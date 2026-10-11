@@ -41,6 +41,7 @@ func _process(_delta: float) -> void:
 	for button in session.find_children("*", "Button", true, false):
 		if button.is_visible_in_tree():
 			buttons[button.text] = rect(button)
+			if button.has_meta("gameplay_action"): buttons[button.get_meta("gameplay_action")] = rect(button)
 	data.buttons = buttons
 	if session.game != null:
 		var world: Node = session.game
@@ -57,6 +58,13 @@ func _process(_delta: float) -> void:
 			if structure is PlacedStructure: data.structures.append({"kind":structure.kind,"x":structure.position.x,"y":structure.position.y})
 		data.scroll = hud.get_node("InventoryPanel/Panel/Scroll").scroll_vertical
 		data.bed_registered = is_instance_valid(structures.respawn_bed)
+		data.placement_points = []
+		if structures.active:
+			for offset in [Vector2(85, 0), Vector2(0, 85), Vector2(-85, 0), Vector2(0, -85)]:
+				var point: Vector2 = player.position + offset
+				if structures.can_place(point):
+					var screen: Vector2 = player.get_canvas_transform() * point
+					data.placement_points.append([screen.x, screen.y])
 		data.viewport = [get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]
 		if is_instance_valid(MobileInput.overlay):
 			data.portrait = MobileInput.overlay.portrait

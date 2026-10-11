@@ -5,6 +5,9 @@ var contents: Dictionary = {}
 var released := false
 var highlighted := false
 
+func can_interact() -> bool:
+	return not released
+
 func prompt() -> String:
 	return "E — Recipiente vazio" if released else "E — Vasculhar recipiente"
 

@@ -381,11 +381,13 @@ func update_counts(wood: int, stone: int) -> void:
 
 
 func show_target(message: String) -> void:
+	if MobileInput.enabled: message = message.trim_prefix("F / mouse — ")
 	$Controls/Rows/Prompt.text = message
 	$Controls/Rows/Prompt.visible = message != ""
 
 
 func show_pickup(message: String) -> void:
+	if MobileInput.enabled: message = message.trim_prefix("E — ")
 	$Controls/Rows/Pickup.text = message
 	$Controls/Rows/Pickup.visible = message != ""
 

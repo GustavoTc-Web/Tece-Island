@@ -3,6 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 await mkdir('.tools/screenshots',{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.BROWSER_EXE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});
 const errors=[],results=[];
+try {
 const context=await browser.newContext({viewport:{width:960,height:540},hasTouch:true});
 const page=await context.newPage();
 page.on('pageerror',e=>errors.push(e.message));
@@ -77,7 +78,10 @@ await setup('position',{x:bed.x,y:bed.y-50});
 await setup('night');await tap('Interagir');
 await check((await state()).bed_registered&&(await state()).day===2,'Cama define reaparecimento e dorme por Interagir');
 await tap('Inventário');await tapBox((await state()).inventory_buttons[1]);await tap('Colocar selecionado');
-await page.touchscreen.tap(565,270);await sleep(150);await tap('Confirmar');
+await page.waitForFunction(()=>window.tcState.placement_points?.length>0);
+const firePoint=(await state()).placement_points[0];
+await page.touchscreen.tap(firePoint[0],firePoint[1]);await sleep(200);await tap('Confirmar');
+await page.waitForFunction(()=>window.tcState.structures.some(x=>x.kind==='fogueira'));
 s=await state();await check(s.structures.some(x=>x.kind==='fogueira'),'Confirmar coloca fogueira');
 const fire=s.structures.find(x=>x.kind==='fogueira');await setup('position',{x:fire.x,y:fire.y-50});await tap('Interagir');
 await check((await state()).panel==='crafting','Fogueira abre receitas por botão Interagir');
@@ -90,8 +94,8 @@ await fingers('touchStart',[{id:0,x:160,y:425},{id:1,x:915,y:425}]);await sleep(
 await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await sleep(150);
 s=await state();await check(s.move.every(v=>v===0)&&s.aim.every(v=>v===0),'Suspensão/perda de foco limpa entradas');
 await fingers('touchEnd',[]);
-await page.setViewportSize({width:540,height:960});await sleep(300);await check((await state()).portrait,'Vertical mostra instrução de rotação');
-await page.setViewportSize({width:960,height:540});await sleep(300);await check(!(await state()).portrait,'Retorno horizontal restaura layout');
+await page.setViewportSize({width:540,height:960});await page.waitForFunction(()=>window.tcState.portrait);await check((await state()).portrait,'Vertical mostra instrução de rotação');
+await page.setViewportSize({width:960,height:540});await page.waitForFunction(()=>!window.tcState.portrait);await check(!(await state()).portrait,'Retorno horizontal restaura layout');
 await page.screenshot({path:'.tools/screenshots/mobile-final.png'});
 s=await state();await check(s.fps>0,'Amostra de desempenho na fixture debug com renderização por software: '+s.fps+' FPS');
 await tap('Inventário');await tap('Voltar ao menu');await check((await state()).menu,'Retorno ao menu enquanto pausado');
@@ -124,3 +128,4 @@ await desktop.screenshot({path:'.tools/screenshots/desktop-final.png'});
 await browser.close();
 await writeFile('.tools/browser-results.json',JSON.stringify({results,errors},null,2));
 if(results.some(x=>!x.pass)||errors.length)process.exitCode=1;
+} finally { await browser.close(); }

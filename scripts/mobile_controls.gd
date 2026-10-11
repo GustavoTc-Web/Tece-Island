@@ -8,6 +8,7 @@ var fingers := {"move": -1, "aim": -1}
 var vectors := {"move": Vector2.ZERO, "aim": Vector2.ZERO}
 var centers := {"move": Vector2.ZERO, "aim": Vector2.ZERO}
 var actions: HBoxContainer
+var interact_button: Button
 var placement: HBoxContainer
 var rotate: Label
 var portrait := false
@@ -27,11 +28,14 @@ func _ready() -> void:
 	for action in ["Interagir", "Usar item", "Recarregar", "Inventário", "Fabricação"]:
 		var button := Button.new()
 		button.text = action
+		button.set_meta("gameplay_action", action)
 		button.custom_minimum_size = Vector2(112, 64)
 		button.add_theme_font_size_override("font_size", 20)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(invoke.bind(action))
 		actions.add_child(button)
+		if action == "Interagir": interact_button = button
+	player.get_node("Interaction").pickup_changed.connect(update_interaction_label)
 	placement = HBoxContainer.new()
 	add_child(placement)
 	for action in ["Confirmar", "Cancelar"]:
@@ -52,6 +56,16 @@ func _ready() -> void:
 	add_child(rotate)
 	layout()
 
+func update_interaction_label(_message: String) -> void:
+	var pickup: Node = player.get_node("Interaction").pickup
+	var caption := "Interagir"
+	if is_instance_valid(pickup):
+		if pickup is ResourceDrop: caption = "Coletar"
+		elif pickup is WaterWell: caption = "Beber"
+		elif pickup is PlacedStructure: caption = "Usar cama" if pickup.kind == "cama" else "Cozinhar"
+		else: caption = "Abrir"
+	interact_button.text = caption
+
 func layout() -> void:
 	reset()
 	var viewport_size := get_viewport_rect().size
@@ -60,7 +74,7 @@ func layout() -> void:
 	centers.move = Vector2(100, viewport_size.y - 115)
 	centers.aim = Vector2(viewport_size.x - 100, viewport_size.y - 115)
 	actions.position = Vector2((viewport_size.x - 576) / 2, viewport_size.y - 144)
-	placement.position = Vector2((viewport_size.x - 284) / 2, viewport_size.y - 205)
+	placement.position = Vector2((viewport_size.x - 284) / 2, viewport_size.y - 144)
 	rotate.position = Vector2(0, viewport_size.y / 2)
 	rotate.size.x = viewport_size.x
 	rotate.visible = portrait

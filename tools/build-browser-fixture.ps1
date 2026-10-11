@@ -3,6 +3,9 @@ $ErrorActionPreference = "Stop"
 if (-not $Godot) { throw "Passe -Godot com o caminho do Godot 4.7.2." }
 $taskRoot = Split-Path $PSScriptRoot -Parent
 $taskCopy = Join-Path $taskRoot ".tools/browser-fixture"
+$taskCache = [IO.Path]::GetFullPath((Join-Path $taskCopy ".godot"))
+if (-not $taskCache.StartsWith([IO.Path]::GetFullPath((Join-Path $taskRoot ".tools")) + [IO.Path]::DirectorySeparatorChar)) { throw "Cache fora da pasta de testes." }
+if (Test-Path -LiteralPath $taskCache) { Remove-Item -LiteralPath $taskCache -Recurse -Force }
 New-Item -ItemType Directory -Force $taskCopy | Out-Null
 foreach ($taskName in @("scripts", "scenes", "web")) {
     Copy-Item -LiteralPath (Join-Path $taskRoot $taskName) -Destination $taskCopy -Recurse -Force

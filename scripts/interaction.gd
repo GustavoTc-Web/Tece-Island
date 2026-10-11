@@ -203,6 +203,7 @@ func update_pickup() -> void:
 	if not blocked:
 		for node in get_tree().get_nodes_in_group("resource_drops") + get_tree().get_nodes_in_group("interactables"):
 			var drop := node as Node2D
+			if drop.has_method("can_interact") and not drop.can_interact(): continue
 			var distance := player.global_position.distance_squared_to(drop.global_position)
 			var ray := PhysicsRayQueryParameters2D.create(player.global_position, drop.global_position, 1)
 			var collision := player.get_world_2d().direct_space_state.intersect_ray(ray)
@@ -222,7 +223,10 @@ func update_pickup() -> void:
 
 func collect_nearest() -> int:
 	update_pickup()
-	if blocked or player.dead or get_tree().paused or not is_instance_valid(pickup):
+	if blocked or player.dead or get_tree().paused:
+		return 0
+	if not is_instance_valid(pickup):
+		message_requested.emit("Aproxime-se de um item ou objeto para interagir.")
 		return 0
 	if not pickup is ResourceDrop:
 		message_requested.emit(pickup.interact(inventory))

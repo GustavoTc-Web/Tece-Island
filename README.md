@@ -142,6 +142,12 @@ Use Git Credential Manager ou GitHub CLI para autenticação; nunca grave tokens
 
 ## Validação
 
+Correção de coleta: baús já vasculhados deixam de competir com os drops na
+seleção do alvo. O botão de toque mostra Coletar, Abrir, Beber, Usar cama ou Cozinhar.
+Confirmar/Cancelar ficam fora da região próxima ao jogador usada pela prévia.
+`validate_controls.gd` reproduz o baú vazio interceptando coleta e verifica
+inventário cheio/parcial, nova tentativa e alcance sem depender do cursor.
+
 Testes GDScript em `tests/` exercitam entrada do viewport, pausa, inventário,
 exploração, sobrevivência, armas, animais e transições:
 
