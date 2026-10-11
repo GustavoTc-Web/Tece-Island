@@ -1,0 +1,63 @@
+# Test build only: excluded from the published preset.
+extends Node
+var session: Node
+var callback: JavaScriptObject
+var snapshot_time := 0.0
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	session = load("res://scenes/main.tscn").instantiate()
+	add_child(session)
+	callback = JavaScriptBridge.create_callback(command)
+	JavaScriptBridge.get_interface("window").tcFixture = callback
+func command(args: Array) -> void:
+	var request: Dictionary = JSON.parse_string(str(args[0]))
+	if session.game == null: return
+	var world: Node = session.game
+	var inv: ResourceInventory = world.get_node("Inventory")
+	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
+	match request.action:
+		"items":
+			inv.reset()
+			for item in request.items: inv.add_item(item)
+		"position": player.position = Vector2(request.x, request.y)
+		"clear_drops":
+			for drop in get_tree().get_nodes_in_group("resource_drops"): drop.queue_free()
+		"needs":
+			player.get_node("Needs").hunger = request.hunger
+			player.get_node("Needs").thirst = request.thirst
+		"night":
+			var cycle: DayNightCycle = world.get_node("DayNight")
+			cycle.elapsed = cycle.day_duration + 40
+			cycle.refresh()
+func rect(control: Control) -> Array:
+	var box := control.get_global_rect()
+	return [box.position.x, box.position.y, box.size.x, box.size.y]
+func _process(_delta: float) -> void:
+	snapshot_time += _delta
+	if snapshot_time < 0.1: return
+	snapshot_time = 0.0
+	var data := {"menu": session.menu != null, "paused": get_tree().paused}
+	var buttons := {}
+	for button in session.find_children("*", "Button", true, false):
+		if button.is_visible_in_tree():
+			buttons[button.text] = rect(button)
+	data.buttons = buttons
+	if session.game != null:
+		var world: Node = session.game
+		var player: CharacterBody2D = world.get_node("WorldObjects/Player")
+		var inv: ResourceInventory = world.get_node("Inventory")
+		var hud: Node = world.get_node("HUD")
+		var structures: Node = world.get_node("Structures")
+		var interaction: Node = player.get_node("Interaction")
+		data.merge({"position":[player.position.x,player.position.y], "slots":inv.slots, "selected":inv.selected_index, "panel":hud.current_panel, "aim":[interaction.touch_aim.x,interaction.touch_aim.y], "move":[player.touch_movement.x,player.touch_movement.y], "mouse_held":interaction.mouse_held, "hunger":player.get_node("Needs").hunger, "thirst":player.get_node("Needs").thirst, "placing":structures.active, "valid":structures.valid, "structures":[], "quick":[], "inventory_buttons":[], "recipes":{}, "fps":Engine.get_frames_per_second(), "day":world.get_node("DayNight").day_number})
+		for index in range(5): data.quick.append(rect(hud.quick_buttons[index]))
+		for button in hud.slot_buttons: data.inventory_buttons.append(rect(button))
+		for id in hud.recipe_buttons: data.recipes[id] = rect(hud.recipe_buttons[id])
+		for structure in world.get_node("WorldObjects").get_children():
+			if structure is PlacedStructure: data.structures.append({"kind":structure.kind,"x":structure.position.x,"y":structure.position.y})
+		data.scroll = hud.get_node("InventoryPanel/Panel/Scroll").scroll_vertical
+		data.bed_registered = is_instance_valid(structures.respawn_bed)
+		data.viewport = [get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]
+		if is_instance_valid(MobileInput.overlay):
+			data.portrait = MobileInput.overlay.portrait
+	JavaScriptBridge.eval("window.tcState = " + JSON.stringify(data))

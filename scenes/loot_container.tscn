@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/loot_container.gd" id="1"]
+[node name="LootContainer" type="Node2D" groups=["interactables", "loot_containers"]]
+script = ExtResource("1")

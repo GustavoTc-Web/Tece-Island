@@ -1,0 +1,41 @@
+class_name ResourceRules
+extends RefCounted
+
+# Ajuste aqui custos, recompensas, número de golpes e intervalo em segundos.
+const RECIPES := {
+	"cantil": {"name": "Cantil", "category": "agua", "material": "", "wood": 2, "stone": 0, "fiber": 2},
+	"carne_cozida": {"name": "Carne cozida", "category": "comida", "material": "", "wood": 1, "stone": 0, "fiber": 0, "meat": 1},
+	"mochila": {"name": "Bolsa nível 1 — +2 espaços", "category": "mochila", "material": "", "wood": 4, "stone": 0, "fiber": 12},
+	"cama": {"name": "Cama simples", "category": "estrutura", "material": "", "wood": 8, "stone": 0, "fiber": 6},
+	"fogueira": {"name": "Fogueira", "category": "estrutura", "material": "", "wood": 4, "stone": 5, "fiber": 0},
+	"machado_madeira": {"name": "Machado de madeira", "category": "machado", "material": "madeira", "wood": 3, "stone": 0},
+	"picareta_madeira": {"name": "Picareta de madeira", "category": "picareta", "material": "madeira", "wood": 3, "stone": 0},
+	"espada_madeira": {"name": "Espada de madeira", "category": "espada", "material": "madeira", "wood": 2, "stone": 0},
+	"machado_pedra": {"name": "Machado de pedra", "category": "machado", "material": "pedra", "wood": 2, "stone": 3},
+	"picareta_pedra": {"name": "Picareta de pedra", "category": "picareta", "material": "pedra", "wood": 2, "stone": 3},
+	"espada_pedra": {"name": "Espada de pedra", "category": "espada", "material": "pedra", "wood": 1, "stone": 2},
+}
+const EXTRACTION := {
+	"fibra": {"reward": 4, "hits": {"maos": 2}},
+	"madeira": {"reward": 5, "hits": {"maos": 6, "machado_madeira": 3, "machado_pedra": 2}},
+	"pedra": {"reward": 4, "hits": {"picareta_madeira": 6, "picareta_pedra": 3}},
+}
+# 0.5: +20% uma única vez sobre 1,00 / 0,45 / 0,30 da versão 0.4.
+const INTERVAL := {"maos": 1.20, "madeira": 0.54, "pedra": 0.36}
+const COMBAT_DAMAGE := {"maos": 5, "espada_madeira": 10, "espada_pedra": 15}
+
+
+static func combat_damage(tool: String) -> int:
+	return COMBAT_DAMAGE.get(tool, 5)
+
+
+static func hit_interval(tool: String) -> float:
+	if tool == "maos":
+		return INTERVAL.maos
+	return INTERVAL.get(RECIPES.get(tool, {}).get("material", ""), INTERVAL.maos)
+
+
+static func guidance(resource: String) -> String:
+	if resource == "madeira":
+		return "Use as mãos ou um machado na árvore."
+	return "Equipe uma picareta para extrair pedra."

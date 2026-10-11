@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TC Island</title>
+$GODOT_HEAD_INCLUDE
+<style>
+html,body{margin:0;width:100%;height:100%;background:#182b23;color:#edf4df;font:16px system-ui;overflow:hidden;overscroll-behavior:none}
+#stage{position:fixed;inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
+#status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;background:#182b23}
+progress{width:min(360px,80vw);height:24px}
+button{padding:14px 24px;font:inherit}
+</style>
+</head>
+<body><div id="stage"><canvas id="canvas" tabindex="0">Seu navegador precisa oferecer WebGL 2.</canvas>
+<div id="status"><strong>TC Island</strong><span id="message">Carregando o jogo…</span><progress id="progress"></progress><button id="retry" hidden>Recarregar</button></div></div>
+<script src="$GODOT_URL"></script>
+<script>
+const canvas=document.querySelector('#canvas'),status=document.querySelector('#status'),message=document.querySelector('#message'),progress=document.querySelector('#progress');
+document.querySelector('#retry').onclick=()=>location.reload();
+function fail(error){status.style.display='flex';message.textContent='Não foi possível iniciar o jogo. Verifique sua conexão e o suporte a WebGL 2 do navegador. Você pode recarregar e tentar novamente.';progress.hidden=true;document.querySelector('#retry').hidden=false;console.error(error);}
+const engine=new Engine($GODOT_CONFIG);
+function resize(){const r=document.querySelector('#stage').getBoundingClientRect();canvas.width=Math.round(r.width);canvas.height=Math.round(r.height);}
+window.addEventListener('resize',resize);resize();
+engine.startGame({canvas,canvasResizePolicy:0,onProgress:(current,total)=>{if(total>0){progress.max=total;progress.value=current;message.textContent='Carregando o jogo… '+Math.round(current/total*100)+'%';}}})
+.then(()=>{status.style.display='none';canvas.focus();}).catch(fail);
+// Blur and visibility loss reach Godot even when the browser suspends rendering.
+document.addEventListener('visibilitychange',()=>{if(document.hidden)window.dispatchEvent(new Event('blur'));});
+canvas.addEventListener('webglcontextlost',()=>fail('WebGL context lost'));
+</script></body></html>

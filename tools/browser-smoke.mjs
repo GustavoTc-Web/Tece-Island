@@ -1,0 +1,21 @@
+// Install Playwright locally: npm install --prefix .tools/browser-test playwright
+import {chromium} from '../.tools/browser-test/node_modules/playwright/index.mjs';
+import {mkdir} from 'node:fs/promises';
+await mkdir('.tools/screenshots',{recursive:true});
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});
+const context=await browser.newContext({viewport:{width:960,height:540},hasTouch:process.argv.includes('--touch')});
+const page=await context.newPage();
+const errors=[];
+page.on('console',m=>{console.log(m.type()+': '+m.text());if(m.type()==='error')errors.push(m.text());});
+page.on('pageerror',e=>errors.push(e.message));
+page.on('response',r=>{if(r.status()>=400)errors.push(r.status()+': '+r.url());});
+await page.goto(process.env.TEST_URL||'http://localhost:8080/Tece-Island/');
+await page.waitForFunction(()=>document.querySelector('#status').style.display==='none',{timeout:30000});
+await page.waitForTimeout(1200);
+await page.screenshot({path:'.tools/screenshots/menu.png'});
+if(process.argv.includes('--touch'))await page.touchscreen.tap(480,208);else await page.mouse.click(480,208);
+await page.waitForTimeout(1200);
+await page.screenshot({path:'.tools/screenshots/solo.png'});
+console.log(JSON.stringify({errors,canvas:await page.locator('canvas').boundingBox()}));
+await browser.close();
+if(errors.length)process.exitCode=1;

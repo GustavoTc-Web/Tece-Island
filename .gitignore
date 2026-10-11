@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+.tools/
+build/
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+export_credentials.cfg
+*.p12
+*.keystore
+node_modules/

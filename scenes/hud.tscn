@@ -1,0 +1,274 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="ControlsBackground"]
+bg_color = Color(0.08, 0.14, 0.11, 0.8)
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+
+[node name="HUD" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1")
+
+[node name="Controls" type="PanelContainer" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("ControlsBackground")
+
+[node name="Rows" type="VBoxContainer" parent="Controls"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Instructions" type="Label" parent="Controls/Rows"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.94, 0.85, 1)
+theme_override_font_sizes/font_size = 16
+text = "TC Island 0.7 · WASD / setas · Usar: F / mouse · Interagir: E"
+
+[node name="HealthLabel" type="Label" parent="Controls/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Vida: 100 / 100"
+
+[node name="Health" type="ProgressBar" parent="Controls/Rows"]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+mouse_filter = 2
+value = 100.0
+show_percentage = false
+
+[node name="Time" type="Label" parent="Controls/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Dia 1 · Dia"
+
+[node name="Counts" type="Label" parent="Controls/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Madeira: 0  ·  Pedra: 0"
+
+[node name="Equipment" type="Label" parent="Controls/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Equipado: Mãos"
+
+[node name="EquipmentKeys" type="Label" parent="Controls/Rows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "1–5 / scroll: barra · Q / Shift+Q: jogar 1 / pilha\nR recarregar · C receitas · I inventário · E interagir"
+
+[node name="Prompt" type="Label" parent="Controls/Rows"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.84, 0.53, 1)
+theme_override_font_sizes/font_size = 16
+
+[node name="Pickup" type="Label" parent="Controls/Rows"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.84, 0.53, 1)
+theme_override_font_sizes/font_size = 16
+
+[node name="Feedback" type="Label" parent="Controls/Rows"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.9, 0.67, 1)
+theme_override_font_sizes/font_size = 16
+
+[node name="FeedbackTimer" type="Timer" parent="."]
+wait_time = 1.4
+one_shot = true
+
+[node name="Crafting" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Shade" type="ColorRect" parent="Crafting"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.04, 0.08, 0.06, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="Crafting"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.0
+offset_top = -190.0
+offset_right = 295.0
+offset_bottom = 230.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("ControlsBackground")
+
+[node name="Rows" type="VBoxContainer" parent="Crafting/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Crafting/Panel/Rows"]
+layout_mode = 2
+text = "Fabricação · C ou Esc para fechar"
+theme_override_font_sizes/font_size = 20
+
+[node name="Available" type="Label" parent="Crafting/Panel/Rows"]
+layout_mode = 2
+text = "Disponível: 0 madeira · 0 pedra"
+
+[node name="Scroll" type="ScrollContainer" parent="Crafting/Panel/Rows"]
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Recipes" type="VBoxContainer" parent="Crafting/Panel/Rows/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Note" type="Label" parent="Crafting/Panel/Rows"]
+layout_mode = 2
+text = "Carne cozida exige fogueira próxima. Role para ver todas as receitas."
+theme_override_font_sizes/font_size = 14
+
+[node name="InventoryPanel" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Shade" type="ColorRect" parent="InventoryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.04, 0.08, 0.06, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="InventoryPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.0
+offset_top = -190.0
+offset_right = 295.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("ControlsBackground")
+
+[node name="Scroll" type="ScrollContainer" parent="InventoryPanel/Panel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Rows" type="VBoxContainer" parent="InventoryPanel/Panel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="InventoryPanel/Panel/Scroll/Rows"]
+layout_mode = 2
+text = "Inventário · I ou Esc para fechar"
+theme_override_font_sizes/font_size = 20
+
+[node name="Slots" type="GridContainer" parent="InventoryPanel/Panel/Scroll/Rows"]
+layout_mode = 2
+columns = 4
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Selection" type="Label" parent="InventoryPanel/Panel/Scroll/Rows"]
+layout_mode = 2
+text = "Selecione uma ferramenta para equipar."
+
+[node name="Equip" type="Button" parent="InventoryPanel/Panel/Scroll/Rows"]
+layout_mode = 2
+focus_mode = 0
+text = "Equipar selecionado (melhor ferramenta)"
+disabled = true
+
+[node name="Hands" type="Button" parent="InventoryPanel/Panel/Scroll/Rows"]
+layout_mode = 2
+focus_mode = 0
+text = "Equipar mãos"
+
+[node name="Death" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Shade" type="ColorRect" parent="Death"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.08, 0.03, 0.03, 0.75)
+
+[node name="Panel" type="PanelContainer" parent="Death"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -75.0
+offset_right = 180.0
+offset_bottom = 75.0
+theme_override_styles/panel = SubResource("ControlsBackground")
+
+[node name="Rows" type="VBoxContainer" parent="Death/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Death/Panel/Rows"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+text = "Você morreu"
+
+[node name="Respawn" type="Button" parent="Death/Panel/Rows"]
+layout_mode = 2
+focus_mode = 0
+text = "Reaparecer (manter itens)"
+
+[connection signal="timeout" from="FeedbackTimer" to="." method="_on_feedback_timeout"]
+[connection signal="pressed" from="Death/Panel/Rows/Respawn" to="." method="_request_respawn"]
+[connection signal="pressed" from="InventoryPanel/Panel/Scroll/Rows/Equip" to="." method="_equip_selected"]
+[connection signal="pressed" from="InventoryPanel/Panel/Scroll/Rows/Hands" to="." method="_equip_hands"]
