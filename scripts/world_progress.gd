@@ -13,6 +13,7 @@ func capture() -> Dictionary:
 	result.player.poison = player.poison_remaining
 	result.player.poison_tick = player.poison_tick
 	result.world_seed = world.world_seed
+	result.explored = world.minimap.explored.duplicate(true)
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -42,7 +43,7 @@ func load_progress() -> void:
 	for field in ["structures", "drops", "wells"]:
 		if data.has(field) and not data[field] is Array:
 			writable = false
-	for field in ["resources", "loot", "player"]:
+	for field in ["resources", "loot", "player", "explored"]:
 		if data.has(field) and not data[field] is Dictionary:
 			writable = false
 	if not writable:
@@ -73,6 +74,7 @@ func load_progress() -> void:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
 	world.get_node("Inventory").restore_state(data.inventory)
+	world.minimap.explored = data.get("explored", {}).duplicate(true)
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	var player_state: Dictionary = data.get("player", {})
 	player.position = SaveStore.vector(player_state.get("position"), player.position)

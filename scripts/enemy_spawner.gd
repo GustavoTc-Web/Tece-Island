@@ -48,9 +48,14 @@ func try_spawn() -> ForestCreature:
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
 	query.collision_mask = 7
-	for i in range(SPAWN_POINTS.size()):
-		var point: Vector2 = SPAWN_POINTS[next_point]
-		next_point = (next_point + 1) % SPAWN_POINTS.size()
+	var points: Array = SPAWN_POINTS.duplicate()
+	if player.terrain_enabled:
+		points = []
+		for i in range(12): points.append(player.global_position + Vector2.from_angle(i * TAU / 12) * 420)
+	for i in range(points.size()):
+		var point: Vector2 = points[next_point % points.size()]
+		next_point += 1
+		if player.terrain_enabled and not WorldTerrain.solid_ground(point, Vector2(36, 36)): continue
 		if point.distance_to(safe_center) < safe_radius + 40.0 or point.distance_to(player.global_position) < minimum_player_distance:
 			continue
 		query.transform = Transform2D(0.0, point)

@@ -7,6 +7,7 @@ extends Node
 @export var bird_attempt_interval := 60.0
 var bird_clock := 60.0
 var bird_attempts := 0
+var visited_regions := {}
 var player: CharacterBody2D
 var container: Node2D
 var clock := 120.0
@@ -93,9 +94,15 @@ func spawn(kind: String, avoid_player: bool = true) -> NeutralAnimal:
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
 	query.collision_mask = 7
-	for i in range(POINTS.size()):
-		var point: Vector2 = POINTS[next_point]
-		next_point = (next_point + 1) % POINTS.size()
+	var candidates: Array = POINTS.duplicate()
+	var region := WorldTerrain.region_at(player.global_position)
+	if region.get("id", "") in visited_regions and region.id not in ["forest", "fields", "swamp"]:
+		candidates = []
+		for i in range(8): candidates.append(player.global_position + Vector2.from_angle(i * TAU / 8) * 380)
+	for i in range(candidates.size()):
+		var point: Vector2 = candidates[next_point % candidates.size()]
+		next_point += 1
+		if not WorldTerrain.solid_ground(point) or WorldTerrain.region_at(point).get("kind", "") not in ["Floresta", "Campos", "Pântano"]: continue
 		if avoid_player and point.distance_to(player.global_position) < 250: continue
 		query.transform = Transform2D(0, point)
 		if not player.get_world_2d().direct_space_state.intersect_shape(query).is_empty(): continue
@@ -103,6 +110,18 @@ func spawn(kind: String, avoid_player: bool = true) -> NeutralAnimal:
 		animal.kind = kind
 		animal.position = point
 		animal.player = player
+		animal.habitat = WorldTerrain.region_at(point).rect.grow(-24)
 		container.add_child(animal)
 		return animal
 	return null
+
+func ensure_local_animals() -> void:
+	var region := WorldTerrain.region_at(player.global_position)
+	if region.is_empty() or visited_regions.has(region.id): return
+	visited_regions[region.id] = true
+	if region.kind == "Aquático":
+		for kind in ["lambari", "tilapia"]:
+			for i in range(2): spawn_fish(kind, region)
+	elif region.kind in ["Floresta", "Campos", "Pântano"] and region not in WorldTerrain.ORIGINAL:
+		spawn("coelho")
+		spawn("vaca")

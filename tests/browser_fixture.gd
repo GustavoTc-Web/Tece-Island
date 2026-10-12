@@ -106,6 +106,9 @@ func _process(_delta: float) -> void:
 		data.capacity = inv.capacity
 		data.swimming = player.swimming
 		data.dark = world.get_node("DayNight").local_darkness
+		data.minimap = rect(world.minimap)
+		data.explored = world.minimap.explored.size()
+		data.region = WorldTerrain.region_at(player.global_position).get("id", "")
 		data.temples = []
 		for temple in world.ruins.temples: data.temples.append([temple.position.x, temple.position.y])
 		data.player_screen = [player.get_global_transform_with_canvas().origin.x, player.get_global_transform_with_canvas().origin.y]

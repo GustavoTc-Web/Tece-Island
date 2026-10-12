@@ -12,13 +12,22 @@ const AQUATIC := [
 const RUINS := [
 	{"id": "ruins_w", "kind": "Ruínas Escuras", "rect": Rect2(-3072, 0, 1536, 1536)},
 	{"id": "ruins_s", "kind": "Ruínas Escuras", "rect": Rect2(-1536, 1536, 1536, 1536)}]
+const NEW_LAND := [
+	{"id": "forest_n", "kind": "Floresta", "rect": Rect2(-1536, -1536, 1536, 1536)},
+	{"id": "swamp_n", "kind": "Pântano", "rect": Rect2(0, -1536, 2304, 1536)},
+	{"id": "fields_n", "kind": "Campos", "rect": Rect2(2304, -1536, 1536, 1536)},
+	{"id": "desert_n", "kind": "Deserto", "rect": Rect2(3840, -1536, 1536, 1536)},
+	{"id": "forest_s", "kind": "Floresta", "rect": Rect2(0, 1536, 2304, 1536)},
+	{"id": "swamp_s", "kind": "Pântano", "rect": Rect2(2304, 1536, 1536, 1536)},
+	{"id": "fields_s", "kind": "Campos", "rect": Rect2(3840, 1536, 1536, 1536)},
+	{"id": "desert_s", "kind": "Deserto", "rect": Rect2(5376, 1536, 1536, 1536)}]
 const PONDS := [Rect2(2450, 400, 130, 85), Rect2(3390, 250, 180, 100), Rect2(2770, 1250, 170, 90), Rect2(3500, 940, 160, 70)]
 const COLORS := {"Floresta": Color("567c46"), "Pântano": Color("40574b"), "Campos": Color("ad9b5c"), "Deserto": Color("dec487"), "Aquático": Color("366e86"), "Ruínas Escuras": Color("494755")}
 const BOUNDS := Rect2(-3072, -1536, 9984, 4608)
 const SWIM_SPEED := 0.60
 
 static func regions() -> Array:
-	return ORIGINAL + AQUATIC + RUINS
+	return ORIGINAL + AQUATIC + RUINS + NEW_LAND
 
 static func is_dark(point: Vector2) -> bool:
 	return region_at(point).get("kind", "") == "Ruínas Escuras"
@@ -79,6 +88,19 @@ func boundary(from: Vector2, to: Vector2) -> void:
 	body.add_child(collision)
 	add_child(body)
 
+func initialize_resources(world: Node2D) -> void:
+	for region in NEW_LAND:
+		var rect: Rect2 = region.rect
+		var tree_count: int = {"Floresta": 12, "Pântano": 8, "Campos": 4, "Deserto": 0}[region.kind]
+		for i in range(tree_count):
+			var point := rect.position + Vector2(rect.size.x * (0.12 + (i % 4) * 0.24), rect.size.y * (0.14 + (i / 4) * 0.3))
+			if absf(point.x - rect.get_center().x) < 90 or absf(point.y - rect.get_center().y) < 90: continue
+			world.add_obstacle(world.TREE, point)
+			if region.kind == "Pântano": world.get_node("WorldObjects").get_child(-1).modulate = Color(0.7, 0.85, 0.8)
+		for i in range(4):
+			world.add_obstacle(world.ROCK, rect.position + Vector2(rect.size.x * (0.18 + i * 0.22), rect.size.y * 0.86))
+			world.add_obstacle(world.BUSH, rect.position + Vector2(rect.size.x * (0.18 + i * 0.22), rect.size.y * 0.64))
+
 func _draw() -> void:
 	for region in regions():
 		if region in ORIGINAL: continue
@@ -88,6 +110,13 @@ func _draw() -> void:
 			for i in range(110):
 				var point := rect.position + Vector2(40 + posmod(i * 163, int(rect.size.x) - 80), 40 + posmod(i * 227, int(rect.size.y) - 80))
 				draw_rect(Rect2(point, Vector2(10, 5)), Color("686271"))
+		if region in NEW_LAND:
+			var trail: Color = COLORS[region.kind].lightened(0.12)
+			draw_line(Vector2(rect.get_center().x, rect.position.y), Vector2(rect.get_center().x, rect.end.y), trail, 104)
+			draw_line(Vector2(rect.position.x, rect.get_center().y), Vector2(rect.end.x, rect.get_center().y), trail, 104)
+			for i in range(160):
+				var point := rect.position + Vector2(40 + posmod(i * 179, int(rect.size.x) - 80), 40 + posmod(i * 137, int(rect.size.y) - 80))
+				draw_line(point, point + Vector2(3, -6), COLORS[region.kind].lightened(0.06), 2)
 		if region.kind == "Aquático":
 			var land := Color("819b62")
 			draw_rect(rect, land, false, 28)

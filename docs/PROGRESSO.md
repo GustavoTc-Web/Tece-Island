@@ -37,8 +37,8 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-8. Expandir os quatro tipos originais com duas novas regiões cada e minimapa.
-Depois poços persistentes por região e peças de base.
+9. Poços persistentes: 35% por região, redução segura dos poços naturais anteriores.
+Depois peças de base e validação/publicação final.
 
 ## Etapa 2: bolsas
 
@@ -129,6 +129,22 @@ Validação: 27 verificações Godot, 8 de navegador teclado/toque (entrada fís
 e luz ao entrar/sair), 26 regressões de baú/save, incluindo semente e todos
 os recipientes. Captura de templo em celular emulado revisada. Nenhum aparelho real.
 Etapas 5/6: commit d0d63a4. Gameplay ainda não enviado ao Pages.
+
+## Etapa 8: expansão e minimapa
+
+16 regiões no total: quatro originais preservadas, duas novas Florestas/Pântanos/
+Campos/Desertos e duas Aquáticas/Ruínas. Norte/sul/oeste conectados, câmera
+-3072,-1536 até 6912,3072. Aberturas nas árvores do perímetro liberam acessos
+centrais; coordenadas antigas e bases não se deslocam. Novos recursos em terra.
+Minimapa circular direito com cores, orientação e exploração persistida, sem
+interceptar mouse/toque. IA, animação e colisão de animais/guardiões distantes
+desativadas e reativadas por proximidade; noturnos muito distantes são removidos
+para manter o limite compartilhado útil na região ativa. Bordas físicas agrupadas.
+
+Validação: 14 verificações Godot, 18 de navegador desktop e celular emulado
+852×393/DPR3, incluindo travessia real do norte por teclado/toque e minimapa.
+18 monstros e 27 Ruínas continuam passando. Captura mobile revisada.
+Etapa 7: commit 72be039. Publicação de gameplay ainda pendente.
 
 ## Etapas seguintes solicitadas
 

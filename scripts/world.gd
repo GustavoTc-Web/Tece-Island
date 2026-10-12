@@ -13,6 +13,9 @@ var terrain: WorldTerrain
 var world_seed := 0
 var ruins: Node
 var current_biome := ""
+var minimap: IslandMinimap
+var activity_clock := 0.0
+var last_region := ""
 
 
 func _ready() -> void:
@@ -45,6 +48,9 @@ func _ready() -> void:
 	$WorldObjects/Player.show_equipment($Inventory.equipped_tool())
 	$HUD.panel_toggled.connect(_on_panel_toggled)
 	$HUD.initialize($Inventory)
+	minimap = IslandMinimap.new()
+	minimap.player = $WorldObjects/Player
+	$HUD.add_child(minimap)
 	$HUD.update_counts($Inventory.wood, $Inventory.stone)
 	$WorldObjects/Player.health_changed.connect($HUD.update_health)
 	$WorldObjects/Player.died.connect(_on_player_died)
@@ -96,9 +102,11 @@ func _ready() -> void:
 		add_obstacle(TREE, point)
 	# Uma linha de árvores perto do perímetro ajuda a mostrar o limite da floresta.
 	for x in range(80, 2304, 150):
+		if absf(x - 1152) < 100: continue
 		add_obstacle(TREE, Vector2(x, 105))
 		add_obstacle(TREE, Vector2(x, 1490))
 	for y in range(260, 1400, 160):
+		if absf(y - 768) < 100: continue
 		add_obstacle(TREE, Vector2(65, y))
 		add_obstacle(TREE, Vector2(2240, y))
 	for point in [
@@ -110,6 +118,7 @@ func _ready() -> void:
 	for point in [Vector2(1050, 640), Vector2(1250, 640), Vector2(1050, 890), Vector2(1250, 890), Vector2(650, 700), Vector2(1660, 850), Vector2(1100, 450), Vector2(1200, 1120)]:
 		add_obstacle(BUSH, point)
 	$Biomes.initialize(self)
+	terrain.initialize_resources(self)
 	$Exploration.player = $WorldObjects/Player
 	$Exploration.random_seed = world_seed
 	$Exploration.container = $WorldObjects
@@ -145,6 +154,14 @@ func _physics_process(_delta: float) -> void:
 		$DayNight.local_darkness = dark
 		$DayNight.refresh()
 	var biome: String = WorldTerrain.region_at($WorldObjects/Player.global_position).get("kind", "")
+	var region_id: String = WorldTerrain.region_at($WorldObjects/Player.global_position).get("id", "")
+	activity_clock += _delta
+	if activity_clock >= 0.5 or last_region != region_id:
+		activity_clock = 0
+		update_activity()
+		if last_region != region_id:
+			$Animals.ensure_local_animals()
+		last_region = region_id
 	if biome != current_biome:
 		current_biome = biome
 		$HUD.show_message(biome + (" · escuridão permanente; dormir bloqueado" if dark else ""))
@@ -157,6 +174,31 @@ func _physics_process(_delta: float) -> void:
 	if $Inventory.cooking_available != available:
 		$Inventory.cooking_available = available
 		$Inventory.changed.emit($Inventory.wood, $Inventory.stone)
+
+func update_activity() -> void:
+	for node in $WorldObjects.get_children():
+		if node.is_queued_for_deletion() or not (node is ForestCreature or node is NeutralAnimal or node is HarvestResource or node is PlacedStructure): continue
+		var distance: float = node.global_position.distance_to($WorldObjects/Player.global_position)
+		if node is ForestCreature and node.fading:
+			node.set_process(true)
+			continue
+		if node is ForestCreature and node.origin == "noturno" and distance > 1800:
+			node.remove_from_group("enemies")
+			node.queue_free()
+			continue
+		if node is NeutralAnimal and not node.is_fish() and distance > 2200:
+			node.remove_from_group("animals")
+			node.queue_free()
+			continue
+		var active := distance <= 1600
+		if bool(node.get_meta("activity_active", true)) == active: continue
+		node.set_meta("activity_active", active)
+		node.visible = active
+		node.set_process(active)
+		if node is ForestCreature or node is NeutralAnimal:
+			node.set_physics_process(active)
+			if not node.has_meta("activity_layer"): node.set_meta("activity_layer", node.collision_layer)
+			node.collision_layer = int(node.get_meta("activity_layer")) if active else 0
 
 
 func _on_panel_toggled(open: bool) -> void:
