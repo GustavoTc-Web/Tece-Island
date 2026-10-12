@@ -19,6 +19,8 @@ var last_region := ""
 var initial_progress := {}
 var region_wells := {}
 var journal: IslandJournal
+var objectives: IslandObjectives
+var loading_progress := false
 
 
 func _ready() -> void:
@@ -137,6 +139,15 @@ func _ready() -> void:
 	add_child(journal)
 	journal.initialize(self)
 	$HUD.initialize_journal(journal)
+	objectives = IslandObjectives.new()
+	add_child(objectives)
+	$HUD.initialize_objectives(objectives)
+	$Inventory.resource_collected.connect(objectives.collected)
+	$Inventory.crafted.connect(objectives.crafted)
+	$Structures.placed.connect(objectives.structure_placed)
+	journal.changed.connect(func():
+		if "arrival" in journal.discovered: objectives.advance("record", 1, loading_progress))
+	objectives.completed.connect(func(title): $HUD.show_message("Objetivo concluído: " + title))
 	var previous_wells: Dictionary = initial_progress.get("region_wells", {}) if initial_progress.get("region_wells", {}) is Dictionary else {}
 	if NaturalWells.valid_metadata(previous_wells):
 		region_wells = NaturalWells.generate(world_seed, previous_wells, initial_progress.get("structures", []) if initial_progress.get("structures", []) is Array else [])
@@ -148,6 +159,7 @@ func _ready() -> void:
 		progress_store.load_progress()
 		# Persist the fixed layout after loading; any older/draft format has a backup.
 		if initial_progress.get("wells_policy", "") != "fixed": save_progress()
+	objectives.reconcile(self)
 
 func save_progress() -> bool:
 	return progress_store.save() if progress_store != null else true
@@ -164,6 +176,7 @@ func _use_item(index: int) -> void:
 	$HUD.show_message($WorldObjects/Player/Needs.use_slot($Inventory, index))
 
 func _physics_process(_delta: float) -> void:
+	objectives.visit(self)
 	var dark: bool = WorldTerrain.is_dark($WorldObjects/Player.global_position)
 	if $DayNight.local_darkness != dark:
 		$DayNight.local_darkness = dark

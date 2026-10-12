@@ -27,6 +27,12 @@ contas. Diário e objetivos inexistentes. Baseline: 18 testes de monstros passam
    texto 22px com rolagem. Validação: 15 verificações incluindo inventário cheio,
    coleta pelo sistema existente e reload sem reaparecimento.
    Etapa 2 registrada em e0cac1c.
-4. Pendente: objetivos opcionais com evidências persistidas.
+4. Implementado: seis objetivos opcionais, progresso por eventos efetivos,
+   acompanhamento/recolher/desativar na HUD e área separada no Diário.
+   Sem recompensas; conclusão notifica uma única vez. Saves antigos reconhecem
+   cama/fogueira presentes, primeiro registro e posição dentro de templo;
+   não inventam coleta/fabricação/cozinha históricas sem dados.
+   Validação: 15 verificações; estado/visibilidade/progresso e notificações.
+   Etapa 3 registrada em 93d2d63.
 5. Pendente: estados reais de gravação, saves por UID e importação legada explícita.
 6. Pendente: testes nativos/Web/toque, commits, push e verificação do Pages.

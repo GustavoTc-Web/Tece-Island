@@ -1,6 +1,7 @@
 extends Node2D
 
 const STRUCTURE := preload("res://scenes/placed_structure.tscn")
+signal placed(kind: String)
 @export var placement_distance: float = 110.0
 @export var sleep_enemy_distance: float = 260.0
 var player: CharacterBody2D
@@ -73,6 +74,7 @@ func confirm() -> bool:
 	structure.rotation = preview_angle
 	structure.system = self
 	container.add_child(structure)
+	placed.emit(item)
 	cancel()
 	return true
 

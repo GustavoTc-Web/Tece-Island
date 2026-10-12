@@ -18,6 +18,7 @@ func collect(inventory: ResourceInventory) -> int:
 	data.quantity = quantity
 	var accepted := inventory.add_item(data)
 	quantity -= accepted
+	if accepted > 0: inventory.resource_collected.emit(resource, accepted)
 	collecting = false
 	queue_redraw()
 	if quantity == 0:

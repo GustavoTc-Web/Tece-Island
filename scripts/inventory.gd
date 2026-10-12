@@ -3,6 +3,8 @@ extends Node
 
 signal changed(wood: int, stone: int)
 signal equipment_changed(tool: String)
+signal resource_collected(item: String, amount: int)
+signal crafted(id: String)
 @export_range(5, 64) var capacity: int = 7
 @export var stack_limit: int = 15
 @export var backpack_bonus: int = 2
@@ -176,6 +178,7 @@ func craft(id: String) -> bool:
 		backpack = {"item": id, "quantity": 1}
 		_resize_capacity()
 	_notify()
+	crafted.emit(id)
 	return true
 
 func _resize_capacity() -> void:

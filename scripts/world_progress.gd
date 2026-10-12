@@ -17,6 +17,7 @@ func capture() -> Dictionary:
 	result.region_wells = world.region_wells.duplicate(true)
 	result.wells_policy = "fixed"
 	result.journal = world.journal.capture()
+	result.objectives = world.objectives.capture()
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -41,6 +42,11 @@ func capture() -> Dictionary:
 	return result
 
 func load_progress() -> void:
+	world.loading_progress = true
+	_load_progress()
+	world.loading_progress = false
+
+func _load_progress() -> void:
 	var data := store.read()
 	if store.error != "":
 		writable = false
@@ -58,6 +64,13 @@ func load_progress() -> void:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
 	# Validate all inventories before changing anything in the running world.
+	var goals_check := IslandObjectives.new()
+	if not data.get("objectives", {}) is Dictionary or not goals_check.restore(data.get("objectives", {})):
+		writable = false
+		goals_check.free()
+		world.get_node("HUD").show_message("Objetivos incompatíveis: save original preservado.")
+		return
+	goals_check.free()
 	var journal_check := IslandJournal.new()
 	if not data.get("journal", {}) is Dictionary or not journal_check.restore(data.get("journal", {})):
 		writable = false
@@ -93,6 +106,7 @@ func load_progress() -> void:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
 	world.get_node("Inventory").restore_state(data.inventory)
+	world.objectives.restore(data.get("objectives", {}))
 	world.journal.restore(data.get("journal", {}))
 	world.minimap.explored = data.get("explored", {}).duplicate(true)
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
@@ -146,6 +160,7 @@ func load_progress() -> void:
 				node.released = bool(data.loot[key].released)
 				node.queue_redraw()
 	world.get_node("HUD").show_message("Progresso local carregado.")
+	world.objectives.reconcile(world)
 
 func save() -> bool:
 	if not writable: return false

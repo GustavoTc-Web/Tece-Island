@@ -5,6 +5,8 @@ var journal: IslandJournal
 var pages: VBoxContainer
 var text: Label
 var selected := ""
+var objectives: IslandObjectives
+var goals_mode := false
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var shade := ColorRect.new()
@@ -22,8 +24,16 @@ func _ready() -> void:
 	title.text = "Diário · O Último Sinal"
 	title.add_theme_font_size_override("font_size", 24)
 	rows.add_child(title)
+	var tabs := HBoxContainer.new()
+	rows.add_child(tabs)
+	for mode in [false, true]:
+		var tab := Button.new()
+		tab.text = "Objetivos" if mode else "Registros"
+		tab.custom_minimum_size = Vector2(280, 52)
+		tab.pressed.connect(func(): goals_mode = mode; refresh())
+		tabs.add_child(tab)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(580, 370)
+	scroll.custom_minimum_size = Vector2(580, 300)
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	rows.add_child(scroll)
@@ -48,6 +58,23 @@ func refresh() -> void:
 	for child in pages.get_children():
 		pages.remove_child(child)
 		child.queue_free()
+	if goals_mode and objectives != null:
+		var toggle := CheckButton.new()
+		toggle.text = "Mostrar objetivo na HUD"
+		toggle.custom_minimum_size.y = 56
+		toggle.button_pressed = objectives.enabled
+		toggle.toggled.connect(func(value): objectives.enabled = value; objectives.changed.emit())
+		pages.add_child(toggle)
+		for id in IslandObjectives.GOALS:
+			var goal: Dictionary = IslandObjectives.GOALS[id]
+			var button := Button.new()
+			button.text = "%s · %d/%d%s\n%s" % [goal.title, objectives.values[id], goal.target, " · Concluído" if objectives.values[id] == goal.target else "", "Acompanhando" if objectives.tracked == id else "Acompanhar"]
+			button.add_theme_font_size_override("font_size", 18)
+			button.custom_minimum_size.y = 64
+			button.pressed.connect(func(): objectives.tracked = id; objectives.enabled = true; objectives.collapsed = false; objectives.changed.emit())
+			pages.add_child(button)
+		text.text = "Objetivos opcionais, sem recompensas materiais. Contagens começam com ações comprovadas; o save antigo não registra todo o histórico."
+		return
 	for i in range(journal.discovered.size()):
 		var id := journal.discovered[i]
 		var button := Button.new()

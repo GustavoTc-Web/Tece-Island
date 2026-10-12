@@ -25,6 +25,7 @@ var utility_buttons: HBoxContainer
 var base_view: BaseView
 var journal_view: JournalView
 var journal_button: Button
+var objective_button: Button
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -115,7 +116,7 @@ func initialize(source: ResourceInventory) -> void:
 	add_child(utility_buttons)
 	var sound := Button.new()
 	sound.text = "Som"
-	sound.custom_minimum_size = Vector2(88, 52)
+	sound.custom_minimum_size = Vector2(84, 52)
 	sound.pressed.connect(func():
 		if combat_options == null:
 			combat_options = CombatOptions.new()
@@ -125,7 +126,7 @@ func initialize(source: ResourceInventory) -> void:
 	utility_buttons.add_child(sound)
 	var base := Button.new()
 	base.text = "Base"
-	base.custom_minimum_size = Vector2(88, 52)
+	base.custom_minimum_size = Vector2(84, 52)
 	base.pressed.connect(func(): open_base())
 	utility_buttons.add_child(base)
 	utility_buttons.position.x = -92
@@ -221,6 +222,7 @@ func set_panel(panel: String) -> void:
 	if base_view != null: base_view.visible = panel == "base"
 	if journal_view != null: journal_view.visible = panel == "journal"
 	if utility_buttons != null: utility_buttons.visible = panel == "" and not showing_death
+	if objective_button != null: refresh_objective()
 	panel_toggled.emit(panel != "")
 
 
@@ -245,11 +247,33 @@ func initialize_journal(source: IslandJournal) -> void:
 	journal_view.visible = false
 	journal_button = Button.new()
 	journal_button.text = "Diário · J"
-	journal_button.custom_minimum_size = Vector2(88, 52)
+	journal_button.custom_minimum_size = Vector2(84, 52)
+	journal_button.add_theme_font_size_override("font_size", 16)
+	journal_button.clip_text = true
 	journal_button.pressed.connect(func(): set_panel("journal"))
 	utility_buttons.add_child(journal_button)
-	utility_buttons.position.x = -138
-	source.changed.connect(func(): journal_button.text = "Diário · %d novas" % source.unread.size() if not source.unread.is_empty() else "Diário · J")
+	utility_buttons.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	utility_buttons.position = Vector2(420, 16)
+	source.changed.connect(func(): journal_button.text = "Diário · %d" % source.unread.size() if not source.unread.is_empty() else "Diário · J")
+
+func initialize_objectives(source: IslandObjectives) -> void:
+	journal_view.objectives = source
+	source.changed.connect(journal_view.refresh)
+	objective_button = Button.new()
+	objective_button.position = Vector2(420, 76)
+	objective_button.custom_minimum_size = Vector2(260, 48)
+	objective_button.add_theme_font_size_override("font_size", 14)
+	objective_button.clip_text = true
+	objective_button.pressed.connect(func(): source.collapsed = not source.collapsed; source.changed.emit())
+	add_child(objective_button)
+	source.changed.connect(refresh_objective)
+	refresh_objective()
+
+func refresh_objective() -> void:
+	var source := journal_view.objectives
+	objective_button.visible = source.enabled and current_panel == "" and not showing_death
+	var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
+	objective_button.text = "Objetivo ▸" if source.collapsed else "%s · %d/%d ▾" % [goal.title, source.values[source.tracked], goal.target]
 
 func open_base(target: PlacedStructure = null) -> void:
 	if network_mode:
