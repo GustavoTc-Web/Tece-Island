@@ -320,9 +320,8 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		var slot: Dictionary = data[index]
 		var text := "Mãos"
 		if not slot.is_empty():
-			text = ItemCatalog.title(slot.item).replace(" de ", "\n").replace("Carne ", "Carne\n").replace("Fibra ", "Fibra\n") + " ×" + str(slot.quantity)
-			if slot.item == "cantil": text += " · %d/3" % slot.get("water", 0)
-		quick_buttons[index].text = "%d\n%s" % [index + 1, text]
+			text = ItemCatalog.quick_title(slot.item)
+		quick_buttons[index].text = "%d %s\n%s" % [index + 1, text, ("%d/3 doses" % slot.get("water", 0) if slot.get("item", "") == "cantil" else "×%d" % slot.get("quantity", 0))]
 		quick_buttons[index].modulate = Color("f2d786") if inventory.selected_index == index else Color.WHITE
 	for index in range(slot_buttons.size()):
 		var slot: Dictionary = data[index]

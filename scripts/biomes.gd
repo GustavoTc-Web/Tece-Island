@@ -24,8 +24,7 @@ func initialize(world: Node2D) -> void:
 	for point in [Vector2(3060, 1400), Vector2(3670, 1100), Vector2(4020, 230), Vector2(4500, 1350), Vector2(5180, 1020)]:
 		world.add_obstacle(world.ROCK, point)
 	# Poças e cercas têm colisões, deixando o corredor horizontal e os acessos livres.
-	for rect in [Rect2(2450, 400, 130, 85), Rect2(3390, 250, 180, 100), Rect2(2770, 1250, 170, 90), Rect2(3500, 940, 160, 70)]:
-		obstacle(rect)
+	# Ponds are traversable water, queried by WorldTerrain; fences remain solid.
 	for rect in [Rect2(3970, 1040, 12, 160), Rect2(4440, 240, 180, 12), Rect2(5050, 1150, 150, 12)]:
 		obstacle(rect)
 

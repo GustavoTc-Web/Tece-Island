@@ -39,7 +39,8 @@ func update_preview(point: Vector2) -> void:
 	queue_redraw()
 
 func can_place(point: Vector2) -> bool:
-	if not Rect2(Vector2(48, 48), map_size - Vector2(96, 96)).has_point(point):
+	if player.terrain_enabled and not WorldTerrain.solid_ground(point, Vector2(64, 48)): return false
+	if not player.terrain_enabled and not Rect2(Vector2(48, 48), map_size - Vector2(96, 96)).has_point(point):
 		return false
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(64, 48)
@@ -50,7 +51,7 @@ func can_place(point: Vector2) -> bool:
 	return player.get_world_2d().direct_space_state.intersect_shape(query).is_empty()
 
 func confirm() -> bool:
-	if not active or get_tree().paused or not can_place(preview_point):
+	if not active or get_tree().paused or player.global_position.distance_to(preview_point) > placement_distance + 6 or not can_place(preview_point):
 		return false
 	if not inventory.consume_slot(slot_index, item):
 		cancel()

@@ -107,7 +107,7 @@ func _consume(plan: Array[Dictionary], item: String, amount: int) -> void:
 
 func craft_error(id: String) -> String:
 	if not ResourceRules.RECIPES.has(id): return "Receita desconhecida"
-	if id == "carne_cozida" and not cooking_available: return "Prepare perto de uma fogueira acesa"
+	if ResourceRules.crafting_group(id) == "Fogueira" and not cooking_available: return "Prepare perto de uma fogueira acesa"
 	if ItemCatalog.is_equippable(id) and count_item(id) > 0: return "Ferramenta já fabricada"
 	if id == "mochila" and not backpack.is_empty(): return "Bolsa nível 1 já equipada"
 	var recipe: Dictionary = ResourceRules.RECIPES[id]

@@ -23,6 +23,8 @@ var identity_label: String = ""
 var identity_color := Color("d9a441")
 var poison_remaining := 0.0
 var poison_tick := 0.0
+var terrain_enabled := false
+var swimming := false
 
 func apply_poison(duration: float = 3.0) -> void:
 	if dead or not simulation_authority: return
@@ -111,7 +113,11 @@ func step_movement(delta: float, direction: Vector2) -> void:
 		return
 	# get_vector limita o comprimento a 1: a diagonal não fica mais rápida.
 	direction = direction.limit_length(1.0)
-	velocity = direction * speed
+	var water: bool = terrain_enabled and WorldTerrain.is_water(global_position)
+	if water != swimming:
+		swimming = water
+		queue_redraw()
+	velocity = direction * speed * (WorldTerrain.SWIM_SPEED if swimming else 1.0)
 	if direction != Vector2.ZERO:
 		facing = direction
 		queue_redraw()
@@ -121,6 +127,9 @@ func step_movement(delta: float, direction: Vector2) -> void:
 
 
 func _draw() -> void:
+	if swimming:
+		draw_arc(Vector2(0, -3), 21, 0, PI, 16, Color("94c8db"), 3)
+		draw_string(ThemeDB.fallback_font, Vector2(-15, -52), "Nado", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("c2e4e9"))
 	if poison_remaining > 0:
 		draw_arc(Vector2.ZERO, 17, 0, TAU, 20, Color("89c866"), 2)
 		draw_string(ThemeDB.fallback_font, Vector2(-19, -52), "Veneno", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("b0db87"))

@@ -37,7 +37,7 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-5/6. Peixes e Garça-azul, terreno aquático e nado. Depois Ruínas/expansão/minimapa.
+7. Ruínas Escuras; depois expansão/minimapa, poços e peças de base.
 
 ## Etapa 2: bolsas
 
@@ -91,6 +91,27 @@ Validação: 18 verificações Godot (desvio, paredes, veneno, pausa, respawn,
 distribuições e limite compartilhado), 25 regressões baú/arco/save.
 Capturas Web desktop e resolução de celular revisadas, sem erros do navegador.
 Não houve teste em aparelho físico. Etapa 3: commit dbfef4b.
+
+## Etapas 5/6: animais e Aquático
+
+Implementadas juntas por dependência do terreno: lambari/tilápia com aparências
+distintas, cada um deixa uma carne de peixe; receita e consumo de peixe cozido
+na fogueira. Peixes permanecem na água, com colisão e drops coletáveis pelo
+combate/controle existentes. Garça-azul azul/cinza, bico/penas/pernas, fuga rápida,
+colisão pequena, uma carne; chance 2% por tentativa válida, intervalo >=60 s,
+no máximo uma ave. Fixture força o sorteio apenas para testar, não no jogo.
+
+Duas regiões Aquáticas a oeste/norte, sem deslocar coordenadas antigas.
+Amostragem de terreno: 78,9% água; ilhas, margens e passagens conectadas.
+Nado 60% com indicação visual, retorno automático à velocidade terrestre.
+Construção requer solo e drops usam limites atuais. Bordas físicas agrupadas.
+
+Validação: 29 verificações Godot, 10 de navegador mouse/toque (caçar e coletar
+peixe na água, movimento e transição); 12 fabricação e 25 baú/save continuam
+passando. Capturas da ave/água revisadas. Rótulos da barra rápida reduzidos a
+duas linhas para não cortar carne de peixe no rodapé. Nenhum celular físico.
+Etapa 4: commit d06789b. Ainda faltam Ruínas, outras regiões, minimapa, poços,
+peças de base e publicação final das etapas de gameplay.
 
 ## Etapas seguintes solicitadas
 

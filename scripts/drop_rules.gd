@@ -11,7 +11,9 @@ static func accessible_point(player: CharacterBody2D, map_size: Vector2) -> Vect
 	for radius in [32.0, 48.0, 16.0, 0.0]:
 		for i in range(8):
 			var point: Vector2 = player.global_position + player.facing.rotated(i * TAU / 8) * radius
-			if not Rect2(Vector2(32, 32), map_size - Vector2(64, 64)).has_point(point): continue
+			if player.get("terrain_enabled") == true:
+				if not WorldTerrain.contains(point): continue
+			elif not Rect2(Vector2(32, 32), map_size - Vector2(64, 64)).has_point(point): continue
 			query.transform = Transform2D(0, point)
 			if not player.get_world_2d().direct_space_state.intersect_shape(query).is_empty(): continue
 			var ray := PhysicsRayQueryParameters2D.create(player.global_position, point, 1)

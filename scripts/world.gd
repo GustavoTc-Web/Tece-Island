@@ -8,9 +8,23 @@ const BUSH := preload("res://scenes/obstacles/bush.tscn")
 var persistence_enabled := false
 var progress_store: WorldProgress
 var save_clock := 0.0
+var terrain: WorldTerrain
 
 
 func _ready() -> void:
+	terrain = WorldTerrain.new()
+	terrain.name = "Terrain"
+	add_child(terrain)
+	move_child(terrain, 0)
+	$Borders.collision_layer = 0
+	$Borders.queue_free()
+	terrain.build_boundaries()
+	$WorldObjects/Player.terrain_enabled = true
+	var camera: Camera2D = $WorldObjects/Player/Camera2D
+	camera.limit_left = int(WorldTerrain.BOUNDS.position.x)
+	camera.limit_top = int(WorldTerrain.BOUNDS.position.y)
+	camera.limit_right = int(WorldTerrain.BOUNDS.end.x)
+	camera.limit_bottom = int(WorldTerrain.BOUNDS.end.y)
 	# O mundo conecta os componentes; o inventário não depende da interface.
 	$Inventory.changed.connect($HUD.update_counts)
 	$WorldObjects/Player/Interaction.target_changed.connect($HUD.show_target)
@@ -164,6 +178,7 @@ func _spawn_drop(resource: String, amount: int) -> void:
 
 
 func _draw() -> void:
+	draw_rect(WorldTerrain.BOUNDS.grow(1000), Color("182b29"))
 	draw_rect(Rect2(Vector2.ZERO, MAP_SIZE), Color("567c46"))
 	# Semente local fixa: detalhes visuais não mudam entre execuções.
 	var random := RandomNumberGenerator.new()
@@ -179,4 +194,3 @@ func _draw() -> void:
 	draw_line(Vector2(1152, 32), Vector2(1152, 1504), trail, 104.0)
 	draw_circle(Vector2(1152, 768), 155.0, trail)
 	draw_arc(Vector2(1152, 768), 140.0, 0.0, TAU, 64, Color("89955d"), 2.0)
-	draw_rect(Rect2(Vector2.ZERO, MAP_SIZE), Color("344e36"), false, 32.0)

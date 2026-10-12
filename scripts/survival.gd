@@ -45,11 +45,11 @@ func drink() -> String:
 func use_slot(inventory: ResourceInventory, index: int) -> String:
 	if player.dead: return "Você precisa reaparecer"
 	var item: String = inventory.slot_data(index).get("item", "")
-	if item == "carne_cozida":
+	if item in ["carne_cozida", "peixe_cozido"]:
 		if not inventory.consume_slot(index, item): return "Item indisponível"
 		hunger = minf(max_hunger, hunger + food_restores)
 		changed.emit(hunger, thirst)
-		return "Carne cozida: +%d fome" % food_restores
+		return "%s: +%d fome" % [ItemCatalog.title(item), food_restores]
 	if item == "cantil":
 		if not inventory.use_water(index): return "Cantil vazio — encha em um poço"
 		return drink()

@@ -57,6 +57,25 @@ func command(args: Array) -> void:
 				world.get_node("WorldObjects").add_child(enemy)
 				enemy.set_physics_process(false)
 				if kind == "esqueleto": enemy.try_attack()
+		"aquatic":
+			player.position = Vector2(-1000, 300)
+			for animal in get_tree().get_nodes_in_group("animals"):
+				animal.set_physics_process(false)
+				if animal.global_position.distance_to(player.position) < 300: animal.queue_free()
+			var fish := NeutralAnimal.new()
+			fish.kind = "lambari"
+			fish.position = player.position + Vector2(55, 0)
+			fish.player = player
+			fish.habitat = WorldTerrain.AQUATIC[0].rect
+			world.get_node("WorldObjects").add_child(fish)
+			fish.set_physics_process(false)
+		"bird_art":
+			var bird := NeutralAnimal.new()
+			bird.kind = "garca_azul"
+			bird.position = player.position + Vector2(160, 50)
+			bird.player = player
+			world.get_node("WorldObjects").add_child(bird)
+			bird.set_physics_process(false)
 func rect(control: Control) -> Array:
 	var box := control.get_global_rect()
 	return [box.position.x, box.position.y, box.size.x, box.size.y]
@@ -85,6 +104,8 @@ func _process(_delta: float) -> void:
 			if hud.recipe_buttons[id].is_visible_in_tree(): data.recipes[id] = rect(hud.recipe_buttons[id])
 		data.search = rect(hud.crafting_view.search)
 		data.capacity = inv.capacity
+		data.swimming = player.swimming
+		data.player_screen = [player.get_global_transform_with_canvas().origin.x, player.get_global_transform_with_canvas().origin.y]
 		data.backpack = inv.backpack
 		if hud.storage_view != null and is_instance_valid(hud.storage_view.chest):
 			data.storage_slots = hud.storage_view.chest.storage.slots
