@@ -23,6 +23,8 @@ var storage_view: StorageView
 var combat_options: CombatOptions
 var utility_buttons: HBoxContainer
 var base_view: BaseView
+var journal_view: JournalView
+var journal_button: Button
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -186,7 +188,10 @@ func _input(event: InputEvent) -> void:
 		return
 	var focus := get_viewport().gui_get_focus_owner()
 	if focus is LineEdit or focus is TextEdit: return
-	if event.is_action_pressed("crafting"):
+	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_J and journal_button != null:
+		set_panel("" if current_panel == "journal" else "journal")
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("crafting"):
 		if network_mode:
 			show_message("Fabricação fora da arena de teste")
 			get_viewport().set_input_as_handled()
@@ -214,6 +219,7 @@ func set_panel(panel: String) -> void:
 	if storage_view != null: storage_view.visible = panel == "chest"
 	if combat_options != null: combat_options.visible = panel == "sound"
 	if base_view != null: base_view.visible = panel == "base"
+	if journal_view != null: journal_view.visible = panel == "journal"
 	if utility_buttons != null: utility_buttons.visible = panel == "" and not showing_death
 	panel_toggled.emit(panel != "")
 
@@ -230,6 +236,20 @@ func open_chest(chest: PlacedStructure) -> void:
 	storage_view.open(chest)
 	set_panel("chest")
 
+
+func initialize_journal(source: IslandJournal) -> void:
+	journal_view = JournalView.new()
+	journal_view.hud = self
+	journal_view.journal = source
+	add_child(journal_view)
+	journal_view.visible = false
+	journal_button = Button.new()
+	journal_button.text = "Diário · J"
+	journal_button.custom_minimum_size = Vector2(88, 52)
+	journal_button.pressed.connect(func(): set_panel("journal"))
+	utility_buttons.add_child(journal_button)
+	utility_buttons.position.x = -138
+	source.changed.connect(func(): journal_button.text = "Diário · %d novas" % source.unread.size() if not source.unread.is_empty() else "Diário · J")
 
 func open_base(target: PlacedStructure = null) -> void:
 	if network_mode:

@@ -64,6 +64,7 @@ func update_interaction_label(_message: String) -> void:
 	var caption := "Interagir"
 	if is_instance_valid(pickup):
 		if pickup is ResourceDrop: caption = "Coletar"
+		elif pickup is ExpeditionRecord: caption = "Ler registro"
 		elif pickup is WaterWell: caption = "Beber"
 		elif pickup is PlacedStructure: caption = {"cama": "Usar cama", "fogueira": "Cozinhar", "bau": "Abrir", "porta_madeira": "Fechar" if pickup.door_open else "Abrir"}.get(pickup.kind, "Interagir")
 		else: caption = "Abrir"

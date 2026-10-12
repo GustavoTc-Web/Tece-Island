@@ -18,6 +18,7 @@ var activity_clock := 0.0
 var last_region := ""
 var initial_progress := {}
 var region_wells := {}
+var journal: IslandJournal
 
 
 func _ready() -> void:
@@ -132,6 +133,10 @@ func _ready() -> void:
 	ruins.name = "Ruins"
 	add_child(ruins)
 	ruins.initialize(self, world_seed)
+	journal = IslandJournal.new()
+	add_child(journal)
+	journal.initialize(self)
+	$HUD.initialize_journal(journal)
 	var previous_wells: Dictionary = initial_progress.get("region_wells", {}) if initial_progress.get("region_wells", {}) is Dictionary else {}
 	if NaturalWells.valid_metadata(previous_wells):
 		region_wells = NaturalWells.generate(world_seed, previous_wells, initial_progress.get("structures", []) if initial_progress.get("structures", []) is Array else [])

@@ -16,6 +16,7 @@ func capture() -> Dictionary:
 	result.explored = world.minimap.explored.duplicate(true)
 	result.region_wells = world.region_wells.duplicate(true)
 	result.wells_policy = "fixed"
+	result.journal = world.journal.capture()
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -57,6 +58,13 @@ func load_progress() -> void:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
 	# Validate all inventories before changing anything in the running world.
+	var journal_check := IslandJournal.new()
+	if not data.get("journal", {}) is Dictionary or not journal_check.restore(data.get("journal", {})):
+		writable = false
+		journal_check.free()
+		world.get_node("HUD").show_message("Diário incompatível: save original preservado.")
+		return
+	journal_check.free()
 	var validation := ResourceInventory.new()
 	var valid := validation.restore_state(data.inventory)
 	validation.free()
@@ -85,6 +93,7 @@ func load_progress() -> void:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
 	world.get_node("Inventory").restore_state(data.inventory)
+	world.journal.restore(data.get("journal", {}))
 	world.minimap.explored = data.get("explored", {}).duplicate(true)
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	var player_state: Dictionary = data.get("player", {})

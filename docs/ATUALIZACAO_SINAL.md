@@ -20,7 +20,13 @@ contas. Diário e objetivos inexistentes. Baseline: 18 testes de monstros passam
    cama desmontada limpa retorno; naturais não entram na seleção.
    Validação: 14 testes de nomes/transferência/save/desmontagem; regressões de
    baú/arco/save e bases. Etapa 1 registrada em 88f0cef.
-3. Pendente: registros originais, coleta e diário.
+3. Implementado: O Último Sinal, três registros originais de 40–80 palavras na
+   casa da Floresta (550,1250), fazenda do Pântano (3250,1120) e primeiro templo
+   das ruínas a oeste. Pistas direcionam entre locais reais. Coleta E/toque sem
+   inventário, IDs únicos, ordem/novas páginas persistidas, Diário por J/botão,
+   texto 22px com rolagem. Validação: 15 verificações incluindo inventário cheio,
+   coleta pelo sistema existente e reload sem reaparecimento.
+   Etapa 2 registrada em e0cac1c.
 4. Pendente: objetivos opcionais com evidências persistidas.
 5. Pendente: estados reais de gravação, saves por UID e importação legada explícita.
 6. Pendente: testes nativos/Web/toque, commits, push e verificação do Pages.
