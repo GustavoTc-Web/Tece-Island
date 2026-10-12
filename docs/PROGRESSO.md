@@ -14,13 +14,31 @@ incluindo rejeição real de credenciais inválidas. Sem erros na exportação W
 Validação real informada pelo usuário: cadastro, confirmação, login e recuperação.
 Logout de uma sessão real, renovação prolongada e celular físico: verificação manual.
 
-Publicação desta etapa: commit/deploy em andamento; atualizar após confirmação.
+Publicação confirmada: implementação 0d76e9c, merge preservando README remoto
+47b0114. Actions 38269574352 concluído com sucesso. Tela de login do Pages
+verificada em navegador, mouse e toque, incluindo rejeição real pelo Firebase.
+
+## Etapa 1: nitidez e fabricação
+
+Implementado: canvas considera DPR, limitado a 2 para conter custo de GPU,
+ResizeObserver e acompanhamento de mudanças de densidade. Canvas antes em
+852×393 para tela CSS 852×393 com DPR 3; depois 1704×786. Campo de visão
+1170×540 preservado. Desktop DPR 1 permanece 960×540. Texturas usam nearest.
+Categorias Ferramentas/Recursos/Alimentos, busca, ícone do resultado, quantidade,
+ingredientes disponíveis/necessários e motivo de bloqueio visível.
+Cozidos aparecem exclusivamente na interface da fogueira.
+
+Validação: 12 verificações Godot, 20 verificações de navegador (mouse e toque
+emulado), inclusive multitouch com DPR 2 e perda de foco; 10 de autenticação.
+Capturas da mesma posição antes/depois em .tools/screenshots/sharpness-*.
+Fixture de gameplay explicitamente offline numa cópia, excluída da publicação;
+não representa login real. Nenhum teste em celular físico.
+Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/classes/class_viewport.html
 
 ## Próxima etapa
 
-1. Investigar nitidez comparando a mesma cena em desktop e resolução de celular.
-2. Organizar receitas em Ferramentas, Recursos e Alimentos; cozidos somente na fogueira.
-3. Acrescentar apresentação de resultado, quantidade e ingredientes disponíveis/necessários.
+2. Bolsas de quatro níveis: melhorias atômicas, capacidade, preservação de itens.
+Depois baú/arco/flechas e persistência; conferir saves e backup antes de migrar.
 
 ## Etapas seguintes solicitadas
 

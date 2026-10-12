@@ -29,6 +29,14 @@ func command(args: Array) -> void:
 			var cycle: DayNightCycle = world.get_node("DayNight")
 			cycle.elapsed = cycle.day_duration + 40
 			cycle.refresh()
+		"fire":
+			var fire: PlacedStructure = load("res://scenes/placed_structure.tscn").instantiate()
+			fire.kind = "fogueira"
+			fire.system = world.get_node("Structures")
+			fire.position = player.position + Vector2(65, 0)
+			world.get_node("WorldObjects").add_child(fire)
+			inv.cooking_available = true
+			fire.interact(inv)
 func rect(control: Control) -> Array:
 	var box := control.get_global_rect()
 	return [box.position.x, box.position.y, box.size.x, box.size.y]
@@ -53,7 +61,12 @@ func _process(_delta: float) -> void:
 		data.merge({"position":[player.position.x,player.position.y], "slots":inv.slots, "selected":inv.selected_index, "panel":hud.current_panel, "aim":[interaction.touch_aim.x,interaction.touch_aim.y], "move":[player.touch_movement.x,player.touch_movement.y], "mouse_held":interaction.mouse_held, "hunger":player.get_node("Needs").hunger, "thirst":player.get_node("Needs").thirst, "placing":structures.active, "valid":structures.valid, "structures":[], "quick":[], "inventory_buttons":[], "recipes":{}, "fps":Engine.get_frames_per_second(), "day":world.get_node("DayNight").day_number})
 		for index in range(5): data.quick.append(rect(hud.quick_buttons[index]))
 		for button in hud.slot_buttons: data.inventory_buttons.append(rect(button))
-		for id in hud.recipe_buttons: data.recipes[id] = rect(hud.recipe_buttons[id])
+		for id in hud.recipe_buttons:
+			if hud.recipe_buttons[id].is_visible_in_tree(): data.recipes[id] = rect(hud.recipe_buttons[id])
+		data.search = rect(hud.crafting_view.search)
+		data.recipe_descriptions = {}
+		for id in hud.crafting_view.labels:
+			data.recipe_descriptions[id] = hud.crafting_view.labels[id].text
 		for structure in world.get_node("WorldObjects").get_children():
 			if structure is PlacedStructure: data.structures.append({"kind":structure.kind,"x":structure.position.x,"y":structure.position.y})
 		data.scroll = hud.get_node("InventoryPanel/Panel/Scroll").scroll_vertical

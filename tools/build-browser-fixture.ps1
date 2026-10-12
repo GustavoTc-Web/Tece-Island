@@ -16,6 +16,13 @@ foreach ($taskName in @("project.godot", "icon.svg", "export_presets.cfg")) {
 New-Item -ItemType Directory -Force (Join-Path $taskCopy "tests") | Out-Null
 Copy-Item -Path (Join-Path $taskRoot "tests/browser_fixture.*") -Destination (Join-Path $taskCopy "tests") -Force
 if ($AuthPreview) { Copy-Item -Path (Join-Path $taskRoot "tests/auth_ui_fixture.*") -Destination (Join-Path $taskCopy "tests") -Force }
+if (-not $AuthPreview) {
+    # Offline gameplay fixture only. The source and published config stay mandatory.
+    $taskConfigPath = Join-Path $taskCopy "config/firebase-public.json"
+    $taskConfig = Get-Content -LiteralPath $taskConfigPath -Raw | ConvertFrom-Json
+    $taskConfig.enabled = $false
+    $taskConfig | ConvertTo-Json | Set-Content -LiteralPath $taskConfigPath -Encoding UTF8
+}
 $taskProject = Join-Path $taskCopy "project.godot"
 $taskScene = if ($AuthPreview) { "res://tests/auth_ui_fixture.tscn" } else { "res://tests/browser_fixture.tscn" }
 $taskText = [IO.File]::ReadAllText($taskProject).Replace("res://scenes/main.tscn", $taskScene)

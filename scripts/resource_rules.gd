@@ -29,6 +29,22 @@ static func combat_damage(tool: String) -> int:
 	return COMBAT_DAMAGE.get(tool, 5)
 
 
+static func crafting_group(id: String) -> String:
+	var recipe: Dictionary = RECIPES.get(id, {})
+	if recipe.get("cooking", id == "carne_cozida"): return "Fogueira"
+	if recipe.get("category", "") in ["machado", "picareta", "espada", "arco", "flechas"]: return "Ferramentas"
+	if recipe.get("category", "") == "comida": return "Alimentos"
+	return "Recursos"
+
+
+static func ingredients(id: String) -> Dictionary:
+	var recipe: Dictionary = RECIPES.get(id, {})
+	var result := {}
+	for pair in [["wood", "madeira"], ["stone", "pedra"], ["fiber", "fibra"], ["meat", "carne_crua"], ["thread", "linha"], ["glass", "vidro"]]:
+		if int(recipe.get(pair[0], 0)) > 0: result[pair[1]] = int(recipe[pair[0]])
+	return result
+
+
 static func hit_interval(tool: String) -> float:
 	if tool == "maos":
 		return INTERVAL.maos

@@ -18,6 +18,7 @@ var quick_buttons: Array[Button] = []
 var moving_slot := -1
 var active_well: WaterWell
 var needs_bars: Dictionary = {}
+var crafting_view: CraftingView
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -26,25 +27,8 @@ func initialize(source: ResourceInventory) -> void:
 	inventory.changed.connect(_refresh_inventory)
 	inventory.changed.connect(func(_wood, _stone): show_equipment(inventory.equipped_tool()))
 	inventory.equipment_changed.connect(show_equipment)
-	for id in ResourceRules.RECIPES:
-		var recipe: Dictionary = ResourceRules.RECIPES[id]
-		var row := HBoxContainer.new()
-		var label := Label.new()
-		label.text = "%s · %d madeira / %d pedra / %d fibra" % [recipe.name, recipe.wood, recipe.stone, recipe.get("fiber", 0)]
-		if recipe.has("meat"): label.text += " / %d carne crua" % recipe.meat
-		label.add_theme_font_size_override("font_size", 14)
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.custom_minimum_size.x = 300
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(label)
-		var button := Button.new()
-		button.text = "Fabricar"
-		button.focus_mode = Control.FOCUS_NONE
-		button.custom_minimum_size.x = 110
-		button.pressed.connect(_craft.bind(id))
-		row.add_child(button)
-		$Crafting/Panel/Rows/Scroll/Recipes.add_child(row)
-		recipe_buttons[id] = button
+	crafting_view = CraftingView.new()
+	crafting_view.initialize(self, inventory)
 	_sync_slots()
 	var backpack_row := HBoxContainer.new()
 	backpack_row.name = "BackpackSlot"
@@ -182,7 +166,7 @@ func _input(event: InputEvent) -> void:
 			show_message("Fabricação fora da arena de teste")
 			get_viewport().set_input_as_handled()
 			return
-		set_panel("" if current_panel == "crafting" else "crafting")
+		set_panel("" if current_panel in ["crafting", "cooking"] else "crafting")
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("inventory"):
 		set_panel("" if current_panel == "inventory" else "inventory")
@@ -198,10 +182,15 @@ func set_panel(panel: String) -> void:
 	current_panel = panel
 	moving_slot = -1
 	if has_node("Quickbar"): $Quickbar.visible = panel == "" and not showing_death
-	$Crafting.visible = panel == "crafting"
+	$Crafting.visible = panel in ["crafting", "cooking"]
+	if $Crafting.visible: crafting_view.open(panel == "cooking")
 	$InventoryPanel.visible = panel == "inventory"
 	if has_node("WellPanel"): $WellPanel.visible = panel == "well"
 	panel_toggled.emit(panel != "")
+
+
+func open_cooking() -> void:
+	set_panel("cooking")
 
 
 func update_health(current: int, maximum: int) -> void:
@@ -230,9 +219,10 @@ func _request_respawn() -> void:
 func _craft(recipe_id: String) -> void:
 	if network_mode:
 		return
-	if current_panel != "crafting":
+	if current_panel not in ["crafting", "cooking"]:
 		return
-	if recipe_id == "carne_cozida":
+	if ResourceRules.crafting_group(recipe_id) == "Fogueira":
+		if current_panel != "cooking": return
 		inventory.cooking_available = get_parent().get_node("Structures").near_fire(get_parent().get_node("WorldObjects/Player").global_position)
 	if inventory.craft(recipe_id):
 		show_message("Fabricado: " + ResourceRules.RECIPES[recipe_id].name)
@@ -303,12 +293,7 @@ func _well_action(action: String) -> void:
 
 func _refresh_recipes(wood: int, stone: int) -> void:
 	$Crafting/Panel/Rows/Available.text = "Disponível: %d madeira · %d pedra · %d fibra" % [wood, stone, inventory.count_item("fibra")]
-	for id in recipe_buttons:
-		var button: Button = recipe_buttons[id]
-		var error := inventory.craft_error(id)
-		button.disabled = error != ""
-		button.tooltip_text = error
-		button.text = "Fabricar"
+	if crafting_view != null: crafting_view.refresh()
 
 
 func _refresh_inventory(_wood: int, _stone: int) -> void:

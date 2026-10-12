@@ -37,7 +37,7 @@ func set_highlighted(value: bool) -> void:
 func interact(_inventory: ResourceInventory) -> String:
 	if kind == "cama": return system.use_bed(self)
 	_inventory.cooking_available = system.near_fire(system.player.global_position)
-	system.hud.set_panel("crafting")
+	system.hud.open_cooking()
 	return "Receita: 1 carne crua + 1 madeira → 1 carne cozida"
 
 func _process(delta: float) -> void:
