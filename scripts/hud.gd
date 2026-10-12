@@ -153,7 +153,7 @@ func _remove_backpack() -> void:
 		show_message("Mochilas fora da arena de teste")
 		return
 	if not inventory.remove_backpack():
-		show_message("Remoção bloqueada: itens e mochila precisam caber em 7 espaços.")
+		show_message("Remoção bloqueada: esvazie os espaços extras e reserve espaço para a bolsa.")
 
 
 func _input(event: InputEvent) -> void:
@@ -302,7 +302,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		selected_slot = -1
 	$InventoryPanel/Panel/Scroll/Rows/Title.text = "Inventário · %d espaços · I / Esc para fechar" % inventory.capacity
 	if $InventoryPanel/Panel/Scroll/Rows.has_node("BackpackSlot"):
-		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.text = "Bolsa nível 1 — +2 espaços · Retirar" if not inventory.backpack.is_empty() else "Vazio"
+		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.text = ItemCatalog.title(inventory.backpack.item) + " · Retirar" if not inventory.backpack.is_empty() else "Vazio"
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.disabled = inventory.backpack.is_empty()
 	var data := inventory.slots
 	for index in range(quick_buttons.size()):
@@ -325,7 +325,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		slot_buttons[index].text = "%d\n%s" % [index + 1, title]
 		slot_buttons[index].modulate = Color("f2d786") if index == selected_slot else Color.WHITE
 	var item: String = data[selected_slot].get("item", "") if selected_slot >= 0 else ""
-	$InventoryPanel/Panel/Scroll/Rows/Equip.disabled = not ItemCatalog.is_equippable(item) and item != "mochila"
+	$InventoryPanel/Panel/Scroll/Rows/Equip.disabled = not ItemCatalog.is_equippable(item) and ItemCatalog.bag_level(item) == 0
 	$InventoryPanel/Panel/Scroll/Rows/Selection.text = "Selecionado: " + ItemCatalog.title(item) if item != "" else "Selecione ferramenta, mochila ou objeto."
 
 

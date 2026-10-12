@@ -19,6 +19,8 @@ func command(args: Array) -> void:
 		"items":
 			inv.reset()
 			for item in request.items: inv.add_item(item)
+		"add":
+			for item in request.items: inv.add_item(item)
 		"position": player.position = Vector2(request.x, request.y)
 		"clear_drops":
 			for drop in get_tree().get_nodes_in_group("resource_drops"): drop.queue_free()
@@ -64,6 +66,8 @@ func _process(_delta: float) -> void:
 		for id in hud.recipe_buttons:
 			if hud.recipe_buttons[id].is_visible_in_tree(): data.recipes[id] = rect(hud.recipe_buttons[id])
 		data.search = rect(hud.crafting_view.search)
+		data.capacity = inv.capacity
+		data.backpack = inv.backpack
 		data.recipe_descriptions = {}
 		for id in hud.crafting_view.labels:
 			data.recipe_descriptions[id] = hud.crafting_view.labels[id].text

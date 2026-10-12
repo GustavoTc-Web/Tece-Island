@@ -94,7 +94,8 @@ func refresh() -> void:
 		if visible: count += 1
 		var lines := PackedStringArray()
 		for item in ResourceRules.ingredients(id):
-			lines.append("%s: %d/%d" % [ItemCatalog.title(item), inventory.count_item(item), ResourceRules.ingredients(id)[item]])
+			var available: int = 1 if inventory.backpack.get("item", "") == item else inventory.count_item(item)
+			lines.append("%s: %d/%d" % [ItemCatalog.title(item), available, ResourceRules.ingredients(id)[item]])
 		labels[id].text = "%s ×%d\n%s" % [recipe.name, int(recipe.get("quantity", 1)), " · ".join(lines)]
 		var error := inventory.craft_error(id)
 		hud.recipe_buttons[id].disabled = error != ""

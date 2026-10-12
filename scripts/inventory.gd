@@ -32,7 +32,7 @@ func _ready() -> void:
 	reset()
 
 func calculated_capacity(equipped: bool = true) -> int:
-	return base_capacity + (backpack_bonus if equipped else 0)
+	return base_capacity + (backpack_bonus * maxi(1, ItemCatalog.bag_level(backpack.get("item", ""))) if equipped else 0)
 
 func reset() -> void:
 	backpack = {}
@@ -111,18 +111,20 @@ func craft_error(id: String) -> String:
 	if ItemCatalog.is_equippable(id) and count_item(id) > 0: return "Ferramenta já fabricada"
 	if id == "mochila" and not backpack.is_empty(): return "Bolsa nível 1 já equipada"
 	var recipe: Dictionary = ResourceRules.RECIPES[id]
-	if wood < recipe.wood or stone < recipe.stone or count_item("fibra") < int(recipe.get("fiber", 0)) or count_item("carne_crua") < int(recipe.get("meat", 0)): return "Materiais insuficientes"
+	if recipe.has("previous_bag") and backpack.get("item", "") != recipe.previous_bag:
+		return "Equipe %s para melhorar" % ItemCatalog.title(recipe.previous_bag)
+	for ingredient in ResourceRules.ingredients(id):
+		if ingredient == recipe.get("previous_bag", ""): continue
+		if count_item(ingredient) < ResourceRules.ingredients(id)[ingredient]: return "Materiais insuficientes"
 	if _craft_plan(id).is_empty(): return "Inventário cheio"
 	return ""
 
 func _craft_plan(id: String) -> Array[Dictionary]:
 	var plan: Array[Dictionary] = _slots.duplicate(true)
 	var recipe: Dictionary = ResourceRules.RECIPES[id]
-	_consume(plan, "madeira", recipe.wood)
-	_consume(plan, "pedra", recipe.stone)
-	_consume(plan, "fibra", int(recipe.get("fiber", 0)))
-	_consume(plan, "carne_crua", int(recipe.get("meat", 0)))
-	if id == "mochila": return plan
+	for ingredient in ResourceRules.ingredients(id):
+		if ingredient != recipe.get("previous_bag", ""): _consume(plan, ingredient, ResourceRules.ingredients(id)[ingredient])
+	if ItemCatalog.bag_level(id) > 0: return plan
 	if id in ItemCatalog.STACKABLE:
 		for slot in plan:
 			if slot.get("item", "") == id and slot.quantity < stack_limit:
@@ -141,7 +143,7 @@ func can_craft(id: String) -> bool:
 func craft(id: String) -> bool:
 	if not can_craft(id): return false
 	_slots = _craft_plan(id)
-	if id == "mochila":
+	if ItemCatalog.bag_level(id) > 0:
 		backpack = {"item": id, "quantity": 1}
 		_resize_capacity()
 	_notify()
@@ -159,7 +161,7 @@ func select_quick(index: int) -> bool:
 
 func equip_slot(index: int) -> bool:
 	if index < 0 or index >= _slots.size(): return false
-	if _slots[index].get("item", "") == "mochila": return equip_backpack(index)
+	if ItemCatalog.bag_level(_slots[index].get("item", "")) > 0: return equip_backpack(index)
 	selected_index = index
 	_notify()
 	return true
@@ -182,7 +184,7 @@ func equip(category: String) -> bool:
 	return false
 
 func equip_backpack(index: int) -> bool:
-	if not backpack.is_empty() or slot_data(index).get("item", "") != "mochila": return false
+	if not backpack.is_empty() or ItemCatalog.bag_level(slot_data(index).get("item", "")) == 0: return false
 	backpack = _slots[index].duplicate(true)
 	_slots[index] = {}
 	_resize_capacity()
@@ -190,6 +192,9 @@ func equip_backpack(index: int) -> bool:
 	return true
 
 func backpack_plan(drop: bool = false) -> Array[Dictionary]:
+	# Never silently rearrange occupied extra spaces while removing the bag.
+	for i in range(base_capacity, _slots.size()):
+		if not _slots[i].is_empty(): return []
 	var plan: Array[Dictionary] = []
 	for slot in _slots:
 		if slot.is_empty(): continue
@@ -297,3 +302,28 @@ func apply_network_state(state: Dictionary) -> void:
 	backpack = state.get("backpack", {}).duplicate(true)
 	selected_index = int(state.get("selected", 0))
 	_notify()
+
+
+func restore_state(state: Dictionary) -> bool:
+	# Validated game state only; authentication tokens never enter this format.
+	var bag: Dictionary = state.get("backpack", {}).duplicate(true)
+	if not bag.is_empty() and ItemCatalog.bag_level(bag.get("item", "")) == 0: return false
+	var loaded: Array[Dictionary] = []
+	for slot in state.get("slots", []):
+		if not slot is Dictionary: return false
+		if not slot.is_empty() and (int(slot.get("quantity", 0)) <= 0 or (not ItemCatalog.NAMES.has(slot.get("item", "")) and not ResourceRules.RECIPES.has(slot.get("item", "")))): return false
+		loaded.append(slot.duplicate(true))
+	var expected := base_capacity + ItemCatalog.bag_level(bag.get("item", "")) * backpack_bonus
+	for i in range(expected, loaded.size()):
+		if not loaded[i].is_empty(): return false
+	loaded.resize(expected)
+	for i in range(loaded.size()):
+		if loaded[i] == null: loaded[i] = {}
+	backpack = bag
+	_slots = loaded
+	capacity = expected
+	selected_index = clampi(int(state.get("selected", 0)), -1, capacity - 1)
+	next_weapon_uid = 1
+	for slot in _slots: next_weapon_uid = maxi(next_weapon_uid, int(slot.get("uid", 0)) + 1)
+	_notify()
+	return true

@@ -1,8 +1,11 @@
 ﻿class_name ItemCatalog
 extends RefCounted
 
-const STACKABLE := ["madeira", "pedra", "fibra", "municao_pistola", "cartucho", "carne_crua", "carne_cozida"]
-const NAMES := {"madeira": "Madeira", "pedra": "Pedra", "fibra": "Fibra vegetal", "mochila": "Bolsa nível 1 — +2 espaços", "cama": "Cama simples", "fogueira": "Fogueira", "pistola": "Pistola", "espingarda": "Espingarda calibre 12", "municao_pistola": "Munição de pistola", "cartucho": "Cartuchos", "carne_crua": "Carne crua", "carne_cozida": "Carne cozida", "cantil": "Cantil"}
+const STACKABLE := ["madeira", "pedra", "fibra", "linha", "municao_pistola", "cartucho", "carne_crua", "carne_cozida"]
+const NAMES := {"madeira": "Madeira", "pedra": "Pedra", "fibra": "Fibra vegetal", "linha": "Linha", "mochila": "Bolsa nível 1 — +2 espaços", "cama": "Cama simples", "fogueira": "Fogueira", "pistola": "Pistola", "espingarda": "Espingarda calibre 12", "municao_pistola": "Munição de pistola", "cartucho": "Cartuchos", "carne_crua": "Carne crua", "carne_cozida": "Carne cozida", "cantil": "Cantil"}
+
+static func bag_level(item: String) -> int:
+	return {"mochila": 1, "mochila_2": 2, "mochila_3": 3, "mochila_4": 4}.get(item, 0)
 
 static func is_consumable(item: String) -> bool:
 	return item in ["carne_cozida", "cantil"]

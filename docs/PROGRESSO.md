@@ -37,8 +37,24 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-2. Bolsas de quatro níveis: melhorias atômicas, capacidade, preservação de itens.
-Depois baú/arco/flechas e persistência; conferir saves e backup antes de migrar.
+3. Baú/arco/flechas e persistência local. Depois monstros que fornecem linha.
+
+## Etapa 2: bolsas
+
+Quatro níveis com totais 9/11/13/15. Receita inicial preservada; melhorias usam
+a bolsa anterior equipada, madeira e linha, substituindo sem empilhar bônus.
+Retirada bloqueada com espaços extras ocupados. Restauração validada preserva
+propriedades e recusa estados inconsistentes sem substituir o estado atual.
+Linha será obtida das aranhas na etapa 4; testes desta etapa fornecem ingredientes
+na fixture, sem alterar os recursos da publicação.
+
+Validação: 25 verificações Godot e 14 verificações de interface Web com mouse
+e toque emulado (quatro melhorias, quinze slots, fechar e ausência de erros).
+As 12 verificações da fabricação continuam passando.
+Auditoria antes da persistência: código só acessa FileAccess na configuração
+pública Firebase; README informa ausência de save. Pasta user:// contém
+somente caches, logs e snapshots internos do Godot; nenhum save a converter.
+Nenhuma migração aplicada. Salvamento em disco ainda pertence à etapa 3.
 
 ## Etapas seguintes solicitadas
 

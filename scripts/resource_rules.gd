@@ -6,6 +6,9 @@ const RECIPES := {
 	"cantil": {"name": "Cantil", "category": "agua", "material": "", "wood": 2, "stone": 0, "fiber": 2},
 	"carne_cozida": {"name": "Carne cozida", "category": "comida", "material": "", "wood": 1, "stone": 0, "fiber": 0, "meat": 1},
 	"mochila": {"name": "Bolsa nível 1 — +2 espaços", "category": "mochila", "material": "", "wood": 4, "stone": 0, "fiber": 12},
+	"mochila_2": {"name": "Bolsa nível 2 — +4 espaços", "category": "mochila", "material": "", "wood": 12, "stone": 0, "thread": 4, "previous_bag": "mochila"},
+	"mochila_3": {"name": "Bolsa nível 3 — +6 espaços", "category": "mochila", "material": "", "wood": 20, "stone": 0, "thread": 8, "previous_bag": "mochila_2"},
+	"mochila_4": {"name": "Bolsa nível 4 — +8 espaços", "category": "mochila", "material": "", "wood": 30, "stone": 0, "thread": 12, "previous_bag": "mochila_3"},
 	"cama": {"name": "Cama simples", "category": "estrutura", "material": "", "wood": 8, "stone": 0, "fiber": 6},
 	"fogueira": {"name": "Fogueira", "category": "estrutura", "material": "", "wood": 4, "stone": 5, "fiber": 0},
 	"machado_madeira": {"name": "Machado de madeira", "category": "machado", "material": "madeira", "wood": 3, "stone": 0},
@@ -42,6 +45,7 @@ static func ingredients(id: String) -> Dictionary:
 	var result := {}
 	for pair in [["wood", "madeira"], ["stone", "pedra"], ["fiber", "fibra"], ["meat", "carne_crua"], ["thread", "linha"], ["glass", "vidro"]]:
 		if int(recipe.get(pair[0], 0)) > 0: result[pair[1]] = int(recipe[pair[0]])
+	if recipe.has("previous_bag"): result[recipe.previous_bag] = 1
 	return result
 
 
