@@ -102,7 +102,8 @@ atacadas e deixam duas ou três. Animais nascem em regiões com vegetação,
 separados dos monstros, com limites e reposição gradual.
 
 Mapa de **6912 × 1536 pixels**: floresta, pântano, campos secos e deserto, nove
-construções e quatro poços. Dia e noite duram cinco minutos cada, incluindo
+construções e quatro poços originais. Cada nova região mantém a regra de um
+poço fixo; a mudança de chance foi adiada. Dia e noite duram cinco minutos cada, incluindo
 transições de 30 segundos. HUD mostra tempo até a próxima fase. Monstros noturnos
 surgem gradualmente e desaparecem ao amanhecer; guardiões defendem construções de dia também.
 Construções: 70% de loot, 30% de ocupação, 2% de chance total de dois guardiões,

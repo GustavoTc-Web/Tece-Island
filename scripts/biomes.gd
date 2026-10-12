@@ -9,12 +9,6 @@ func initialize(world: Node2D) -> void:
 	for point in CACTI: obstacle(Rect2(point - Vector2(12, 10), Vector2(24, 20)))
 	for point in [Vector2(5840, 210), Vector2(5980, 990), Vector2(6550, 1320)]:
 		world.add_obstacle(world.ROCK, point)
-	for point in [Vector2(1310, 768), Vector2(3000, 768), Vector2(4520, 768), Vector2(6030, 768)]:
-		var well := WaterWell.new()
-		well.position = point
-		well.hud = world.get_node("HUD")
-		well.player = world.get_node("WorldObjects/Player")
-		world.get_node("WorldObjects").add_child(well)
 	for point in [Vector2(2470, 230), Vector2(2600, 1050), Vector2(3150, 260), Vector2(3500, 1220), Vector2(3700, 330), Vector2(3540, 500)]:
 		world.add_obstacle(world.TREE, point)
 		var tree: Node2D = world.get_node("WorldObjects").get_child(-1)

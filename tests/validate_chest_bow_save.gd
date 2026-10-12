@@ -109,7 +109,7 @@ func run() -> void:
 	var migrator := SaveStore.new()
 	migrator.path = migration_path
 	var converted := migrator.read()
-	check(converted.version == 1 and FileAccess.get_file_as_string(migration_path + ".before-v1.json") == original and FileAccess.get_file_as_string(migration_path) == original, "Conversão de fixture antiga cria backup antes de alterar estado")
+	check(converted.version == SaveStore.VERSION and FileAccess.get_file_as_string(migration_path + ".before-v%d.json" % SaveStore.VERSION) == original and FileAccess.get_file_as_string(migration_path) == original, "Conversão de fixture antiga cria backup antes de alterar estado")
 	world.queue_free()
 	restored.queue_free()
 	await process_frame

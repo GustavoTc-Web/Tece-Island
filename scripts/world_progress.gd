@@ -14,6 +14,8 @@ func capture() -> Dictionary:
 	result.player.poison_tick = player.poison_tick
 	result.world_seed = world.world_seed
 	result.explored = world.minimap.explored.duplicate(true)
+	result.region_wells = world.region_wells.duplicate(true)
+	result.wells_policy = "fixed"
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -43,9 +45,10 @@ func load_progress() -> void:
 	for field in ["structures", "drops", "wells"]:
 		if data.has(field) and not data[field] is Array:
 			writable = false
-	for field in ["resources", "loot", "player", "explored"]:
+	for field in ["resources", "loot", "player", "explored", "region_wells"]:
 		if data.has(field) and not data[field] is Dictionary:
 			writable = false
+	if data.has("region_wells") and data.region_wells is Dictionary and not NaturalWells.valid_metadata(data.region_wells): writable = false
 	if not writable:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return

@@ -37,8 +37,8 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-9. Poços persistentes: 35% por região, redução segura dos poços naturais anteriores.
-Depois peças de base e validação/publicação final.
+10. Paredes, portas e vidraças, depois validação/publicação final.
+Decisão atual do usuário: chance dos poços adiada; preservar regra fixa.
 
 ## Etapa 2: bolsas
 
@@ -146,6 +146,21 @@ Validação: 14 verificações Godot, 18 de navegador desktop e celular emulado
 18 monstros e 27 Ruínas continuam passando. Captura mobile revisada.
 Etapa 7: commit 72be039. Publicação de gameplay ainda pendente.
 
+## Etapa 9: decisão atual — manter os poços
+
+O usuário adiou expressamente os 35% e a rejeição de mundos sem poço.
+A proposta de sorteio foi retirada antes de qualquer publicação.
+Os quatro poços originais ficam em 1310,768 / 3000,768 / 4520,768 / 6030,768.
+Cada nova região segue a regra anterior de um poço fixo, em terra acessível;
+total 16. Nenhum RNG decide presença/ausência. Layout fixo persistido.
+Save versão 3 aceita formatos anteriores e guarda bytes em before-v3 antes
+de converter; também recupera a distribuição fixa caso exista save do rascunho.
+Construções e inventário preservados; poços novos evitam bases salvas.
+
+Validação: 12 verificações Godot e 10 de navegador mouse/toque (beber, encher,
+uma dose por uso, reload sem mudar layout); 26 regressões baú/arco/save.
+Etapa 8: commit 95450e7. Nada da proposta de 35% foi enviado ao GitHub.
+
 ## Etapas seguintes solicitadas
 
 2. Bolsas de quatro níveis e melhorias atômicas.
@@ -155,7 +170,7 @@ Etapa 7: commit 72be039. Publicação de gameplay ainda pendente.
 6. Aquático e nado.
 7. Ruínas Escuras e templos.
 8. Expansão para norte/sul/oeste e minimapa.
-9. Poços por região, sorteio persistente e migração segura.
+9. Poços: sorteio/redução adiados pelo usuário; regra fixa anterior preservada.
 10. Paredes, portas e vidraças.
 11. Persistência, validação final e publicação.
 

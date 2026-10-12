@@ -5,6 +5,9 @@ var callback: JavaScriptObject
 var snapshot_time := 0.0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Reproducible offline gameplay data, never authentication/session data.
+	if not FileAccess.file_exists("user://solo-progress.json"):
+		SaveStore.new().write({"version": SaveStore.VERSION, "inventory": {"slots": [], "backpack": {}, "selected": 0}, "world_seed": 77})
 	session = load("res://scenes/main.tscn").instantiate()
 	add_child(session)
 	callback = JavaScriptBridge.create_callback(command)
@@ -109,6 +112,9 @@ func _process(_delta: float) -> void:
 		data.minimap = rect(world.minimap)
 		data.explored = world.minimap.explored.size()
 		data.region = WorldTerrain.region_at(player.global_position).get("id", "")
+		data.wells = []
+		for node in world.get_node("WorldObjects").get_children():
+			if node is WaterWell: data.wells.append([node.position.x, node.position.y])
 		data.temples = []
 		for temple in world.ruins.temples: data.temples.append([temple.position.x, temple.position.y])
 		data.player_screen = [player.get_global_transform_with_canvas().origin.x, player.get_global_transform_with_canvas().origin.y]

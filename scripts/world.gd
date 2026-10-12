@@ -16,6 +16,8 @@ var current_biome := ""
 var minimap: IslandMinimap
 var activity_clock := 0.0
 var last_region := ""
+var initial_progress := {}
+var region_wells := {}
 
 
 func _ready() -> void:
@@ -24,6 +26,7 @@ func _ready() -> void:
 		var store := SaveStore.new()
 		store.path = progress_path
 		var preview := store.read()
+		initial_progress = preview
 		world_seed = int(preview.get("world_seed", world_seed))
 	terrain = WorldTerrain.new()
 	terrain.name = "Terrain"
@@ -128,11 +131,17 @@ func _ready() -> void:
 	ruins.name = "Ruins"
 	add_child(ruins)
 	ruins.initialize(self, world_seed)
+	var previous_wells: Dictionary = initial_progress.get("region_wells", {}) if initial_progress.get("region_wells", {}) is Dictionary else {}
+	if NaturalWells.valid_metadata(previous_wells):
+		region_wells = NaturalWells.generate(world_seed, previous_wells, initial_progress.get("structures", []) if initial_progress.get("structures", []) is Array else [])
+		NaturalWells.spawn(self, region_wells)
 	if persistence_enabled:
 		progress_store = WorldProgress.new()
 		progress_store.world = self
 		progress_store.store.path = progress_path
 		progress_store.load_progress()
+		# Persist the fixed layout after loading; any older/draft format has a backup.
+		if initial_progress.get("wells_policy", "") != "fixed": save_progress()
 
 func save_progress() -> bool:
 	return progress_store.save() if progress_store != null else true

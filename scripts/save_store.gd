@@ -1,6 +1,6 @@
 class_name SaveStore
 extends RefCounted
-const VERSION := 1
+const VERSION := 3
 var path := "user://solo-progress.json"
 var error := ""
 
@@ -10,7 +10,7 @@ func read() -> Dictionary:
 	var parser := JSON.new()
 	var parsed := parser.parse(FileAccess.get_file_as_string(path))
 	var data = parser.data
-	if parsed != OK or not data is Dictionary or not data.get("inventory") is Dictionary or int(data.get("version", -1)) not in [0, VERSION]:
+	if parsed != OK or not data is Dictionary or not data.get("inventory") is Dictionary or int(data.get("version", -1)) < 0 or int(data.get("version", -1)) > VERSION:
 		error = "Não foi possível carregar o progresso. O arquivo original foi preservado."
 		return {}
 	if int(data.version) < VERSION:
