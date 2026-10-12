@@ -22,6 +22,8 @@ func capture() -> Dictionary:
 		if node.is_queued_for_deletion(): continue
 		if node is PlacedStructure:
 			var state := {"kind": node.kind, "position": SaveStore.point(node.position)}
+			state.rotation = node.rotation
+			if node.kind == "porta_madeira": state.door_open = node.door_open
 			if node.kind == "bau": state.storage = node.storage.network_state()
 			result.structures.append(state)
 		elif node is ResourceDrop:
@@ -57,9 +59,13 @@ func load_progress() -> void:
 	var valid := validation.restore_state(data.inventory)
 	validation.free()
 	for state in data.get("structures", []):
-		if not state is Dictionary or state.get("kind", "") not in ["cama", "fogueira", "bau"]:
+		if not state is Dictionary or state.get("kind", "") not in ["cama", "fogueira", "bau"] + PlacedStructure.PIECES:
 			valid = false
 			break
+		if not SaveStore.vector(state.get("position"), Vector2.INF).is_finite(): valid = false
+		if state.has("door_open") and not state.door_open is bool: valid = false
+		var angle := float(state.get("rotation", 0))
+		if not is_finite(angle) or (not is_zero_approx(angle) and not is_equal_approx(angle, PI / 2)): valid = false
 		if state.kind == "bau":
 			validation = ResourceInventory.new()
 			validation.base_capacity = 12
@@ -82,7 +88,7 @@ func load_progress() -> void:
 	var player_state: Dictionary = data.get("player", {})
 	player.position = SaveStore.vector(player_state.get("position"), player.position)
 	player.health = clampi(int(player_state.get("health", 100)), 1, player.max_health)
-	player.poison_remaining = clampf(float(player_state.get("poison", 0)), 0, 3)
+	player.poison_remaining = clampf(float(player_state.get("poison", 0)), 0, 60)
 	player.poison_tick = clampf(float(player_state.get("poison_tick", 1)), 0, 1)
 	player.get_node("Needs").hunger = clampf(float(player_state.get("hunger", 100)), 0, 100)
 	player.get_node("Needs").thirst = clampf(float(player_state.get("thirst", 100)), 0, 100)
@@ -105,9 +111,11 @@ func load_progress() -> void:
 		var structure: PlacedStructure = preload("res://scenes/placed_structure.tscn").instantiate()
 		structure.kind = state.kind
 		structure.position = SaveStore.vector(state.get("position"))
+		structure.rotation = float(state.get("rotation", 0))
 		structure.system = world.get_node("Structures")
 		objects.add_child(structure)
 		if structure.kind == "bau": structure.storage.restore_state(state.storage)
+		if structure.kind == "porta_madeira": structure.set_open(bool(state.get("door_open", false)))
 		if data.has("bed") and structure.kind == "cama" and structure.position == SaveStore.vector(data.bed): world.get_node("Structures").respawn_bed = structure
 	for state in data.get("drops", []):
 		var drop: ResourceDrop = preload("res://scenes/resource_drop.tscn").instantiate()

@@ -25,7 +25,7 @@ func populate_temple(random: RandomNumberGenerator, budget: int) -> void:
 		add_child(chest)
 		chests.append(chest)
 	# A single budget is divided across all chests; adding a chest adds no loot.
-	var choices := ["madeira", "pedra", "fibra", "linha", "flecha"]
+	var choices := ["madeira", "pedra", "fibra", "linha", "flecha", "vidro"]
 	for i in range(budget):
 		var chest := chests[i % count]
 		var item: String = choices[random.randi_range(0, choices.size() - 1)]

@@ -128,7 +128,7 @@ func _process(_delta: float) -> void:
 		for id in hud.crafting_view.labels:
 			data.recipe_descriptions[id] = hud.crafting_view.labels[id].text
 		for structure in world.get_node("WorldObjects").get_children():
-			if structure is PlacedStructure: data.structures.append({"kind":structure.kind,"x":structure.position.x,"y":structure.position.y})
+			if structure is PlacedStructure: data.structures.append({"kind":structure.kind,"x":structure.position.x,"y":structure.position.y,"rotation":structure.rotation,"door_open":structure.door_open})
 		data.scroll = hud.get_node("InventoryPanel/Panel/Scroll").scroll_vertical
 		data.bed_registered = is_instance_valid(structures.respawn_bed)
 		data.placement_points = []

@@ -36,6 +36,7 @@ func _ready() -> void:
 	$Borders.queue_free()
 	terrain.build_boundaries()
 	$WorldObjects/Player.terrain_enabled = true
+	$WorldObjects/Player.collision_mask |= 8
 	var camera: Camera2D = $WorldObjects/Player/Camera2D
 	camera.limit_left = int(WorldTerrain.BOUNDS.position.x)
 	camera.limit_top = int(WorldTerrain.BOUNDS.position.y)

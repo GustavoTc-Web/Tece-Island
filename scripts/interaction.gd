@@ -120,7 +120,7 @@ func can_reach(candidate: Node2D) -> bool:
 	var distance_limit := combat_distance if candidate is ForestCreature or candidate is NeutralAnimal else interaction_distance
 	if player.global_position.distance_to(candidate.anchor()) > distance_limit:
 		return false
-	var ray := PhysicsRayQueryParameters2D.create(player.global_position, candidate.anchor(), 5)
+	var ray := PhysicsRayQueryParameters2D.create(player.global_position, candidate.anchor(), 13)
 	ray.exclude = [player.get_rid()]
 	var collision := player.get_world_2d().direct_space_state.intersect_ray(ray)
 	return collision.is_empty() or collision.collider == candidate
@@ -205,7 +205,7 @@ func update_pickup() -> void:
 			var drop := node as Node2D
 			if drop.has_method("can_interact") and not drop.can_interact(): continue
 			var distance := player.global_position.distance_squared_to(drop.global_position)
-			var ray := PhysicsRayQueryParameters2D.create(player.global_position, drop.global_position, 1)
+			var ray := PhysicsRayQueryParameters2D.create(player.global_position, drop.global_position, 9)
 			var collision := player.get_world_2d().direct_space_state.intersect_ray(ray)
 			var reachable: bool = collision.is_empty() or collision.collider == drop
 			if (not drop is ResourceDrop or drop.quantity > 0) and reachable and distance <= nearest and (chosen == null or distance < nearest):

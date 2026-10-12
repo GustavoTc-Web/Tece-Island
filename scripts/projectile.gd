@@ -14,7 +14,7 @@ func _physics_process(delta: float) -> void:
 	var distance := minf(remaining, speed * delta)
 	var end := global_position + direction * distance
 	# Raycast varrido evita atravessar paredes finas entre dois frames.
-	var ray := PhysicsRayQueryParameters2D.create(global_position, end, 7 if hit_players else 5)
+	var ray := PhysicsRayQueryParameters2D.create(global_position, end, 15 if hit_players else 13)
 	ray.exclude = [shooter]
 	var collision := get_world_2d().direct_space_state.intersect_ray(ray)
 	if not collision.is_empty():

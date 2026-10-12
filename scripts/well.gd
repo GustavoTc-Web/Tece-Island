@@ -22,7 +22,7 @@ func interact(_inventory: ResourceInventory) -> String:
 	return "Poço de água potável"
 func can_interact() -> bool:
 	if not is_instance_valid(player) or player.dead or player.global_position.distance_to(global_position) > 90: return false
-	var ray := PhysicsRayQueryParameters2D.create(player.global_position, global_position, 1)
+	var ray := PhysicsRayQueryParameters2D.create(player.global_position, global_position, 9)
 	var collision := get_world_2d().direct_space_state.intersect_ray(ray)
 	return collision.is_empty() or collision.collider == self
 func _draw() -> void:

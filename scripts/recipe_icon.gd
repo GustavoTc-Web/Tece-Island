@@ -21,6 +21,10 @@ func _draw() -> void:
 	elif item == "flecha":
 		draw_line(Vector2(8, 40), Vector2(40, 8), Color("d9bd80"), 3)
 		draw_colored_polygon(PackedVector2Array([Vector2(40, 8), Vector2(28, 12), Vector2(36, 20)]), Color("c7d3d2"))
+	elif item in PlacedStructure.PIECES:
+		draw_rect(Rect2(3, 14, 42, 22), Color(0.5, 0.8, 0.88, 0.5) if item == "vidraca" else Color("967047"))
+		draw_rect(Rect2(3, 14, 42, 22), Color("a78351"), false, 3)
+		if item == "porta_madeira": draw_circle(Vector2(36, 26), 3, Color("ddcb83"))
 	elif item == "bau":
 		draw_rect(Rect2(4, 13, 40, 28), Color("a08048"))
 		draw_rect(Rect2(4, 13, 40, 10), Color("c2a35c"))

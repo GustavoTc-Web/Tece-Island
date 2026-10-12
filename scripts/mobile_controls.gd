@@ -12,6 +12,7 @@ var interact_button: Button
 var placement: HBoxContainer
 var rotate: Label
 var portrait := false
+var rotate_piece: Button
 const RADIUS := 68.0
 const DEADZONE := 0.22
 
@@ -38,14 +39,16 @@ func _ready() -> void:
 	player.get_node("Interaction").pickup_changed.connect(update_interaction_label)
 	placement = HBoxContainer.new()
 	add_child(placement)
-	for action in ["Confirmar", "Cancelar"]:
+	for action in ["Confirmar", "Cancelar", "Girar"]:
 		var button := Button.new()
 		button.text = action
 		button.custom_minimum_size = Vector2(140, 64)
 		button.add_theme_font_size_override("font_size", 20)
+		if action == "Girar": rotate_piece = button
 		button.pressed.connect(func():
 			if action == "Confirmar":
 				if not structures.confirm(): hud.show_message("Escolha terreno livre, perto do jogador.")
+			elif action == "Girar": structures.rotate_placement()
 			else: structures.cancel())
 		placement.add_child(button)
 	rotate = Label.new()
@@ -62,7 +65,7 @@ func update_interaction_label(_message: String) -> void:
 	if is_instance_valid(pickup):
 		if pickup is ResourceDrop: caption = "Coletar"
 		elif pickup is WaterWell: caption = "Beber"
-		elif pickup is PlacedStructure: caption = {"cama": "Usar cama", "fogueira": "Cozinhar", "bau": "Abrir"}.get(pickup.kind, "Interagir")
+		elif pickup is PlacedStructure: caption = {"cama": "Usar cama", "fogueira": "Cozinhar", "bau": "Abrir", "porta_madeira": "Fechar" if pickup.door_open else "Abrir"}.get(pickup.kind, "Interagir")
 		else: caption = "Abrir"
 	interact_button.text = caption
 
@@ -83,6 +86,8 @@ func layout() -> void:
 	queue_redraw()
 
 func _process(_delta: float) -> void:
+	rotate_piece.visible = structures.item in PlacedStructure.PIECES
+	placement.position.x = (get_viewport_rect().size.x - (432 if rotate_piece.visible else 284)) / 2
 	actions.visible = not portrait and hud.current_panel == "" and not hud.showing_death and not structures.active
 	placement.visible = not portrait and structures.active
 

@@ -47,7 +47,7 @@ func try_spawn() -> ForestCreature:
 	shape.radius = 18.0
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.collision_mask = 7
+	query.collision_mask = 15
 	var points: Array = SPAWN_POINTS.duplicate()
 	if player.terrain_enabled:
 		points = []

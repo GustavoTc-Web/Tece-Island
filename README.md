@@ -101,14 +101,36 @@ Coelhos fogem e deixam uma carne crua. Vacas começam passivas, fogem quando
 atacadas e deixam duas ou três. Animais nascem em regiões com vegetação,
 separados dos monstros, com limites e reposição gradual.
 
-Mapa de **6912 × 1536 pixels**: floresta, pântano, campos secos e deserto, nove
-construções e quatro poços originais. Cada nova região mantém a regra de um
+Mapa original de **6912 × 1536 pixels** preservado. A expansão tem 16 regiões:
+duas novas de cada tipo original, duas Aquáticas e duas Ruínas Escuras, para
+norte/sul/oeste. Limites de câmera: (-3072, -1536) a (6912, 3072).
+Minimapa circular mostra orientação e terreno explorado, conservado no save.
+O Aquático tem aproximadamente 80% de água, com nado a 60% da velocidade.
+Lambari/tilápia deixam uma carne de peixe cada; cozinhe na fogueira.
+Garça-azul foge rapidamente, deixa uma carne e aparece raramente.
+Ruínas mantêm escuridão, bloqueiam sono e têm quatro templos com 3–5 baús,
+seis unidades de saque por templo e limite próprio de guardiões.
+As nove construções anteriores e quatro poços originais permanecem.
+Cada nova região mantém a regra de um
 poço fixo; a mudança de chance foi adiada. Dia e noite duram cinco minutos cada, incluindo
 transições de 30 segundos. HUD mostra tempo até a próxima fase. Monstros noturnos
 surgem gradualmente e desaparecem ao amanhecer; guardiões defendem construções de dia também.
 Construções: 70% de loot, 30% de ocupação, 2% de chance total de dois guardiões,
 uma ou duas entradas de loot, sorteio de arma de 5% e peso de pistola de 75%.
 Sorteio ocorre uma vez por construção, sem gerar novos itens ao vasculhar novamente.
+
+Esqueletos e aranhas compartilham o limite noturno de cinco: esqueletos avisam
+antes de disparar flecha de dano 10; aranhas causam 4 e veneno de 3 segundos,
+um dano/s sem empilhar. Drops: flechas e linha, recolhidos pelo comando existente.
+
+Peças de base: parede (4 madeiras), porta (6 madeiras) e vidraça (4 madeiras,
+2 vidros). Vidro aparece no saque com o mesmo orçamento anterior.
+Coloque pelo inventário, ajuste prévia, use **R** ou **Girar** para orientar
+e confirme/cancele. Grade de 32 nas peças, de 8 nas demais estruturas.
+Porta abre/fecha por **E / Interagir** e não fecha sobre personagens.
+Paredes, porta fechada e vidro bloqueiam corpos/projéteis; vidro mantém visão.
+Posição, orientação e porta aberta/fechada ficam no save.
+Valores ajustáveis e referências: [docs/EQUILIBRIO.md](docs/EQUILIBRIO.md).
 
 Árvore deixa cinco madeiras, rocha quatro pedras, arbusto quatro fibras, coletadas
 do chão. Intervalos: mãos 1,20 s, madeira 0,54 s, pedra 0,36 s.

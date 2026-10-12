@@ -74,7 +74,7 @@ static func roll_contents(random: RandomNumberGenerator, weapon_chance: float = 
 		contents[weapon] = 1
 		contents[GunRules.WEAPONS[weapon].ammo] = random.randi_range(1, 3)
 	else:
-		var choices := ["madeira", "pedra", "fibra", "municao_pistola", "cartucho", "carne_crua", "carne_cozida", "cantil"]
+		var choices := ["madeira", "pedra", "fibra", "municao_pistola", "cartucho", "carne_crua", "carne_cozida", "cantil", "vidro"]
 		for i in range(random.randi_range(1, 2)):
 			var index := random.randi_range(0, choices.size() - 1)
 			contents[choices[index]] = 1 if choices[index] == "cantil" else random.randi_range(1, 3)

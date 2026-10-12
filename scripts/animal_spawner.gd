@@ -66,7 +66,7 @@ func try_bird(roll: float = -1) -> NeutralAnimal:
 	shape.radius = 10
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.collision_mask = 7
+	query.collision_mask = 15
 	for i in range(8):
 		var point: Vector2 = player.global_position + Vector2.from_angle(i * TAU / 8) * 380
 		if not rect.grow(-24).has_point(point) or not WorldTerrain.solid_ground(point): continue
@@ -93,7 +93,7 @@ func spawn(kind: String, avoid_player: bool = true) -> NeutralAnimal:
 	shape.radius = 18
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.collision_mask = 7
+	query.collision_mask = 15
 	var candidates: Array = POINTS.duplicate()
 	var region := WorldTerrain.region_at(player.global_position)
 	if region.get("id", "") in visited_regions and region.id not in ["forest", "fields", "swamp"]:

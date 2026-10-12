@@ -37,7 +37,7 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-10. Paredes, portas e vidraças, depois validação/publicação final.
+11. Verificações finais, commit/push e deploy. Gameplay ainda não publicado.
 Decisão atual do usuário: chance dos poços adiada; preservar regra fixa.
 
 ## Etapa 2: bolsas
@@ -160,6 +160,21 @@ Construções e inventário preservados; poços novos evitam bases salvas.
 Validação: 12 verificações Godot e 10 de navegador mouse/toque (beber, encher,
 uma dose por uso, reload sem mudar layout); 26 regressões baú/arco/save.
 Etapa 8: commit 95450e7. Nada da proposta de 35% foi enviado ao GitHub.
+
+## Etapa 10: peças de base
+
+Parede/porta/vidraça custam 4 madeiras / 6 madeiras / 4 madeiras+2 vidros.
+Vidro usa o orçamento de saque anterior, inclusive nos templos.
+Sistema de colocação existente: grade 32 nas peças, prévia, R/Girar para orientar,
+confirmar/cancelar PC/toque; só consome após validar alcance, terra e colisões.
+Porta aberta libera passagem; fechada bloqueia. Não fecha sobre personagens.
+Vidro transparente à visão usa camada própria que bloqueia corpos/projéteis,
+ações e coleta, preservando LOS visual. Save conserva posição, orientação
+e estado da porta. Equilíbrio documentado em docs/EQUILIBRIO.md.
+
+Validação: 25 verificações Godot e 16 de navegador mouse/toque, incluindo
+rotação, abrir/fechar, cancelamento e reload com base/porta aberta.
+Etapa dos poços fixos: commit b4f8377.
 
 ## Etapas seguintes solicitadas
 

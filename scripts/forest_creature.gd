@@ -6,6 +6,10 @@ extends CharacterBody2D
 @export var skeleton_interval := 2.5
 @export var skeleton_windup := 0.65
 @export var skeleton_arrow_speed := 240.0
+@export var skeleton_damage := 10
+@export var spider_damage := 4
+@export var spider_interval := 1.5
+@export var spider_poison_duration := 3.0
 var windup_remaining := 0.0
 var shot_direction := Vector2.RIGHT
 @export var attack_damage: int = 10
@@ -60,14 +64,15 @@ func begin_dawn() -> void:
 
 
 func _ready() -> void:
+	collision_mask |= 8
 	if kind == "esqueleto":
-		attack_damage = 10
+		attack_damage = skeleton_damage
 		attack_interval = maxf(2.5, skeleton_interval)
 		attack_range = 220
 		chase_speed = 75
 	elif kind == "aranha":
-		attack_damage = 4
-		attack_interval = 1.5
+		attack_damage = spider_damage
+		attack_interval = spider_interval
 		chase_speed = 105
 	health = max_health
 	home = global_position
@@ -110,7 +115,7 @@ func try_attack() -> bool:
 		queue_redraw()
 		return true
 	var hit: bool = player.receive_damage(attack_damage)
-	if hit and kind == "aranha" and player.has_method("apply_poison"): player.apply_poison(3)
+	if hit and kind == "aranha" and player.has_method("apply_poison"): player.apply_poison(spider_poison_duration)
 	return hit
 
 func release_arrow() -> bool:
@@ -120,7 +125,7 @@ func release_arrow() -> bool:
 	arrow.direction = shot_direction
 	arrow.speed = skeleton_arrow_speed
 	arrow.remaining = 440
-	arrow.damage = 10
+	arrow.damage = skeleton_damage
 	arrow.arrow = true
 	arrow.hit_players = true
 	arrow.shooter = get_rid()

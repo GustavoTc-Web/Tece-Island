@@ -16,38 +16,49 @@ var preview_point := Vector2.ZERO
 var valid := false
 var respawn_bed: PlacedStructure
 var placement_armed := false
+var preview_angle := 0.0
 
 func start_placement(index: int) -> bool:
 	var data := inventory.slots
-	if index < 0 or index >= data.size() or data[index].get("item", "") not in ["cama", "fogueira", "bau"]:
+	if index < 0 or index >= data.size() or data[index].get("item", "") not in ["cama", "fogueira", "bau"] + PlacedStructure.PIECES:
 		return false
 	slot_index = index
 	item = data[index].item
 	hud.set_panel("")
 	active = true
+	preview_angle = 0
 	placement_armed = false
 	set_deferred("placement_armed", true)
 	player.get_node("Interaction").set_blocked(true)
-	hud.show_message("Colocar: clique confirma · Esc / botão direito cancela")
+	hud.show_message("Colocar: clique confirma · Esc cancela" + (" · R gira" if item in PlacedStructure.PIECES else ""))
 	update_preview(player.global_position + player.facing * 85)
 	return true
 
 func update_preview(point: Vector2) -> void:
 	preview_point = player.global_position + (point - player.global_position).limit_length(placement_distance)
-	preview_point = preview_point.snapped(Vector2(8, 8))
-	valid = can_place(preview_point)
+	preview_point = preview_point.snapped(Vector2(32, 32) if item in PlacedStructure.PIECES else Vector2(8, 8))
+	valid = can_place(preview_point) and player.global_position.distance_to(preview_point) <= placement_distance + 6
 	queue_redraw()
 
+func rotate_placement() -> void:
+	if not active or item not in PlacedStructure.PIECES: return
+	preview_angle = 0.0 if preview_angle > 0 else PI / 2
+	update_preview(preview_point)
+
+func placement_size() -> Vector2:
+	if not active or item not in PlacedStructure.PIECES: return Vector2(64, 48)
+	return Vector2(16, 64) if preview_angle > 0 else Vector2(64, 16)
+
 func can_place(point: Vector2) -> bool:
-	if player.terrain_enabled and not WorldTerrain.solid_ground(point, Vector2(64, 48)): return false
+	if player.terrain_enabled and not WorldTerrain.solid_ground(point, placement_size()): return false
 	if not player.terrain_enabled and not Rect2(Vector2(48, 48), map_size - Vector2(96, 96)).has_point(point):
 		return false
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(64, 48)
+	shape.size = placement_size() - Vector2(0.5, 0.5)
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
 	query.transform = Transform2D(0, point)
-	query.collision_mask = 7
+	query.collision_mask = 15
 	return player.get_world_2d().direct_space_state.intersect_shape(query).is_empty()
 
 func confirm() -> bool:
@@ -59,6 +70,7 @@ func confirm() -> bool:
 	var structure := STRUCTURE.instantiate() as PlacedStructure
 	structure.kind = item
 	structure.position = preview_point
+	structure.rotation = preview_angle
 	structure.system = self
 	container.add_child(structure)
 	cancel()
@@ -74,7 +86,10 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion and not MobileInput.enabled:
 		update_preview(player.get_canvas_transform().affine_inverse() * event.position)
-	if event.is_action_pressed("close_panel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
+	if event.is_action_pressed("reload"):
+		rotate_placement()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("close_panel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
 		cancel()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("hit"):
@@ -110,7 +125,7 @@ func use_bed(bed: PlacedStructure) -> String:
 func near_fire(point: Vector2) -> bool:
 	for structure in get_tree().get_nodes_in_group("campfires"):
 		if point.distance_to(structure.global_position) > 100: continue
-		var ray := PhysicsRayQueryParameters2D.create(point, structure.global_position, 1)
+		var ray := PhysicsRayQueryParameters2D.create(point, structure.global_position, 9)
 		var collision := player.get_world_2d().direct_space_state.intersect_ray(ray)
 		if collision.is_empty() or collision.collider == structure: return true
 	return false
@@ -126,5 +141,5 @@ func respawn_point(fallback: Vector2) -> Vector2:
 func _draw() -> void:
 	if active:
 		var color := Color(0.3, 0.95, 0.4, 0.65) if valid else Color(1, 0.25, 0.25, 0.65)
-		draw_rect(Rect2(preview_point - Vector2(32, 24), Vector2(64, 48)), color)
+		draw_rect(Rect2(preview_point - placement_size() / 2, placement_size()), color)
 		draw_string(ThemeDB.fallback_font, preview_point + Vector2(-25, -30), ItemCatalog.title(item), HORIZONTAL_ALIGNMENT_LEFT, -1, 14)

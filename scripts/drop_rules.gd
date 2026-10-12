@@ -6,7 +6,7 @@ static func accessible_point(player: CharacterBody2D, map_size: Vector2) -> Vect
 	shape.radius = 12
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.collision_mask = 7
+	query.collision_mask = 15
 	query.exclude = [player.get_rid()]
 	for radius in [32.0, 48.0, 16.0, 0.0]:
 		for i in range(8):
@@ -16,7 +16,7 @@ static func accessible_point(player: CharacterBody2D, map_size: Vector2) -> Vect
 			elif not Rect2(Vector2(32, 32), map_size - Vector2(64, 64)).has_point(point): continue
 			query.transform = Transform2D(0, point)
 			if not player.get_world_2d().direct_space_state.intersect_shape(query).is_empty(): continue
-			var ray := PhysicsRayQueryParameters2D.create(player.global_position, point, 1)
+			var ray := PhysicsRayQueryParameters2D.create(player.global_position, point, 9)
 			if player.get_world_2d().direct_space_state.intersect_ray(ray).is_empty(): return point
 	return Vector2.INF
 

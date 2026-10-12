@@ -85,7 +85,7 @@ func reachable() -> bool:
 	if not is_instance_valid(chest) or chest.is_queued_for_deletion(): return false
 	var player: CharacterBody2D = chest.system.player
 	if player.global_position.distance_to(chest.global_position) > 90: return false
-	var ray := PhysicsRayQueryParameters2D.create(player.global_position, chest.global_position, 1)
+	var ray := PhysicsRayQueryParameters2D.create(player.global_position, chest.global_position, 9)
 	var collision := player.get_world_2d().direct_space_state.intersect_ray(ray)
 	return collision.is_empty() or collision.collider == chest
 

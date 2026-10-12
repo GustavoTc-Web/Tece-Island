@@ -20,7 +20,7 @@ func _ready() -> void:
 	add_to_group("animals")
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	collision_layer = 4
-	collision_mask = 7
+	collision_mask = 15
 	health = cow_health if kind == "vaca" else rabbit_health
 	if is_fish(): health = 10 if kind == "lambari" else 15
 	if kind == "garca_azul": health = 10
