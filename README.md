@@ -1,4 +1,4 @@
-# TC Island — solo Web e controles de toque
+# Tece Island — solo Web e controles de toque
 
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
 O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no desktop.
