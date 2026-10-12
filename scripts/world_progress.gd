@@ -22,6 +22,8 @@ func capture() -> Dictionary:
 		if node.is_queued_for_deletion(): continue
 		if node is PlacedStructure:
 			var state := {"kind": node.kind, "position": SaveStore.point(node.position)}
+			state.id = node.structure_id
+			if node.kind == "bau": state.chest_name = node.chest_name
 			state.rotation = node.rotation
 			if node.kind == "porta_madeira": state.door_open = node.door_open
 			if node.kind == "bau": state.storage = node.storage.network_state()
@@ -110,6 +112,9 @@ func load_progress() -> void:
 	for state in data.get("structures", []):
 		var structure: PlacedStructure = preload("res://scenes/placed_structure.tscn").instantiate()
 		structure.kind = state.kind
+		structure.structure_id = str(state.get("id", state.kind + "-" + SaveStore.key(SaveStore.vector(state.get("position")))))
+		structure.chest_name = str(state.get("chest_name", "Baú")).strip_edges().left(24)
+		if structure.chest_name.is_empty(): structure.chest_name = "Baú"
 		structure.position = SaveStore.vector(state.get("position"))
 		structure.rotation = float(state.get("rotation", 0))
 		structure.system = world.get_node("Structures")

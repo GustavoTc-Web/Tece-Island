@@ -10,6 +10,7 @@ var selected := -1
 var from_player := true
 var transfer_one: Button
 var transfer_all: Button
+var name_input: LineEdit
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -19,14 +20,29 @@ func _ready() -> void:
 	add_child(shade)
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	panel.position = Vector2(-295, -215)
-	panel.custom_minimum_size = Vector2(590, 430)
+	panel.position = Vector2(-295, -245)
+	panel.custom_minimum_size = Vector2(590, 490)
 	add_child(panel)
 	var rows := VBoxContainer.new()
 	panel.add_child(rows)
 	title = Label.new()
 	title.add_theme_font_size_override("font_size", 20)
 	rows.add_child(title)
+	var rename := HBoxContainer.new()
+	rows.add_child(rename)
+	name_input = LineEdit.new()
+	name_input.max_length = 24
+	name_input.placeholder_text = "Nome do baú · até 24 caracteres"
+	name_input.custom_minimum_size.y = 52
+	name_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rename.add_child(name_input)
+	var save_name := Button.new()
+	save_name.text = "Renomear"
+	save_name.pressed.connect(func():
+		if hud.current_panel != "chest" or not reachable(): return
+		status.text = "Nome salvo." if chest.rename_chest(name_input.text) else "Use um nome de 1 a 24 caracteres."
+		refresh())
+	rename.add_child(save_name)
 	var tabs := HBoxContainer.new()
 	rows.add_child(tabs)
 	for name in ["Inventário", "Baú"]:
@@ -37,7 +53,7 @@ func _ready() -> void:
 		button.pressed.connect(func(): from_player = name == "Inventário"; selected = -1; refresh())
 		tabs.add_child(button)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size.y = 180
+	scroll.custom_minimum_size.y = 120
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	rows.add_child(scroll)
@@ -69,8 +85,7 @@ func _ready() -> void:
 		button.pressed.connect(func():
 			if name == "Fechar": hud.set_panel("")
 			elif reachable():
-				status.text = chest.dismantle(inventory)
-				if chest.is_queued_for_deletion(): hud.set_panel(""))
+				hud.open_base(chest))
 		footer.add_child(button)
 	if MobileInput.enabled: hud.touch_sizes(self)
 
@@ -79,6 +94,7 @@ func open(target: PlacedStructure) -> void:
 	from_player = true
 	selected = -1
 	status.text = "Selecione um item para transferir."
+	name_input.text = chest.chest_name
 	refresh()
 
 func reachable() -> bool:
@@ -92,9 +108,9 @@ func reachable() -> bool:
 func refresh() -> void:
 	if not is_instance_valid(chest): return
 	var source: ResourceInventory = inventory if from_player else chest.storage
-	title.text = "%s · %d espaços" % ["Inventário" if from_player else "Baú", source.capacity]
+	title.text = "%s · %d espaços" % ["Inventário" if from_player else chest.chest_name, source.capacity]
 	transfer_one.text = ("Guardar" if from_player else "Retirar") + " 1"
-	transfer_all.text = ("Guardar" if from_player else "Retirar") + " pilha"
+	transfer_all.text = ("Guardar" if from_player else "Retirar") + " pilha · T"
 	for child in grid.get_children():
 		grid.remove_child(child)
 		child.queue_free()
@@ -122,3 +138,10 @@ func transfer(whole: bool) -> void:
 	var accepted := source.transfer_to(destination, selected, whole)
 	status.text = "%d unidade(s) transferida(s)." % accepted if accepted > 0 else "Destino cheio: libere espaço antes de transferir."
 	refresh()
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not visible or hud.current_panel != "chest" or event.is_echo(): return
+	if get_viewport().gui_get_focus_owner() is LineEdit: return
+	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_T:
+		transfer(true)
+		get_viewport().set_input_as_handled()

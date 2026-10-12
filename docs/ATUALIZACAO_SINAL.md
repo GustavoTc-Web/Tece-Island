@@ -13,7 +13,13 @@ contas. Diário e objetivos inexistentes. Baseline: 18 testes de monstros passam
    vida inimiga temporária e duração do veneno. Equilíbrio preservado.
    Validação: 12 testes novos e 18 regressões de monstros; interface Web/nativa
    e apreciação dos sons previstas na verificação final.
-2. Pendente: nomes/IDs de baús, transferência rápida e desmontagem confirmada.
+2. Implementado: baús com nome até 24 caracteres e ID persistente; transferência
+   parcial existente reutilizada, atalho T indicado e botão de pilha para toque.
+   Painel Base seleciona/identifica peça e exige confirmação. Devolve metade
+   da receita arredondada para baixo; excedentes no chão. Baú ocupado bloqueado,
+   cama desmontada limpa retorno; naturais não entram na seleção.
+   Validação: 14 testes de nomes/transferência/save/desmontagem; regressões de
+   baú/arco/save e bases. Etapa 1 registrada em 88f0cef.
 3. Pendente: registros originais, coleta e diário.
 4. Pendente: objetivos opcionais com evidências persistidas.
 5. Pendente: estados reais de gravação, saves por UID e importação legada explícita.

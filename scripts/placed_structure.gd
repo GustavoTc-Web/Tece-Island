@@ -8,9 +8,12 @@ var animation_time := 0.0
 var light: PointLight2D
 var storage: ResourceInventory
 var door_open := false
+var structure_id := ""
+var chest_name := "Baú"
 const PIECES := ["parede_madeira", "porta_madeira", "vidraca"]
 
 func _ready() -> void:
+	if structure_id.is_empty(): structure_id = "%d-%d" % [Time.get_ticks_usec(), randi()]
 	if kind in PIECES:
 		var shape := RectangleShape2D.new()
 		shape.size = Vector2(64, 16)
@@ -42,7 +45,7 @@ func _ready() -> void:
 
 func prompt() -> String:
 	if kind == "porta_madeira": return "E — Fechar porta" if door_open else "E — Abrir porta"
-	if kind == "bau": return "E — Abrir baú"
+	if kind == "bau": return "E — Abrir " + chest_name
 	return "E — Definir reaparecimento / dormir" if kind == "cama" else "E — Preparar carne na fogueira"
 
 func set_highlighted(value: bool) -> void:
@@ -78,13 +81,39 @@ func can_close() -> bool:
 	query.exclude = [get_rid()]
 	return get_world_2d().direct_space_state.intersect_shape(query).is_empty()
 
+func rename_chest(value: String) -> bool:
+	value = value.strip_edges()
+	if kind != "bau" or value.is_empty() or value.length() > 24: return false
+	chest_name = value
+	return true
+
+func dismantle_error() -> String:
+	if is_queued_for_deletion() or not is_instance_valid(system): return "Estrutura indisponível"
+	if kind == "bau":
+		for slot in storage.slots:
+			if not slot.is_empty(): return "Baú cheio: retire todos os itens antes de desmontar"
+	if not ResourceRules.RECIPES.has(kind): return "Estrutura não desmontável"
+	return ""
+
 func dismantle(inventory: ResourceInventory) -> String:
-	if kind != "bau": return "Estrutura não desmontável"
-	for slot in storage.slots:
-		if not slot.is_empty(): return "Baú cheio: retire todos os itens antes de desmontar"
-	if inventory.add_resource("bau", 1) != 1: return "Inventário cheio: libere um espaço para o baú"
+	var error := dismantle_error()
+	if error != "": return error
+	if system.player.global_position.distance_to(global_position) > 90: return "Aproxime-se da estrutura para desmontar."
+	if system.respawn_bed == self: system.respawn_bed = null
+	for material in ResourceRules.ingredients(kind):
+		var refund := floori(float(ResourceRules.ingredients(kind)[material]) * 0.5)
+		var remaining := refund - inventory.add_resource(material, refund)
+		if remaining > 0:
+			var drop: ResourceDrop = preload("res://scenes/resource_drop.tscn").instantiate()
+			drop.resource = material
+			drop.quantity = remaining
+			drop.position = system.player.global_position
+			system.container.add_child(drop)
+	remove_from_group("structures")
+	remove_from_group("interactables")
+	collision_layer = 0
 	queue_free()
-	return "Baú desmontado e guardado no inventário"
+	return "Estrutura desmontada: metade dos materiais devolvida; excedentes no chão."
 
 func _process(delta: float) -> void:
 	if kind == "fogueira":

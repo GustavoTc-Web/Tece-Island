@@ -22,6 +22,7 @@ var crafting_view: CraftingView
 var storage_view: StorageView
 var combat_options: CombatOptions
 var utility_buttons: HBoxContainer
+var base_view: BaseView
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -120,6 +121,12 @@ func initialize(source: ResourceInventory) -> void:
 			add_child(combat_options)
 		set_panel("sound"))
 	utility_buttons.add_child(sound)
+	var base := Button.new()
+	base.text = "Base"
+	base.custom_minimum_size = Vector2(88, 52)
+	base.pressed.connect(func(): open_base())
+	utility_buttons.add_child(base)
+	utility_buttons.position.x = -92
 	for panel in ["Crafting", "InventoryPanel"]:
 		var close := Button.new()
 		close.text = "Fechar"
@@ -206,6 +213,7 @@ func set_panel(panel: String) -> void:
 	if has_node("WellPanel"): $WellPanel.visible = panel == "well"
 	if storage_view != null: storage_view.visible = panel == "chest"
 	if combat_options != null: combat_options.visible = panel == "sound"
+	if base_view != null: base_view.visible = panel == "base"
 	if utility_buttons != null: utility_buttons.visible = panel == "" and not showing_death
 	panel_toggled.emit(panel != "")
 
@@ -222,6 +230,18 @@ func open_chest(chest: PlacedStructure) -> void:
 	storage_view.open(chest)
 	set_panel("chest")
 
+
+func open_base(target: PlacedStructure = null) -> void:
+	if network_mode:
+		show_message("Base disponível no mundo solo")
+		return
+	if base_view == null:
+		base_view = BaseView.new()
+		base_view.hud = self
+		base_view.system = get_parent().get_node("Structures")
+		add_child(base_view)
+	base_view.open(target)
+	set_panel("base")
 
 func update_health(current: int, maximum: int) -> void:
 	$Controls/Rows/Health.max_value = maximum
