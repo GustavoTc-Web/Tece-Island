@@ -5,6 +5,9 @@ const TREE := preload("res://scenes/obstacles/tree.tscn")
 const ROCK := preload("res://scenes/obstacles/rock.tscn")
 const DROP := preload("res://scenes/resource_drop.tscn")
 const BUSH := preload("res://scenes/obstacles/bush.tscn")
+var persistence_enabled := false
+var progress_store: WorldProgress
+var save_clock := 0.0
 
 
 func _ready() -> void:
@@ -87,6 +90,17 @@ func _ready() -> void:
 	$Exploration.container = $WorldObjects
 	$Exploration.initialize()
 	$Animals.initialize($WorldObjects/Player, $WorldObjects)
+	if persistence_enabled:
+		progress_store = WorldProgress.new()
+		progress_store.world = self
+		progress_store.load_progress()
+
+func save_progress() -> bool:
+	return progress_store.save() if progress_store != null else true
+
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_CLOSE_REQUEST] and is_node_ready():
+		save_progress()
 
 func _discard(index: int, whole: bool) -> void:
 	if not DropRules.discard($Inventory, index, whole, $WorldObjects/Player, $WorldObjects, MAP_SIZE):
@@ -96,6 +110,11 @@ func _use_item(index: int) -> void:
 	$HUD.show_message($WorldObjects/Player/Needs.use_slot($Inventory, index))
 
 func _physics_process(_delta: float) -> void:
+	if persistence_enabled:
+		save_clock += _delta
+		if save_clock >= 30:
+			save_clock = 0
+			save_progress()
 	var available: bool = $Structures.near_fire($WorldObjects/Player.global_position)
 	if $Inventory.cooking_available != available:
 		$Inventory.cooking_available = available

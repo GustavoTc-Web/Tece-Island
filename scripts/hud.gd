@@ -19,6 +19,7 @@ var moving_slot := -1
 var active_well: WaterWell
 var needs_bars: Dictionary = {}
 var crafting_view: CraftingView
+var storage_view: StorageView
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -186,11 +187,21 @@ func set_panel(panel: String) -> void:
 	if $Crafting.visible: crafting_view.open(panel == "cooking")
 	$InventoryPanel.visible = panel == "inventory"
 	if has_node("WellPanel"): $WellPanel.visible = panel == "well"
+	if storage_view != null: storage_view.visible = panel == "chest"
 	panel_toggled.emit(panel != "")
 
 
 func open_cooking() -> void:
 	set_panel("cooking")
+
+func open_chest(chest: PlacedStructure) -> void:
+	if storage_view == null:
+		storage_view = StorageView.new()
+		storage_view.hud = self
+		storage_view.inventory = inventory
+		add_child(storage_view)
+	storage_view.open(chest)
+	set_panel("chest")
 
 
 func update_health(current: int, maximum: int) -> void:
@@ -321,7 +332,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 			if slot.item in ItemCatalog.STACKABLE:
 				title += " × %d" % slot.quantity
 			if slot.item == "cantil": title += " · %d/3 doses" % slot.get("water", 0)
-			if GunRules.WEAPONS.has(slot.item): title += " · %d tiros" % slot.get("loaded", 0)
+			if GunRules.WEAPONS.has(slot.item) and slot.item != "arco": title += " · %d tiros" % slot.get("loaded", 0)
 		slot_buttons[index].text = "%d\n%s" % [index + 1, title]
 		slot_buttons[index].modulate = Color("f2d786") if index == selected_slot else Color.WHITE
 	var item: String = data[selected_slot].get("item", "") if selected_slot >= 0 else ""
@@ -357,7 +368,9 @@ func _equip_hands() -> void:
 func show_equipment(tool: String) -> void:
 	var title: String = "Mãos" if tool == "maos" else ItemCatalog.title(tool)
 	$Controls/Rows/Equipment.text = "Equipado: " + title
-	if GunRules.WEAPONS.has(tool):
+	if tool == "arco":
+		$Controls/Rows/Equipment.text += " · %d flechas" % inventory.count_item("flecha")
+	elif GunRules.WEAPONS.has(tool):
 		$Controls/Rows/Equipment.text += " · %d/%d carregada · %d reserva · R recarrega" % [inventory.loaded_ammo(tool), GunRules.WEAPONS[tool].magazine, inventory.count_item(GunRules.WEAPONS[tool].ammo)]
 
 

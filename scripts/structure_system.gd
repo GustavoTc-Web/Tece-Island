@@ -19,7 +19,7 @@ var placement_armed := false
 
 func start_placement(index: int) -> bool:
 	var data := inventory.slots
-	if index < 0 or index >= data.size() or data[index].get("item", "") not in ["cama", "fogueira"]:
+	if index < 0 or index >= data.size() or data[index].get("item", "") not in ["cama", "fogueira", "bau"]:
 		return false
 	slot_index = index
 	item = data[index].item

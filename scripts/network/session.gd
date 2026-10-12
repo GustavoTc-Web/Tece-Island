@@ -62,6 +62,7 @@ func clear_scene() -> void:
 	get_tree().paused = false
 	for node in [game, menu, auth_screen]:
 		if is_instance_valid(node):
+			if node.has_method("save_progress"): node.save_progress()
 			remove_child(node)
 			node.queue_free()
 	game = null
@@ -78,6 +79,7 @@ func start_solo() -> void:
 	clear_scene()
 	game = scene
 	game.name = "Solo"
+	game.persistence_enabled = true
 	add_child(game)
 	add_exit_button("Voltar ao menu")
 	var layer := CanvasLayer.new()

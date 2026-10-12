@@ -8,10 +8,26 @@ O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no 
 Importe `project.godot`, execute com F5, entre com uma conta de e-mail confirmado
 e escolha **Jogar solo**. Para o primeiro acesso, use **Criar conta** e confirme
 o link recebido por e-mail. **Voltar ao menu**
-funciona durante a pausa; iniciar novamente cria uma partida limpa: sete espaços,
-vida/fome/sede completas, posição inicial (1152, 768) e dia 1.
-Não existe salvamento. **Reaparecer** mantém itens, estruturas, drops e horário da
+funciona durante a pausa; iniciar novamente retoma o progresso local.
+Na primeira partida, começa com sete espaços, vida/fome/sede completas,
+posição inicial (1152, 768) e dia 1. **Reaparecer** mantém itens, estruturas, drops e horário da
 mesma partida, restaurando vida, fome e sede. Usa a cama definida ou a clareira inicial.
+
+O modo solo salva inventário, propriedades dos itens, estruturas, baús, recursos
+e itens no chão a cada 30 segundos, ao perder foco e ao retornar ao menu.
+O arquivo local é `user://solo-progress.json`, com cópia anterior
+`solo-progress.json.backup.json`; conversões guardam uma cópia antes de migrar.
+No navegador, os dados ficam no IndexedDB deste dispositivo e navegador.
+Desktop e navegador têm saves separados; não há sincronização em nuvem.
+Limpar os dados do site apaga o progresso local. Senhas e tokens continuam
+somente em memória e nunca fazem parte do save.
+
+A fabricação tem busca e categorias; alimentos cozidos estão na fogueira.
+Bolsas melhoram de 9 até 15 espaços, usando madeira e linha das aranhas.
+O baú construído guarda 12 pilhas: abra, selecione Inventário ou Baú, selecione
+o item e use Guardar/Retirar 1 ou pilha. Baú cheio não pode ser desmontado.
+O arco usa os controles de ataque/mira, consome uma flecha por tiro e dispensa
+recarga. A receita de flechas produz quatro unidades.
 
 ## Computador
 

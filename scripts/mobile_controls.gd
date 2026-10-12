@@ -62,7 +62,7 @@ func update_interaction_label(_message: String) -> void:
 	if is_instance_valid(pickup):
 		if pickup is ResourceDrop: caption = "Coletar"
 		elif pickup is WaterWell: caption = "Beber"
-		elif pickup is PlacedStructure: caption = "Usar cama" if pickup.kind == "cama" else "Cozinhar"
+		elif pickup is PlacedStructure: caption = {"cama": "Usar cama", "fogueira": "Cozinhar", "bau": "Abrir"}.get(pickup.kind, "Interagir")
 		else: caption = "Abrir"
 	interact_button.text = caption
 

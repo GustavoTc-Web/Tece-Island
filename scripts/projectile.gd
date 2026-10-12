@@ -8,6 +8,7 @@ var shooter: RID
 var hit_players: bool = false
 var friendly_fire: bool = true
 var simulation_authority: bool = true
+var arrow := false
 
 func _physics_process(delta: float) -> void:
 	var distance := minf(remaining, speed * delta)
@@ -30,4 +31,9 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 func _draw() -> void:
+	if arrow:
+		draw_line(-direction * 20, Vector2.ZERO, Color("d9bd80"), 2)
+		draw_line(-direction * 5 + direction.orthogonal() * 4, Vector2.ZERO, Color("c7d3d2"), 2)
+		draw_line(-direction * 5 - direction.orthogonal() * 4, Vector2.ZERO, Color("c7d3d2"), 2)
+		return
 	draw_line(-direction * 8, Vector2.ZERO, Color("ffe5a1"), 3)

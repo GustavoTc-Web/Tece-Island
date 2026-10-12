@@ -1,13 +1,18 @@
 class_name PlacedStructure
 extends StaticBody2D
 
-@export_enum("cama", "fogueira") var kind: String = "cama"
+@export_enum("cama", "fogueira", "bau") var kind: String = "cama"
 var system: Node2D
 var highlighted := false
 var animation_time := 0.0
 var light: PointLight2D
+var storage: ResourceInventory
 
 func _ready() -> void:
+	if kind == "bau":
+		storage = ResourceInventory.new()
+		storage.capacity = 12
+		add_child(storage)
 	if kind == "fogueira":
 		add_to_group("campfires")
 		var gradient := Gradient.new()
@@ -28,6 +33,7 @@ func _ready() -> void:
 		add_child(light)
 
 func prompt() -> String:
+	if kind == "bau": return "E — Abrir baú"
 	return "E — Definir reaparecimento / dormir" if kind == "cama" else "E — Preparar carne na fogueira"
 
 func set_highlighted(value: bool) -> void:
@@ -35,10 +41,21 @@ func set_highlighted(value: bool) -> void:
 	queue_redraw()
 
 func interact(_inventory: ResourceInventory) -> String:
+	if kind == "bau":
+		system.hud.open_chest(self)
+		return "Baú — selecione um item e use Guardar / Retirar"
 	if kind == "cama": return system.use_bed(self)
 	_inventory.cooking_available = system.near_fire(system.player.global_position)
 	system.hud.open_cooking()
 	return "Receita: 1 carne crua + 1 madeira → 1 carne cozida"
+
+func dismantle(inventory: ResourceInventory) -> String:
+	if kind != "bau": return "Estrutura não desmontável"
+	for slot in storage.slots:
+		if not slot.is_empty(): return "Baú cheio: retire todos os itens antes de desmontar"
+	if inventory.add_resource("bau", 1) != 1: return "Inventário cheio: libere um espaço para o baú"
+	queue_free()
+	return "Baú desmontado e guardado no inventário"
 
 func _process(delta: float) -> void:
 	if kind == "fogueira":
@@ -47,7 +64,11 @@ func _process(delta: float) -> void:
 		queue_redraw()
 
 func _draw() -> void:
-	if kind == "cama":
+	if kind == "bau":
+		draw_rect(Rect2(-26, -18, 52, 36), Color("a08048"))
+		draw_rect(Rect2(-26, -18, 52, 12), Color("c2a35c"))
+		draw_rect(Rect2(-4, -6, 8, 12), Color("e1d180"))
+	elif kind == "cama":
 		draw_rect(Rect2(-26, -18, 52, 36), Color("6b4931"))
 		draw_rect(Rect2(-22, -14, 44, 28), Color("c7b580"))
 		draw_rect(Rect2(-20, -12, 12, 24), Color("eee2bd"))

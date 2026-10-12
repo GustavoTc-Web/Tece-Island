@@ -11,19 +11,25 @@ signal message_requested(text: String)
 signal shot_fired(point: Vector2, direction: Vector2, weapon: String)
 var hit_players: bool = false
 var friendly_fire: bool = true
+var shot_remaining := 0.0
 
 func fire(direction: Vector2) -> bool:
 	var tool := inventory.equipped_tool()
-	if get_tree().paused or player.dead or not GunRules.WEAPONS.has(tool):
+	if get_tree().paused or player.dead or player.controls_blocked or shot_remaining > 0 or direction.is_zero_approx() or not GunRules.WEAPONS.has(tool):
 		return false
 	if reload_remaining > 0:
 		message_requested.emit("Recarregando…")
 		return false
 	var rule: Dictionary = GunRules.WEAPONS[tool]
-	if inventory.loaded_ammo(tool) <= 0:
+	if tool == "arco" and inventory.count_item("flecha") <= 0:
+		message_requested.emit("Sem flechas — fabrique ou colete flechas para usar o arco")
+		return false
+	if tool != "arco" and inventory.loaded_ammo(tool) <= 0:
 		message_requested.emit("Sem munição carregada — R para recarregar")
 		return false
-	inventory.set_loaded_ammo(tool, inventory.loaded_ammo(tool) - 1)
+	if tool == "arco": inventory.remove_item("flecha", 1)
+	else: inventory.set_loaded_ammo(tool, inventory.loaded_ammo(tool) - 1)
+	shot_remaining = rule.interval
 	for index in range(rule.pellets):
 		var bullet = PROJECTILE.instantiate()
 		# Espingarda distribui os chumbos no cone; não usa sorteios de loot.
@@ -33,6 +39,7 @@ func fire(direction: Vector2) -> bool:
 		bullet.speed = rule.speed
 		bullet.remaining = rule.range
 		bullet.damage = rule.damage
+		bullet.arrow = tool == "arco"
 		bullet.shooter = player.get_rid()
 		bullet.hit_players = hit_players
 		bullet.friendly_fire = friendly_fire
@@ -43,7 +50,10 @@ func fire(direction: Vector2) -> bool:
 
 func reload() -> bool:
 	var tool := inventory.equipped_tool()
-	if get_tree().paused or player.dead or reload_remaining > 0 or not GunRules.WEAPONS.has(tool):
+	if tool == "arco":
+		message_requested.emit("O arco usa uma flecha por disparo; não precisa recarregar")
+		return false
+	if get_tree().paused or player.dead or player.controls_blocked or reload_remaining > 0 or not GunRules.WEAPONS.has(tool):
 		return false
 	var rule: Dictionary = GunRules.WEAPONS[tool]
 	if inventory.loaded_ammo(tool) >= rule.magazine or inventory.count_item(rule.ammo) == 0:
@@ -56,6 +66,7 @@ func reload() -> bool:
 	return true
 
 func _physics_process(delta: float) -> void:
+	shot_remaining = maxf(0, shot_remaining - delta)
 	if reload_remaining <= 0:
 		return
 	if inventory.equipped_tool() != reloading or inventory.equipped_weapon_id() != reloading_uid or player.dead:

@@ -125,17 +125,46 @@ func _craft_plan(id: String) -> Array[Dictionary]:
 	for ingredient in ResourceRules.ingredients(id):
 		if ingredient != recipe.get("previous_bag", ""): _consume(plan, ingredient, ResourceRules.ingredients(id)[ingredient])
 	if ItemCatalog.bag_level(id) > 0: return plan
+	var remaining: int = int(recipe.get("quantity", 1))
 	if id in ItemCatalog.STACKABLE:
 		for slot in plan:
 			if slot.get("item", "") == id and slot.quantity < stack_limit:
-				slot.quantity += 1
-				return plan
+				var accepted := mini(remaining, stack_limit - int(slot.quantity))
+				slot.quantity += accepted
+				remaining -= accepted
+				if remaining == 0: return plan
 	for i in range(plan.size()):
 		if plan[i].is_empty():
-			plan[i] = {"item": id, "quantity": 1}
+			var quantity := mini(remaining, stack_limit if id in ItemCatalog.STACKABLE else 1)
+			plan[i] = {"item": id, "quantity": quantity}
 			if id == "cantil": plan[i].water = 0
-			return plan
+			remaining -= quantity
+			if remaining == 0: return plan
 	return []
+
+
+func transfer_to(destination: ResourceInventory, index: int, whole: bool = true) -> int:
+	if destination == self: return 0
+	var data := slot_data(index)
+	if data.is_empty(): return 0
+	if not whole: data.quantity = 1
+	# Prepare on an isolated inventory. Commit both arrays before either signal.
+	var planner := ResourceInventory.new()
+	planner._slots = destination.slots
+	planner.stack_limit = destination.stack_limit
+	planner.next_weapon_uid = destination.next_weapon_uid
+	var accepted := planner.add_item(data)
+	if accepted == 0:
+		planner.free()
+		return 0
+	destination._slots = planner.slots
+	destination.next_weapon_uid = planner.next_weapon_uid
+	_slots[index].quantity -= accepted
+	if _slots[index].quantity == 0: _slots[index] = {}
+	planner.free()
+	_notify()
+	destination._notify()
+	return accepted
 
 func can_craft(id: String) -> bool:
 	return craft_error(id) == ""
@@ -306,6 +335,7 @@ func apply_network_state(state: Dictionary) -> void:
 
 func restore_state(state: Dictionary) -> bool:
 	# Validated game state only; authentication tokens never enter this format.
+	if not state.get("backpack", {}) is Dictionary or not state.get("slots", []) is Array: return false
 	var bag: Dictionary = state.get("backpack", {}).duplicate(true)
 	if not bag.is_empty() and ItemCatalog.bag_level(bag.get("item", "")) == 0: return false
 	var loaded: Array[Dictionary] = []
@@ -313,6 +343,9 @@ func restore_state(state: Dictionary) -> bool:
 		if not slot is Dictionary: return false
 		if not slot.is_empty() and (int(slot.get("quantity", 0)) <= 0 or (not ItemCatalog.NAMES.has(slot.get("item", "")) and not ResourceRules.RECIPES.has(slot.get("item", "")))): return false
 		loaded.append(slot.duplicate(true))
+		if not loaded[-1].is_empty():
+			for field in ["quantity", "uid", "loaded", "water"]:
+				if loaded[-1].has(field): loaded[-1][field] = int(loaded[-1][field])
 	var expected := base_capacity + ItemCatalog.bag_level(bag.get("item", "")) * backpack_bonus
 	for i in range(expected, loaded.size()):
 		if not loaded[i].is_empty(): return false

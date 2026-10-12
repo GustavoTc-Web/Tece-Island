@@ -15,6 +15,16 @@ func _draw() -> void:
 		if category == "espada": draw_line(center, center + Vector2(14, -17), color, 7)
 		elif category == "machado": draw_rect(Rect2(center + Vector2(3, -17), Vector2(17, 13)), color)
 		else: draw_line(center + Vector2(-7, -16), center + Vector2(20, -9), color, 6)
+	elif item == "arco":
+		draw_arc(center, 18, -PI / 2, PI / 2, 12, Color("b58b55"), 3)
+		draw_line(Vector2(24, 6), Vector2(24, 42), Color("ded1a6"), 1)
+	elif item == "flecha":
+		draw_line(Vector2(8, 40), Vector2(40, 8), Color("d9bd80"), 3)
+		draw_colored_polygon(PackedVector2Array([Vector2(40, 8), Vector2(28, 12), Vector2(36, 20)]), Color("c7d3d2"))
+	elif item == "bau":
+		draw_rect(Rect2(4, 13, 40, 28), Color("a08048"))
+		draw_rect(Rect2(4, 13, 40, 10), Color("c2a35c"))
+		draw_rect(Rect2(21, 22, 6, 9), Color("e1d180"))
 	elif item == "cantil":
 		draw_rect(Rect2(13, 13, 23, 28), Color("578796"))
 		draw_rect(Rect2(20, 6, 9, 8), Color("d6ca99"))

@@ -123,6 +123,10 @@ func draw_tool() -> void:
 		return
 	var hand := Vector2(15 if facing.x >= 0 else -15, -14)
 	var head := hand + Vector2(4, -19)
+	if equipped == "arco":
+		draw_arc(hand, 15, -PI / 2, PI / 2, 12, Color("b58b55"), 3)
+		draw_line(hand + Vector2(0, -15), hand + Vector2(0, 15), Color("ded1a6"), 1)
+		return
 	if GunRules.WEAPONS.has(equipped):
 		draw_line(hand, hand + facing.normalized() * (26 if equipped == "espingarda" else 16), Color("b6c5be"), 6)
 		draw_circle(hand, 4, Color("644631"))

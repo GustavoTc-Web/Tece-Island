@@ -39,6 +39,13 @@ func command(args: Array) -> void:
 			world.get_node("WorldObjects").add_child(fire)
 			inv.cooking_available = true
 			fire.interact(inv)
+		"chest":
+			var chest: PlacedStructure = load("res://scenes/placed_structure.tscn").instantiate()
+			chest.kind = "bau"
+			chest.system = world.get_node("Structures")
+			chest.position = player.position + Vector2(65, 0)
+			world.get_node("WorldObjects").add_child(chest)
+			chest.interact(inv)
 func rect(control: Control) -> Array:
 	var box := control.get_global_rect()
 	return [box.position.x, box.position.y, box.size.x, box.size.y]
@@ -68,6 +75,11 @@ func _process(_delta: float) -> void:
 		data.search = rect(hud.crafting_view.search)
 		data.capacity = inv.capacity
 		data.backpack = inv.backpack
+		if hud.storage_view != null and is_instance_valid(hud.storage_view.chest):
+			data.storage_slots = hud.storage_view.chest.storage.slots
+			data.storage_buttons = []
+			for button in hud.storage_view.grid.get_children(): data.storage_buttons.append(rect(button))
+			data.storage_status = hud.storage_view.status.text
 		data.recipe_descriptions = {}
 		for id in hud.crafting_view.labels:
 			data.recipe_descriptions[id] = hud.crafting_view.labels[id].text

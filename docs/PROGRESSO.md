@@ -37,7 +37,7 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-3. Baú/arco/flechas e persistência local. Depois monstros que fornecem linha.
+4. Esqueletos/aranhas, veneno e drops que fornecem flechas/linha.
 
 ## Etapa 2: bolsas
 
@@ -55,6 +55,28 @@ Auditoria antes da persistência: código só acessa FileAccess na configuraçã
 pública Firebase; README informa ausência de save. Pasta user:// contém
 somente caches, logs e snapshots internos do Godot; nenhum save a converter.
 Nenhuma migração aplicada. Salvamento em disco ainda pertence à etapa 3.
+
+## Etapa 3: baú, arco, flechas e persistência local
+
+Baú construível: 20 madeiras/8 pedras, 12 slots, Guardar/Retirar 1 ou pilha,
+mesmos botões PC/toque, transferência preparada antes dos sinais, propriedades
+de arma/cantil preservadas, desmontagem bloqueada quando cheio.
+Arco 8 madeiras/3 linhas, dano 12, intervalo 1 s; flechas 2 madeiras/1 pedra
+produzem 4, limitadas por pilha e capacidade. Só tiro válido consome munição;
+mira cancelada, menu e cooldown bloqueiam consumo; projétil colide com paredes.
+
+Persistência local: user://solo-progress.json, arquivo temporário e backup anterior,
+sem dados da autenticação. Inventário, baús, cama de reaparecimento, estruturas,
+vida/necessidades, relógio, drops, recursos restantes e loot vasculhado.
+Saves inválidos são preservados e bloqueiam sobrescrita. Web usa IndexedDB do
+navegador; teste de recarregar a página confirma persistência, sem nuvem/custo.
+Não havia save real anterior: conversão/backup foi testada em fixture sintética,
+não é declaração de migração de progresso real.
+
+Validação: 25 verificações Godot, 18 de navegador com mouse/toque (incluindo
+reload com baú e munição preservados), 6 regressões da coleta. Nenhum celular físico.
+Etapas 1/2 já registradas nos commits 0a138cb / ea8e0d2; push das etapas de gameplay
+ainda pendente até consolidar a atualização.
 
 ## Etapas seguintes solicitadas
 

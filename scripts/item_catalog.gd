@@ -1,7 +1,7 @@
 ﻿class_name ItemCatalog
 extends RefCounted
 
-const STACKABLE := ["madeira", "pedra", "fibra", "linha", "municao_pistola", "cartucho", "carne_crua", "carne_cozida"]
+const STACKABLE := ["madeira", "pedra", "fibra", "linha", "flecha", "municao_pistola", "cartucho", "carne_crua", "carne_cozida"]
 const NAMES := {"madeira": "Madeira", "pedra": "Pedra", "fibra": "Fibra vegetal", "linha": "Linha", "mochila": "Bolsa nível 1 — +2 espaços", "cama": "Cama simples", "fogueira": "Fogueira", "pistola": "Pistola", "espingarda": "Espingarda calibre 12", "municao_pistola": "Munição de pistola", "cartucho": "Cartuchos", "carne_crua": "Carne crua", "carne_cozida": "Carne cozida", "cantil": "Cantil"}
 
 static func bag_level(item: String) -> int:
@@ -19,5 +19,5 @@ static func category(item: String) -> String:
 	return ResourceRules.RECIPES.get(item, {}).get("category", "")
 
 static func is_equippable(item: String) -> bool:
-	return category(item) in ["machado", "picareta", "espada", "pistola", "espingarda"]
+	return category(item) in ["machado", "picareta", "espada", "arco", "pistola", "espingarda"]
 
