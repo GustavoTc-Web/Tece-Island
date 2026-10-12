@@ -116,7 +116,7 @@ func run() -> void:
 	progress.world = world
 	progress.store.path = "res://.tools/save-tests/base-%d.json" % Time.get_ticks_usec()
 	DirAccess.make_dir_recursive_absolute("res://.tools/save-tests")
-	check(progress.save(), "Save de base gravado")
+	check(await progress.save(), "Save de base gravado")
 	var restored: Node2D = load("res://scenes/world.tscn").instantiate()
 	restored.persistence_enabled = true
 	restored.progress_path = progress.store.path

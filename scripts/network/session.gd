@@ -10,6 +10,7 @@ var auth_screen: Control
 var connecting := false
 var closing := false
 var connection_time: float = 0
+var transitioning := false
 @export var connection_timeout: float = 8.0
 
 func _ready() -> void:
@@ -20,22 +21,23 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(_peer_left)
 	FirebaseAuth.authenticated.connect(_authenticated)
 	FirebaseAuth.signed_out.connect(_signed_out)
+	FirebaseAuth.before_logout = _save_before_logout
 	if FirebaseAuth.can_play(): show_menu("Teste local / rede local · anfitrião + um convidado")
 	else: show_auth()
 
-func show_auth(message: String = "") -> void:
+func show_auth(message: String = "", save_current: bool = true) -> void:
 	reset_network()
-	clear_scene()
+	await clear_scene(save_current)
 	auth_screen = AUTH.instantiate()
 	add_child(auth_screen)
 	if message != "": auth_screen.show_message(message)
 
 func _authenticated() -> void:
-	clear_scene()
+	await clear_scene()
 	show_menu("Conta validada. Escolha uma partida.")
 
 func _signed_out(reason: String) -> void:
-	if FirebaseAuth.enabled(): show_auth(reason)
+	if FirebaseAuth.enabled(): show_auth(reason, false)
 
 func show_menu(message: String) -> void:
 	if not FirebaseAuth.can_play():
@@ -47,6 +49,7 @@ func show_menu(message: String) -> void:
 	menu.host_requested.connect(host_game)
 	menu.join_requested.connect(join_game)
 	menu.show_status(message)
+	if FirebaseAuth.enabled(): menu.show_status(message + "\nProgresso local por conta; outro aparelho não sincroniza.")
 	if FirebaseAuth.enabled():
 		var logout := Button.new()
 		logout.text = "Sair da conta"
@@ -55,28 +58,105 @@ func show_menu(message: String) -> void:
 		logout.custom_minimum_size = Vector2(210, 56)
 		logout.pressed.connect(FirebaseAuth.logout)
 		menu.add_child(logout)
+		var account := AccountProgress.new()
+		var owner := FirebaseAuth.account_uid()
+		account.configure(owner)
+		var existing := await account.read(get_tree())
+		var available := await account.legacy_available(get_tree())
+		if not is_instance_valid(menu) or FirebaseAuth.account_uid() != owner: return
+		if account.error == "" and existing.is_empty() and available:
+			var import_button := Button.new()
+			import_button.text = "Importar save antigo"
+			import_button.position = Vector2(16, 16)
+			import_button.custom_minimum_size = Vector2(250, 56)
+			import_button.pressed.connect(func():
+				var dialog := ConfirmationDialog.new()
+				dialog.title = "Importar progresso antigo"
+				dialog.dialog_text = "Atribuir o save antigo sem dono a esta conta?\nImportação única neste aparelho, com backup.\nNão substitui progresso existente. Não sincroniza com outros aparelhos."
+				dialog.ok_button_text = "Importar para esta conta"
+				dialog.cancel_button_text = "Cancelar"
+				dialog.confirmed.connect(func(): _import_legacy(account))
+				dialog.canceled.connect(dialog.queue_free)
+				menu.add_child(dialog)
+				dialog.popup_centered(Vector2i(600, 240)))
+			menu.add_child(import_button)
 
-func clear_scene() -> void:
+func _import_legacy(account: AccountProgress) -> void:
+	if transitioning or FirebaseAuth.account_uid() != account.uid: return
+	set_transition(true)
+	menu.show_status("Importando progresso antigo…")
+	var ok := await account.import_legacy(get_tree())
+	if not is_instance_valid(menu): return
+	menu.show_status("Progresso antigo importado. Agora abra Jogar solo." if ok else account.error)
+	set_transition(false)
+	for button in menu.find_children("*", "Button", true, false):
+		if button.text == "Importar save antigo": button.disabled = ok
+
+func set_transition(value: bool) -> void:
+	transitioning = value
+	if is_instance_valid(menu):
+		for button in menu.find_children("*", "Button", true, false): button.disabled = value
+
+func _save_before_logout() -> bool:
+	if not is_instance_valid(game) or not game.has_method("save_progress"): return true
+	set_transition(true)
+	var paused := get_tree().paused
+	get_tree().paused = true
+	MobileInput.reset()
+	var ok: bool = await game.save_progress(true)
+	if not ok:
+		get_tree().paused = paused
+		set_transition(false)
+	return ok
+
+func _exit_tree() -> void:
+	if FirebaseAuth.before_logout == _save_before_logout: FirebaseAuth.before_logout = Callable()
+
+func clear_scene(save_current: bool = true) -> void:
 	MobileInput.reset()
 	MobileInput.overlay = null
-	get_tree().paused = false
+	if is_instance_valid(game) and game.has_method("save_progress") and save_current:
+		get_tree().paused = true
+		await game.save_progress(true)
 	for node in [game, menu, auth_screen]:
 		if is_instance_valid(node):
-			if node.has_method("save_progress"): node.save_progress()
 			remove_child(node)
 			node.queue_free()
 	game = null
 	menu = null
 	auth_screen = null
+	get_tree().paused = false
+	transitioning = false
 
 func start_solo() -> void:
+	if transitioning or is_instance_valid(game): return
 	if not FirebaseAuth.can_play():
 		show_auth("Entre com uma conta confirmada para jogar.")
 		return
 	var scene := prepare_game(SOLO)
 	if scene == null: return
+	set_transition(true)
+	if FirebaseAuth.enabled():
+		var account := AccountProgress.new()
+		var owner := FirebaseAuth.account_uid()
+		account.configure(owner)
+		menu.show_status("Carregando progresso desta conta…")
+		var data := await account.read(get_tree())
+		if not FirebaseAuth.can_play() or FirebaseAuth.account_uid() != owner:
+			scene.free()
+			set_transition(false)
+			return
+		if account.error != "":
+			scene.free()
+			menu.show_status(account.error + " Tente novamente.")
+			set_transition(false)
+			return
+		scene.account_store = account
+		scene.owner_uid = owner
+		scene.progress_path = account.store.path
+		scene.initial_progress = data
 	reset_network()
-	clear_scene()
+	await clear_scene()
 	game = scene
 	game.name = "Solo"
 	game.persistence_enabled = true
@@ -100,7 +180,7 @@ func host_game(port: int = 7000, allow_damage: bool = true) -> void:
 	if OS.has_feature("web"):
 		menu.show_status("Multiplayer em breve. Jogue solo nesta versão Web.")
 		return
-	if connecting or is_instance_valid(game): return
+	if transitioning or connecting or is_instance_valid(game): return
 	var peer := ENetMultiplayerPeer.new()
 	var error := peer.create_server(port, 1) # Um convidado, além do anfitrião.
 	if error != OK:
@@ -111,7 +191,7 @@ func host_game(port: int = 7000, allow_damage: bool = true) -> void:
 		peer.close()
 		return
 	multiplayer.multiplayer_peer = peer
-	clear_scene()
+	await clear_scene()
 	game = scene
 	game.name = "Arena"
 	game.friendly_fire = allow_damage
@@ -126,7 +206,7 @@ func join_game(address: String = "127.0.0.1", port: int = 7000) -> void:
 	if OS.has_feature("web"):
 		menu.show_status("Multiplayer em breve. Jogue solo nesta versão Web.")
 		return
-	if connecting or is_instance_valid(game): return
+	if transitioning or connecting or is_instance_valid(game): return
 	if address == "":
 		menu.show_status("Informe o endereço do anfitrião.")
 		return
@@ -147,7 +227,7 @@ func _connected() -> void:
 	connecting = false
 	var scene := prepare_game(ARENA)
 	if scene == null: return
-	clear_scene()
+	await clear_scene()
 	game = scene
 	game.name = "Arena"
 	add_child(game)
@@ -190,6 +270,7 @@ func add_exit_button(text: String) -> void:
 	layer.add_child(button)
 
 func leave_game() -> void:
+	if transitioning or FirebaseAuth.logging_out: return
 	if closing: return
 	closing = true
 	if multiplayer.multiplayer_peer is ENetMultiplayerPeer:
@@ -225,6 +306,18 @@ func reset_network() -> void:
 	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
 
 func return_to_menu(message: String) -> void:
+	if FirebaseAuth.logging_out: return
+	if is_instance_valid(game) and game.has_method("save_progress"):
+		var paused := get_tree().paused
+		get_tree().paused = true
+		set_transition(true)
+		var ok: bool = await game.save_progress(true)
+		if not ok:
+			get_tree().paused = paused
+			set_transition(false)
+			closing = false
+			game.get_node("HUD").show_message("Falha ao salvar. Tente novamente antes de voltar ao menu.")
+			return
 	reset_network()
-	clear_scene()
+	await clear_scene(false)
 	show_menu(message)

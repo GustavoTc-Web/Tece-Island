@@ -34,5 +34,26 @@ contas. Diário e objetivos inexistentes. Baseline: 18 testes de monstros passam
    não inventam coleta/fabricação/cozinha históricas sem dados.
    Validação: 15 verificações; estado/visibilidade/progresso e notificações.
    Etapa 3 registrada em 93d2d63.
-5. Pendente: estados reais de gravação, saves por UID e importação legada explícita.
+5. Implementado: save v4 por UID (nome de pasta/chave SHA-256, dono validado),
+   mundo/inventário/bases/baús/diário/objetivos isolados. Native usa gravação
+   temporária e backups; Web usa transação IndexedDB com backup na mesma
+   transação, confirma sucesso só em oncomplete. Estado Salvando/salvo/falha
+   com retry, serialização, debounce 1,5 s, limite 3 s e automático 30 s mesmo
+   com painel pausado. Logout aguarda gravação antes de limpar UID/tokens;
+   falha bloqueia logout voluntário para permitir retry. Expiração limpa sessão
+   mesmo se a tentativa de gravação falhar, mostrando aviso.
+   Save legado sem dono permanece intacto: menu oferece importação confirmada,
+   única por aparelho, nunca substitui progresso da conta. Interface informa
+   armazenamento local sem sincronização entre aparelhos. Nenhum serviço pago.
+   Validação: 21 testes de isolamento, migração, recuperação de escrita, estado
+   real/coalescência e ordem de logout; 12 poços e 10 autenticação obrigatória.
+   Contas/UIDs dos testes são fixtures; não representam login Firebase real.
+   Mais seis verificações da sessão: falha mantém partida antes de menu/logout,
+   nova tentativa grava e reentrada restaura dados. UI Web: 50 verificações
+   aprovadas em PC e toque emulado, incluindo transações reais e reload.
+   Etapa 4 registrada em c595eff.
+
+Referência: [armazenamento user:// na Web](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html).
+O arquivo virtual anterior do Godot é usado somente para ler/importar legado;
+novos saves de conta na Web têm confirmação explícita da transação IndexedDB.
 6. Pendente: testes nativos/Web/toque, commits, push e verificação do Pages.

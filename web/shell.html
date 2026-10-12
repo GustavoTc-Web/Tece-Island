@@ -22,6 +22,22 @@ const canvas=document.querySelector('#canvas'),status=document.querySelector('#s
 document.querySelector('#retry').onclick=()=>location.reload();
 function fail(error){status.style.display='flex';message.textContent='Não foi possível iniciar o jogo. Verifique sua conexão e o suporte a WebGL 2 do navegador. Você pode recarregar e tentar novamente.';progress.hidden=true;document.querySelector('#retry').hidden=false;console.error(error);}
 const engine=new Engine($GODOT_CONFIG);
+// Local game progress only. A transaction acknowledges durable browser storage.
+window.tcLocalProgress={request:async(operation,key,payload,claim,done)=>{
+ let db;
+ try{
+  db=await new Promise((resolve,reject)=>{const r=indexedDB.open('tece-island-progress-v4',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onblocked=()=>reject(new Error('blocked'));});
+  const tx=db.transaction('saves',operation==='read'?'readonly':'readwrite'),store=tx.objectStore('saves');let value=null;
+  tx.oncomplete=()=>{db.close();done(JSON.stringify({ok:true,value}));};
+  tx.onabort=()=>{db.close();done(JSON.stringify({ok:false,error:'Falha no armazenamento local. O progresso anterior foi preservado. Tente novamente.'}));};
+  tx.onerror=()=>{};
+  if(operation==='read'){const r=store.get(key);r.onsuccess=()=>{value=r.result??null;};}
+  else if(operation==='write'){const r=store.get(key);r.onsuccess=()=>{if(r.result!==undefined){store.put(r.result,key+':backup');try{if(JSON.parse(r.result).version<4){const old=store.get(key+':before-v4');old.onsuccess=()=>{if(old.result===undefined)store.put(r.result,key+':before-v4');};}}catch(_error){tx.abort();return;}}store.put(payload,key);};}
+  else if(operation==='import'){
+   const r=store.get('legacy-import-v4');r.onsuccess=()=>{if(r.result!==undefined){tx.abort();return;}const target=store.get(key);target.onsuccess=()=>{if(target.result!==undefined){tx.abort();return;}store.put(payload,key);store.put(claim,'legacy-import-v4');};};
+  }else tx.abort();
+ }catch(_error){if(db)db.close();done(JSON.stringify({ok:false,error:'Armazenamento do navegador indisponível. Libere espaço e tente novamente.'}));}
+}};
 // Render at display density, capped at 2 to bound fill-rate on mobile GPUs.
 function resize(){const r=document.querySelector('#stage').getBoundingClientRect(),density=Math.min(window.devicePixelRatio||1,2);const width=Math.max(1,Math.round(r.width*density)),height=Math.max(1,Math.round(r.height*density));if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;}
 window.addEventListener('resize',resize);new ResizeObserver(resize).observe(document.querySelector('#stage'));

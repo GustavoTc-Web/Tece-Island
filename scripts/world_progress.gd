@@ -18,6 +18,7 @@ func capture() -> Dictionary:
 	result.wells_policy = "fixed"
 	result.journal = world.journal.capture()
 	result.objectives = world.objectives.capture()
+	if not world.owner_uid.is_empty(): result.owner_uid = world.owner_uid
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -47,7 +48,7 @@ func load_progress() -> void:
 	world.loading_progress = false
 
 func _load_progress() -> void:
-	var data := store.read()
+	var data: Dictionary = world.initial_progress if world.account_store != null else store.read()
 	if store.error != "":
 		writable = false
 		world.get_node("HUD").show_message(store.error)
@@ -164,6 +165,6 @@ func _load_progress() -> void:
 
 func save() -> bool:
 	if not writable: return false
-	var ok := store.write(capture())
-	if not ok: world.get_node("HUD").show_message(store.error)
+	var ok: bool = await world.account_store.write(capture(), world.get_tree()) if world.account_store != null else store.write(capture())
+	if not ok: world.get_node("HUD").show_message(world.account_store.error if world.account_store != null else store.error)
 	return ok

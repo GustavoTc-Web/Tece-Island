@@ -46,6 +46,7 @@ func _ready() -> void:
 	close.custom_minimum_size.y = 56
 	close.pressed.connect(func(): hud.set_panel(""))
 	rows.add_child(close)
+	if MobileInput.enabled: hud.touch_sizes(self)
 
 func reachable(target: PlacedStructure) -> bool:
 	if not is_instance_valid(target) or target.is_queued_for_deletion() or target.system != system: return false

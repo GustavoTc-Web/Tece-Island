@@ -13,11 +13,15 @@ Na primeira partida, começa com sete espaços, vida/fome/sede completas,
 posição inicial (1152, 768) e dia 1. **Reaparecer** mantém itens, estruturas, drops e horário da
 mesma partida, restaurando vida, fome e sede. Usa a cama definida ou a clareira inicial.
 
-O modo solo salva inventário, propriedades dos itens, estruturas, baús, recursos
-e itens no chão a cada 30 segundos, ao perder foco e ao retornar ao menu.
-O arquivo local é `user://solo-progress.json`, com cópia anterior
-`solo-progress.json.backup.json`; conversões guardam uma cópia antes de migrar.
-No navegador, os dados ficam no IndexedDB deste dispositivo e navegador.
+O modo solo salva mundo, inventário, equipamento, bases, baús, diário e objetivos
+por UID da conta Firebase. Salva periodicamente a cada 30 segundos, após mudanças
+importantes, ao perder foco e antes de retornar ao menu ou sair da conta.
+O indicador distingue Salvando, Progresso salvo e falha com nova tentativa.
+Godot usa `user://accounts/<SHA-256 do UID>/solo-progress.json`, temporário,
+cópia anterior `.backup.json` e backup versionado antes da migração para v4.
+Na Web, uma transação IndexedDB confirma a gravação e conserva a cópia anterior.
+O arquivo antigo `user://solo-progress.json` permanece intacto: o menu oferece
+uma importação única e confirmada para a conta atual, sem sobrescrever progresso.
 Desktop e navegador têm saves separados; não há sincronização em nuvem.
 Limpar os dados do site apaga o progresso local. Senhas e tokens continuam
 somente em memória e nunca fazem parte do save.
@@ -25,7 +29,11 @@ somente em memória e nunca fazem parte do save.
 A fabricação tem busca e categorias; alimentos cozidos estão na fogueira.
 Bolsas melhoram de 9 até 15 espaços, usando madeira e linha das aranhas.
 O baú construído guarda 12 pilhas: abra, selecione Inventário ou Baú, selecione
-o item e use Guardar/Retirar 1 ou pilha. Baú cheio não pode ser desmontado.
+um item e use Guardar/Retirar pilha ou T; transferências parciais conservam o resto.
+Renomeie o baú em até 24 caracteres. O painel Base seleciona e confirma desmontagem:
+50% dos materiais, arredondados para baixo, com excedentes no chão; baú cheio bloqueado.
+Diário por J/botão reúne O Último Sinal e objetivos opcionais, sem recompensas.
+Som permite volume/silenciar. Detalhes e testes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md).
 O arco usa os controles de ataque/mira, consome uma flecha por tiro e dispensa
 recarga. A receita de flechas produz quatro unidades.
 

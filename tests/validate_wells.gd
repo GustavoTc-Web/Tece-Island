@@ -55,9 +55,10 @@ func run() -> void:
 	restored.progress_path = path
 	root.add_child(restored)
 	await step()
-	check(FileAccess.get_file_as_string(path + ".before-v3.json") == bytes, "Backup exato antes de converter formato antigo")
+	await restored.save_progress(true)
+	check(FileAccess.get_file_as_string(path + ".before-v%d.json" % SaveStore.VERSION) == bytes, "Backup exato antes de converter formato antigo")
 	var saved: Dictionary = restored.progress_store.store.read()
-	check(saved.version == 3 and saved.region_wells.size() == 16 and saved.wells_policy == "fixed", "Layout fixo persistido")
+	check(saved.version == SaveStore.VERSION and saved.region_wells.size() == 16 and saved.wells_policy == "fixed", "Layout fixo persistido")
 	check(restored.get_node("Inventory").slots == inv.slots, "Conversão conserva inventário, munição e doses")
 	var found_base := false
 	for node in restored.get_node("WorldObjects").get_children():

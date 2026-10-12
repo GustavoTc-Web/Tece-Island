@@ -19,6 +19,8 @@ var _expires_at := 0.0
 var _verified := false
 var _generation := 0
 var _retry_at := 0.0
+var before_logout: Callable
+var logging_out := false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -34,7 +36,10 @@ func has_session() -> bool:
 	return _verified and not _id_token.is_empty() and Time.get_unix_time_from_system() < _expires_at
 
 func can_play() -> bool:
-	return not enabled() or has_session()
+	return not logging_out and (not enabled() or has_session())
+
+func account_uid() -> String:
+	return _user_id if has_session() and not logging_out else ""
 
 func _begin() -> bool:
 	if busy: return false
@@ -107,6 +112,7 @@ func _store_tokens(data: Dictionary, refresh: bool = false) -> bool:
 	var duration := float(data.get("expires_in" if refresh else "expiresIn", 0))
 	var user_id: String = str(data.get("user_id" if refresh else "localId", ""))
 	if id_token.is_empty() or refresh_token.is_empty() or user_id.is_empty() or duration <= 0: return false
+	if refresh and user_id != _user_id: return false
 	_id_token = id_token
 	_refresh_token = refresh_token
 	_user_id = user_id
@@ -136,6 +142,7 @@ func _check_user(announce: bool = true) -> bool:
 	return true
 
 func login(email: String, password: String) -> void:
+	if _verified and not await logout(): return
 	if not _begin(): return
 	_forget_tokens()
 	var result := await _request("signInWithPassword", {"email": email.strip_edges(), "password": password, "returnSecureToken": true})
@@ -146,6 +153,7 @@ func login(email: String, password: String) -> void:
 	_end()
 
 func register(email: String, password: String) -> void:
+	if _verified and not await logout(): return
 	if not _begin(): return
 	_forget_tokens()
 	var result := await _request("signUp", {"email": email.strip_edges(), "password": password, "returnSecureToken": true})
@@ -193,10 +201,21 @@ func _forget_tokens() -> void:
 	user_email = ""
 	_user_id = ""
 
-func logout(reason: String = "Você saiu da conta.") -> void:
+func logout(reason: String = "Você saiu da conta.") -> bool:
+	if logging_out: return false
+	logging_out = true
+	var saved := true
+	if before_logout.is_valid(): saved = await before_logout.call()
+	if not saved and reason == "Você saiu da conta.":
+		logging_out = false
+		message_changed.emit("Falha ao salvar. Tente novamente antes de sair da conta.")
+		return false
+	if not saved: reason += " A última gravação falhou; o save anterior foi preservado."
 	_forget_tokens()
+	logging_out = false
 	signed_out.emit(reason)
 	message_changed.emit(reason)
+	return true
 
 func _refresh_session() -> void:
 	if not _begin(): return
@@ -211,6 +230,7 @@ func _refresh_session() -> void:
 	_end()
 
 func _process(_delta: float) -> void:
+	if logging_out: return
 	if _id_token.is_empty(): return
 	var now := Time.get_unix_time_from_system()
 	if now >= _expires_at:

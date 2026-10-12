@@ -8,7 +8,9 @@ const BUSH := preload("res://scenes/obstacles/bush.tscn")
 var persistence_enabled := false
 var progress_path := "user://solo-progress.json"
 var progress_store: WorldProgress
-var save_clock := 0.0
+var save_controller: ProgressController
+var account_store: AccountProgress
+var owner_uid := ""
 var terrain: WorldTerrain
 var world_seed := 0
 var ruins: Node
@@ -26,11 +28,11 @@ var loading_progress := false
 func _ready() -> void:
 	if world_seed == 0: world_seed = int($Exploration.random_seed) if $Exploration.random_seed > 0 else randi_range(1, 2147480000)
 	if persistence_enabled:
-		var store := SaveStore.new()
-		store.path = progress_path
-		var preview := store.read()
-		initial_progress = preview
-		world_seed = int(preview.get("world_seed", world_seed))
+		if account_store == null:
+			var store := SaveStore.new()
+			store.path = progress_path
+			initial_progress = store.read()
+		world_seed = int(initial_progress.get("world_seed", world_seed))
 	terrain = WorldTerrain.new()
 	terrain.name = "Terrain"
 	add_child(terrain)
@@ -157,12 +159,24 @@ func _ready() -> void:
 		progress_store.world = self
 		progress_store.store.path = progress_path
 		progress_store.load_progress()
-		# Persist the fixed layout after loading; any older/draft format has a backup.
-		if initial_progress.get("wells_policy", "") != "fixed": save_progress()
 	objectives.reconcile(self)
+	if persistence_enabled:
+		save_controller = ProgressController.new()
+		save_controller.world = self
+		add_child(save_controller)
+		$HUD.initialize_save(self)
+		$Inventory.changed.connect(save_controller.changed)
+		journal.changed.connect(save_controller.changed)
+		objectives.changed.connect(save_controller.changed)
+		$Structures.placed.connect(save_controller.changed)
+		$WorldObjects/Player.health_changed.connect(save_controller.changed)
+		$HUD.panel_toggled.connect(save_controller.changed)
 
-func save_progress() -> bool:
-	return progress_store.save() if progress_store != null else true
+func queue_save() -> void:
+	if save_controller != null: save_controller.changed()
+
+func save_progress(force: bool = false) -> bool:
+	return await save_controller.flush(force) if save_controller != null else true
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_CLOSE_REQUEST] and is_node_ready():
@@ -193,11 +207,6 @@ func _physics_process(_delta: float) -> void:
 	if biome != current_biome:
 		current_biome = biome
 		$HUD.show_message(biome + (" · escuridão permanente; dormir bloqueado" if dark else ""))
-	if persistence_enabled:
-		save_clock += _delta
-		if save_clock >= 30:
-			save_clock = 0
-			save_progress()
 	var available: bool = $Structures.near_fire($WorldObjects/Player.global_position)
 	if $Inventory.cooking_available != available:
 		$Inventory.cooking_available = available

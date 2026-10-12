@@ -1,6 +1,6 @@
 class_name SaveStore
 extends RefCounted
-const VERSION := 3
+const VERSION := 4
 var path := "user://solo-progress.json"
 var error := ""
 

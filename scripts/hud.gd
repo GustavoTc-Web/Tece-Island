@@ -26,6 +26,8 @@ var base_view: BaseView
 var journal_view: JournalView
 var journal_button: Button
 var objective_button: Button
+var save_button: Button
+var save_notice: Label
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -150,6 +152,11 @@ func mobile_layout(value: bool) -> void:
 		touch_sizes(self)
 		for button in quick_buttons: button.add_theme_font_size_override("font_size", 16)
 		for button in slot_buttons: button.add_theme_font_size_override("font_size", 18)
+	if objective_button != null: objective_button.position.y = 88 if value else 76
+	if journal_button != null: journal_button.add_theme_font_size_override("font_size", 16)
+	if save_button != null:
+		save_button.position.y = 160 if value else 130
+		save_notice.visible = not value and current_panel == "" and not showing_death
 
 func touch_sizes(node: Node) -> void:
 	if node is Button:
@@ -223,6 +230,9 @@ func set_panel(panel: String) -> void:
 	if journal_view != null: journal_view.visible = panel == "journal"
 	if utility_buttons != null: utility_buttons.visible = panel == "" and not showing_death
 	if objective_button != null: refresh_objective()
+	if save_button != null:
+		save_button.visible = panel == "" and not showing_death
+		save_notice.visible = save_button.visible and not MobileInput.enabled
 	panel_toggled.emit(panel != "")
 
 
@@ -256,6 +266,34 @@ func initialize_journal(source: IslandJournal) -> void:
 	utility_buttons.position = Vector2(420, 16)
 	source.changed.connect(func(): journal_button.text = "Diário · %d" % source.unread.size() if not source.unread.is_empty() else "Diário · J")
 
+func initialize_save(world: Node2D) -> void:
+	save_button = Button.new()
+	save_button.position = Vector2(420, 130)
+	save_button.custom_minimum_size = Vector2(260, 44)
+	save_button.add_theme_font_size_override("font_size", 14)
+	save_button.text = "Progresso local"
+	save_button.add_theme_color_override("font_disabled_color", Color("dce8ce"))
+	var saved_style := StyleBoxFlat.new()
+	saved_style.bg_color = Color(0.06, 0.11, 0.085, 0.85)
+	saved_style.set_corner_radius_all(6)
+	save_button.add_theme_stylebox_override("disabled", saved_style)
+	save_button.disabled = true
+	save_button.pressed.connect(func(): world.save_progress(true))
+	add_child(save_button)
+	save_notice = Label.new()
+	save_notice.position = Vector2(420, 178)
+	save_notice.custom_minimum_size.x = 260
+	save_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	save_notice.add_theme_font_size_override("font_size", 12)
+	save_notice.text = "Salvo neste aparelho. Outros aparelhos não sincronizam."
+	save_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(save_notice)
+
+func show_save_state(text: String, retry: bool) -> void:
+	if save_button == null: return
+	save_button.text = "Falha ao salvar\nTentar novamente" if retry else text
+	save_button.disabled = not retry
+
 func initialize_objectives(source: IslandObjectives) -> void:
 	journal_view.objectives = source
 	source.changed.connect(journal_view.refresh)
@@ -273,7 +311,8 @@ func refresh_objective() -> void:
 	var source := journal_view.objectives
 	objective_button.visible = source.enabled and current_panel == "" and not showing_death
 	var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
-	objective_button.text = "Objetivo ▸" if source.collapsed else "%s · %d/%d ▾" % [goal.title, source.values[source.tracked], goal.target]
+	var title: String = "Explorar um templo" if source.tracked == "temple" else goal.title
+	objective_button.text = "Objetivo ▸" if source.collapsed else "%s\n%d/%d ▾" % [title, source.values[source.tracked], goal.target]
 
 func open_base(target: PlacedStructure = null) -> void:
 	if network_mode:
@@ -304,6 +343,11 @@ func show_death(value: bool) -> void:
 	showing_death = value
 	$Death.visible = value
 	if has_node("Quickbar"): $Quickbar.visible = not value and current_panel == ""
+	if utility_buttons != null: utility_buttons.visible = not value and current_panel == ""
+	if objective_button != null: refresh_objective()
+	if save_button != null:
+		save_button.visible = not value and current_panel == ""
+		save_notice.visible = save_button.visible and not MobileInput.enabled
 
 
 func _request_respawn() -> void:

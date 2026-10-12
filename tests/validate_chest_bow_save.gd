@@ -74,12 +74,12 @@ func run() -> void:
 	progress.world = world
 	DirAccess.make_dir_recursive_absolute("res://.tools/save-tests")
 	progress.store.path = "res://.tools/save-tests/progress.json"
-	check(progress.save(), "Save gravado em arquivo de teste")
+	check(await progress.save(), "Save gravado em arquivo de teste")
 	var saved := progress.store.read()
 	check(saved.structures[0].storage.slots[0].loaded == 6, "Save inclui propriedades da arma no baú")
 	var old := FileAccess.get_file_as_string(progress.store.path)
 	inv.add_resource("linha", 2)
-	check(progress.save() and FileAccess.get_file_as_string(progress.store.path + ".backup.json") == old, "Substituição preserva backup exato do save anterior")
+	check(await progress.save() and FileAccess.get_file_as_string(progress.store.path + ".backup.json") == old, "Substituição preserva backup exato do save anterior")
 	var restored: Node2D = load("res://scenes/world.tscn").instantiate()
 	restored.persistence_enabled = true
 	restored.progress_path = progress.store.path
@@ -98,7 +98,7 @@ func run() -> void:
 	file.close()
 	reader.store.path = bad_path
 	reader.load_progress()
-	check(not reader.writable and not reader.save() and FileAccess.get_file_as_string(bad_path) == "{broken", "Save inválido nunca sobrescrito")
+	check(not reader.writable and not await reader.save() and FileAccess.get_file_as_string(bad_path) == "{broken", "Save inválido nunca sobrescrito")
 	var migration := saved.duplicate(true)
 	migration.version = 0
 	var migration_path := "res://.tools/save-tests/migrate-%d.json" % Time.get_ticks_usec()

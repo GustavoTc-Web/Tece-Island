@@ -52,6 +52,7 @@ func _ready() -> void:
 	close.custom_minimum_size.y = 56
 	close.pressed.connect(func(): hud.set_panel(""))
 	rows.add_child(close)
+	if MobileInput.enabled: hud.touch_sizes(self)
 	journal.changed.connect(refresh)
 	refresh()
 func refresh() -> void:

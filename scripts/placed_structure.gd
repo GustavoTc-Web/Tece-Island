@@ -24,6 +24,7 @@ func _ready() -> void:
 		storage = ResourceInventory.new()
 		storage.capacity = 12
 		add_child(storage)
+		storage.changed.connect(func(_a, _b): progress_changed())
 	if kind == "fogueira":
 		add_to_group("campfires")
 		var gradient := Gradient.new()
@@ -70,6 +71,7 @@ func set_open(value: bool) -> void:
 	collision_layer = 0 if value else 1
 	$CollisionShape2D.set_deferred("disabled", value)
 	queue_redraw()
+	progress_changed()
 
 func can_close() -> bool:
 	var query := PhysicsShapeQueryParameters2D.new()
@@ -85,6 +87,7 @@ func rename_chest(value: String) -> bool:
 	value = value.strip_edges()
 	if kind != "bau" or value.is_empty() or value.length() > 24: return false
 	chest_name = value
+	progress_changed()
 	return true
 
 func dismantle_error() -> String:
@@ -113,7 +116,11 @@ func dismantle(inventory: ResourceInventory) -> String:
 	remove_from_group("interactables")
 	collision_layer = 0
 	queue_free()
+	progress_changed()
 	return "Estrutura desmontada: metade dos materiais devolvida; excedentes no chão."
+
+func progress_changed() -> void:
+	if is_instance_valid(system) and system.get_parent().has_method("queue_save"): system.get_parent().queue_save()
 
 func _process(delta: float) -> void:
 	if kind == "fogueira":
