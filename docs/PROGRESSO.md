@@ -37,7 +37,7 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-4. Esqueletos/aranhas, veneno e drops que fornecem flechas/linha.
+5/6. Peixes e Garça-azul, terreno aquático e nado. Depois Ruínas/expansão/minimapa.
 
 ## Etapa 2: bolsas
 
@@ -77,6 +77,20 @@ Validação: 25 verificações Godot, 18 de navegador com mouse/toque (incluindo
 reload com baú e munição preservados), 6 regressões da coleta. Nenhum celular físico.
 Etapas 1/2 já registradas nos commits 0a138cb / ea8e0d2; push das etapas de gameplay
 ainda pendente até consolidar a atualização.
+
+## Etapa 4: monstros e veneno
+
+Esqueleto e aranha entram na rotação do spawner existente, com o mesmo limite
+noturno total de cinco. Esqueleto: flecha de dano 10/velocidade 240, intervalo
+mínimo 2,5 s, aviso 0,65 s com direção capturada e LOS antes de iniciar/liberar.
+Aranha: 4 danos/1,5 s, veneno 3 s com um dano/s; novo ataque renova duração
+sem empilhar. Veneno congela na pausa, termina no respawn e integra o save.
+Drops no chão: flechas 70/25/5% para 1/2/3; linha 75/25% para 1/2.
+
+Validação: 18 verificações Godot (desvio, paredes, veneno, pausa, respawn,
+distribuições e limite compartilhado), 25 regressões baú/arco/save.
+Capturas Web desktop e resolução de celular revisadas, sem erros do navegador.
+Não houve teste em aparelho físico. Etapa 3: commit dbfef4b.
 
 ## Etapas seguintes solicitadas
 

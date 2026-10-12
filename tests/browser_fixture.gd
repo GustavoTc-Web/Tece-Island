@@ -46,6 +46,17 @@ func command(args: Array) -> void:
 			chest.position = player.position + Vector2(65, 0)
 			world.get_node("WorldObjects").add_child(chest)
 			chest.interact(inv)
+		"monsters":
+			for kind in ["esqueleto", "aranha"]:
+				var enemy: ForestCreature = load("res://scenes/forest_creature.tscn").instantiate()
+				enemy.kind = kind
+				enemy.origin = "guardiao"
+				enemy.safe_radius = 0
+				enemy.player = player
+				enemy.position = player.position + (Vector2(-160, 0) if kind == "esqueleto" else Vector2(160, 0))
+				world.get_node("WorldObjects").add_child(enemy)
+				enemy.set_physics_process(false)
+				if kind == "esqueleto": enemy.try_attack()
 func rect(control: Control) -> Array:
 	var box := control.get_global_rect()
 	return [box.position.x, box.position.y, box.size.x, box.size.y]

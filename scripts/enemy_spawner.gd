@@ -14,6 +14,8 @@ var cycle: DayNightCycle
 var container: Node2D
 var cooldown: float = 0.0
 var next_point: int = 0
+var next_kind := 0
+const KINDS := ["criatura", "esqueleto", "aranha"]
 
 
 func alive_count() -> int:
@@ -55,6 +57,8 @@ func try_spawn() -> ForestCreature:
 		if not player.get_world_2d().direct_space_state.intersect_shape(query).is_empty():
 			continue
 		var enemy := CREATURE.instantiate() as ForestCreature
+		enemy.kind = KINDS[next_kind % KINDS.size()]
+		next_kind += 1
 		enemy.position = point
 		enemy.player = player
 		enemy.safe_center = safe_center

@@ -2,6 +2,12 @@ class_name ForestCreature
 extends CharacterBody2D
 
 @export var max_health: int = 30
+@export_enum("criatura", "esqueleto", "aranha") var kind := "criatura"
+@export var skeleton_interval := 2.5
+@export var skeleton_windup := 0.65
+@export var skeleton_arrow_speed := 240.0
+var windup_remaining := 0.0
+var shot_direction := Vector2.RIGHT
 @export var attack_damage: int = 10
 @export_range(1.0, 10.0) var attack_interval: float = 1.0
 @export var attack_range: float = 30.0
@@ -54,6 +60,15 @@ func begin_dawn() -> void:
 
 
 func _ready() -> void:
+	if kind == "esqueleto":
+		attack_damage = 10
+		attack_interval = maxf(2.5, skeleton_interval)
+		attack_range = 220
+		chase_speed = 75
+	elif kind == "aranha":
+		attack_damage = 4
+		attack_interval = 1.5
+		chase_speed = 105
 	health = max_health
 	home = global_position
 	destination = home
@@ -89,7 +104,32 @@ func try_attack() -> bool:
 	if is_safe(player.global_position) or not has_line_of_sight(player.global_position):
 		return false
 	attack_cooldown = attack_interval
-	return player.receive_damage(attack_damage)
+	if kind == "esqueleto":
+		shot_direction = (player.global_position - global_position).normalized()
+		windup_remaining = skeleton_windup
+		queue_redraw()
+		return true
+	var hit: bool = player.receive_damage(attack_damage)
+	if hit and kind == "aranha" and player.has_method("apply_poison"): player.apply_poison(3)
+	return hit
+
+func release_arrow() -> bool:
+	if dead or fading or not is_instance_valid(player) or player.dead or is_safe(player.global_position) or not has_line_of_sight(player.global_position): return false
+	var arrow: Node2D = preload("res://scenes/projectile.tscn").instantiate()
+	arrow.position = global_position
+	arrow.direction = shot_direction
+	arrow.speed = skeleton_arrow_speed
+	arrow.remaining = 440
+	arrow.damage = 10
+	arrow.arrow = true
+	arrow.hit_players = true
+	arrow.shooter = get_rid()
+	get_parent().add_child(arrow)
+	return true
+
+static func drop_quantity(monster: String, roll: float) -> int:
+	if monster == "esqueleto": return 1 if roll < 0.70 else (2 if roll < 0.95 else 3)
+	return 1 if roll < 0.75 else 2
 
 
 func receive_damage(amount: int) -> bool:
@@ -104,6 +144,12 @@ func receive_damage(amount: int) -> bool:
 		collision_layer = 0
 		collision_mask = 0
 		remove_from_group("enemies")
+		if kind in ["esqueleto", "aranha"]:
+			var drop: ResourceDrop = preload("res://scenes/resource_drop.tscn").instantiate()
+			drop.resource = "flecha" if kind == "esqueleto" else "linha"
+			drop.quantity = drop_quantity(kind, randf())
+			drop.position = global_position
+			get_parent().add_child(drop)
 		queue_free()
 	return true
 
@@ -124,6 +170,10 @@ func _physics_process(delta: float) -> void:
 	if not simulation_authority or dead or fading or not is_instance_valid(player):
 		return
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
+	if windup_remaining > 0:
+		windup_remaining = maxf(0, windup_remaining - delta)
+		queue_redraw()
+		if windup_remaining == 0: release_arrow()
 	var distance := global_position.distance_to(player.global_position)
 	var player_safe := is_safe(player.global_position)
 	var outside_territory := origin == "guardiao" and player.global_position.distance_to(home) > territory_radius
@@ -160,6 +210,9 @@ func _physics_process(delta: float) -> void:
 
 
 func _draw() -> void:
+	if kind != "criatura":
+		draw_monster()
+		return
 	draw_set_transform(Vector2(0, 3), 0.0, Vector2(1, 0.4))
 	draw_circle(Vector2.ZERO, 22, Color(0.08, 0.1, 0.12, 0.35))
 	draw_set_transform(Vector2.ZERO)
@@ -176,3 +229,30 @@ func _draw() -> void:
 	if highlighted or health < max_health:
 		draw_rect(Rect2(-22, -48, 44, 5), Color("302c42"))
 		draw_rect(Rect2(-22, -48, 44.0 * health / max_health, 5), Color("db866a"))
+
+func draw_monster() -> void:
+	if kind == "esqueleto":
+		draw_circle(Vector2(0, -30), 12, Color("dedbc3"))
+		for x in [-5, 5]: draw_circle(Vector2(x, -32), 3, Color("343e48"))
+		draw_line(Vector2(0, -18), Vector2(0, -4), Color("dedbc3"), 4)
+		for y in [-16, -11, -6]: draw_line(Vector2(-8, y), Vector2(8, y), Color("cbc9b2"), 3)
+		for x in [-7, 7]:
+			draw_line(Vector2(0, -4), Vector2(x, 5), Color("dedbc3"), 4)
+			draw_line(Vector2(x, -17), Vector2(x * 2, -6), Color("dedbc3"), 3)
+		draw_arc(Vector2(17, -13), 12, -PI / 2, PI / 2, 10, Color("aa8753"), 3)
+		if windup_remaining > 0:
+			draw_line(Vector2.ZERO, shot_direction * 50, Color("ffc16c"), 3)
+			draw_arc(Vector2(0, -30), 18, 0, TAU, 20, Color("ffc16c"), 2)
+	else:
+		for side in [-1, 1]:
+			for i in range(4):
+				var start := Vector2(side * 7, -10 + i * 4)
+				var bend := Vector2(side * 23, -19 + i * 10)
+				draw_polyline(PackedVector2Array([start, bend, bend + Vector2(side * 4, 6)]), Color("615369"), 3)
+		draw_circle(Vector2(0, -8), 14, Color("55405f"))
+		draw_circle(Vector2(0, 4), 9, Color("7a596f"))
+		for x in [-4, 4]: draw_circle(Vector2(x, 7), 2, Color("d8bf68"))
+	if highlighted: draw_arc(Vector2.ZERO, 27, 0, TAU, 24, Color("efae7b"), 2)
+	if highlighted or health < max_health:
+		draw_rect(Rect2(-22, -52, 44, 5), Color("302c42"))
+		draw_rect(Rect2(-22, -52, 44.0 * health / max_health, 5), Color("db866a"))

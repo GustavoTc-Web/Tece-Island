@@ -10,6 +10,8 @@ func capture() -> Dictionary:
 	var result := {"version": SaveStore.VERSION, "inventory": world.get_node("Inventory").network_state(), "player": {"position": SaveStore.point(player.position), "health": player.health, "hunger": needs.hunger, "thirst": needs.thirst}, "elapsed": world.get_node("DayNight").elapsed, "structures": [], "drops": [], "resources": {}, "loot": {}, "wells": []}
 	var structures: Node = world.get_node("Structures")
 	if is_instance_valid(structures.respawn_bed): result.bed = SaveStore.point(structures.respawn_bed.position)
+	result.player.poison = player.poison_remaining
+	result.player.poison_tick = player.poison_tick
 	for node in world.get_node("WorldObjects").get_children():
 		if node.is_queued_for_deletion(): continue
 		if node is PlacedStructure:
@@ -72,6 +74,8 @@ func load_progress() -> void:
 	var player_state: Dictionary = data.get("player", {})
 	player.position = SaveStore.vector(player_state.get("position"), player.position)
 	player.health = clampi(int(player_state.get("health", 100)), 1, player.max_health)
+	player.poison_remaining = clampf(float(player_state.get("poison", 0)), 0, 3)
+	player.poison_tick = clampf(float(player_state.get("poison_tick", 1)), 0, 1)
 	player.get_node("Needs").hunger = clampf(float(player_state.get("hunger", 100)), 0, 100)
 	player.get_node("Needs").thirst = clampf(float(player_state.get("thirst", 100)), 0, 100)
 	world.get_node("HUD").update_health(player.health, player.max_health)

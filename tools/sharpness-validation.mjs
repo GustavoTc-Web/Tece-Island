@@ -18,6 +18,7 @@ try {
   await page.waitForFunction(()=>window.tcState?.position);
   await page.evaluate(()=>window.tcFixture(JSON.stringify({action:'position',x:1152,y:768})));
   await page.waitForTimeout(500);
+	  if(phase==='monsters'){await page.evaluate(()=>window.tcFixture(JSON.stringify({action:'monsters'})));await page.waitForTimeout(250);}
   const sizing=await page.evaluate(()=>{const c=document.querySelector('canvas'),r=c.getBoundingClientRect();return {backing:[c.width,c.height],css:[r.width,r.height],dpr:devicePixelRatio,viewport:window.tcState.viewport};});
   await page.screenshot({path:'.tools/screenshots/sharpness-'+phase+'-'+sample.name+'.png'});
   results.push({...sample,...sizing,errors});

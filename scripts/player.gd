@@ -21,6 +21,24 @@ var network_controlled: bool = false
 var simulation_authority: bool = true
 var identity_label: String = ""
 var identity_color := Color("d9a441")
+var poison_remaining := 0.0
+var poison_tick := 0.0
+
+func apply_poison(duration: float = 3.0) -> void:
+	if dead or not simulation_authority: return
+	if poison_remaining <= 0: poison_tick = 1.0
+	poison_remaining = duration
+	queue_redraw()
+
+func step_poison(delta: float) -> void:
+	if poison_remaining <= 0 or dead or not simulation_authority or get_tree().paused: return
+	var active_delta := minf(delta, poison_remaining)
+	poison_remaining = maxf(0, poison_remaining - delta)
+	poison_tick -= active_delta
+	while poison_tick <= 0.00001 and not dead:
+		receive_damage(1, true)
+		poison_tick += 1.0
+	queue_redraw()
 
 
 func show_swing(direction: Vector2, radius: float) -> void:
@@ -56,6 +74,8 @@ func respawn(point: Vector2) -> void:
 	velocity = Vector2.ZERO
 	invulnerability = invulnerability_duration
 	damage_flash = 0.0
+	poison_remaining = 0
+	poison_tick = 0
 	modulate = Color.WHITE
 	health_changed.emit(health, max_health)
 	queue_redraw()
@@ -77,6 +97,7 @@ func show_equipment(tool: String) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	step_poison(delta)
 	if network_controlled:
 		return
 	step_movement(delta, Input.get_vector("move_left", "move_right", "move_up", "move_down") + touch_movement)
@@ -100,6 +121,9 @@ func step_movement(delta: float, direction: Vector2) -> void:
 
 
 func _draw() -> void:
+	if poison_remaining > 0:
+		draw_arc(Vector2.ZERO, 17, 0, TAU, 20, Color("89c866"), 2)
+		draw_string(ThemeDB.fallback_font, Vector2(-19, -52), "Veneno", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("b0db87"))
 	if swing_time > 0.0:
 		var angle := swing_direction.angle()
 		draw_arc(Vector2.ZERO, swing_radius, angle - PI / 4, angle + PI / 4, 20, Color(1, 0.9, 0.65, swing_time / 0.16), 3)
