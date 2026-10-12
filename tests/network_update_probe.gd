@@ -8,10 +8,12 @@ var failures := 0
 var checks := 0
 var reports := {}
 func _ready() -> void:
+	FirebaseAuth.config.enabled = false # Test-only offline gameplay, never a mock login.
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--role="): role = arg.trim_prefix("--role=")
 		if arg.begins_with("--port="): port = int(arg.trim_prefix("--port="))
 	main = load("res://scenes/main.tscn").instantiate()
+	main.set_script(load("res://tests/native_fixture_session.gd"))
 	add_child(main)
 	if role == "host":
 		main.host_game(port)

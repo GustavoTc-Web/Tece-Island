@@ -32,7 +32,7 @@ theme_override_constants/separation = 4
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.94, 0.85, 1)
 theme_override_font_sizes/font_size = 16
-text = "TC Island 0.7 · WASD / setas · Usar: F / mouse · Interagir: E"
+text = "TC Island · WASD / setas · F / mouse: usar"
 
 [node name="HealthLabel" type="Label" parent="Controls/Rows"]
 layout_mode = 2

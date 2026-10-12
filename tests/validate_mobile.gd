@@ -39,8 +39,13 @@ func find_button(node: Node, text: String) -> Button:
 func run() -> void:
 	root.size = Vector2i(960, 540)
 	var mobile := root.get_node("MobileInput")
+	var auth := root.get_node("FirebaseAuth")
+	var original_config: Dictionary = auth.config.duplicate(true)
+	auth.config.enabled = false
+	print("TEST: fixture de gameplay offline; nenhuma autenticação positiva simulada")
 	mobile.set_enabled(true)
 	session = load("res://scenes/main.tscn").instantiate()
+	session.set_script(load("res://tests/native_fixture_session.gd"))
 	root.add_child(session)
 	await step()
 	await tap_button(find_button(session.menu, "Jogar solo"))
@@ -133,11 +138,16 @@ func run() -> void:
 	check(not structures.active and inv.count_item("fogueira") == 1, "Cancelar conserva objeto")
 	hud.set_panel("inventory")
 	await step()
+	if DisplayServer.get_name() != "headless":
+		DirAccess.make_dir_recursive_absolute("res://.tools/screenshots")
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://.tools/screenshots/mobile-native.png")
 	await tap_button(world.get_node("ExitUI").get_child(0))
 	await step()
 	check(session.menu != null and session.game == null and not paused, "Menu por toque responde a partir de partida pausada")
 	mobile.set_enabled(false)
 	session.queue_free()
 	await step()
+	auth.config = original_config
 	print("MOBILE: ", checks, " verificações, ", failures, " falhas")
 	quit(1 if failures else 0)

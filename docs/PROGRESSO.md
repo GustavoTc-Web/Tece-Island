@@ -35,10 +35,12 @@ Fixture de gameplay explicitamente offline numa cópia, excluída da publicaçã
 não representa login real. Nenhum teste em celular físico.
 Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/classes/class_viewport.html
 
-## Próxima etapa
+## Estado final da implementação
 
-11. Verificações finais, commit/push e deploy. Gameplay ainda não publicado.
+Etapas 0–11 implementadas e verificadas. Publicação pelo workflow Pages após
+o commit final; resultado do deploy será conferido no endereço existente.
 Decisão atual do usuário: chance dos poços adiada; preservar regra fixa.
+Detalhes dos testes e limites: docs/VALIDACAO.md.
 
 ## Etapa 2: bolsas
 
@@ -176,20 +178,23 @@ Validação: 25 verificações Godot e 16 de navegador mouse/toque, incluindo
 rotação, abrir/fechar, cancelamento e reload com base/porta aberta.
 Etapa dos poços fixos: commit b4f8377.
 
-## Etapas seguintes solicitadas
+## Etapa 11: persistência e validação final
 
-2. Bolsas de quatro níveis e melhorias atômicas.
-3. Baú construível, transferências, arco e flechas.
-4. Esqueletos e aranhas, veneno e drops.
-5. Peixes e Garça-azul.
-6. Aquático e nado.
-7. Ruínas Escuras e templos.
-8. Expansão para norte/sul/oeste e minimapa.
-9. Poços: sorteio/redução adiados pelo usuário; regra fixa anterior preservada.
-10. Paredes, portas e vidraças.
-11. Persistência, validação final e publicação.
+Save versão 3, gravação temporária verificada antes da substituição e backup.
+Formatos antigos aceitos; arquivo inválido/futuro preservado sem sobrescrever.
+Inventário, equipamento, propriedades dos itens, bases, portas, baús, loot,
+recursos coletados, semente, exploração e distribuição fixa conservados.
+Migração de um save local v1 conferida: inventário/jogador idênticos, duas bases
+e loot anteriores preservados; bytes originais disponíveis no before-v3.
+Testes de menu e rede agora usam arquivos separados para evitar carregar
+progresso pessoal. Limites antigos dos testes atualizados para o mapa expandido.
+HUD compacto não cobre o personagem; animais terrestres distantes ficam
+inativos, preservando os antigos e limitando a população total em 48.
 
-Antes de persistência/migração, conferir saves realmente existentes e fazer
-backup. A documentação anterior declara que a versão atual não tem salvamento;
-não presumir um formato sem examinar o código e os arquivos.
-Preservar as coordenadas atuais e as correções dos controles.
+Validação: 405 verificações headless; 48 na janela Godot Compatibility;
+71 em duas instâncias reais ENet; 114 no navegador com mouse/toque emulado.
+Após o ajuste final, repetidos fabricação/base (36), menu/mobile (38),
+animais/aquático/expansão (77) e smoke da exportação principal Firebase.
+Falha de cena proposital verifica mensagem e nova tentativa; não é falha
+da partida normal. Sem teste em celular físico ou login positivo simulado.
+Etapa 10: commit 571577f. Histórico mantém um commit por etapa funcional.

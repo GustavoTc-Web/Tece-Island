@@ -121,8 +121,9 @@ func run() -> void:
 	check(drop.quantity in [2, 3], "Vaca deixa duas ou três carnes")
 	var correct_habitat := true
 	for animal in get_nodes_in_group("animals"):
-		correct_habitat = correct_habitat and animal.position.x < 5376
-	check(correct_habitat, "Animais ficam em regiões com vegetação")
+		if animal.is_fish(): correct_habitat = correct_habitat and WorldTerrain.is_water(animal.position)
+		elif animal.kind in ["coelho", "vaca"]: correct_habitat = correct_habitat and WorldTerrain.region_at(animal.position).get("kind", "") in ["Floresta", "Campos", "Pântano"]
+	check(correct_habitat, "Peixes ficam na água e animais terrestres na vegetação")
 	world.queue_free()
 	await step()
 	print("UPDATE C: ", checks, " verificações, ", failures, " falhas")

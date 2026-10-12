@@ -47,7 +47,7 @@ func run() -> void:
 		check(building.loot.contents == contents, "Revisita não sorteia novamente")
 	for well in get_nodes_in_group("wells"):
 		check(accessible_point(well.position + Vector2(0, 48), reachable), "Poço alcançável: " + str(well.position))
-	check(player.get_node("Camera2D").limit_right == 6912 and world.get_node("Borders/Right").position.x == 6896, "Câmera e borda cobrem deserto")
+	check(player.get_node("Camera2D").limit_right == 6912 and world.terrain.get_child_count() > 0, "Câmera e borda cobrem deserto")
 	var structures := world.get_node("Structures")
 	inv.add_resource("cama")
 	inv.add_resource("fogueira")

@@ -35,7 +35,12 @@ func click(control: Control) -> void:
 
 func run() -> void:
 	root.size = Vector2i(960, 540)
+	var auth := root.get_node("FirebaseAuth")
+	var original_config: Dictionary = auth.config.duplicate(true)
+	auth.config.enabled = false
+	print("TEST: fixture de gameplay offline; nenhuma autenticação positiva simulada")
 	session = load("res://scenes/main.tscn").instantiate()
+	session.set_script(load("res://tests/native_fixture_session.gd"))
 	root.add_child(session)
 	await step()
 	var solo := find_button("Jogar solo")
@@ -49,6 +54,10 @@ func run() -> void:
 	if is_instance_valid(session.game):
 		check(session.game.get_script() != null and session.game.get_node("Structures").player != null, "Mapa inicializado")
 		check(session.multiplayer.multiplayer_peer is OfflineMultiplayerPeer, "Solo usa rede offline")
+		if DisplayServer.get_name() != "headless":
+			DirAccess.make_dir_recursive_absolute("res://.tools/screenshots")
+			await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png("res://.tools/screenshots/game-main-native.png")
 		var player: Node2D = session.game.get_node("WorldObjects/Player")
 		var point := player.position
 		session.game.get_node("HUD").set_panel("inventory")
@@ -94,5 +103,6 @@ func run() -> void:
 	session.return_to_menu("Fim")
 	session.queue_free()
 	await step()
+	auth.config = original_config
 	print("MENU failures: ", failures)
 	quit(1 if failures else 0)

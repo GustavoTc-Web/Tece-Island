@@ -11,6 +11,7 @@
 - População noturna: exports de scripts/enemy_spawner.gd; cinco no total.
   Ruínas: scripts/ruins_system.gd; quatro guardiões e seis unidades por templo.
 - Animais: scripts/animal.gd e exports de scripts/animal_spawner.gd.
+  Seis coelhos/três vacas próximos; limite total terrestre 48, distantes inativos.
   Garça: 2% por tentativa válida, >=60 s, no máximo uma.
 - Terreno, área de água e nado: scripts/world_terrain.gd; nado 60%.
 - Ciclo: scripts/day_night.gd; dia/noite 300 s cada, transição 30 s.

@@ -193,6 +193,9 @@ tools/export-auth-test.ps1 e servir build/auth-test na porta 8083.
 
 ## Validação
 
+Resultados desta atualização e limites dos testes: [docs/VALIDACAO.md](docs/VALIDACAO.md).
+Etapas e commits: [docs/PROGRESSO.md](docs/PROGRESSO.md).
+
 Correção de coleta: baús já vasculhados deixam de competir com os drops na
 seleção do alvo. O botão de toque mostra Coletar, Abrir, Beber, Usar cama ou Cozinhar.
 Confirmar/Cancelar ficam fora da região próxima ao jogador usada pela prévia.

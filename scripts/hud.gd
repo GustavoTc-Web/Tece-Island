@@ -90,6 +90,7 @@ func initialize(source: ResourceInventory) -> void:
 		button.custom_minimum_size = Vector2(100, 54)
 		button.focus_mode = Control.FOCUS_NONE
 		button.add_theme_font_size_override("font_size", 12)
+		button.clip_text = true
 		button.pressed.connect(func():
 			if current_panel != "" or showing_death: return
 			if network_mode: network_action_requested.emit("select", index)
@@ -116,8 +117,8 @@ func mobile_layout(value: bool) -> void:
 	$Controls/Rows/Instructions.visible = not value
 	$Controls/Rows/EquipmentKeys.visible = not value
 	for label in [$Controls/Rows/Equipment, $Controls/Rows/Prompt, $Controls/Rows/Pickup, $Controls/Rows/Feedback]:
-		label.custom_minimum_size.x = 560 if value else 0
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if value else TextServer.AUTOWRAP_OFF
+		label.custom_minimum_size.x = 360
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	if value:
 		touch_sizes(self)

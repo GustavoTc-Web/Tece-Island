@@ -42,7 +42,7 @@ func accessible_cells(player: CharacterBody2D) -> Dictionary:
 	shape.radius = 10
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.collision_mask = 1
+	query.collision_mask = 9
 	var start := Vector2i(player.position / 24)
 	var queue: Array[Vector2i] = [start]
 	var seen := {start: true}
@@ -53,7 +53,7 @@ func accessible_cells(player: CharacterBody2D) -> Dictionary:
 		index += 1
 		for direction in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 			var next: Vector2i = cell + direction
-			if next.x < 0 or next.x >= 288 or next.y < 0 or next.y >= 64 or seen.has(next): continue
+			if seen.has(next) or not WorldTerrain.contains(Vector2(next) * 24 + Vector2(12, 12)): continue
 			seen[next] = true
 			query.transform = Transform2D(0, Vector2(next) * 24 + Vector2(12, 12))
 			if player.get_world_2d().direct_space_state.intersect_shape(query).is_empty():

@@ -57,9 +57,13 @@ func run() -> void:
 	minimap.reveal()
 	check(minimap.explored.size() > explored, "Exploração cresce ao visitar região nova")
 	var sleeping := 0
+	var dormant_animals := 0
 	for node in world.get_node("WorldObjects").get_children():
 		if node is ForestCreature and not node.is_physics_processing(): sleeping += 1
+		if node is NeutralAnimal and node.kind in ["coelho", "vaca"] and node.global_position.distance_to(player.global_position) > 2200:
+			if not node.is_physics_processing() and not node.is_queued_for_deletion(): dormant_animals += 1
 	check(sleeping >= 4, "Guardiões distantes têm IA desativada")
+	check(dormant_animals > 0, "Animais terrestres antigos permanecem no mundo, inativos quando distantes")
 	player.position = Vector2(-2304, 768)
 	await step()
 	var awake := 0

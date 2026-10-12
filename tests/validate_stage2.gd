@@ -49,7 +49,7 @@ func run() -> void:
 	index = 0
 	check(system.start_placement(index), "Colocação fecha painel e inicia prévia")
 	check(not system.can_place(player.position), "Não sobrepõe jogador")
-	check(not system.can_place(Vector2(10, 10)), "Não sobrepõe bordas")
+	check(not system.can_place(WorldTerrain.BOUNDS.position - Vector2(10, 10)), "Não sobrepõe bordas")
 	system.cancel()
 	check(inv.count_item("cama") == 1, "Cancelar preserva item")
 	system.start_placement(index)

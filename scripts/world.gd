@@ -21,7 +21,7 @@ var region_wells := {}
 
 
 func _ready() -> void:
-	world_seed = randi_range(1, 2147480000)
+	if world_seed == 0: world_seed = int($Exploration.random_seed) if $Exploration.random_seed > 0 else randi_range(1, 2147480000)
 	if persistence_enabled:
 		var store := SaveStore.new()
 		store.path = progress_path
@@ -196,7 +196,7 @@ func update_activity() -> void:
 			node.remove_from_group("enemies")
 			node.queue_free()
 			continue
-		if node is NeutralAnimal and not node.is_fish() and distance > 2200:
+		if node is NeutralAnimal and node.kind == "garca_azul" and distance > 2200:
 			node.remove_from_group("animals")
 			node.queue_free()
 			continue

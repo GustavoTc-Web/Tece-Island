@@ -3,6 +3,7 @@ extends Node
 @export var cow_limit: int = 3
 @export var replenish_interval: float = 120.0
 @export var fish_limit := 8
+@export var total_land_limit := 48
 @export var bird_chance := 0.02
 @export var bird_attempt_interval := 60.0
 var bird_clock := 60.0
@@ -86,9 +87,11 @@ func try_bird(roll: float = -1) -> NeutralAnimal:
 	return bird
 func spawn(kind: String, avoid_player: bool = true) -> NeutralAnimal:
 	var count := 0
+	var total_land := 0
 	for animal in get_tree().get_nodes_in_group("animals"):
-		if animal.kind == kind: count += 1
-	if count >= (cow_limit if kind == "vaca" else rabbit_limit): return null
+		if animal.kind in ["coelho", "vaca"]: total_land += 1
+		if animal.kind == kind and animal.global_position.distance_to(player.global_position) <= 1600: count += 1
+	if total_land >= total_land_limit or count >= (cow_limit if kind == "vaca" else rabbit_limit): return null
 	var shape := CircleShape2D.new()
 	shape.radius = 18
 	var query := PhysicsShapeQueryParameters2D.new()
