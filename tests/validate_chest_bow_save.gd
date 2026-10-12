@@ -81,12 +81,12 @@ func run() -> void:
 	inv.add_resource("linha", 2)
 	check(progress.save() and FileAccess.get_file_as_string(progress.store.path + ".backup.json") == old, "Substituição preserva backup exato do save anterior")
 	var restored: Node2D = load("res://scenes/world.tscn").instantiate()
+	restored.persistence_enabled = true
+	restored.progress_path = progress.store.path
 	root.add_child(restored)
 	await step()
-	var reader := WorldProgress.new()
-	reader.world = restored
-	reader.store.path = progress.store.path
-	reader.load_progress()
+	var reader: WorldProgress = restored.progress_store
+	check(reader.capture().loot == saved.loot, "Semente do save conserva todos os recipientes e seu saque")
 	check(reader.writable and restored.get_node("Inventory").count_item("linha") == 2, "Carregar restaura inventário")
 	var loaded_chest: PlacedStructure
 	for node in restored.get_node("WorldObjects").get_children():

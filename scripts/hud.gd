@@ -322,6 +322,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		if not slot.is_empty():
 			text = ItemCatalog.quick_title(slot.item)
 		quick_buttons[index].text = "%d %s\n%s" % [index + 1, text, ("%d/3 doses" % slot.get("water", 0) if slot.get("item", "") == "cantil" else "×%d" % slot.get("quantity", 0))]
+		if slot.is_empty(): quick_buttons[index].text = "%d\nMãos" % (index + 1)
 		quick_buttons[index].modulate = Color("f2d786") if inventory.selected_index == index else Color.WHITE
 	for index in range(slot_buttons.size()):
 		var slot: Dictionary = data[index]

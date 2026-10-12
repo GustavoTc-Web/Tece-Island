@@ -37,7 +37,8 @@ Documentação técnica da filtragem: https://docs.godotengine.org/en/stable/cla
 
 ## Próxima etapa
 
-7. Ruínas Escuras; depois expansão/minimapa, poços e peças de base.
+8. Expandir os quatro tipos originais com duas novas regiões cada e minimapa.
+Depois poços persistentes por região e peças de base.
 
 ## Etapa 2: bolsas
 
@@ -112,6 +113,22 @@ passando. Capturas da ave/água revisadas. Rótulos da barra rápida reduzidos a
 duas linhas para não cortar carne de peixe no rodapé. Nenhum celular físico.
 Etapa 4: commit d06789b. Ainda faltam Ruínas, outras regiões, minimapa, poços,
 peças de base e publicação final das etapas de gameplay.
+
+## Etapa 7: Ruínas Escuras
+
+Duas regiões oeste/sul, quatro templos grandes ao todo, salas e corredores com
+entrada acessível. Cada templo tem 3–5 baús e orçamento total de seis unidades,
+dividido entre eles. Guardiões existentes com configuração própria, limite quatro,
+independentes da população noturna; regras das construções antigas mantidas.
+Escuridão no contexto do jogador ao entrar; sair restaura o horário global.
+Dormir é bloqueado com motivo e sem avançar relógio. A semente do mundo agora
+é persistida e carregada antes da geração; loot dos recipientes não é sorteado
+novamente. Novas regiões não perdem recursos ao carregar um save anterior.
+
+Validação: 27 verificações Godot, 8 de navegador teclado/toque (entrada física
+e luz ao entrar/sair), 26 regressões de baú/save, incluindo semente e todos
+os recipientes. Captura de templo em celular emulado revisada. Nenhum aparelho real.
+Etapas 5/6: commit d0d63a4. Gameplay ainda não enviado ao Pages.
 
 ## Etapas seguintes solicitadas
 

@@ -9,13 +9,19 @@ const ORIGINAL := [
 const AQUATIC := [
 	{"id": "aquatic_w", "kind": "Aquático", "rect": Rect2(-1536, 0, 1536, 1536)},
 	{"id": "aquatic_n", "kind": "Aquático", "rect": Rect2(5376, -1536, 1536, 1536)}]
+const RUINS := [
+	{"id": "ruins_w", "kind": "Ruínas Escuras", "rect": Rect2(-3072, 0, 1536, 1536)},
+	{"id": "ruins_s", "kind": "Ruínas Escuras", "rect": Rect2(-1536, 1536, 1536, 1536)}]
 const PONDS := [Rect2(2450, 400, 130, 85), Rect2(3390, 250, 180, 100), Rect2(2770, 1250, 170, 90), Rect2(3500, 940, 160, 70)]
 const COLORS := {"Floresta": Color("567c46"), "Pântano": Color("40574b"), "Campos": Color("ad9b5c"), "Deserto": Color("dec487"), "Aquático": Color("366e86"), "Ruínas Escuras": Color("494755")}
-const BOUNDS := Rect2(-1536, -1536, 8448, 3072)
+const BOUNDS := Rect2(-3072, -1536, 9984, 4608)
 const SWIM_SPEED := 0.60
 
 static func regions() -> Array:
-	return ORIGINAL + AQUATIC
+	return ORIGINAL + AQUATIC + RUINS
+
+static func is_dark(point: Vector2) -> bool:
+	return region_at(point).get("kind", "") == "Ruínas Escuras"
 
 static func region_at(point: Vector2) -> Dictionary:
 	for region in regions():
@@ -78,6 +84,10 @@ func _draw() -> void:
 		if region in ORIGINAL: continue
 		var rect: Rect2 = region.rect
 		draw_rect(rect, COLORS[region.kind])
+		if region.kind == "Ruínas Escuras":
+			for i in range(110):
+				var point := rect.position + Vector2(40 + posmod(i * 163, int(rect.size.x) - 80), 40 + posmod(i * 227, int(rect.size.y) - 80))
+				draw_rect(Rect2(point, Vector2(10, 5)), Color("686271"))
 		if region.kind == "Aquático":
 			var land := Color("819b62")
 			draw_rect(rect, land, false, 28)

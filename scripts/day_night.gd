@@ -13,6 +13,7 @@ var elapsed: float = 0.0
 var day_number: int = 1
 var phase: String = "Dia"
 var remaining_seconds := -1
+var local_darkness := false
 
 
 func _ready() -> void:
@@ -57,7 +58,7 @@ func refresh() -> void:
 		if position >= day_duration + night_duration - transition:
 			next_phase = "Amanhecer"
 			darkness = 1.0 - smoothstep(day_duration + night_duration - transition, day_duration + night_duration, position)
-	color = Color.WHITE.lerp(night_color, darkness)
+	color = Color.WHITE.lerp(night_color, 1.0 if local_darkness else darkness)
 	var remaining := ceili((day_duration if position < day_duration else day_duration + night_duration) - position)
 	if remaining != remaining_seconds or next_phase != phase:
 		remaining_seconds = remaining

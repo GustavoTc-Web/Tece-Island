@@ -12,6 +12,9 @@ func capture() -> Dictionary:
 	if is_instance_valid(structures.respawn_bed): result.bed = SaveStore.point(structures.respawn_bed.position)
 	result.player.poison = player.poison_remaining
 	result.player.poison_tick = player.poison_tick
+	result.world_seed = world.world_seed
+	result.generated_regions = []
+	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
 		if node.is_queued_for_deletion(): continue
 		if node is PlacedStructure:
@@ -87,10 +90,12 @@ func load_progress() -> void:
 		if node is ResourceDrop: node.queue_free()
 		elif node is HarvestResource and data.has("resources"):
 			var key := SaveStore.key(node.position)
-			if not data.resources.has(key):
+			var region := WorldTerrain.region_at(node.global_position)
+			var old_regions: Array = data.get("generated_regions", ["forest", "swamp", "fields", "desert"])
+			if not data.resources.has(key) and region.get("id", "") in old_regions:
 				node.collision_layer = 0
 				node.queue_free()
-			else: node.progress = clampf(float(data.resources[key]), 0, 0.999)
+			elif data.resources.has(key): node.progress = clampf(float(data.resources[key]), 0, 0.999)
 	for state in data.get("structures", []):
 		var structure: PlacedStructure = preload("res://scenes/placed_structure.tscn").instantiate()
 		structure.kind = state.kind

@@ -105,6 +105,9 @@ func _process(_delta: float) -> void:
 		data.search = rect(hud.crafting_view.search)
 		data.capacity = inv.capacity
 		data.swimming = player.swimming
+		data.dark = world.get_node("DayNight").local_darkness
+		data.temples = []
+		for temple in world.ruins.temples: data.temples.append([temple.position.x, temple.position.y])
 		data.player_screen = [player.get_global_transform_with_canvas().origin.x, player.get_global_transform_with_canvas().origin.y]
 		data.backpack = inv.backpack
 		if hud.storage_view != null and is_instance_valid(hud.storage_view.chest):

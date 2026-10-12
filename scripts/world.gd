@@ -6,12 +6,22 @@ const ROCK := preload("res://scenes/obstacles/rock.tscn")
 const DROP := preload("res://scenes/resource_drop.tscn")
 const BUSH := preload("res://scenes/obstacles/bush.tscn")
 var persistence_enabled := false
+var progress_path := "user://solo-progress.json"
 var progress_store: WorldProgress
 var save_clock := 0.0
 var terrain: WorldTerrain
+var world_seed := 0
+var ruins: Node
+var current_biome := ""
 
 
 func _ready() -> void:
+	world_seed = randi_range(1, 2147480000)
+	if persistence_enabled:
+		var store := SaveStore.new()
+		store.path = progress_path
+		var preview := store.read()
+		world_seed = int(preview.get("world_seed", world_seed))
 	terrain = WorldTerrain.new()
 	terrain.name = "Terrain"
 	add_child(terrain)
@@ -101,12 +111,18 @@ func _ready() -> void:
 		add_obstacle(BUSH, point)
 	$Biomes.initialize(self)
 	$Exploration.player = $WorldObjects/Player
+	$Exploration.random_seed = world_seed
 	$Exploration.container = $WorldObjects
 	$Exploration.initialize()
 	$Animals.initialize($WorldObjects/Player, $WorldObjects)
+	ruins = preload("res://scripts/ruins_system.gd").new()
+	ruins.name = "Ruins"
+	add_child(ruins)
+	ruins.initialize(self, world_seed)
 	if persistence_enabled:
 		progress_store = WorldProgress.new()
 		progress_store.world = self
+		progress_store.store.path = progress_path
 		progress_store.load_progress()
 
 func save_progress() -> bool:
@@ -124,6 +140,14 @@ func _use_item(index: int) -> void:
 	$HUD.show_message($WorldObjects/Player/Needs.use_slot($Inventory, index))
 
 func _physics_process(_delta: float) -> void:
+	var dark: bool = WorldTerrain.is_dark($WorldObjects/Player.global_position)
+	if $DayNight.local_darkness != dark:
+		$DayNight.local_darkness = dark
+		$DayNight.refresh()
+	var biome: String = WorldTerrain.region_at($WorldObjects/Player.global_position).get("kind", "")
+	if biome != current_biome:
+		current_biome = biome
+		$HUD.show_message(biome + (" · escuridão permanente; dormir bloqueado" if dark else ""))
 	if persistence_enabled:
 		save_clock += _delta
 		if save_clock >= 30:

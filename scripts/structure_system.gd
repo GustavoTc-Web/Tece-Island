@@ -94,6 +94,8 @@ func _physics_process(_delta: float) -> void:
 
 func use_bed(bed: PlacedStructure) -> String:
 	respawn_bed = bed
+	if player.terrain_enabled and WorldTerrain.is_dark(bed.global_position):
+		return "Não é possível dormir nas Ruínas Escuras. Reaparecimento definido."
 	if not cycle.is_night():
 		return "Ponto de reaparecimento definido. Durma aqui à noite."
 	for enemy in get_tree().get_nodes_in_group("enemies"):
