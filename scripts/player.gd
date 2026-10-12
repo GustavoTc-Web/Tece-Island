@@ -17,6 +17,7 @@ var equipped: String = "maos"
 var swing_time: float = 0.0
 var swing_direction := Vector2.DOWN
 var swing_radius: float = 50.0
+var swing_kind := "swing"
 var network_controlled: bool = false
 var simulation_authority: bool = true
 var identity_label: String = ""
@@ -43,10 +44,12 @@ func step_poison(delta: float) -> void:
 	queue_redraw()
 
 
-func show_swing(direction: Vector2, radius: float) -> void:
+func show_swing(direction: Vector2, radius: float, effect: String = "swing") -> void:
+	swing_kind = effect
 	swing_direction = direction
 	swing_radius = radius
 	swing_time = 0.16
+	CombatEffect.emit_at(self, global_position, effect, direction)
 	queue_redraw()
 
 
@@ -60,6 +63,7 @@ func receive_damage(amount: int, ignore_invulnerability: bool = false) -> bool:
 	health = maxi(0, health - amount)
 	invulnerability = invulnerability_duration
 	damage_flash = 0.2
+	CombatEffect.emit_at(self, global_position + Vector2(0, -18), "damage")
 	health_changed.emit(health, max_health)
 	if health == 0:
 		dead = true
@@ -132,8 +136,8 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(-15, -52), "Nado", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("c2e4e9"))
 	if poison_remaining > 0:
 		draw_arc(Vector2.ZERO, 17, 0, TAU, 20, Color("89c866"), 2)
-		draw_string(ThemeDB.fallback_font, Vector2(-19, -52), "Veneno", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("b0db87"))
-	if swing_time > 0.0:
+		draw_string(ThemeDB.fallback_font, Vector2(-28, -52), "Veneno %.1fs" % poison_remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("b0db87"))
+	if swing_time > 0.0 and swing_kind == "swing":
 		var angle := swing_direction.angle()
 		draw_arc(Vector2.ZERO, swing_radius, angle - PI / 4, angle + PI / 4, 20, Color(1, 0.9, 0.65, swing_time / 0.16), 3)
 	# A origem fica nos pés, tanto para a colisão quanto para a ordenação visual.
@@ -155,6 +159,8 @@ func draw_tool() -> void:
 	if equipped == "maos":
 		return
 	var hand := Vector2(15 if facing.x >= 0 else -15, -14)
+	if swing_time > 0:
+		hand += swing_direction * sin(swing_time / 0.16 * PI) * (8 if swing_kind == "swing" else -4)
 	var head := hand + Vector2(4, -19)
 	if equipped == "arco":
 		draw_arc(hand, 15, -PI / 2, PI / 2, 12, Color("b58b55"), 3)

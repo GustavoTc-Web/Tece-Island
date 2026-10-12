@@ -20,6 +20,8 @@ var active_well: WaterWell
 var needs_bars: Dictionary = {}
 var crafting_view: CraftingView
 var storage_view: StorageView
+var combat_options: CombatOptions
+var utility_buttons: HBoxContainer
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -104,6 +106,20 @@ func initialize(source: ResourceInventory) -> void:
 	_refresh_recipes(inventory.wood, inventory.stone)
 	_refresh_inventory(inventory.wood, inventory.stone)
 	show_equipment(inventory.equipped_tool())
+	utility_buttons = HBoxContainer.new()
+	utility_buttons.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	utility_buttons.position = Vector2(-48, 16)
+	add_child(utility_buttons)
+	var sound := Button.new()
+	sound.text = "Som"
+	sound.custom_minimum_size = Vector2(88, 52)
+	sound.pressed.connect(func():
+		if combat_options == null:
+			combat_options = CombatOptions.new()
+			combat_options.hud = self
+			add_child(combat_options)
+		set_panel("sound"))
+	utility_buttons.add_child(sound)
 	for panel in ["Crafting", "InventoryPanel"]:
 		var close := Button.new()
 		close.text = "Fechar"
@@ -189,6 +205,8 @@ func set_panel(panel: String) -> void:
 	$InventoryPanel.visible = panel == "inventory"
 	if has_node("WellPanel"): $WellPanel.visible = panel == "well"
 	if storage_view != null: storage_view.visible = panel == "chest"
+	if combat_options != null: combat_options.visible = panel == "sound"
+	if utility_buttons != null: utility_buttons.visible = panel == "" and not showing_death
 	panel_toggled.emit(panel != "")
 
 

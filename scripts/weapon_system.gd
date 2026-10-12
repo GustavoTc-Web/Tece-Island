@@ -45,7 +45,7 @@ func fire(direction: Vector2) -> bool:
 		bullet.friendly_fire = friendly_fire
 		container.add_child(bullet)
 	shot_fired.emit(player.global_position, direction.normalized(), tool)
-	player.show_swing(direction, 20)
+	player.show_swing(direction, 20, "arrow" if tool == "arco" else "shot")
 	return true
 
 func reload() -> bool:

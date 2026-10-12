@@ -179,17 +179,29 @@ func strike_target() -> bool:
 		var direction: Vector2 = touch_aim.normalized() if touch_aim != Vector2.ZERO else (player.facing if key_held else (cursor_world() - player.global_position).normalized())
 		return weapons.fire(direction)
 	if not is_instance_valid(target) or not can_reach(target):
+		cooldown = ResourceRules.hit_interval(tool)
+		var aim: Vector2 = touch_aim.normalized() if touch_aim != Vector2.ZERO else (player.facing if key_held else (cursor_world() - player.global_position).normalized())
+		player.show_swing(aim, combat_distance)
+		var ray := PhysicsRayQueryParameters2D.create(player.global_position, player.global_position + aim * combat_distance, 9)
+		ray.exclude = [player.get_rid()]
+		var obstruction := player.get_world_2d().direct_space_state.intersect_ray(ray)
+		if not obstruction.is_empty(): CombatEffect.emit_at(player, obstruction.position, "blocked", aim)
 		return false
 	# Inclusive mensagens inadequadas são limitadas pelo mesmo intervalo.
 	cooldown = ResourceRules.hit_interval(tool)
 	# A seleção é única para combate e extração: este golpe segue só um ramo.
 	if target is ForestCreature or target is NeutralAnimal:
 		player.show_swing((target.anchor() - player.global_position).normalized(), combat_distance)
-		return target.receive_damage(ResourceRules.combat_damage(tool))
+		var hit: bool = target.receive_damage(ResourceRules.combat_damage(tool))
+		if hit: CombatEffect.emit_at(player, target.anchor(), "impact")
+		return hit
 	if not ResourceRules.EXTRACTION[target.resource].hits.has(tool):
 		message_requested.emit(ResourceRules.guidance(target.resource))
 		return false
-	return target.apply_hit(tool)
+	player.show_swing((target.anchor() - player.global_position).normalized(), interaction_distance)
+	var hit: bool = target.apply_hit(tool)
+	if hit: CombatEffect.emit_at(player, target.anchor(), "impact")
+	return hit
 
 
 func hit_at(cursor: Vector2) -> bool:

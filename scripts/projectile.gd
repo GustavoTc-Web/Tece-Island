@@ -18,16 +18,19 @@ func _physics_process(delta: float) -> void:
 	ray.exclude = [shooter]
 	var collision := get_world_2d().direct_space_state.intersect_ray(ray)
 	if not collision.is_empty():
+		var hit := false
 		if simulation_authority and (collision.collider is ForestCreature or collision.collider is NeutralAnimal):
-			collision.collider.receive_damage(damage)
+			hit = collision.collider.receive_damage(damage)
 		elif simulation_authority and hit_players and friendly_fire and collision.collider.has_method("receive_damage"):
-			collision.collider.receive_damage(damage)
+			hit = collision.collider.receive_damage(damage)
+		CombatEffect.emit_at(self, collision.position, "impact" if hit else "blocked", direction)
 		queue_free()
 		set_physics_process(false)
 		return
 	global_position = end
 	remaining -= distance
 	if remaining <= 0:
+		CombatEffect.emit_at(self, global_position, "arrow" if arrow else "blocked", direction)
 		queue_free()
 
 func _draw() -> void:

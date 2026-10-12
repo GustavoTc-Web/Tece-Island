@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var flee_distance: float = 150
 var player: CharacterBody2D
 var health := 15
+var damage_flash := 0.0
 var dead := false
 var highlighted := false
 var panic := 0.0
@@ -39,6 +40,8 @@ func set_highlighted(value: bool) -> void:
 	queue_redraw()
 func _physics_process(delta: float) -> void:
 	if dead or get_tree().paused: return
+	damage_flash = maxf(0, damage_flash - delta)
+	modulate = Color("efa497") if damage_flash > 0 else Color.WHITE
 	animation += delta
 	if kind == "garca_azul" or is_fish(): queue_redraw()
 	panic = maxf(0, panic - delta)
@@ -74,6 +77,7 @@ func _physics_process(delta: float) -> void:
 func receive_damage(amount: int) -> bool:
 	if dead or get_tree().paused or amount <= 0: return false
 	health = maxi(0, health - amount)
+	damage_flash = 0.18
 	panic = 8
 	if health == 0:
 		dead = true

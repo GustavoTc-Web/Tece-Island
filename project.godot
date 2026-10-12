@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 MobileInput="*res://scripts/mobile_input.gd"
 FirebaseAuth="*res://scripts/auth/firebase_auth.gd"
+CombatAudio="*res://scripts/combat_audio.gd"
 
 [display]
 

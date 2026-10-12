@@ -32,6 +32,9 @@ var chasing: bool = false
 var highlighted: bool = false
 var attack_cooldown: float = 0.0
 var flash_time: float = 0.0
+var combat_visible := 0.0
+var attack_visual := 0.0
+var attack_direction := Vector2.RIGHT
 var home: Vector2
 var destination: Vector2
 var wander_time: float = 0.0
@@ -109,12 +112,17 @@ func try_attack() -> bool:
 	if is_safe(player.global_position) or not has_line_of_sight(player.global_position):
 		return false
 	attack_cooldown = attack_interval
+	combat_visible = 4
+	attack_direction = (player.global_position - global_position).normalized()
 	if kind == "esqueleto":
 		shot_direction = (player.global_position - global_position).normalized()
 		windup_remaining = skeleton_windup
 		queue_redraw()
 		return true
+	attack_visual = 0.2
+	CombatEffect.emit_at(self, global_position, "swing", attack_direction)
 	var hit: bool = player.receive_damage(attack_damage)
+	if hit: CombatEffect.emit_at(self, player.global_position, "impact")
 	if hit and kind == "aranha" and player.has_method("apply_poison"): player.apply_poison(spider_poison_duration)
 	return hit
 
@@ -130,6 +138,8 @@ func release_arrow() -> bool:
 	arrow.hit_players = true
 	arrow.shooter = get_rid()
 	get_parent().add_child(arrow)
+	attack_visual = 0.2
+	CombatEffect.emit_at(self, global_position, "arrow", shot_direction)
 	return true
 
 static func drop_quantity(monster: String, roll: float) -> int:
@@ -142,6 +152,7 @@ func receive_damage(amount: int) -> bool:
 		return false
 	health = maxi(0, health - amount)
 	flash_time = 0.18
+	combat_visible = 4
 	queue_redraw()
 	if health == 0:
 		dead = true
@@ -160,6 +171,10 @@ func receive_damage(amount: int) -> bool:
 
 
 func _process(delta: float) -> void:
+	if combat_visible > 0 or attack_visual > 0:
+		combat_visible = maxf(0, combat_visible - delta)
+		attack_visual = maxf(0, attack_visual - delta)
+		queue_redraw()
 	if fading:
 		fade_elapsed += delta
 		modulate.a = maxf(0.0, 1.0 - fade_elapsed / dawn_fade_duration)
@@ -215,6 +230,11 @@ func _physics_process(delta: float) -> void:
 
 
 func _draw() -> void:
+	if is_instance_valid(player) and chasing and kind != "esqueleto" and attack_cooldown < 0.3:
+		var aim := (player.global_position - global_position).angle()
+		draw_arc(Vector2.ZERO, attack_range, aim - 0.5, aim + 0.5, 12, Color("ffc16c"), 3)
+	if attack_visual > 0:
+		draw_set_transform(attack_direction * sin(attack_visual / 0.2 * PI) * 5)
 	if kind != "criatura":
 		draw_monster()
 		return
@@ -231,7 +251,7 @@ func _draw() -> void:
 	draw_line(Vector2(-5, -6), Vector2(5, -6), Color("302c42"), 3)
 	if highlighted:
 		draw_arc(Vector2.ZERO, 25, 0, TAU, 32, Color("efae7b"), 2)
-	if highlighted or health < max_health:
+	if combat_visible > 0:
 		draw_rect(Rect2(-22, -48, 44, 5), Color("302c42"))
 		draw_rect(Rect2(-22, -48, 44.0 * health / max_health, 5), Color("db866a"))
 
@@ -258,6 +278,6 @@ func draw_monster() -> void:
 		draw_circle(Vector2(0, 4), 9, Color("7a596f"))
 		for x in [-4, 4]: draw_circle(Vector2(x, 7), 2, Color("d8bf68"))
 	if highlighted: draw_arc(Vector2.ZERO, 27, 0, TAU, 24, Color("efae7b"), 2)
-	if highlighted or health < max_health:
+	if combat_visible > 0:
 		draw_rect(Rect2(-22, -52, 44, 5), Color("302c42"))
 		draw_rect(Rect2(-22, -52, 44.0 * health / max_health, 5), Color("db866a"))
