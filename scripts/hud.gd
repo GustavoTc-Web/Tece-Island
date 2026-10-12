@@ -136,7 +136,7 @@ func mobile_layout(value: bool) -> void:
 		label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	if value:
 		touch_sizes(self)
-		for button in quick_buttons: button.add_theme_font_size_override("font_size", 18)
+		for button in quick_buttons: button.add_theme_font_size_override("font_size", 16)
 		for button in slot_buttons: button.add_theme_font_size_override("font_size", 18)
 
 func touch_sizes(node: Node) -> void:
@@ -324,7 +324,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		var slot: Dictionary = data[index]
 		var text := "Mãos"
 		if not slot.is_empty():
-			text = ItemCatalog.title(slot.item).replace(" de ", "\n") + " ×" + str(slot.quantity)
+			text = ItemCatalog.title(slot.item).replace(" de ", "\n").replace("Carne ", "Carne\n").replace("Fibra ", "Fibra\n") + " ×" + str(slot.quantity)
 			if slot.item == "cantil": text += " · %d/3" % slot.get("water", 0)
 		quick_buttons[index].text = "%d\n%s" % [index + 1, text]
 		quick_buttons[index].modulate = Color("f2d786") if inventory.selected_index == index else Color.WHITE

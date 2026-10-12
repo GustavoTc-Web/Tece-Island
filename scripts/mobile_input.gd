@@ -49,6 +49,9 @@ func _input(event: InputEvent) -> void:
 			var control := button_at(get_tree().root, event.position)
 			if control != null:
 				gui_touches[event.index] = {"control": control, "position": event.position, "dragged": false}
+				if control is LineEdit and control.editable:
+					control.grab_focus()
+					control.edit()
 			elif is_instance_valid(overlay) and enabled:
 				overlay.touch(event)
 		else:
@@ -83,5 +86,6 @@ func button_at(node: Node, point: Vector2) -> Control:
 		var found := button_at(child, point)
 		if found != null: return found
 	if node is Button and node.get_global_rect().has_point(point): return node
+	if node is LineEdit and node.get_global_rect().has_point(point): return node
 	if node is ScrollContainer and node.get_global_rect().has_point(point): return node
 	return null

@@ -18,11 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 MobileInput="*res://scripts/mobile_input.gd"
-
-[input_devices]
-
-pointing/emulate_mouse_from_touch=false
-pointing/emulate_touch_from_mouse=false
+FirebaseAuth="*res://scripts/auth/firebase_auth.gd"
 
 [display]
 
@@ -123,13 +119,17 @@ move_down={
 ]
 }
 
+[input_devices]
+
+pointing/emulate_mouse_from_touch=false
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
 
 [rendering]
 
-textures/vram_compression/import_etc2_astc=true
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

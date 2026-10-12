@@ -25,6 +25,13 @@ jobs:
           echo "/tmp/godot" >> "$GITHUB_PATH"
       - name: Templates Web oficiais
         run: node tools/fetch-web-templates.mjs 4.7.2
+      - name: Configuração pública do Firebase
+        env:
+          FIREBASE_AUTH_ENABLED: ${{ vars.FIREBASE_AUTH_ENABLED }}
+          FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ vars.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+        run: node tools/configure-firebase.mjs
       - name: Exportar
         run: |
           mkdir -p build/web

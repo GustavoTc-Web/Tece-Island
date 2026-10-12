@@ -5,7 +5,9 @@ O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no 
 
 ## Começar
 
-Importe `project.godot`, execute com F5 e escolha **Jogar solo**. **Voltar ao menu**
+Importe `project.godot`, execute com F5, entre com uma conta de e-mail confirmado
+e escolha **Jogar solo**. Para o primeiro acesso, use **Criar conta** e confirme
+o link recebido por e-mail. **Voltar ao menu**
 funciona durante a pausa; iniciar novamente cria uma partida limpa: sete espaços,
 vida/fome/sede completas, posição inicial (1152, 768) e dia 1.
 Não existe salvamento. **Reaparecer** mantém itens, estruturas, drops e horário da
@@ -139,6 +141,16 @@ Antes do push, rode testes e confira a exportação local por HTTP.
 Após deploy, abra a URL indicada pelo job e confirme menu, partida e carregamento
 de `index.js`, `index.wasm` e `index.pck`.
 Use Git Credential Manager ou GitHub CLI para autenticação; nunca grave tokens no projeto.
+
+## Firebase Authentication
+
+Integração REST ativada no projeto principal (Godot/F5) e na Web, com a
+configuração pública fornecida, tokens apenas em memória e bloqueio para
+e-mail não confirmado. **Sair da conta** limpa a sessão e retorna à entrada.
+Veja [configuração, versão de teste e roteiro real](docs/FIREBASE.md).
+
+O teste isolado abre em http://localhost:8083/Tece-Island/ após executar
+tools/export-auth-test.ps1 e servir build/auth-test na porta 8083.
 
 ## Validação
 

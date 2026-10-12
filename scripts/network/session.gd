@@ -3,8 +3,10 @@ extends Node
 const MENU := preload("res://scenes/menu.tscn")
 const SOLO := "res://scenes/world.tscn"
 const ARENA := "res://scenes/network/test_arena.tscn"
+const AUTH := preload("res://scenes/auth.tscn")
 var game: Node
 var menu: Control
+var auth_screen: Control
 var connecting := false
 var closing := false
 var connection_time: float = 0
@@ -16,26 +18,60 @@ func _ready() -> void:
 	multiplayer.connection_failed.connect(func(): return_to_menu("Falha na conexão. Confira endereço, porta e se a partida está disponível."))
 	multiplayer.server_disconnected.connect(func(): return_to_menu("O anfitrião encerrou a partida ou a conexão foi perdida."))
 	multiplayer.peer_disconnected.connect(_peer_left)
-	show_menu("Teste local / rede local · anfitrião + um convidado")
+	FirebaseAuth.authenticated.connect(_authenticated)
+	FirebaseAuth.signed_out.connect(_signed_out)
+	if FirebaseAuth.can_play(): show_menu("Teste local / rede local · anfitrião + um convidado")
+	else: show_auth()
+
+func show_auth(message: String = "") -> void:
+	reset_network()
+	clear_scene()
+	auth_screen = AUTH.instantiate()
+	add_child(auth_screen)
+	if message != "": auth_screen.show_message(message)
+
+func _authenticated() -> void:
+	clear_scene()
+	show_menu("Conta validada. Escolha uma partida.")
+
+func _signed_out(reason: String) -> void:
+	if FirebaseAuth.enabled(): show_auth(reason)
 
 func show_menu(message: String) -> void:
+	if not FirebaseAuth.can_play():
+		show_auth("Entre com uma conta confirmada para jogar.")
+		return
 	menu = MENU.instantiate()
 	add_child(menu)
 	menu.solo_requested.connect(start_solo)
 	menu.host_requested.connect(host_game)
 	menu.join_requested.connect(join_game)
 	menu.show_status(message)
+	if FirebaseAuth.enabled():
+		var logout := Button.new()
+		logout.text = "Sair da conta"
+		logout.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		logout.position = Vector2(-230, 16)
+		logout.custom_minimum_size = Vector2(210, 56)
+		logout.pressed.connect(FirebaseAuth.logout)
+		menu.add_child(logout)
 
 func clear_scene() -> void:
+	MobileInput.reset()
+	MobileInput.overlay = null
 	get_tree().paused = false
-	for node in [game, menu]:
+	for node in [game, menu, auth_screen]:
 		if is_instance_valid(node):
 			remove_child(node)
 			node.queue_free()
 	game = null
 	menu = null
+	auth_screen = null
 
 func start_solo() -> void:
+	if not FirebaseAuth.can_play():
+		show_auth("Entre com uma conta confirmada para jogar.")
+		return
 	var scene := prepare_game(SOLO)
 	if scene == null: return
 	reset_network()
@@ -56,6 +92,9 @@ func start_solo() -> void:
 	layer.add_child(controls)
 
 func host_game(port: int = 7000, allow_damage: bool = true) -> void:
+	if not FirebaseAuth.can_play():
+		show_auth()
+		return
 	if OS.has_feature("web"):
 		menu.show_status("Multiplayer em breve. Jogue solo nesta versão Web.")
 		return
@@ -79,6 +118,9 @@ func host_game(port: int = 7000, allow_damage: bool = true) -> void:
 	game.get_node("HUD").show_message("Anfitrião · porta %d · aguardando convidado" % port)
 
 func join_game(address: String = "127.0.0.1", port: int = 7000) -> void:
+	if not FirebaseAuth.can_play():
+		show_auth()
+		return
 	if OS.has_feature("web"):
 		menu.show_status("Multiplayer em breve. Jogue solo nesta versão Web.")
 		return
@@ -97,6 +139,9 @@ func join_game(address: String = "127.0.0.1", port: int = 7000) -> void:
 	menu.show_status("Conectando a %s:%d…" % [address, port])
 
 func _connected() -> void:
+	if not FirebaseAuth.can_play():
+		show_auth()
+		return
 	connecting = false
 	var scene := prepare_game(ARENA)
 	if scene == null: return
