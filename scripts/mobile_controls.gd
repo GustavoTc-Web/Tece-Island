@@ -13,6 +13,9 @@ var placement: HBoxContainer
 var rotate: Label
 var portrait := false
 var rotate_piece: Button
+var use_button: Button
+var reload_button: Button
+var radius := RADIUS
 const RADIUS := 68.0
 const DEADZONE := 0.22
 
@@ -26,7 +29,7 @@ func _ready() -> void:
 	hud.panel_toggled.connect(func(_open): reset())
 	actions = HBoxContainer.new()
 	add_child(actions)
-	for action in ["Interagir", "Usar item", "Recarregar", "Inventário", "Fabricação"]:
+	for action in ["Interagir", "Usar item", "Recarregar", "Inventário"]:
 		var button := Button.new()
 		button.text = action
 		button.set_meta("gameplay_action", action)
@@ -36,6 +39,8 @@ func _ready() -> void:
 		button.pressed.connect(invoke.bind(action))
 		actions.add_child(button)
 		if action == "Interagir": interact_button = button
+		if action == "Usar item": use_button = button
+		if action == "Recarregar": reload_button = button
 	player.get_node("Interaction").pickup_changed.connect(update_interaction_label)
 	placement = HBoxContainer.new()
 	add_child(placement)
@@ -57,6 +62,7 @@ func _ready() -> void:
 	rotate.add_theme_font_size_override("font_size", 26)
 	rotate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(rotate)
+	hud.touch_goal_initialized = false
 	layout()
 
 func update_interaction_label(_message: String) -> void:
@@ -75,22 +81,37 @@ func layout() -> void:
 	var viewport_size := get_viewport_rect().size
 	portrait = viewport_size.y > viewport_size.x
 	visible = MobileInput.enabled
-	centers.move = Vector2(100, viewport_size.y - 115)
-	centers.aim = Vector2(viewport_size.x - 100, viewport_size.y - 115)
-	actions.position = Vector2((viewport_size.x - 576) / 2, viewport_size.y - 144)
-	placement.position = Vector2((viewport_size.x - 284) / 2, viewport_size.y - 144)
+	var unit := MobileInput.touch_minimum()
+	var gap := ceilf(8 / MobileInput.css_scale())
+	radius = maxf(RADIUS, unit * 0.78)
+	centers.move = Vector2(radius + 24, viewport_size.y - unit * 2 - gap * 3 - radius)
+	centers.aim = Vector2(viewport_size.x - radius - 24, centers.move.y)
+	for container in [actions, placement]:
+		container.add_theme_constant_override("separation", int(gap))
+		for button in container.get_children():
+			button.custom_minimum_size = Vector2(unit * 1.75, unit)
+			button.add_theme_font_size_override("font_size", int(maxf(20, ceilf(14 / MobileInput.css_scale()))))
+	actions.position.y = viewport_size.y - unit * 2 - gap * 2
+	placement.position.y = actions.position.y
 	rotate.position = Vector2(0, viewport_size.y / 2)
 	rotate.size.x = viewport_size.x
-	rotate.visible = portrait
-	player.controls_blocked = portrait and MobileInput.enabled or hud.current_panel != "" or player.dead
+	rotate.visible = false
+	player.controls_blocked = hud.current_panel != "" or player.dead
 	hud.mobile_layout(MobileInput.enabled)
 	queue_redraw()
 
 func _process(_delta: float) -> void:
 	rotate_piece.visible = structures.item in PlacedStructure.PIECES
-	placement.position.x = (get_viewport_rect().size.x - (432 if rotate_piece.visible else 284)) / 2
-	actions.visible = not portrait and hud.current_panel == "" and not hud.showing_death and not structures.active
-	placement.visible = not portrait and structures.active
+	var tool: String = hud.inventory.equipped_tool()
+	reload_button.visible = tool in GunRules.WEAPONS and tool != "arco"
+	var slot: Dictionary = hud.inventory.slots[hud.inventory.selected_index]
+	var item: String = slot.get("item", "")
+	use_button.visible = item == "cantil" or ItemCatalog.category(item) == "comida"
+	use_button.text = "Beber" if item == "cantil" else "Comer"
+	actions.position.x = (get_viewport_rect().size.x - actions.get_combined_minimum_size().x) / 2
+	placement.position.x = (get_viewport_rect().size.x - placement.get_combined_minimum_size().x) / 2
+	actions.visible = hud.current_panel == "" and not hud.showing_death and not structures.active
+	placement.visible = structures.active and hud.current_panel == ""
 
 func reset() -> void:
 	fingers = {"move": -1, "aim": -1}
@@ -108,7 +129,7 @@ func mouse_touch(event: InputEventMouseButton) -> bool:
 		if MobileInput.button_at(get_tree().root, event.position) != null: return false
 		var in_stick := false
 		for side in ["move", "aim"]:
-			in_stick = in_stick or event.position.distance_to(centers[side]) <= RADIUS * 1.35
+			in_stick = in_stick or event.position.distance_to(centers[side]) <= radius * 1.1
 		if not in_stick and not structures.active: return false
 	var converted := InputEventScreenTouch.new()
 	converted.index = -100
@@ -118,14 +139,14 @@ func mouse_touch(event: InputEventMouseButton) -> bool:
 	return true
 
 func touch(event: InputEvent) -> void:
-	if not MobileInput.enabled or portrait or hud.current_panel != "" or player.dead: return
+	if not MobileInput.enabled or hud.current_panel != "" or player.dead: return
 	if event is InputEventScreenTouch and event.pressed:
 		if structures.active:
 			if MobileInput.button_at(get_tree().root, event.position) == null:
 				structures.update_preview(player.get_canvas_transform().affine_inverse() * event.position)
 			return
 		for side in ["move", "aim"]:
-			if fingers[side] == -1 and event.position.distance_to(centers[side]) <= RADIUS * 1.35:
+			if fingers[side] == -1 and event.position.distance_to(centers[side]) <= radius * 1.1:
 				fingers[side] = event.index
 				update_stick(side, event.position)
 				return
@@ -139,7 +160,7 @@ func touch(event: InputEvent) -> void:
 			if fingers[side] == event.index: update_stick(side, event.position)
 
 func update_stick(side: String, point: Vector2) -> void:
-	var direction: Vector2 = ((point - centers[side]) / RADIUS).limit_length()
+	var direction: Vector2 = ((point - centers[side]) / radius).limit_length()
 	if direction.length() < DEADZONE: direction = Vector2.ZERO
 	vectors[side] = direction
 	if side == "move": player.touch_movement = direction
@@ -151,7 +172,7 @@ func invoke(action: String) -> void:
 		hud.set_panel("inventory")
 	elif action == "Fabricação":
 		hud.set_panel("crafting")
-	elif hud.current_panel == "" and not player.dead and not portrait and not structures.active:
+	elif hud.current_panel == "" and not player.dead and not structures.active:
 		var interaction := player.get_node("Interaction")
 		match action:
 			"Interagir": interaction.collect_nearest()
@@ -159,9 +180,9 @@ func invoke(action: String) -> void:
 			"Recarregar": interaction.weapons.reload()
 
 func _draw() -> void:
-	if portrait or hud.current_panel != "" or hud.showing_death or structures.active: return
+	if hud.current_panel != "" or hud.showing_death or structures.active: return
 	for side in ["move", "aim"]:
-		draw_circle(centers[side], RADIUS, Color(0.08, 0.14, 0.11, 0.6))
-		draw_arc(centers[side], RADIUS, 0, TAU, 48, Color(1, 1, 1, 0.5), 2)
-		draw_circle(centers[side] + vectors[side] * RADIUS * 0.65, 24, Color(0.8, 0.9, 0.7, 0.8))
-		draw_string(ThemeDB.fallback_font, centers[side] + Vector2(-32, -85), "Andar" if side == "move" else "Atacar", HORIZONTAL_ALIGNMENT_LEFT, -1, 18)
+		draw_circle(centers[side], radius, Color(0.08, 0.14, 0.11, 0.6))
+		draw_arc(centers[side], radius, 0, TAU, 48, Color(1, 1, 1, 0.5), 2)
+		draw_circle(centers[side] + vectors[side] * radius * 0.65, radius * 0.35, Color(0.8, 0.9, 0.7, 0.8))
+		draw_string(ThemeDB.fallback_font, centers[side] + Vector2(-32, -radius - 17), "Andar" if side == "move" else "Atacar", HORIZONTAL_ALIGNMENT_LEFT, -1, int(maxf(18, 12 / MobileInput.css_scale())))

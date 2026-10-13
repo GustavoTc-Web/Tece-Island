@@ -20,6 +20,16 @@ func set_enabled(value: bool) -> void:
 	enabled = value
 	mode_changed.emit()
 
+func css_scale() -> float:
+	var logical := get_viewport().get_visible_rect().size
+	var pixels := Vector2(DisplayServer.window_get_size())
+	if OS.has_feature("web"):
+		pixels = Vector2(float(JavaScriptBridge.eval("document.querySelector('#canvas').getBoundingClientRect().width")), float(JavaScriptBridge.eval("document.querySelector('#canvas').getBoundingClientRect().height")))
+	return maxf(0.1, minf(pixels.x / logical.x, pixels.y / logical.y))
+
+func touch_minimum() -> float:
+	return maxf(64, ceilf(44 / css_scale())) if enabled else 52.0
+
 func reset() -> void:
 	gui_touches.clear()
 	if is_instance_valid(overlay): overlay.reset()
@@ -85,7 +95,7 @@ func button_at(node: Node, point: Vector2) -> Control:
 	for child in children:
 		var found := button_at(child, point)
 		if found != null: return found
-	if node is Button and node.get_global_rect().has_point(point): return node
+	if node is Button and not node.disabled and node.mouse_filter != Control.MOUSE_FILTER_IGNORE and node.get_global_rect().has_point(point): return node
 	if node is LineEdit and node.get_global_rect().has_point(point): return node
 	if node is ScrollContainer and node.get_global_rect().has_point(point): return node
 	return null

@@ -36,6 +36,12 @@ func _ready() -> void:
 	rows.add_child(mute)
 	slider.value_changed.connect(func(value): label.text = "Volume: %d%%" % value; CombatAudio.configure(value / 100, mute.button_pressed))
 	mute.toggled.connect(func(value): CombatAudio.configure(slider.value / 100, value))
+	if hud.journal_view != null:
+		var goal := CheckButton.new()
+		goal.text = "Mostrar objetivo na HUD"
+		goal.button_pressed = hud.journal_view.objectives.enabled
+		goal.toggled.connect(func(value): hud.journal_view.objectives.enabled = value; hud.journal_view.objectives.changed.emit())
+		rows.add_child(goal)
 	var close := Button.new()
 	close.text = "Fechar"
 	close.custom_minimum_size.y = 56

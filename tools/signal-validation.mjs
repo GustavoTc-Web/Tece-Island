@@ -20,7 +20,7 @@ try {for(const touch of [false,true]){
  const check=(value,label)=>{results.push({touch,label,pass:!!value});console.log((value?'PASS: ':'FAIL: ')+(touch?'Toque: ':'PC: ')+label);};
  await page.goto('http://localhost:8081/Tece-Island/');await page.waitForFunction(()=>window.tcState?.menu,null,{timeout:60000});
  await tap('Jogar solo');await page.waitForFunction(()=>window.tcState?.position);await wait();
- await tap('Som');check((await state()).panel==='sound'&&(await state()).paused,'Som abre painel e bloqueia gameplay');
+ await tap('Menu');await tap('Configurações');check((await state()).panel==='sound'&&(await state()).paused,'Som abre painel e bloqueia gameplay');
  await tap('Silenciar');check((await state()).sound.muted,'Silenciar pela interface');
  const slider=(await state()).volume_slider;await box([slider[0],slider[1],slider[2]*0.4,slider[3]]);check((await state()).sound.volume<0.5,'Volume pelo controle visual');
  await tap('Fechar');check(!(await state()).paused,'Fechar restaura controles');
@@ -28,7 +28,7 @@ try {for(const touch of [false,true]){
  if(touch)await tap('Interagir');else{await page.keyboard.press('e');await wait();}
  check((await state()).journal.discovered.includes('arrival'),'Coleta registro pela interação existente');
  check((await state()).objectives.values.record===1,'Registro progride objetivo');
- if(touch)await tap('Diário');else{await page.keyboard.press('j');await wait();}
+ if(touch){await tap('Menu');await tap('Diário e objetivos');}else{await page.keyboard.press('j');await wait();}
  check((await state()).panel==='journal','Diário por botão/atalho');
  await tap('1ª descoberta');check((await state()).journal_text.includes('Lia')&&Object.keys((await state()).journal.unread).length===0,'Leitura marca página como lida');
  await page.screenshot({path:'.tools/screenshots/signal-journal-'+(touch?'touch':'desktop')+'.png'});
@@ -51,7 +51,7 @@ try {for(const touch of [false,true]){
  await tap('Confirmar desmontagem');check(!(await state()).structures.some(s=>s.id===originalId),'Confirmar remove a peça selecionada');
  await tap('Cancelar / Fechar');
  await setup('items',{items:[]});await setup('combat_probe');
- if(touch){const s=await state(),x=(s.viewport[0]-100)*size.width/s.viewport[0],y=(s.viewport[1]-115)*size.height/s.viewport[1];await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:23,x,y}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:23,x:x+35,y}]});await page.waitForTimeout(120);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await wait();}
+ if(touch){const s=await state(),x=s.sticks.aim[0]*size.width/s.viewport[0],y=s.sticks.aim[1]*size.height/s.viewport[1];await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:23,x,y}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:23,x:x+35,y}]});await page.waitForTimeout(120);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await wait();}
  else{const s=await state();await box([s.combat_enemy.screen[0]-2,s.combat_enemy.screen[1]-2,4,4]);}
  check((await state()).combat_enemy.health===25&&(await state()).combat_enemy.bar>0,'Ataque real mantém dano e mostra vida em combate');
  check((await state()).poison>0&&(await state()).poison<3&&(await state()).poison_text.startsWith('Veneno'),'Veneno com duração restante legível na HUD');

@@ -9,19 +9,27 @@ var address: LineEdit
 var port: SpinBox
 var damage_option: CheckBox
 var status: Label
+var rows: VBoxContainer
+var center: CenterContainer
 
 func _ready() -> void:
 	var background := ColorRect.new()
 	background.color = Color("263c35")
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(background)
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(center)
-	var rows := VBoxContainer.new()
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroll)
+	center = CenterContainer.new()
+	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(center)
+	rows = VBoxContainer.new()
 	rows.custom_minimum_size.x = 430
 	rows.add_theme_constant_override("separation", 12)
 	center.add_child(rows)
+	get_viewport().size_changed.connect(resize)
+	MobileInput.mode_changed.connect(resize)
 	var title := Label.new()
 	title.text = "TC Island" if OS.has_feature("web") else "TC Island · primeiro teste multiplayer"
 	title.add_theme_font_size_override("font_size", 23)
@@ -42,6 +50,7 @@ func _ready() -> void:
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		rows.add_child(status)
 		rows.get_child(1).grab_focus()
+		resize()
 		return
 	var label := Label.new()
 	label.text = "Endereço do anfitrião (duas instâncias: 127.0.0.1)"
@@ -71,6 +80,21 @@ func _ready() -> void:
 	status.text = "Teste local / rede local · anfitrião + um convidado"
 	rows.add_child(status)
 	rows.get_child(1).grab_focus()
+	resize()
+
+func resize() -> void:
+	center.custom_minimum_size = get_viewport_rect().size
+	rows.custom_minimum_size.x = minf(740, get_viewport_rect().size.x - 48)
+	if not MobileInput.enabled: return
+	var font := int(maxf(20, ceilf(15 / MobileInput.css_scale())))
+	for child in rows.get_children():
+		if child is Button:
+			child.custom_minimum_size.y = MobileInput.touch_minimum()
+			child.add_theme_font_size_override("font_size", font)
+			child.clip_text = true
+		if child is Label:
+			child.add_theme_font_size_override("font_size", font)
+			child.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 func button(parent: Node, text: String, callback: Callable) -> void:
 	var control := Button.new()
@@ -81,4 +105,4 @@ func button(parent: Node, text: String, callback: Callable) -> void:
 	parent.add_child(control)
 
 func show_status(text: String) -> void:
-	status.text = "Modo solo · jogue na horizontal em dispositivos de toque" if OS.has_feature("web") and text.begins_with("Teste local") else text
+	status.text = "Modo solo · explore a ilha" if OS.has_feature("web") and text.begins_with("Teste local") else text

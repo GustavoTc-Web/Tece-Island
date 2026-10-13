@@ -20,6 +20,17 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"drop_probe":
+			for drop in get_tree().get_nodes_in_group("resource_drops"): drop.queue_free()
+			var drop: ResourceDrop = load("res://scenes/resource_drop.tscn").instantiate()
+			drop.resource = "madeira"
+			drop.quantity = 5
+			drop.position = player.position + Vector2(0, 35)
+			world.get_node("WorldObjects").add_child(drop)
+		"save_error":
+			world.save_controller.set_process(false)
+			world.get_node("HUD").show_save_state("Erro de teste", true)
+		"save_ok": world.get_node("HUD").show_save_state("Progresso salvo.", false)
 		"account_probe": account_probe(world, str(request.seed), str(request.get("phase", "write")))
 		"record":
 			for enemy in get_tree().get_nodes_in_group("enemies"): enemy.set_physics_process(false)
@@ -143,7 +154,7 @@ func _process(_delta: float) -> void:
 	snapshot_time += _delta
 	if snapshot_time < 0.1: return
 	snapshot_time = 0.0
-	var data := {"menu": session.menu != null, "paused": get_tree().paused}
+	var data := {"menu": session.menu != null, "paused": get_tree().paused, "viewport":[get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]}
 	var buttons := {}
 	for button in session.find_children("*", "Button", true, false):
 		if button.is_visible_in_tree():
@@ -164,6 +175,7 @@ func _process(_delta: float) -> void:
 		for id in hud.recipe_buttons:
 			if hud.recipe_buttons[id].is_visible_in_tree(): data.recipes[id] = rect(hud.recipe_buttons[id])
 		data.search = rect(hud.crafting_view.search)
+		data.crafting_scroll = rect(hud.get_node("Crafting/Panel/Rows/Scroll"))
 		data.capacity = inv.capacity
 		data.swimming = player.swimming
 		data.dark = world.get_node("DayNight").local_darkness
@@ -195,6 +207,8 @@ func _process(_delta: float) -> void:
 			data.base_status = hud.base_view.status.text
 			data.base_confirm_enabled = not hud.base_view.confirm.disabled
 		if hud.save_button != null: data.save_status = hud.save_button.text
+		data.save_visible = hud.save_button.visible if hud.save_button != null else false
+		data.diagnostic = hud.menu_view.diagnostic()
 		if hud.storage_view != null and is_instance_valid(hud.storage_view.chest):
 			data.storage_slots = hud.storage_view.chest.storage.slots
 			data.storage_buttons = []
@@ -218,4 +232,5 @@ func _process(_delta: float) -> void:
 		data.viewport = [get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]
 		if is_instance_valid(MobileInput.overlay):
 			data.portrait = MobileInput.overlay.portrait
+			data.sticks = {"move":[MobileInput.overlay.centers.move.x, MobileInput.overlay.centers.move.y], "aim":[MobileInput.overlay.centers.aim.x, MobileInput.overlay.centers.aim.y]}
 	JavaScriptBridge.eval("window.tcState = " + JSON.stringify(data))

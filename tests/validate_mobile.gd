@@ -89,7 +89,7 @@ func run() -> void:
 	inv.add_item({"item": "carne_cozida", "quantity": 3})
 	player.get_node("Needs").hunger = 20
 	await tap_button(hud.quick_buttons[0])
-	var use := find_button(controls, "Usar item")
+	var use: Button = controls.use_button
 	touch(3, use.get_global_rect().get_center(), true)
 	await step(45)
 	check(inv.count_item("carne_cozida") == 3, "Consumível não repete ao manter dedo no botão")
@@ -114,7 +114,7 @@ func run() -> void:
 	check(player.touch_movement == Vector2.ZERO and interaction.touch_aim == Vector2.ZERO, "Perda de foco limpa movimento e ataque")
 	root.size = Vector2i(540, 960)
 	await step()
-	check(controls.portrait and controls.rotate.visible and player.touch_movement == Vector2.ZERO, "Vertical mostra orientação e cancela entradas")
+	check(controls.portrait and not controls.rotate.visible and not player.controls_blocked and player.touch_movement == Vector2.ZERO, "Retrato permite jogar e cancela entradas da orientação anterior")
 	root.size = Vector2i(960, 540)
 	await step()
 	check(not controls.portrait and not player.controls_blocked, "Retorno horizontal libera controles")
@@ -142,7 +142,9 @@ func run() -> void:
 		DirAccess.make_dir_recursive_absolute("res://.tools/screenshots")
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://.tools/screenshots/mobile-native.png")
-	await tap_button(world.get_node("ExitUI").get_child(0))
+	hud.set_panel("menu")
+	await step()
+	await tap_button(find_button(hud.menu_view, "Voltar ao menu principal"))
 	await step()
 	check(session.menu != null and session.game == null and not paused, "Menu por toque responde a partir de partida pausada")
 	mobile.set_enabled(false)

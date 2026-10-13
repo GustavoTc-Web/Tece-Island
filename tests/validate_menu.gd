@@ -63,7 +63,13 @@ func run() -> void:
 		session.game.get_node("HUD").set_panel("inventory")
 		await step()
 		check(paused and not player.can_process() and player.position == point, "Inventário mantém pausa da simulação")
-		await click(session.game.get_node("ExitUI").get_child(0))
+		var hud: CanvasLayer = session.game.get_node("HUD")
+		hud.set_panel("menu")
+		await step()
+		for button in hud.menu_view.menu_actions:
+			if button.text == "Voltar ao menu principal":
+				await click(button)
+				break
 		check(session.menu != null and session.game == null and not paused, "Retorno por mouse durante pausa")
 	else:
 		session.return_to_menu("Teste")

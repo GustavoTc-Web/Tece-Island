@@ -29,6 +29,13 @@ var objective_button: Button
 var save_button: Button
 var save_notice: Label
 var poison_status: Label
+var menu_view: GameMenu
+var menu_button: Button
+var quick_icons: Array[Control] = []
+var saved_timer: Timer
+var compact_ready := false
+var touch_goal_initialized := false
+var inventory_actions: GridContainer
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -58,6 +65,7 @@ func initialize(source: ResourceInventory) -> void:
 	drop_bag.pressed.connect(func(): discard_requested.emit(-2, true))
 	backpack_row.add_child(drop_bag)
 	var actions := GridContainer.new()
+	inventory_actions = actions
 	actions.columns = 3
 	$InventoryPanel/Panel/Scroll/Rows.add_child(actions)
 	var place := Button.new()
@@ -89,6 +97,14 @@ func initialize(source: ResourceInventory) -> void:
 		if network_mode: network_action_requested.emit("use", selected_slot)
 		else: use_requested.emit(selected_slot))
 	actions.add_child(use)
+	for caption in ["Fabricação", "Base"]:
+		var button := Button.new()
+		button.text = caption
+		button.pressed.connect(func():
+			if caption == "Base": open_base()
+			elif not network_mode: set_panel("crafting")
+			else: show_message("Fabricação fora da arena de teste"))
+		actions.add_child(button)
 	var quick := HBoxContainer.new()
 	quick.name = "Quickbar"
 	quick.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
@@ -106,6 +122,10 @@ func initialize(source: ResourceInventory) -> void:
 			else: inventory.select_quick(index))
 		quick.add_child(button)
 		quick_buttons.append(button)
+		var icon := preload("res://scripts/recipe_icon.gd").new()
+		icon.position = Vector2(6, 4)
+		button.add_child(icon)
+		quick_icons.append(icon)
 	$Controls/Rows/EquipmentKeys.text = "1–5 / scroll: barra · Q / Shift+Q: jogar 1 / pilha\nR recarregar · C receitas · I inventário · E interagir"
 	$InventoryPanel/Panel/Scroll/Rows/Equip.text = "Equipar este item"
 	_create_needs_ui()
@@ -144,35 +164,83 @@ func initialize(source: ResourceInventory) -> void:
 		close.text = "Fechar"
 		close.custom_minimum_size = Vector2(150, 52)
 		close.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-		close.position = Vector2(-75, 16)
+		close.offset_left = -75
+		close.offset_right = 75
+		close.offset_top = 16
+		close.offset_bottom = 68
 		close.pressed.connect(func(): set_panel(""))
 		get_node(panel).add_child(close)
+	_create_compact_ui()
+	get_viewport().size_changed.connect(func(): mobile_layout(MobileInput.enabled))
 
 func mobile_layout(value: bool) -> void:
-	$Controls/Rows/Instructions.visible = not value
-	$Controls/Rows/EquipmentKeys.visible = not value
-	for label in [$Controls/Rows/Equipment, $Controls/Rows/Prompt, $Controls/Rows/Pickup, $Controls/Rows/Feedback]:
-		label.custom_minimum_size.x = 360
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	for label in [$Controls/Rows/Instructions, $Controls/Rows/EquipmentKeys, $Controls/Rows/Counts, $Controls/Rows/HealthLabel]: label.hide()
+	$Controls/Rows/Prompt.visible = not value and not $Controls/Rows/Prompt.text.is_empty()
+	$Controls/Rows/Pickup.visible = not value and not $Controls/Rows/Pickup.text.is_empty()
+	var unit := MobileInput.touch_minimum()
 	if value:
-		touch_sizes(self)
-		for button in quick_buttons: button.add_theme_font_size_override("font_size", 16)
-		for button in slot_buttons: button.add_theme_font_size_override("font_size", 18)
-	if objective_button != null: objective_button.position.y = 88 if value else 76
-	if journal_button != null: journal_button.add_theme_font_size_override("font_size", 16)
+		for panel in [$InventoryPanel, $Crafting, get_node("WellPanel")]: touch_sizes(panel)
+	var view := get_viewport().get_visible_rect().size
+	var display_scale := maxf(1, 0.72 / MobileInput.css_scale()) if value else 1.0
+	$Controls.scale = Vector2.ONE * display_scale
+	for button in quick_buttons:
+		button.custom_minimum_size = Vector2(unit, unit)
+		button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(12 / MobileInput.css_scale()))) if value else 14)
+	for index in range(quick_icons.size()):
+		quick_icons[index].scale = Vector2.ONE * unit / 64
+		quick_icons[index].position = Vector2(unit * 0.125, 2)
+	if has_node("Quickbar"):
+		var gap := ceilf(8 / MobileInput.css_scale()) if value else 8.0
+		$Quickbar.add_theme_constant_override("separation", int(gap))
+		$Quickbar.offset_left = -(5 * unit + 4 * gap) / 2
+		$Quickbar.offset_right = (5 * unit + 4 * gap) / 2
+		$Quickbar.offset_top = -unit - gap
+		$Quickbar.offset_bottom = -gap
+	if inventory_actions != null: inventory_actions.columns = 2 if view.y > view.x else 3
+	if value:
+		for grid in [inventory_actions, $InventoryPanel/Panel/Scroll/Rows/Slots]:
+			grid.add_theme_constant_override("h_separation", int(ceilf(8 / MobileInput.css_scale())))
+			grid.add_theme_constant_override("v_separation", int(ceilf(8 / MobileInput.css_scale())))
+	$InventoryPanel/Panel/Scroll/Rows/Slots.columns = 2 if view.y > view.x and value else 4
+	for button in slot_buttons:
+		button.custom_minimum_size.x = 200
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if menu_button != null:
+		menu_button.custom_minimum_size = Vector2(unit * 1.25, unit)
+		menu_button.position = Vector2(view.x - unit * 1.25 - 16, 16)
+		menu_button.add_theme_font_size_override("font_size", int(maxf(18, 14 / MobileInput.css_scale())))
+	if menu_view != null: menu_view.layout()
+	if objective_button != null:
+		objective_button.position = Vector2(16, 142 * display_scale)
+		objective_button.custom_minimum_size = Vector2(unit * 2.6, unit)
+		if value and not touch_goal_initialized:
+			touch_goal_initialized = true
+			journal_view.objectives.collapsed = true
+			refresh_objective()
+		objective_button.add_theme_font_size_override("font_size", int(maxf(16, 13 / MobileInput.css_scale())))
 	if save_button != null:
-		save_button.custom_minimum_size.y = 64 if value and not save_button.disabled else (52 if not save_button.disabled else 28)
-		save_button.add_theme_font_size_override("font_size", 20 if value and not save_button.disabled else 16)
-		save_notice.visible = not value and current_panel == "" and not showing_death
+		save_button.custom_minimum_size.y = unit if not save_button.disabled else 28
+		save_button.custom_minimum_size.x = minf(440, view.x - 48)
+		save_button.position = Vector2((view.x - save_button.custom_minimum_size.x) / 2, view.y - unit * 3.5 - 24)
+		save_button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(14 / MobileInput.css_scale()))))
+		save_notice.hide()
+	for panel in [$InventoryPanel, $Crafting]: _fit_modal(panel)
+	if current_panel != "" and value:
+		for panel in [journal_view, base_view, storage_view, combat_options]:
+			if panel != null and panel.visible: touch_sizes(panel); _fit_modal(panel)
 
 func touch_sizes(node: Node) -> void:
 	if node is Button:
-		node.custom_minimum_size.y = maxf(node.custom_minimum_size.y, 64)
-		node.add_theme_font_size_override("font_size", 20)
+		node.custom_minimum_size.y = maxf(node.custom_minimum_size.y, MobileInput.touch_minimum())
+		node.custom_minimum_size.x = maxf(node.custom_minimum_size.x, MobileInput.touch_minimum())
+		if node.get_parent() is Container: node.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		node.add_theme_font_size_override("font_size", int(maxf(20, ceilf(15 / MobileInput.css_scale()))))
 		node.clip_text = true
 	if node is Label:
-		node.add_theme_font_size_override("font_size", 18)
+		node.add_theme_font_size_override("font_size", int(maxf(18, ceilf(14 / MobileInput.css_scale()))))
+	if node is LineEdit:
+		node.custom_minimum_size.y = MobileInput.touch_minimum()
+		node.add_theme_font_size_override("font_size", int(maxf(20, ceilf(15 / MobileInput.css_scale()))))
 	for child in node.get_children(): touch_sizes(child)
 
 
@@ -229,22 +297,97 @@ func set_panel(panel: String) -> void:
 	if showing_death and panel != "":
 		return
 	current_panel = panel
+	MobileInput.reset()
 	moving_slot = -1
 	if has_node("Quickbar"): $Quickbar.visible = panel == "" and not showing_death
 	$Crafting.visible = panel in ["crafting", "cooking"]
 	if $Crafting.visible: crafting_view.open(panel == "cooking")
 	$InventoryPanel.visible = panel == "inventory"
 	if has_node("WellPanel"): $WellPanel.visible = panel == "well"
+	if panel == "well": _fit_modal($WellPanel)
 	if storage_view != null: storage_view.visible = panel == "chest"
 	if combat_options != null: combat_options.visible = panel == "sound"
 	if base_view != null: base_view.visible = panel == "base"
 	if journal_view != null: journal_view.visible = panel == "journal"
-	if utility_buttons != null: utility_buttons.visible = panel == "" and not showing_death
+	if utility_buttons != null: utility_buttons.hide()
+	if menu_button != null: menu_button.visible = panel == "" and not showing_death
+	if menu_view != null:
+		menu_view.visible = panel == "menu"
+		if panel == "menu": menu_view.open()
 	if objective_button != null: refresh_objective()
 	if save_button != null:
-		save_button.visible = panel == "" and not showing_death
-		save_notice.visible = save_button.visible and not MobileInput.enabled
+		save_button.visible = not save_button.disabled or panel == "" and not saved_timer.is_stopped()
+		save_notice.hide()
+	if MobileInput.enabled:
+		for view in [storage_view, combat_options, base_view, journal_view]:
+			if view != null and view.visible: touch_sizes(view); _fit_modal(view)
 	panel_toggled.emit(panel != "")
+
+func _create_compact_ui() -> void:
+	utility_buttons.hide()
+	menu_view = GameMenu.new()
+	menu_view.hud = self
+	add_child(menu_view)
+	menu_button = Button.new()
+	menu_button.text = "Menu"
+	menu_button.focus_mode = Control.FOCUS_NONE
+	menu_button.pressed.connect(func(): set_panel("menu"))
+	add_child(menu_button)
+	for path in ["Instructions", "HealthLabel", "Counts", "EquipmentKeys"]: get_node("Controls/Rows/" + path).hide()
+	$Controls/Rows/Equipment.hide()
+	$Controls/Rows/Health.custom_minimum_size = Vector2(156, 10)
+	for path in ["Prompt", "Pickup", "Feedback"]:
+		var label: Label = get_node("Controls/Rows/" + path)
+		label.custom_minimum_size.x = 180
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	$Controls/Rows/Time.add_theme_font_size_override("font_size", 12)
+	compact_ready = true
+	mobile_layout(MobileInput.enabled)
+
+func open_settings() -> void:
+	if combat_options == null:
+		combat_options = CombatOptions.new()
+		combat_options.hud = self
+		add_child(combat_options)
+	set_panel("sound")
+
+func _fit_modal(view: Control) -> void:
+	# Entire forms can scroll when their content exceeds the available screen.
+	if view.name == "WellPanel":
+		view.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		view.offset_left = -240
+		view.offset_right = 240
+		view.offset_top = -MobileInput.touch_minimum() * 2
+		view.offset_bottom = MobileInput.touch_minimum() * 2
+		return
+	if view in [$InventoryPanel, $Crafting]:
+		var view_size := get_viewport().get_visible_rect().size
+		var fixed_panel: Control = view.get_node("Panel")
+		fixed_panel.offset_left = -minf(900, view_size.x - 48) / 2
+		fixed_panel.offset_right = -fixed_panel.offset_left
+		fixed_panel.offset_top = -minf(1400, view_size.y - MobileInput.touch_minimum() - 48) / 2
+		fixed_panel.offset_bottom = -fixed_panel.offset_top
+		return
+	if not view.has_meta("responsive_scroll"):
+		for child in view.get_children():
+			if not child is PanelContainer: continue
+			view.remove_child(child)
+			var scroll := ScrollContainer.new()
+			scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+			view.add_child(scroll)
+			var center := CenterContainer.new()
+			center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			center.custom_minimum_size.y = get_viewport().get_visible_rect().size.y
+			scroll.add_child(center)
+			child.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+			center.add_child(child)
+			view.set_meta("responsive_scroll", child)
+			break
+	if view.has_meta("responsive_scroll"):
+		var panel: PanelContainer = view.get_meta("responsive_scroll")
+		panel.custom_minimum_size.x = minf(900, get_viewport().get_visible_rect().size.x - 48)
+		panel.get_parent().custom_minimum_size.y = get_viewport().get_visible_rect().size.y
 
 
 func open_cooking() -> void:
@@ -290,8 +433,14 @@ func initialize_save(world: Node2D) -> void:
 	save_button.disabled = true
 	save_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	save_button.pressed.connect(func(): world.save_progress(true))
-	$Controls/Rows.add_child(save_button)
-	$Controls/Rows.move_child(save_button, $Controls/Rows/Time.get_index() + 1)
+	add_child(save_button)
+	save_button.position = Vector2(240, 16)
+	saved_timer = Timer.new()
+	saved_timer.one_shot = true
+	saved_timer.wait_time = 2.5
+	saved_timer.timeout.connect(func(): if save_button.disabled: save_button.hide())
+	add_child(saved_timer)
+	save_button.hide()
 	save_notice = Label.new()
 	save_notice.custom_minimum_size.x = 360
 	save_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -299,16 +448,20 @@ func initialize_save(world: Node2D) -> void:
 	save_notice.text = "Salvo neste aparelho. Outros aparelhos não sincronizam."
 	save_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$Controls/Rows.add_child(save_notice)
-	$Controls/Rows.move_child(save_notice, save_button.get_index() + 1)
+	save_notice.hide()
 
 func show_save_state(text: String, retry: bool) -> void:
 	if save_button == null: return
 	if current_panel == "saving": show_message(text)
 	save_button.text = "Falha ao salvar\nTentar novamente" if retry else text
 	save_button.disabled = not retry
-	save_button.custom_minimum_size.y = (64 if MobileInput.enabled else 52) if retry else 28
-	save_button.add_theme_font_size_override("font_size", 20 if retry and MobileInput.enabled else 16)
+	save_button.custom_minimum_size.y = MobileInput.touch_minimum() if retry else 28
+	save_button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(14 / MobileInput.css_scale()))) if MobileInput.enabled else 16)
 	save_button.mouse_filter = Control.MOUSE_FILTER_STOP if retry else Control.MOUSE_FILTER_IGNORE
+	save_button.visible = retry or current_panel == "" and not showing_death
+	if retry or text.begins_with("Salvando"): saved_timer.stop()
+	else: saved_timer.start()
+	if menu_view != null and current_panel == "menu" and menu_view.area == "data": menu_view.open("data")
 
 func initialize_objectives(source: IslandObjectives) -> void:
 	journal_view.objectives = source
@@ -321,14 +474,18 @@ func initialize_objectives(source: IslandObjectives) -> void:
 	objective_button.pressed.connect(func(): source.collapsed = not source.collapsed; source.changed.emit())
 	add_child(objective_button)
 	source.changed.connect(refresh_objective)
+	if MobileInput.enabled:
+		source.collapsed = true
+		touch_goal_initialized = true
 	refresh_objective()
+	mobile_layout(MobileInput.enabled)
 
 func refresh_objective() -> void:
 	var source := journal_view.objectives
 	objective_button.visible = source.enabled and current_panel == "" and not showing_death
 	var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
 	var title: String = "Explorar um templo" if source.tracked == "temple" else goal.title
-	objective_button.text = "Objetivo ▸" if source.collapsed else "%s\n%d/%d ▾" % [title, source.values[source.tracked], goal.target]
+	objective_button.text = "Objetivo +" if source.collapsed else "%s\n%d/%d -" % [title, source.values[source.tracked], goal.target]
 
 func open_base(target: PlacedStructure = null) -> void:
 	if network_mode:
@@ -357,18 +514,19 @@ func update_time(day: int, phase: String) -> void:
 	$Controls/Rows/Time.text = "Dia %d · %s" % [day, phase]
 
 func update_clock(day: int, phase: String, remaining: int) -> void:
-	$Controls/Rows/Time.text = "Dia %d · %s · próxima fase em %02d:%02d" % [day, phase, remaining / 60, remaining % 60]
+	$Controls/Rows/Time.text = "Dia %d · %s" % [day, phase]
 
 
 func show_death(value: bool) -> void:
 	showing_death = value
 	$Death.visible = value
 	if has_node("Quickbar"): $Quickbar.visible = not value and current_panel == ""
-	if utility_buttons != null: utility_buttons.visible = not value and current_panel == ""
+	if utility_buttons != null: utility_buttons.hide()
+	if menu_button != null: menu_button.visible = not value and current_panel == ""
 	if objective_button != null: refresh_objective()
 	if save_button != null:
 		save_button.visible = not value and current_panel == ""
-		save_notice.visible = save_button.visible and not MobileInput.enabled
+		save_notice.hide()
 
 
 func _request_respawn() -> void:
@@ -389,22 +547,28 @@ func _craft(recipe_id: String) -> void:
 		show_message(inventory.craft_error(recipe_id))
 
 func _create_needs_ui() -> void:
-	var row := HBoxContainer.new()
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	$Controls/Rows.add_child(row)
-	$Controls/Rows.move_child(row, 3)
+	var health_icon := HudSymbol.new()
+	health_icon.tooltip_text = "Vida"
+	$Controls/Rows/Health.add_child(health_icon)
+	health_icon.position = Vector2(-22, -3)
 	for kind in ["Fome", "Sede"]:
-		var label := Label.new()
-		label.text = kind
-		label.add_theme_font_size_override("font_size", 12)
-		row.add_child(label)
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		$Controls/Rows.add_child(row)
+		$Controls/Rows.move_child(row, 2 if kind == "Fome" else 3)
+		var icon := HudSymbol.new()
+		icon.kind = "food" if kind == "Fome" else "water"
+		icon.tooltip_text = kind
+		row.add_child(icon)
 		var bar := ProgressBar.new()
-		bar.custom_minimum_size = Vector2(125, 12)
+		bar.custom_minimum_size = Vector2(156, 12)
+		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		bar.show_percentage = true
+		bar.show_percentage = false
 		bar.value = 100
 		row.add_child(bar)
 		needs_bars[kind] = bar
+	$Controls/Rows.move_child($Controls/Rows/Health, 1)
 
 func update_needs(hunger: float, thirst: float) -> void:
 	if needs_bars.is_empty(): return
@@ -460,6 +624,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 	if selected_slot >= inventory.capacity:
 		selected_slot = -1
 	$InventoryPanel/Panel/Scroll/Rows/Title.text = "Inventário · %d espaços · I / Esc para fechar" % inventory.capacity
+	if MobileInput.enabled: $InventoryPanel/Panel/Scroll/Rows/Title.text = "Inventário · %d espaços" % inventory.capacity
 	if $InventoryPanel/Panel/Scroll/Rows.has_node("BackpackSlot"):
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.text = ItemCatalog.title(inventory.backpack.item) + " · Retirar" if not inventory.backpack.is_empty() else "Vazio"
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.disabled = inventory.backpack.is_empty()
@@ -469,8 +634,11 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		var text := "Mãos"
 		if not slot.is_empty():
 			text = ItemCatalog.quick_title(slot.item)
-		quick_buttons[index].text = "%d %s\n%s" % [index + 1, text, ("%d/3 doses" % slot.get("water", 0) if slot.get("item", "") == "cantil" else "×%d" % slot.get("quantity", 0))]
-		if slot.is_empty(): quick_buttons[index].text = "%d\nMãos" % (index + 1)
+		quick_buttons[index].text = "\n   " + ("%d/3" % slot.get("water", 0) if slot.get("item", "") == "cantil" else "×%d" % slot.get("quantity", 0)) if not slot.is_empty() else ""
+		quick_buttons[index].tooltip_text = "%d · %s" % [index + 1, text]
+		quick_icons[index].item = slot.get("item", "")
+		quick_icons[index].visible = not slot.is_empty()
+		quick_icons[index].queue_redraw()
 		quick_buttons[index].modulate = Color("f2d786") if inventory.selected_index == index else Color.WHITE
 	for index in range(slot_buttons.size()):
 		var slot: Dictionary = data[index]
@@ -517,9 +685,10 @@ func show_equipment(tool: String) -> void:
 	var title: String = "Mãos" if tool == "maos" else ItemCatalog.title(tool)
 	$Controls/Rows/Equipment.text = "Equipado: " + title
 	if tool == "arco":
-		$Controls/Rows/Equipment.text += " · %d flechas" % inventory.count_item("flecha")
+		$Controls/Rows/Equipment.text = "%d flechas" % inventory.count_item("flecha")
 	elif GunRules.WEAPONS.has(tool):
-		$Controls/Rows/Equipment.text += " · %d/%d carregada · %d reserva · R recarrega" % [inventory.loaded_ammo(tool), GunRules.WEAPONS[tool].magazine, inventory.count_item(GunRules.WEAPONS[tool].ammo)]
+		$Controls/Rows/Equipment.text = "%d/%d · reserva %d" % [inventory.loaded_ammo(tool), GunRules.WEAPONS[tool].magazine, inventory.count_item(GunRules.WEAPONS[tool].ammo)]
+	$Controls/Rows/Equipment.visible = tool in GunRules.WEAPONS
 
 
 func update_counts(wood: int, stone: int) -> void:
@@ -529,13 +698,13 @@ func update_counts(wood: int, stone: int) -> void:
 func show_target(message: String) -> void:
 	if MobileInput.enabled: message = message.trim_prefix("F / mouse — ")
 	$Controls/Rows/Prompt.text = message
-	$Controls/Rows/Prompt.visible = message != ""
+	$Controls/Rows/Prompt.visible = message != "" and not MobileInput.enabled
 
 
 func show_pickup(message: String) -> void:
 	if MobileInput.enabled: message = message.trim_prefix("E — ")
 	$Controls/Rows/Pickup.text = message
-	$Controls/Rows/Pickup.visible = message != ""
+	$Controls/Rows/Pickup.visible = message != "" and not MobileInput.enabled
 
 
 func show_message(message: String) -> void:

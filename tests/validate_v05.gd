@@ -138,7 +138,7 @@ func validate() -> void:
 	check(cycle.phase == "Amanhecer" and cycle.color.r > cycle.night_color.r, "amanhecer gradual")
 	cycle.advance(0.25)
 	check(cycle.day_number == 2 and cycle.phase == "Dia" and cycle.color.is_equal_approx(Color.WHITE), "novo dia e iluminação restaurada")
-	check(hud.get_node("Controls/Rows/Time").text.begins_with("Dia 2 · Dia ·"), "HUD recebe número do dia, fase e contagem")
+	check(hud.get_node("Controls/Rows/Time").text == "Dia 2 · Dia", "HUD compacta recebe número do dia e fase")
 	cycle.time_scale = 30
 	var before_time := cycle.elapsed
 	cycle.advance(0.1)

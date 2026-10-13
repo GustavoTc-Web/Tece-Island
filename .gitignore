@@ -14,3 +14,4 @@ export_credentials.cfg
 node_modules/
 config/firebase-development.json
 *service-account*.json
+config/build-public.json

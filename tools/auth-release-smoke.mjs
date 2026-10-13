@@ -26,9 +26,15 @@ try{
   await page.waitForTimeout(500);
   await page.screenshot({path:'.tools/screenshots/auth-release-'+(touch?'touch':'desktop')+'.png'});
   const click=async(x,y)=>{if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);};
-  await click(450,170);await page.keyboard.type('validation-probe@example.invalid');
-  await click(450,270);await page.keyboard.type('invalid-credential-probe');
-  await click(480,395);
+  if(await page.locator('#auth-email').count()){
+   await page.locator('#auth-email').fill('validation-probe@example.invalid');
+   await page.locator('#auth-password').fill('invalid-credential-probe');
+   await page.locator('#auth-primary').click();
+  }else{
+   await click(450,170);await page.keyboard.type('validation-probe@example.invalid');
+   await click(450,270);await page.keyboard.type('invalid-credential-probe');
+   await click(480,395);
+  }
   await page.waitForResponse(r=>r.url().startsWith('https://identitytoolkit.googleapis.com/'),{timeout:25000}).catch(()=>{});
   await page.waitForTimeout(800);
   await page.screenshot({path:'.tools/screenshots/auth-release-rejected-'+(touch?'touch':'desktop')+'.png'});

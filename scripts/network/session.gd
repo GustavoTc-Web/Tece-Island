@@ -59,11 +59,10 @@ func show_menu(message: String) -> void:
 	if FirebaseAuth.enabled():
 		var logout := Button.new()
 		logout.text = "Sair da conta"
-		logout.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-		logout.position = Vector2(-230, 16)
 		logout.custom_minimum_size = Vector2(210, 64)
 		logout.pressed.connect(FirebaseAuth.logout)
-		menu.add_child(logout)
+		menu.rows.add_child(logout)
+		menu.resize()
 		var account := AccountProgress.new()
 		var owner := FirebaseAuth.account_uid()
 		account.configure(owner)
@@ -89,7 +88,8 @@ func show_menu(message: String) -> void:
 				dialog.canceled.connect(dialog.queue_free)
 				menu.add_child(dialog)
 				dialog.popup_centered(Vector2i(600, 240)))
-			menu.add_child(import_button)
+			menu.rows.add_child(import_button)
+			menu.resize()
 
 func _import_legacy(account: AccountProgress) -> void:
 	if transitioning or FirebaseAuth.account_uid() != account.uid: return
@@ -275,18 +275,7 @@ func _process(delta: float) -> void:
 			return_to_menu("Conexão não concluída: servidor indisponível, partida cheia ou porta bloqueada.")
 
 func add_exit_button(text: String) -> void:
-	var layer := CanvasLayer.new()
-	layer.name = "ExitUI"
-	layer.layer = 10
-	layer.process_mode = Node.PROCESS_MODE_ALWAYS
-	game.add_child(layer)
-	var button := Button.new()
-	button.text = text
-	button.position = Vector2(690, 16)
-	button.custom_minimum_size = Vector2(210, 52)
-	button.focus_mode = Control.FOCUS_NONE
-	button.pressed.connect(leave_game)
-	layer.add_child(button)
+	game.get_node("HUD").menu_view.leave_action = leave_game
 
 func leave_game() -> void:
 	if transitioning or FirebaseAuth.logging_out: return

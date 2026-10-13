@@ -32,8 +32,10 @@ O baú construído guarda 12 pilhas: abra, selecione Inventário ou Baú, seleci
 um item e use Guardar/Retirar pilha ou T; transferências parciais conservam o resto.
 Renomeie o baú em até 24 caracteres. O painel Base seleciona e confirma desmontagem:
 50% dos materiais, arredondados para baixo, com excedentes no chão; baú cheio bloqueado.
-Diário por J/botão reúne O Último Sinal e objetivos opcionais, sem recompensas.
-Som permite volume/silenciar. Detalhes e testes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md).
+Diário por J ou Menu → Diário e objetivos reúne O Último Sinal e objetivos opcionais.
+Menu → Configurações permite volume/silenciar e mostrar objetivos.
+Detalhes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md) e
+[usabilidade mobile, testes e capturas](docs/USABILIDADE_MOBILE.md).
 O arco usa os controles de ataque/mira, consome uma flecha por tiro e dispensa
 recarga. A receita de flechas produz quatro unidades.
 
@@ -60,14 +62,17 @@ Armas iguais têm identidade e carregadores independentes.
 
 ## Celular
 
-Use o aparelho **na horizontal**. Dispositivos de toque ativam o layout automaticamente.
+Use retrato ou paisagem. Dispositivos de toque ativam o layout automaticamente.
 A opção **Controles de toque (testar no computador)** no menu permite ativá-lo manualmente;
 os joysticks também aceitam arrastar com o mouse.
 
 - Joystick esquerdo: andar. Direito: arrastar para mirar e manter ataque fora da zona morta.
   Soltar para parar. Dois dedos controlam movimento e mira separadamente.
-- Botões **Interagir**, **Usar item**, **Recarregar**, **Inventário**, **Fabricação**
-  e **Voltar ao menu**. Consumíveis usam uma unidade por toque.
+- **Interagir** mostra o alvo próximo; **Inventário** fica sempre acessível.
+  **Comer/Beber** e **Recarregar** aparecem quando o item permite a ação.
+  Consumíveis usam uma unidade por toque.
+- **Fabricação** e **Base** ficam no inventário. **Menu** reúne diário/objetivos,
+  configurações, ajuda, dados/salvamento, retorno ao menu principal e logout.
 - Toque na barra rápida para selecionar.
 - Inventário: selecione origem → **Mover / trocar** → toque no destino.
   **Jogar 1** / **Jogar pilha** descartam. Role o painel com o dedo.
@@ -76,8 +81,8 @@ os joysticks também aceitam arrastar com o mouse.
 - Painéis têm **Fechar**. Nenhuma dessas ações exige teclado.
 
 Painéis pausam a simulação solo e limpam entradas mantidas. Perda de foco,
-suspensão e mudança de orientação também limpam entradas. Na vertical aparece
-orientação para girar, mantendo acesso ao menu. A página respeita áreas seguras
+suspensão e mudança de orientação também limpam entradas. O retrato permite jogar.
+A página respeita áreas seguras
 e acompanha o tamanho disponível do navegador.
 
 ## Inventário, sobrevivência e mundo
@@ -227,7 +232,10 @@ npm install --prefix .tools/browser-test playwright
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/build-browser-fixture.ps1 -Godot "C:/caminho/Godot_console.exe"
 node tools/serve-web.mjs 8081 .tools/web-validation
 # Outro terminal:
-node tools/browser-validation.mjs
+node tools/mobile-hud-validation.mjs
+node tools/signal-validation.mjs
+# Login principal com Firebase real (somente credenciais inválidas):
+node tools/mobile-login-validation.mjs
 # Smoke da produção, servida na porta 8080:
 node tools/browser-smoke.mjs --touch
 ```

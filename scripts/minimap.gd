@@ -9,10 +9,11 @@ const CELL := 128.0
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	offset_left = -164
+	offset_left = -124
 	offset_right = -16
-	offset_top = 88
-	offset_bottom = 236
+	offset_top = 90
+	offset_bottom = 198
+	scale = Vector2(0.72, 0.72)
 	custom_minimum_size = Vector2(148, 148)
 
 func reveal() -> void:
@@ -24,6 +25,9 @@ func reveal() -> void:
 				explored[SaveStore.key(point)] = true
 
 func _process(delta: float) -> void:
+	var hud := get_parent()
+	visible = hud.current_panel == "" and not hud.showing_death
+	if hud.menu_button != null: offset_top = hud.menu_button.size.y + 32
 	clock += delta
 	if clock < 0.2 or not is_instance_valid(player): return
 	clock = 0

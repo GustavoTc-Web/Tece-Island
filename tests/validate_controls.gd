@@ -31,6 +31,18 @@ func run() -> void:
 	check(interaction.collect_nearest() == 2 and drop.quantity == 2, "Liberar espaço permite nova coleta parcial sem duplicar")
 	drop.position = player.position + Vector2(interaction.pickup_distance + 1, 0)
 	check(interaction.collect_nearest() == 0 and drop.quantity == 2, "Toque não amplia alcance de coleta")
+	var ui := Control.new()
+	root.add_child(ui)
+	var behind := Button.new()
+	behind.size = Vector2(100, 60)
+	ui.add_child(behind)
+	var notice := Button.new()
+	notice.size = behind.size
+	notice.disabled = true
+	notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ui.add_child(notice)
+	check(root.get_node("MobileInput").button_at(ui, Vector2(20, 20)) == behind, "Aviso desabilitado e mouse_filter Ignore não intercepta botão de toque")
+	ui.queue_free()
 	world.queue_free()
 	await step()
 	print("CONTROLS: ", checks, " verificações, ", failures, " falhas")
