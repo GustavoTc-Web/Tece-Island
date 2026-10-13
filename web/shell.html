@@ -12,12 +12,41 @@ canvas{display:block;width:100%;height:100%;touch-action:none;outline:none;image
 #status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;background:#182b23}
 progress{width:min(360px,80vw);height:24px}
 button{padding:14px 24px;font:inherit}
+#auth{position:fixed;z-index:20;box-sizing:border-box;inset:0;background:linear-gradient(135deg,#294734ed,#122b22f5);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+#auth[hidden]{display:none}
+#auth form{box-sizing:border-box;max-width:440px;margin:auto;background:#10271f;border:1px solid #517055;border-radius:16px;padding:24px;box-shadow:0 12px 40px #0005}
+#auth h1{margin:0;color:#e1d7a4}#auth .subtitle{color:#a8c0a4;margin:8px 0 22px}
+#auth label{display:block;margin:14px 0 6px}#auth input:not([type=checkbox]){box-sizing:border-box;display:block;width:100%;min-height:48px;border:1px solid #69806b;border-radius:7px;padding:12px;background:#253b30;color:#fff;font:18px system-ui;touch-action:auto;scroll-margin:20px}
+#auth input:focus{outline:3px solid #d7c67f}#auth button{box-sizing:border-box;min-height:48px;border-radius:7px;border:1px solid #69806b;color:#f3f3df;background:#304f37;cursor:pointer}#auth button:disabled{opacity:.55;cursor:wait}
+#auth .actions{display:grid;gap:10px;margin-top:14px}#auth .check{display:flex;align-items:center;gap:12px;min-height:44px}#auth .check input{width:24px;height:24px}#auth p[role=status]{line-height:1.5;color:#f1d28b;overflow-wrap:anywhere;min-height:24px}#auth [hidden]{display:none!important}
+@media(max-width:480px){#auth form{padding:18px}}
 </style>
 </head>
 <body><div id="stage"><canvas id="canvas" tabindex="0">Seu navegador precisa oferecer WebGL 2.</canvas>
 <div id="status"><strong>TC Island</strong><span id="message">Carregando o jogo…</span><progress id="progress"></progress><button id="retry" hidden>Recarregar</button></div></div>
 <script src="$GODOT_URL"></script>
 <script>
+// Presentation only: every authentication operation goes to FirebaseAuth in Godot.
+// Native browser editing avoids the canvas/hidden virtual-keyboard focus race.
+window.tcAuthForm=(()=>{
+ let root=null,callback=null,mode='login',busy=false,configured=true;
+ const labels={login:'Entrar',register:'Cadastrar',recover:'Enviar recuperação'};
+ const field=id=>root.querySelector('#auth-'+id);
+ function setMode(value){if(busy)return;mode=value;field('password-row').hidden=value==='recover';field('confirmation-row').hidden=value!=='register';field('show-row').hidden=value==='recover';field('primary').textContent=labels[value];field('mode').textContent=value==='login'?'Criar conta':'Voltar para entrar';field('recover').hidden=value==='recover';field('password').autocomplete=value==='register'?'new-password':'current-password';}
+ function viewport(){if(!root)return;const v=window.visualViewport;root.style.top=(v?.offsetTop||0)+'px';root.style.height=(v?.height||window.innerHeight)+'px';root.style.bottom='auto';}
+ function unmount(){if(root){for(const input of root.querySelectorAll('input'))input.value='';root.remove();}root=null;callback=null;window.visualViewport?.removeEventListener('resize',viewport);window.visualViewport?.removeEventListener('scroll',viewport);window.removeEventListener('resize',viewport);}
+ function mount(handler){unmount();callback=handler;mode='login';root=document.createElement('section');root.id='auth';root.setAttribute('aria-label','Entrar no TC Island');root.innerHTML=`<form novalidate><h1>TC Island</h1><p class="subtitle">Floresta · exploração · sobrevivência</p><label for="auth-email">E-mail</label><input id="auth-email" type="text" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false"><div id="auth-password-row"><label for="auth-password">Senha</label><input id="auth-password" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"></div><div id="auth-confirmation-row" hidden><label for="auth-confirmation">Confirmar senha</label><input id="auth-confirmation" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false"></div><label id="auth-show-row" class="check"><input id="auth-show" type="checkbox">Mostrar senha</label><div class="actions"><button id="auth-primary" type="submit">Entrar</button><button id="auth-mode" type="button">Criar conta</button><button id="auth-recover" type="button">Esqueci minha senha</button><button id="auth-resend" type="button" hidden>Reenviar confirmação</button><button id="auth-confirmed" type="button" hidden>Já confirmei</button></div><p id="auth-message" role="status" aria-live="polite"></p></form>`;document.body.append(root);document.activeElement?.blur();
+  // Stop bubbling keyboard commands into Godot. Browser defaults still edit inputs.
+  for(const name of ['keydown','keyup','keypress','touchstart','touchend','pointerdown','pointerup'])root.addEventListener(name,e=>e.stopPropagation());
+  let editing=null;root.addEventListener('focusin',e=>{if(e.target.matches('input:not([type=checkbox])'))editing=e.target;});
+  field('show').addEventListener('pointerdown',e=>{if(editing&&document.activeElement===editing)e.preventDefault();});
+  field('show').addEventListener('change',()=>{const active=editing,start=active?.selectionStart,end=active?.selectionEnd;for(const id of ['password','confirmation'])field(id).type=field('show').checked?'text':'password';if(active&&['auth-password','auth-confirmation'].includes(active.id)){active.focus({preventScroll:true});active.setSelectionRange(start,end);}});
+  root.querySelector('form').addEventListener('submit',e=>{e.preventDefault();if(busy||!configured)return;callback(mode,field('email').value,field('password').value,field('confirmation').value);});
+  field('mode').onclick=()=>setMode(mode==='login'?'register':'login');field('recover').onclick=()=>setMode('recover');field('resend').onclick=()=>{if(!busy)callback('resend');};field('confirmed').onclick=()=>{if(!busy)callback('confirmed');};
+  window.visualViewport?.addEventListener('resize',viewport);window.visualViewport?.addEventListener('scroll',viewport);window.addEventListener('resize',viewport);viewport();
+ }
+ return{mount,unmount,message:text=>{if(root)field('message').textContent=text;},verification:()=>{if(root){field('resend').hidden=false;field('confirmed').hidden=false;}},setBusy:(value,ready)=>{busy=value;configured=ready;if(!root)return;field('primary').textContent=value?'Aguarde…':labels[mode];for(const button of root.querySelectorAll('button'))button.disabled=value||(!ready&&!['auth-mode','auth-recover'].includes(button.id));for(const input of root.querySelectorAll('input'))input.disabled=value;}};
+})();
 const canvas=document.querySelector('#canvas'),status=document.querySelector('#status'),message=document.querySelector('#message'),progress=document.querySelector('#progress');
 document.querySelector('#retry').onclick=()=>location.reload();
 function fail(error){status.style.display='flex';message.textContent='Não foi possível iniciar o jogo. Verifique sua conexão e o suporte a WebGL 2 do navegador. Você pode recarregar e tentar novamente.';progress.hidden=true;document.querySelector('#retry').hidden=false;console.error(error);}
@@ -45,7 +74,7 @@ window.addEventListener('resize',resize);new ResizeObserver(resize).observe(docu
 function watchDensity(){const query=matchMedia('(resolution: '+devicePixelRatio+'dppx)');query.addEventListener('change',()=>{resize();watchDensity();},{once:true});}
 watchDensity();resize();
 engine.startGame({canvas,canvasResizePolicy:0,onProgress:(current,total)=>{if(total>0){progress.max=total;progress.value=current;message.textContent='Carregando o jogo… '+Math.round(current/total*100)+'%';}}})
-.then(()=>{status.style.display='none';canvas.focus();}).catch(fail);
+.then(()=>{status.style.display='none';if(!document.querySelector('#auth'))canvas.focus();}).catch(fail);
 // Blur and visibility loss reach Godot even when the browser suspends rendering.
 document.addEventListener('visibilitychange',()=>{if(document.hidden)window.dispatchEvent(new Event('blur'));});
 canvas.addEventListener('webglcontextlost',()=>fail('WebGL context lost'));

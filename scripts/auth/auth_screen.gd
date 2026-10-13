@@ -16,6 +16,8 @@ var mode := "login"
 var rows: VBoxContainer
 var center: CenterContainer
 var busy := false
+var web_form: JavaScriptObject
+var web_callback: JavaScriptObject
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -60,8 +62,12 @@ func _ready() -> void:
 	show_password.text = "Mostrar senha"
 	show_password.custom_minimum_size.y = 48
 	show_password.toggled.connect(func(value):
+		var password_caret := password.caret_column
+		var confirmation_caret := confirmation.caret_column
 		password.secret = not value
-		confirmation.secret = not value)
+		confirmation.secret = not value
+		password.caret_column = password_caret
+		confirmation.caret_column = confirmation_caret)
 	rows.add_child(show_password)
 	primary = _button("Entrar", submit)
 	mode_button = _button("Criar conta", func(): set_mode("register" if mode == "login" else "login"))
@@ -78,13 +84,46 @@ func _ready() -> void:
 	FirebaseAuth.busy_changed.connect(set_busy)
 	FirebaseAuth.verification_required.connect(func():
 		resend_button.show()
-		confirmed_button.show())
+		confirmed_button.show()
+		if web_form != null: web_form.verification())
 	get_viewport().size_changed.connect(resize)
 	set_mode("login")
 	set_busy(FirebaseAuth.busy)
 	if not FirebaseAuth.configured(): show_message(str(FirebaseAuth.config.error))
 	resize()
-	email.grab_focus()
+	email.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_EMAIL_ADDRESS
+	password.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_PASSWORD
+	confirmation.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_PASSWORD
+	if OS.has_feature("web"):
+		web_form = JavaScriptBridge.get_interface("tcAuthForm")
+		if web_form != null:
+			web_callback = JavaScriptBridge.create_callback(_web_action)
+			web_form.mount(web_callback)
+			center.hide()
+			set_busy(FirebaseAuth.busy)
+			show_message("Explore. Construa. Sobreviva." if FirebaseAuth.configured() else str(FirebaseAuth.config.error))
+	else: email.grab_focus()
+
+func _web_action(args: Array) -> void:
+	if busy or args.is_empty(): return
+	var action := str(args[0])
+	match action:
+		"login", "register", "recover":
+			# Values exist only for this call, never in browser storage or logs.
+			mode = action
+			email.text = str(args[1])
+			password.text = str(args[2])
+			confirmation.text = str(args[3])
+			submit()
+			email.text = ""
+			password.text = ""
+			confirmation.text = ""
+		"resend": FirebaseAuth.resend_verification()
+		"confirmed": FirebaseAuth.check_verification()
+
+func _exit_tree() -> void:
+	if web_form != null: web_form.unmount()
+	web_callback = null
 
 func _label(text: String) -> Label:
 	var label := Label.new()
@@ -134,6 +173,7 @@ func set_mode(value: String) -> void:
 
 func set_busy(value: bool) -> void:
 	busy = value
+	if web_form != null: web_form.setBusy(value, FirebaseAuth.configured())
 	primary.text = "Aguarde…" if value else {"login": "Entrar", "register": "Cadastrar", "recover": "Enviar recuperação"}[mode]
 	for button in [primary, mode_button, recovery_button, resend_button, confirmed_button]:
 		button.disabled = value or (button != mode_button and button != recovery_button and not FirebaseAuth.configured())
@@ -144,6 +184,7 @@ func set_busy(value: bool) -> void:
 
 func show_message(text: String) -> void:
 	if is_instance_valid(status): status.text = text
+	if web_form != null: web_form.message(text)
 
 func submit() -> void:
 	if busy: return
