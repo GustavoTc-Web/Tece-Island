@@ -3,6 +3,7 @@ extends RefCounted
 
 # Ajuste aqui custos, recompensas, número de golpes e intervalo em segundos.
 const RECIPES := {
+	"armadura_pedra": {"name": "Armadura de pedra", "category": "armadura", "material": "pedra", "stone": 20, "thread": 4, "protection": 10},
 	"cantil": {"name": "Cantil", "category": "agua", "material": "", "wood": 2, "stone": 0, "fiber": 2},
 	"carne_cozida": {"name": "Carne cozida", "category": "comida", "material": "", "wood": 1, "stone": 0, "fiber": 0, "meat": 1},
 	"peixe_cozido": {"name": "Peixe cozido", "category": "comida", "material": "", "wood": 1, "stone": 0, "fish_meat": 1, "cooking": true},
@@ -44,6 +45,7 @@ static func crafting_group(id: String) -> String:
 	if recipe.get("cooking", id == "carne_cozida"): return "Fogueira"
 	if recipe.get("category", "") in ["machado", "picareta", "espada", "arco", "flechas"]: return "Ferramentas"
 	if recipe.get("category", "") == "comida": return "Alimentos"
+	if recipe.get("category", "") == "armadura": return "Armaduras"
 	return "Recursos"
 
 

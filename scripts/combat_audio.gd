@@ -13,7 +13,7 @@ func _ready() -> void:
 	if prefs.load(preferences_path) == OK:
 		volume = clampf(float(prefs.get_value("sound", "volume", 0.3)), 0, 1)
 		muted = bool(prefs.get_value("sound", "muted", false))
-	for kind in ["swing", "arrow", "shot", "impact", "blocked", "damage"]:
+	for kind in ["swing", "arrow", "shot", "impact", "blocked", "damage", "objective"]:
 		sounds[kind] = tone(kind)
 	for i in range(4):
 		var voice := AudioStreamPlayer.new()
@@ -54,7 +54,7 @@ func tone(kind: String) -> AudioStreamWAV:
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS
 	stream.mix_rate = 22050
-	var frequencies := {"swing": 180, "arrow": 640, "shot": 90, "impact": 320, "blocked": 120, "damage": 210}
+	var frequencies := {"swing": 180, "arrow": 640, "shot": 90, "impact": 320, "blocked": 120, "damage": 210, "objective": 880}
 	var count := 2646 if kind == "damage" else 1764
 	var bytes := PackedByteArray()
 	bytes.resize(count * 2)

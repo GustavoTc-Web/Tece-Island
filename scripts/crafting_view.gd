@@ -28,7 +28,7 @@ func initialize(owner_hud: CanvasLayer, source: ResourceInventory) -> void:
 	tabs = HBoxContainer.new()
 	parent.add_child(tabs)
 	parent.move_child(tabs, 3)
-	for name in ["Ferramentas", "Recursos", "Alimentos"]:
+	for name in ["Ferramentas", "Recursos", "Alimentos", "Armaduras"]:
 		var button := Button.new()
 		button.text = name
 		button.custom_minimum_size.y = 48

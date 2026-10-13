@@ -15,6 +15,8 @@ func capture() -> Dictionary:
 	result.world_seed = world.world_seed
 	result.explored = world.minimap.explored.duplicate(true)
 	result.region_wells = world.region_wells.duplicate(true)
+	result.region_buildings = world.region_buildings.duplicate(true)
+	result.building_loot = {}
 	result.wells_policy = "fixed"
 	result.journal = world.journal.capture()
 	result.objectives = world.objectives.capture()
@@ -40,6 +42,7 @@ func capture() -> Dictionary:
 	for node in world.find_children("*", "Node2D", true, false):
 		if node.get_script() == preload("res://scripts/loot_container.gd"):
 			result.loot[SaveStore.key(node.global_position)] = {"contents": node.contents, "released": node.released}
+			if node.has_meta("loot_id"): result.building_loot[str(node.get_meta("loot_id"))] = {"contents": node.contents, "released": node.released}
 	return result
 
 func load_progress() -> void:
@@ -57,10 +60,11 @@ func _load_progress() -> void:
 	for field in ["structures", "drops", "wells"]:
 		if data.has(field) and not data[field] is Array:
 			writable = false
-	for field in ["resources", "loot", "player", "explored", "region_wells"]:
+	for field in ["resources", "loot", "player", "explored", "region_wells", "region_buildings", "building_loot"]:
 		if data.has(field) and not data[field] is Dictionary:
 			writable = false
 	if data.has("region_wells") and data.region_wells is Dictionary and not NaturalWells.valid_metadata(data.region_wells): writable = false
+	if data.has("region_buildings") and data.region_buildings is Dictionary and not RegionalBuildings.valid(data.region_buildings): writable = false
 	if not writable:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
@@ -113,7 +117,10 @@ func _load_progress() -> void:
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	var player_state: Dictionary = data.get("player", {})
 	player.position = SaveStore.vector(player_state.get("position"), player.position)
-	player.health = clampi(int(player_state.get("health", 100)), 1, player.max_health)
+	player.health = clampf(float(player_state.get("health", 100)), 0, player.max_health)
+	player.dead = player.health <= 0
+	player.cancel_regeneration()
+	world.get_node("HUD").show_death(player.dead)
 	player.poison_remaining = clampf(float(player_state.get("poison", 0)), 0, 60)
 	player.poison_tick = clampf(float(player_state.get("poison_tick", 1)), 0, 1)
 	player.get_node("Needs").hunger = clampf(float(player_state.get("hunger", 100)), 0, 100)
@@ -157,9 +164,10 @@ func _load_progress() -> void:
 	for node in world.find_children("*", "Node2D", true, false):
 		if node.get_script() == preload("res://scripts/loot_container.gd"):
 			var key := SaveStore.key(node.global_position)
-			if data.get("loot", {}).has(key):
-				node.contents = data.loot[key].contents.duplicate(true)
-				node.released = bool(data.loot[key].released)
+			var state: Dictionary = data.get("building_loot", {}).get(str(node.get_meta("loot_id", "")), data.get("loot", {}).get(key, {}))
+			if not state.is_empty():
+				node.contents = state.contents.duplicate(true)
+				node.released = bool(state.released)
 				node.queue_redraw()
 	world.get_node("HUD").show_message("Progresso local carregado.")
 	world.objectives.reconcile(world)

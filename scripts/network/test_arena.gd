@@ -72,6 +72,7 @@ func add_actor(id: int, server: bool) -> void:
 	inv.name = "Inventory"
 	body.add_child(inv)
 	inv.equipment_changed.connect(body.show_equipment)
+	inv.changed.connect(func(_wood, _stone): body.protection = inv.armor_protection())
 	var record := {"body": body, "inventory": inv, "spawn": body.position, "movement": Vector2.ZERO, "aim": Vector2.RIGHT, "mouse": false, "front": false, "panel": false, "age": 0.0, "cooldown": 0.0, "input_seq": -1, "action_seq": -1, "window": 0, "requests": 0}
 	if server:
 		inv.add_resource("pistola", 1)

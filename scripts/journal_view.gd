@@ -66,15 +66,18 @@ func refresh() -> void:
 		toggle.button_pressed = objectives.enabled
 		toggle.toggled.connect(func(value): objectives.enabled = value; objectives.changed.emit())
 		pages.add_child(toggle)
-		for id in IslandObjectives.GOALS:
+		for id in IslandObjectives.ORDER:
 			var goal: Dictionary = IslandObjectives.GOALS[id]
 			var button := Button.new()
-			button.text = "%s · %d/%d%s\n%s" % [goal.title, objectives.values[id], goal.target, " · Concluído" if objectives.values[id] == goal.target else "", "Acompanhando" if objectives.tracked == id else "Acompanhar"]
+			var done: bool = id in objectives.presented
+			button.text = "%s · %d/%d · %s" % [goal.title, objectives.values[id], goal.target, "Concluído" if done else ("Ativo" if objectives.tracked == id else "Próximo")]
+			if id == "tools": button.text += "\n" + objectives.tools_description()
 			button.add_theme_font_size_override("font_size", 18)
 			button.custom_minimum_size.y = 64
-			button.pressed.connect(func(): objectives.tracked = id; objectives.enabled = true; objectives.collapsed = false; objectives.changed.emit())
+			button.disabled = true
+			button.add_theme_color_override("font_disabled_color", Color("e4dec5"))
 			pages.add_child(button)
-		text.text = "Objetivos opcionais, sem recompensas materiais. Contagens começam com ações comprovadas; o save antigo não registra todo o histórico."
+		text.text = "Objetivos iniciais concluídos" if objectives.tracked.is_empty() else "Ações antecipadas ficam registradas. A próxima etapa é liberada automaticamente."
 		return
 	for i in range(journal.discovered.size()):
 		var id := journal.discovered[i]

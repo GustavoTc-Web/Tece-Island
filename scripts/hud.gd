@@ -64,6 +64,19 @@ func initialize(source: ResourceInventory) -> void:
 	drop_bag.focus_mode = Control.FOCUS_NONE
 	drop_bag.pressed.connect(func(): discard_requested.emit(-2, true))
 	backpack_row.add_child(drop_bag)
+	var armor_row := HBoxContainer.new()
+	armor_row.name = "ArmorSlot"
+	$InventoryPanel/Panel/Scroll/Rows.add_child(armor_row)
+	$InventoryPanel/Panel/Scroll/Rows.move_child(armor_row, 2)
+	var armor_icon := preload("res://scripts/recipe_icon.gd").new()
+	armor_icon.item = "armadura_pedra"
+	armor_row.add_child(armor_icon)
+	var armor_button := Button.new()
+	armor_button.name = "Remove"
+	armor_button.pressed.connect(func():
+		if network_mode: show_message("Armaduras disponíveis no solo")
+		elif not inventory.remove_armor(): show_message("Reserve um espaço livre para retirar a armadura."))
+	armor_row.add_child(armor_button)
 	var actions := GridContainer.new()
 	inventory_actions = actions
 	actions.columns = 3
@@ -213,10 +226,6 @@ func mobile_layout(value: bool) -> void:
 	if objective_button != null:
 		objective_button.position = Vector2(16, 142 * display_scale)
 		objective_button.custom_minimum_size = Vector2(unit * 2.6, unit)
-		if value and not touch_goal_initialized:
-			touch_goal_initialized = true
-			journal_view.objectives.collapsed = true
-			refresh_objective()
 		objective_button.add_theme_font_size_override("font_size", int(maxf(16, 13 / MobileInput.css_scale())))
 	if save_button != null:
 		save_button.custom_minimum_size.y = unit if not save_button.disabled else 28
@@ -473,21 +482,25 @@ func initialize_objectives(source: IslandObjectives) -> void:
 	objective_button.custom_minimum_size = Vector2(260, 48)
 	objective_button.add_theme_font_size_override("font_size", 14)
 	objective_button.clip_text = true
-	objective_button.pressed.connect(func(): source.collapsed = not source.collapsed; source.changed.emit())
+	objective_button.pressed.connect(func(): journal_view.goals_mode = true; journal_view.refresh(); set_panel("journal"))
 	add_child(objective_button)
 	source.changed.connect(refresh_objective)
-	if MobileInput.enabled:
-		source.collapsed = true
-		touch_goal_initialized = true
+	source.completed.connect(func(_title):
+		CombatAudio.play("objective")
+		objective_button.modulate = Color("f5d879")
+		get_tree().create_timer(1.5, true).timeout.connect(func(): if is_instance_valid(objective_button): objective_button.modulate = Color.WHITE))
 	refresh_objective()
 	mobile_layout(MobileInput.enabled)
 
 func refresh_objective() -> void:
 	var source := journal_view.objectives
 	objective_button.visible = source.enabled and current_panel == "" and not showing_death
-	var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
-	var title: String = "Explorar um templo" if source.tracked == "temple" else goal.title
-	objective_button.text = "Objetivo +" if source.collapsed else "%s\n%d/%d -" % [title, source.values[source.tracked], goal.target]
+	if source.tracked.is_empty():
+		objective_button.text = "Objetivos\nIniciais concluídos"
+	else:
+		var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
+		objective_button.text = "Objetivos · %s\n%d/%d" % [goal.title, source.values[source.tracked], goal.target]
+		objective_button.tooltip_text = source.tools_description() if source.tracked == "tools" else goal.title
 
 func open_base(target: PlacedStructure = null) -> void:
 	if network_mode:
@@ -652,6 +665,10 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 	if $InventoryPanel/Panel/Scroll/Rows.has_node("BackpackSlot"):
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.text = ItemCatalog.title(inventory.backpack.item) + " · Retirar" if not inventory.backpack.is_empty() else "Vazio"
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.disabled = inventory.backpack.is_empty()
+	if $InventoryPanel/Panel/Scroll/Rows.has_node("ArmorSlot"):
+		$InventoryPanel/Panel/Scroll/Rows/ArmorSlot/Remove.text = "Armadura: vazia" if inventory.armor.is_empty() else "Pedra · 10 proteção · Retirar"
+		$InventoryPanel/Panel/Scroll/Rows/ArmorSlot/Remove.disabled = inventory.armor.is_empty()
+	update_protection(inventory.armor_protection())
 	var data := inventory.slots
 	for index in range(quick_buttons.size()):
 		var slot: Dictionary = data[index]
@@ -676,7 +693,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		slot_buttons[index].text = "%d\n%s" % [index + 1, title]
 		slot_buttons[index].modulate = Color("f2d786") if index == selected_slot else Color.WHITE
 	var item: String = data[selected_slot].get("item", "") if selected_slot >= 0 else ""
-	$InventoryPanel/Panel/Scroll/Rows/Equip.disabled = not ItemCatalog.is_equippable(item) and ItemCatalog.bag_level(item) == 0
+	$InventoryPanel/Panel/Scroll/Rows/Equip.disabled = not ItemCatalog.is_equippable(item) and ItemCatalog.bag_level(item) == 0 and item != "armadura_pedra"
 	$InventoryPanel/Panel/Scroll/Rows/Selection.text = "Selecionado: " + ItemCatalog.title(item) if item != "" else "Selecione ferramenta, mochila ou objeto."
 
 

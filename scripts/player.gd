@@ -1,13 +1,33 @@
 extends CharacterBody2D
 
-signal health_changed(current: int, maximum: int)
+signal health_changed(current: float, maximum: int)
 signal died
 signal poison_changed(remaining: float)
 
 @export var speed: float = 210.0
 @export var max_health: int = 100
 @export var invulnerability_duration: float = 0.75
-var health: int = 100
+var health: float = 100.0
+var protection := 0.0
+var regeneration_ticks := 0
+var regeneration_clock := 0.0
+
+func renew_regeneration() -> void:
+	regeneration_ticks = 5
+	regeneration_clock = 0.0
+
+func cancel_regeneration() -> void:
+	regeneration_ticks = 0
+	regeneration_clock = 0.0
+
+func step_regeneration(delta: float) -> void:
+	if get_tree().paused or dead or not simulation_authority or regeneration_ticks == 0: return
+	regeneration_clock += delta
+	while regeneration_clock >= 1.0 - 0.000001 and regeneration_ticks > 0:
+		regeneration_clock = maxf(0, regeneration_clock - 1.0)
+		regeneration_ticks -= 1
+		health = minf(max_health, health + 5.0)
+		health_changed.emit(health, max_health)
 var dead: bool = false
 var invulnerability: float = 0.0
 var damage_flash: float = 0.0
@@ -64,19 +84,22 @@ func _ready() -> void:
 func receive_damage(amount: int, ignore_invulnerability: bool = false) -> bool:
 	if not simulation_authority or dead or amount <= 0 or (invulnerability > 0.0 and not ignore_invulnerability) or get_tree().paused:
 		return false
-	health = maxi(0, health - amount)
+	var effective := float(amount) if ignore_invulnerability else float(amount) * 100.0 / (100.0 + clampf(protection, 0, 100))
+	health = maxf(0, health - effective)
 	invulnerability = invulnerability_duration
 	damage_flash = 0.2
 	CombatEffect.emit_at(self, global_position + Vector2(0, -18), "damage")
 	health_changed.emit(health, max_health)
 	if health == 0:
 		dead = true
+		cancel_regeneration()
 		velocity = Vector2.ZERO
 		died.emit()
 	return true
 
 
 func respawn(point: Vector2) -> void:
+	cancel_regeneration()
 	position = point
 	facing = Vector2.DOWN
 	health = max_health
@@ -108,6 +131,7 @@ func show_equipment(tool: String) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	step_regeneration(delta)
 	step_poison(delta)
 	if network_controlled:
 		return
@@ -149,6 +173,9 @@ func _draw() -> void:
 	draw_line(Vector2(-5, -5), Vector2(-5, 1), Color("263c46"), 6.0)
 	draw_line(Vector2(5, -5), Vector2(5, 1), Color("263c46"), 6.0)
 	draw_style_box(body_style(), Rect2(-11, -25, 22, 22))
+	if protection > 0:
+		draw_rect(Rect2(-11, -25, 22, 17), Color("9d9ba7"))
+		draw_line(Vector2(0, -24), Vector2(0, -9), Color("686775"), 2)
 	draw_circle(Vector2(0, -31), 9.0, Color("e6bb8d"))
 	draw_circle(Vector2(0, -35), 10.0, Color("68462f"))
 	draw_circle(Vector2(0, -31) + facing * 6.0, 3.0, Color("e6bb8d"))

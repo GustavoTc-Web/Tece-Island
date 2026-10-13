@@ -20,6 +20,7 @@ var activity_clock := 0.0
 var last_region := ""
 var initial_progress := {}
 var region_wells := {}
+var region_buildings := {}
 var journal: IslandJournal
 var objectives: IslandObjectives
 var loading_progress := false
@@ -54,6 +55,7 @@ func _ready() -> void:
 	$WorldObjects/Player/Interaction.pickup_changed.connect($HUD.show_pickup)
 	$WorldObjects/Player/Interaction.inventory = $Inventory
 	$Inventory.equipment_changed.connect($WorldObjects/Player.show_equipment)
+	$Inventory.changed.connect(func(_wood, _stone): $WorldObjects/Player.protection = $Inventory.armor_protection(); $WorldObjects/Player.queue_redraw())
 	$WorldObjects/Player.show_equipment($Inventory.equipped_tool())
 	$HUD.panel_toggled.connect(_on_panel_toggled)
 	$HUD.initialize($Inventory)
@@ -155,6 +157,9 @@ func _ready() -> void:
 	if NaturalWells.valid_metadata(previous_wells):
 		region_wells = NaturalWells.generate(world_seed, previous_wells, initial_progress.get("structures", []) if initial_progress.get("structures", []) is Array else [])
 		NaturalWells.spawn(self, region_wells)
+	if initial_progress.get("region_buildings", {}) is Dictionary and RegionalBuildings.valid(initial_progress.get("region_buildings", {})):
+		region_buildings = RegionalBuildings.generate(self)
+		RegionalBuildings.spawn(self, region_buildings)
 	if persistence_enabled:
 		progress_store = WorldProgress.new()
 		progress_store.world = self

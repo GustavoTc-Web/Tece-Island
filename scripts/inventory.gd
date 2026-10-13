@@ -10,6 +10,28 @@ signal crafted(id: String)
 @export var backpack_bonus: int = 2
 var base_capacity: int = 7
 var backpack: Dictionary = {}
+var armor: Dictionary = {}
+
+func armor_protection() -> float:
+	return clampf(float(ResourceRules.RECIPES.get(armor.get("item", ""), {}).get("protection", 0)), 0, 100)
+
+func equip_armor(index: int) -> bool:
+	if slot_data(index).get("item", "") != "armadura_pedra": return false
+	var previous := armor.duplicate(true)
+	armor = _slots[index].duplicate(true)
+	_slots[index] = previous
+	_notify()
+	return true
+
+func remove_armor() -> bool:
+	if armor.is_empty(): return false
+	for index in range(_slots.size()):
+		if _slots[index].is_empty():
+			_slots[index] = armor.duplicate(true)
+			armor = {}
+			_notify()
+			return true
+	return false
 var _slots: Array[Dictionary] = []
 var selected_index: int = 0
 var selected_category := "maos"
@@ -38,6 +60,7 @@ func calculated_capacity(equipped: bool = true) -> int:
 
 func reset() -> void:
 	backpack = {}
+	armor = {}
 	capacity = calculated_capacity(false)
 	_slots.clear()
 	_slots.resize(capacity)
@@ -194,6 +217,7 @@ func select_quick(index: int) -> bool:
 func equip_slot(index: int) -> bool:
 	if index < 0 or index >= _slots.size(): return false
 	if ItemCatalog.bag_level(_slots[index].get("item", "")) > 0: return equip_backpack(index)
+	if _slots[index].get("item", "") == "armadura_pedra": return equip_armor(index)
 	selected_index = index
 	_notify()
 	return true
@@ -324,7 +348,7 @@ func equipped_weapon_id() -> int:
 	return int(selected_data().get("uid", 0))
 
 func network_state() -> Dictionary:
-	return {"slots": slots, "category": selected_category, "weapon_uid": selected_weapon_uid, "selected": selected_index, "backpack": backpack.duplicate(true)}
+	return {"slots": slots, "category": selected_category, "weapon_uid": selected_weapon_uid, "selected": selected_index, "backpack": backpack.duplicate(true), "armor": armor.duplicate(true)}
 
 func apply_network_state(state: Dictionary) -> void:
 	if state == network_state(): return
@@ -332,6 +356,7 @@ func apply_network_state(state: Dictionary) -> void:
 	for slot in state.slots: _slots.append(slot.duplicate(true))
 	capacity = _slots.size()
 	backpack = state.get("backpack", {}).duplicate(true)
+	armor = state.get("armor", {}).duplicate(true)
 	selected_index = int(state.get("selected", 0))
 	_notify()
 
@@ -340,6 +365,9 @@ func restore_state(state: Dictionary) -> bool:
 	# Validated game state only; authentication tokens never enter this format.
 	if not state.get("backpack", {}) is Dictionary or not state.get("slots", []) is Array: return false
 	var bag: Dictionary = state.get("backpack", {}).duplicate(true)
+	if not state.get("armor", {}) is Dictionary: return false
+	var loaded_armor: Dictionary = state.get("armor", {}).duplicate(true)
+	if not loaded_armor.is_empty() and (loaded_armor.get("item", "") != "armadura_pedra" or int(loaded_armor.get("quantity", 0)) != 1): return false
 	if not bag.is_empty() and ItemCatalog.bag_level(bag.get("item", "")) == 0: return false
 	var loaded: Array[Dictionary] = []
 	for slot in state.get("slots", []):
@@ -356,6 +384,7 @@ func restore_state(state: Dictionary) -> bool:
 	for i in range(loaded.size()):
 		if loaded[i] == null: loaded[i] = {}
 	backpack = bag
+	armor = loaded_armor
 	_slots = loaded
 	capacity = expected
 	selected_index = clampi(int(state.get("selected", 0)), -1, capacity - 1)
