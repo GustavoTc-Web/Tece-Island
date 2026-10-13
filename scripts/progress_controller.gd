@@ -34,7 +34,7 @@ func flush(force: bool = false) -> bool:
 	last_write = Time.get_ticks_msec()
 	if last_ok:
 		dirty = revision != captured_revision
-		world.get_node("HUD").show_save_state("Progresso salvo.", false)
+		world.get_node("HUD").show_save_state("Salvo", false)
 	else:
 		# Keep the snapshot dirty, but retry only on user request or a later change.
 		dirty = true

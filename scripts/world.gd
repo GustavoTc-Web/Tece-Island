@@ -242,7 +242,7 @@ func update_activity() -> void:
 func _on_panel_toggled(open: bool) -> void:
 	if open and $Structures.active:
 		$Structures.cancel()
-	var stopped: bool = open or $WorldObjects/Player.dead
+	var stopped: bool = open or $WorldObjects/Player.dead or OrientationGuard.blocked
 	$WorldObjects/Player.controls_blocked = stopped
 	$WorldObjects/Player/Interaction.set_blocked(stopped)
 	# HUD usa Always; o restante herda a pausa e congela relógios e física.

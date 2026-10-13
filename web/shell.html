@@ -48,6 +48,8 @@ window.tcAuthForm=(()=>{
  return{mount,unmount,message:text=>{if(root)field('message').textContent=text;},verification:()=>{if(root){field('resend').hidden=false;field('confirmed').hidden=false;}},setBusy:(value,ready)=>{busy=value;configured=ready;if(!root)return;field('primary').textContent=value?'Aguarde…':labels[mode];for(const button of root.querySelectorAll('button'))button.disabled=value||(!ready&&!['auth-mode','auth-recover'].includes(button.id));for(const input of root.querySelectorAll('input'))input.disabled=value;}};
 })();
 const canvas=document.querySelector('#canvas'),status=document.querySelector('#status'),message=document.querySelector('#message'),progress=document.querySelector('#progress');
+// Called directly from a touch gesture; rejection leaves manual rotation usable.
+window.tcRequestLandscape=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();}catch(_error){}try{await screen.orientation?.lock?.('landscape');}catch(_error){}};
 document.querySelector('#retry').onclick=()=>location.reload();
 function fail(error){status.style.display='flex';message.textContent='Não foi possível iniciar o jogo. Verifique sua conexão e o suporte a WebGL 2 do navegador. Você pode recarregar e tentar novamente.';progress.hidden=true;document.querySelector('#retry').hidden=false;console.error(error);}
 const engine=new Engine($GODOT_CONFIG);

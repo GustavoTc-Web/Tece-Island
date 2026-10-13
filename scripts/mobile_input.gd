@@ -42,6 +42,13 @@ func _notification(what: int) -> void:
 
 # Only UI touches are bridged to buttons. Joystick fingers never generate mouse input.
 func _input(event: InputEvent) -> void:
+	if OrientationGuard.blocked:
+		if event is InputEventScreenTouch and event.pressed or event is InputEventMouseButton and event.pressed:
+			var point: Vector2 = event.position
+			var control := button_at(OrientationGuard.notice, point)
+			if control is Button: control.pressed.emit()
+		get_viewport().set_input_as_handled()
+		return
 	if enabled and is_instance_valid(overlay) and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if overlay.mouse_touch(event):
 			get_viewport().set_input_as_handled()

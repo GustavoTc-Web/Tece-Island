@@ -16,6 +16,7 @@ var transition_panel := ""
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	OrientationGuard.blocked_changed.connect(_orientation_changed)
 	multiplayer.connected_to_server.connect(_connected)
 	multiplayer.connection_failed.connect(func(): return_to_menu("Falha na conexão. Confira endereço, porta e se a partida está disponível."))
 	multiplayer.server_disconnected.connect(func(): return_to_menu("O anfitrião encerrou a partida ou a conexão foi perdida."))
@@ -32,6 +33,7 @@ func _auth_message(text: String) -> void:
 	elif is_instance_valid(menu): menu.show_status(text)
 
 func show_auth(message: String = "", save_current: bool = true) -> void:
+	OrientationGuard.set_authenticated(false)
 	reset_network()
 	await clear_scene(save_current)
 	auth_screen = AUTH.instantiate()
@@ -51,6 +53,7 @@ func show_menu(message: String) -> void:
 		return
 	menu = MENU.instantiate()
 	add_child(menu)
+	OrientationGuard.set_authenticated(true)
 	menu.solo_requested.connect(start_solo)
 	menu.host_requested.connect(host_game)
 	menu.join_requested.connect(join_game)
@@ -148,6 +151,7 @@ func clear_scene(save_current: bool = true) -> void:
 	transition_panel = ""
 
 func start_solo() -> void:
+	if OrientationGuard.blocked: return
 	if transitioning or is_instance_valid(game): return
 	if not FirebaseAuth.can_play():
 		show_auth("Entre com uma conta confirmada para jogar.")
@@ -273,6 +277,15 @@ func _process(delta: float) -> void:
 		connection_time += delta
 		if connection_time >= connection_timeout:
 			return_to_menu("Conexão não concluída: servidor indisponível, partida cheia ou porta bloqueada.")
+
+func _orientation_changed(value: bool) -> void:
+	if not is_instance_valid(game): return
+	MobileInput.reset()
+	if game.has_method("_on_panel_toggled"):
+		game._on_panel_toggled(game.get_node("HUD").current_panel != "")
+	elif game.has_node("HUD"):
+		var hud: CanvasLayer = game.get_node("HUD")
+		if value: hud.set_panel("menu")
 
 func add_exit_button(text: String) -> void:
 	game.get_node("HUD").menu_view.leave_action = leave_game

@@ -220,9 +220,10 @@ func mobile_layout(value: bool) -> void:
 		objective_button.add_theme_font_size_override("font_size", int(maxf(16, 13 / MobileInput.css_scale())))
 	if save_button != null:
 		save_button.custom_minimum_size.y = unit if not save_button.disabled else 28
-		save_button.custom_minimum_size.x = minf(440, view.x - 48)
-		save_button.position = Vector2((view.x - save_button.custom_minimum_size.x) / 2, view.y - unit * 3.5 - 24)
-		save_button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(14 / MobileInput.css_scale()))))
+		save_button.custom_minimum_size.x = 210 if not save_button.disabled else 110
+		save_button.size = save_button.custom_minimum_size
+		save_button.position = Vector2(view.x - save_button.size.x - 16, unit + 170)
+		save_button.add_theme_font_size_override("font_size", int(maxf(12, ceilf(11 / MobileInput.css_scale()))))
 		save_notice.hide()
 	for panel in [$InventoryPanel, $Crafting]: _fit_modal(panel)
 	if current_panel != "" and value:
@@ -335,7 +336,7 @@ func _create_compact_ui() -> void:
 	add_child(menu_button)
 	for path in ["Instructions", "HealthLabel", "Counts", "EquipmentKeys"]: get_node("Controls/Rows/" + path).hide()
 	$Controls/Rows/Equipment.hide()
-	$Controls/Rows/Health.custom_minimum_size = Vector2(156, 10)
+	$Controls/Rows/Health.custom_minimum_size = Vector2(210, 20)
 	for path in ["Prompt", "Pickup", "Feedback"]:
 		var label: Label = get_node("Controls/Rows/" + path)
 		label.custom_minimum_size.x = 180
@@ -437,7 +438,7 @@ func initialize_save(world: Node2D) -> void:
 	save_button.position = Vector2(240, 16)
 	saved_timer = Timer.new()
 	saved_timer.one_shot = true
-	saved_timer.wait_time = 2.5
+	saved_timer.wait_time = 2.0
 	saved_timer.timeout.connect(func(): if save_button.disabled: save_button.hide())
 	add_child(saved_timer)
 	save_button.hide()
@@ -459,6 +460,7 @@ func show_save_state(text: String, retry: bool) -> void:
 	save_button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(14 / MobileInput.css_scale()))) if MobileInput.enabled else 16)
 	save_button.mouse_filter = Control.MOUSE_FILTER_STOP if retry else Control.MOUSE_FILTER_IGNORE
 	save_button.visible = retry or current_panel == "" and not showing_death
+	mobile_layout(MobileInput.enabled)
 	if retry or text.begins_with("Salvando"): saved_timer.stop()
 	else: saved_timer.start()
 	if menu_view != null and current_panel == "menu" and menu_view.area == "data": menu_view.open("data")
@@ -504,9 +506,10 @@ func update_poison(remaining: float) -> void:
 	poison_status.text = "Veneno · %.1f s" % (ceilf(remaining * 10) / 10)
 	poison_status.visible = remaining > 0
 
-func update_health(current: int, maximum: int) -> void:
+func update_health(current: float, maximum: float) -> void:
 	$Controls/Rows/Health.max_value = maximum
 	$Controls/Rows/Health.value = current
+	_bar_value($Controls/Rows/Health, "Vida", current, maximum)
 	$Controls/Rows/HealthLabel.text = "Vida: %d / %d" % [current, maximum]
 
 
@@ -514,7 +517,9 @@ func update_time(day: int, phase: String) -> void:
 	$Controls/Rows/Time.text = "Dia %d · %s" % [day, phase]
 
 func update_clock(day: int, phase: String, remaining: int) -> void:
-	$Controls/Rows/Time.text = "Dia %d · %s" % [day, phase]
+	var night := phase in ["Noite", "Amanhecer"]
+	$Controls/Rows/Time.text = "%s — %s em %02d:%02d" % ["Noite" if night else "Dia", "Amanhece" if night else "Anoitece", maxi(0, remaining) / 60, maxi(0, remaining) % 60]
+	$Controls/Rows/Time.tooltip_text = "Dia %d do mundo" % day
 
 
 func show_death(value: bool) -> void:
@@ -547,35 +552,54 @@ func _craft(recipe_id: String) -> void:
 		show_message(inventory.craft_error(recipe_id))
 
 func _create_needs_ui() -> void:
-	var health_icon := HudSymbol.new()
-	health_icon.tooltip_text = "Vida"
-	$Controls/Rows/Health.add_child(health_icon)
-	health_icon.position = Vector2(-22, -3)
-	for kind in ["Fome", "Sede"]:
-		var row := HBoxContainer.new()
-		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		$Controls/Rows.add_child(row)
-		$Controls/Rows.move_child(row, 2 if kind == "Fome" else 3)
-		var icon := HudSymbol.new()
-		icon.kind = "food" if kind == "Fome" else "water"
-		icon.tooltip_text = kind
-		row.add_child(icon)
+	_style_bar($Controls/Rows/Health, Color("d74444"))
+	_bar_value($Controls/Rows/Health, "Vida", 100, 100)
+	for kind in ["Sede", "Fome", "Proteção"]:
 		var bar := ProgressBar.new()
-		bar.custom_minimum_size = Vector2(156, 12)
+		bar.custom_minimum_size = Vector2(210, 20)
 		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		bar.show_percentage = false
-		bar.value = 100
-		row.add_child(bar)
+		bar.value = 0 if kind == "Proteção" else 100
+		$Controls/Rows.add_child(bar)
+		$Controls/Rows.move_child(bar, 2 + ["Sede", "Fome", "Proteção"].find(kind))
+		_style_bar(bar, {"Sede": Color("287fda"), "Fome": Color("e8bb32"), "Proteção": Color("9864ce")}[kind])
+		_bar_value(bar, "Água" if kind == "Sede" else kind, bar.value, 100)
 		needs_bars[kind] = bar
 	$Controls/Rows.move_child($Controls/Rows/Health, 1)
+
+func _style_bar(bar: ProgressBar, color: Color) -> void:
+	for type in ["background", "fill"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("545a60") if type == "background" else color
+		style.set_corner_radius_all(4)
+		bar.add_theme_stylebox_override(type, style)
+	var label := Label.new()
+	label.name = "Value"
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_color_override("font_color", Color.WHITE)
+	label.add_theme_color_override("font_outline_color", Color("161b24"))
+	label.add_theme_constant_override("outline_size", 5)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.add_child(label)
+
+func _bar_value(bar: ProgressBar, title: String, value: float, maximum: float) -> void:
+	if bar.has_node("Value"): bar.get_node("Value").text = "%s  %d/%d" % [title, ceili(value), int(maximum)]
+
+func update_protection(value: float) -> void:
+	if not needs_bars.has("Proteção"): return
+	needs_bars["Proteção"].value = value
+	_bar_value(needs_bars["Proteção"], "Proteção", value, 100)
 
 func update_needs(hunger: float, thirst: float) -> void:
 	if needs_bars.is_empty(): return
 	needs_bars.Fome.value = hunger
 	needs_bars.Sede.value = thirst
-	needs_bars.Fome.modulate = Color("f0a163") if hunger <= 25 else Color.WHITE
-	needs_bars.Sede.modulate = Color("f0a163") if thirst <= 25 else Color.WHITE
+	_bar_value(needs_bars.Fome, "Fome", hunger, 100)
+	_bar_value(needs_bars.Sede, "Água", thirst, 100)
 
 func _create_well_ui() -> void:
 	var panel := PanelContainer.new()
