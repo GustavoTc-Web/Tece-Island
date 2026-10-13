@@ -11,7 +11,7 @@ const RECORDS := {
 }
 func initialize(source: Node2D) -> void:
 	world = source
-	var locations := [Vector2(550, 1305), Vector2(3250, 1175), source.ruins.temples[0].global_position + Vector2(0, 70)]
+	var locations := [Vector2(550, 1305), Vector2(3250, 1175), source.ruins.temples[0].global_position + Vector2(-90, 80)]
 	var ids := ["arrival", "trail", "signal"]
 	for i in range(ids.size()):
 		var note := ExpeditionRecord.new()

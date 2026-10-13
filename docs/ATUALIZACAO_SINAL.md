@@ -64,12 +64,15 @@ novos saves de conta na Web têm confirmação explícita da transação Indexed
    da cena. Sons desativados em headless e liberados ao encerrar.
    Veneno junto à vida e status de save no painel lateral, sem cobrir combate.
    Gravação de saída bloqueia atalhos/interface até concluir ou permitir retry.
+   Registro do templo deslocado para a sala inferior esquerda: validação física
+   cobre chão do registro, aproximação e três trechos de entrada com o corpo do
+   jogador, evitando a parede que o teste antigo não detectava ao teleportar.
 
 ## Testes realmente executados nesta atualização
 
 | Ambiente | Resultado |
 | --- | --- |
-| Godot headless | Suíte completa de 488 verificações, mais três casos de impacto/erro/bloqueio e um de transição: 492 verificações distintas aprovadas |
+| Godot headless | Suíte completa de 488 verificações, mais três de impacto/erro/bloqueio, um de transição e três de acesso físico aos registros: 495 verificações distintas aprovadas |
 | Godot nativo Compatibility | 14 de menu, 24 de controles móveis injetados, 10 de autenticação obrigatória e 15 de combate/render: 63 aprovadas |
 | Dois processos ENet | 43 host + 4 guest, 24 de inventário/consumo/coleta, seis de feedback de acerto/bloqueio/erro: 77 aprovadas |
 | Edge desktop e toque emulado | 50 verificações novas, incluindo rolagem, diário/objetivos, nome/ID, transferências, desmontagem, combate, IndexedDB real e reload |

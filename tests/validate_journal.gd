@@ -23,6 +23,21 @@ func run() -> void:
 	for i in range(7): inv.add_resource("cama", 1)
 	var original := inv.network_state()
 	for note in notes:
+		var query := PhysicsShapeQueryParameters2D.new()
+		var shape := CircleShape2D.new()
+		shape.radius = 10
+		query.shape = shape
+		query.collision_mask = 9
+		query.transform = Transform2D(0, note.position)
+		var clear_record := player.get_world_2d().direct_space_state.intersect_shape(query).is_empty()
+		query.transform = Transform2D(0, note.position + Vector2(0, 35))
+		var entry_path := true
+		if note.record_id == "signal":
+			var transform := Transform2D(0, world.ruins.temples[0].global_position + Vector2(-35, 280))
+			for motion in [Vector2(0, -100), Vector2(-55, 0), Vector2(0, -65)]:
+				if player.test_move(transform, motion): entry_path = false
+				transform.origin += motion
+		check(clear_record and entry_path and player.get_world_2d().direct_space_state.intersect_shape(query).is_empty(), "Registro e aproximação em chão livre, com entrada do templo acessível: " + note.record_id)
 		player.position = note.position + Vector2(0, 35)
 		await step()
 		player.get_node("Interaction").collect_nearest()
