@@ -154,6 +154,7 @@ func run_host() -> void:
 	var start: Vector2 = guest().body.position
 	var host_start: Vector2 = host().body.position
 	var data := await command("move", "move")
+	print("MOVE delta=", guest().body.position.x - start.x, " host=", host().body.position - host_start)
 	check(guest().body.position.x > start.x + 25 and guest().body.position.x < start.x + 85 and host().body.position == host_start, "Movimento remoto exclusivo e limitado pelo servidor")
 	check(data.camera == "Player_%d" % guest_id and get_viewport().get_camera_2d().get_parent() == host().body, "Câmeras locais independentes")
 	check(not data.mob_client_authority and not data.mob_client_physics, "Cliente apenas apresenta mob, sem executar IA/dano")

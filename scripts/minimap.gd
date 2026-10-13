@@ -54,4 +54,3 @@ func _draw() -> void:
 	draw_arc(CENTER, 73, 0, TAU, 64, Color("d0bb81"), 2)
 	var direction: Vector2 = player.facing.normalized()
 	draw_colored_polygon(PackedVector2Array([CENTER + direction * 9, CENTER - direction * 5 + direction.orthogonal() * 5, CENTER - direction * 5 - direction.orthogonal() * 5]), Color("ffe5a1"))
-	draw_string(ThemeDB.fallback_font, Vector2(43, 163), "Minimapa", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("e0d7c0"))

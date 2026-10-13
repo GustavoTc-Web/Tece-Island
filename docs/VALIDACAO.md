@@ -1,3 +1,13 @@
+# Validação da atualização 0.8 · Apresentação
+
+Em 13/10/2026: 591 regressões nativas + 51 de apresentação; 72 ENet em dois
+processos a 60 FPS; 90 de apresentação no navegador + 41 de mundos/mecânicas;
+28 de login/digitação com Firebase real. Zero falhas nas execuções finais.
+Autenticação positiva somente nos navegadores isolados de teste; a versão pública
+continua obrigatória. PC 1280×720, mobile emulado 852×393 e 640×360.
+Capturas, métodos, ressalva de temporização ENet e roteiro de aparelho físico em
+[APRESENTACAO_LOBBY.md](APRESENTACAO_LOBBY.md). Celular físico não foi executado.
+
 # Validação da atualização 0.7 · Mundos
 
 Em 13/10/2026, Godot 4.7.2 e Edge/Playwright no Windows:

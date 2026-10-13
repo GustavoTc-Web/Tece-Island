@@ -186,4 +186,4 @@ func _draw() -> void:
 		draw_circle(centers[side], radius, Color(0.08, 0.14, 0.11, 0.6))
 		draw_arc(centers[side], radius, 0, TAU, 48, Color(1, 1, 1, 0.5), 2)
 		draw_circle(centers[side] + vectors[side] * radius * 0.65, radius * 0.35, Color(0.8, 0.9, 0.7, 0.8))
-		draw_string(ThemeDB.fallback_font, centers[side] + Vector2(-32, -radius - 17), "Andar" if side == "move" else "Atacar", HORIZONTAL_ALIGNMENT_LEFT, -1, int(maxf(18, 12 / MobileInput.css_scale())))
+		draw_string(IslandTheme.BODY, centers[side] + Vector2(-32, -radius - 17), "Andar" if side == "move" else "Atacar", HORIZONTAL_ALIGNMENT_LEFT, -1, int(maxf(18, 12 / MobileInput.css_scale())))

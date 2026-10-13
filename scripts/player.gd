@@ -162,7 +162,7 @@ func step_movement(delta: float, direction: Vector2) -> void:
 func _draw() -> void:
 	if swimming:
 		draw_arc(Vector2(0, -3), 21, 0, PI, 16, Color("94c8db"), 3)
-		draw_string(ThemeDB.fallback_font, Vector2(-15, -52), "Nado", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("c2e4e9"))
+		draw_string(IslandTheme.BODY, Vector2(-15, -52), "Nado", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("c2e4e9"))
 	if poison_remaining > 0:
 		draw_arc(Vector2.ZERO, 17, 0, TAU, 20, Color("89c866"), 2)
 	if swing_time > 0.0 and swing_kind == "swing":
@@ -184,7 +184,7 @@ func _draw() -> void:
 	draw_line(Vector2(13, -21), Vector2(13, -11) + arm_motion, Color("e6bb8d"), 5.0)
 	draw_tool()
 	if identity_label != "":
-		draw_string(ThemeDB.fallback_font, Vector2(-27, -53), identity_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, identity_color)
+		draw_string(IslandTheme.BODY, Vector2(-27, -53), identity_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, identity_color)
 
 
 func draw_tool() -> void:

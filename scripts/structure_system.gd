@@ -145,4 +145,4 @@ func _draw() -> void:
 	if active:
 		var color := Color(0.3, 0.95, 0.4, 0.65) if valid else Color(1, 0.25, 0.25, 0.65)
 		draw_rect(Rect2(preview_point - placement_size() / 2, placement_size()), color)
-		draw_string(ThemeDB.fallback_font, preview_point + Vector2(-25, -30), ItemCatalog.title(item), HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+		draw_string(IslandTheme.BODY, preview_point + Vector2(-25, -30), ItemCatalog.title(item), HORIZONTAL_ALIGNMENT_LEFT, -1, 14)

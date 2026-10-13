@@ -7,7 +7,7 @@ $taskCache = [IO.Path]::GetFullPath((Join-Path $taskCopy ".godot"))
 if (-not $taskCache.StartsWith([IO.Path]::GetFullPath((Join-Path $taskRoot ".tools")) + [IO.Path]::DirectorySeparatorChar)) { throw "Cache fora da pasta de testes." }
 if (Test-Path -LiteralPath $taskCache) { Remove-Item -LiteralPath $taskCache -Recurse -Force }
 New-Item -ItemType Directory -Force $taskCopy | Out-Null
-foreach ($taskName in @("scripts", "scenes", "web", "config")) {
+foreach ($taskName in @("scripts", "scenes", "web", "config", "assets")) {
     Copy-Item -LiteralPath (Join-Path $taskRoot $taskName) -Destination $taskCopy -Recurse -Force
 }
 foreach ($taskName in @("project.godot", "icon.svg", "export_presets.cfg")) {
@@ -36,3 +36,5 @@ New-Item -ItemType Directory -Force $taskOutput | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "Importação da fixture falhou." }
 & $Godot --headless --path $taskCopy --export-debug Web (Join-Path $taskOutput "index.html")
 if ($LASTEXITCODE -ne 0) { throw "Exportação da fixture falhou." }
+New-Item -ItemType Directory -Force (Join-Path $taskOutput 'assets/fonts') | Out-Null
+Copy-Item -Path (Join-Path $taskRoot 'assets/fonts/*.ttf'),(Join-Path $taskRoot 'assets/fonts/*OFL.txt'),(Join-Path $taskRoot 'assets/fonts/README.md') -Destination (Join-Path $taskOutput 'assets/fonts') -Force

@@ -10,8 +10,11 @@ try {
         if ($LASTEXITCODE -ne 0) { throw "Falha ao baixar os templates oficiais." }
     }
     New-Item -ItemType Directory -Force build/web | Out-Null
+    New-Item -ItemType File -Force build/.gdignore | Out-Null
     & $Godot --headless --path . --editor --import --quit
     if ($LASTEXITCODE -ne 0) { throw "Falha ao importar o projeto." }
     & $Godot --headless --path . --export-release Web build/web/index.html
     if ($LASTEXITCODE -ne 0) { throw "Falha na exportação Web." }
+    New-Item -ItemType Directory -Force build/web/assets/fonts | Out-Null
+    Copy-Item -Path assets/fonts/*.ttf,assets/fonts/*OFL.txt,assets/fonts/README.md -Destination build/web/assets/fonts -Force
 } finally { Pop-Location }

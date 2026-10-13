@@ -50,7 +50,7 @@ func _draw() -> void:
 		var entrance: Vector2 = point + Vector2(0, 110)
 		var corner: Vector2 = entrance + Vector2(180, 0)
 		draw_polyline(PackedVector2Array([entrance, corner, Vector2(corner.x, 768)]), Color("cbb27f"), 64)
-	draw_string(ThemeDB.fallback_font, Vector2(5450, 80), "Deserto", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("785733"))
+	draw_string(IslandTheme.BODY, Vector2(5450, 80), "Deserto", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("785733"))
 	var random := RandomNumberGenerator.new()
 	random.seed = 203
 	for i in range(1200):
@@ -71,5 +71,5 @@ func _draw() -> void:
 			var entrance: Vector2 = point + Vector2(0, 140)
 			var corner: Vector2 = entrance + Vector2(side, 0)
 			draw_polyline(PackedVector2Array([entrance, corner, Vector2(corner.x, 768)]), Color("8b9366"), 64)
-	draw_string(ThemeDB.fallback_font, Vector2(2380, 80), "Pântano", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("e5e3ba"))
-	draw_string(ThemeDB.fallback_font, Vector2(3920, 80), "Campos secos", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("fff0b3"))
+	draw_string(IslandTheme.BODY, Vector2(2380, 80), "Pântano", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("e5e3ba"))
+	draw_string(IslandTheme.BODY, Vector2(3920, 80), "Campos secos", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("fff0b3"))

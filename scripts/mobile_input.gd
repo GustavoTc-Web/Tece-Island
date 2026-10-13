@@ -29,7 +29,7 @@ func css_scale() -> float:
 	return maxf(0.1, minf(pixels.x / logical.x, pixels.y / logical.y))
 
 func touch_minimum() -> float:
-	return maxf(64, ceilf(44 / css_scale())) if enabled else 52.0
+	return maxf(48, ceilf(44 / css_scale())) if enabled else 52.0
 
 func reset() -> void:
 	gui_touches.clear()

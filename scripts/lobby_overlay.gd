@@ -10,6 +10,9 @@ func _ready() -> void:
 	menu_view = GameMenu.new()
 	menu_view.hud = self
 	add_child(menu_view)
+	var back: Button = menu_view.rows.get_node("Back")
+	for connection in back.pressed.get_connections(): back.pressed.disconnect(connection.callable)
+	back.pressed.connect(func(): set_panel(""))
 
 func show_message(text: String) -> void: lobby.show_status(text)
 

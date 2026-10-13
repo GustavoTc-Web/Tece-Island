@@ -23,4 +23,4 @@ func _draw() -> void:
 	for point in [Vector2(140, 160), Vector2(340, 160)]:
 		draw_circle(point, 90, Color(0.65, 0.77, 0.42, 0.18))
 		draw_arc(point, 90, 0, TAU, 40, Color("95aa68"), 2)
-	draw_string(ThemeDB.fallback_font, Vector2(635, 280), "Casa · paredes bloqueiam tiros", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("f3e7ba"))
+	draw_string(IslandTheme.BODY, Vector2(635, 280), "Casa · paredes bloqueiam tiros", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("f3e7ba"))

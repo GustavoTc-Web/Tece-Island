@@ -36,8 +36,11 @@ jobs:
         run: |
           node tools/stamp-build.mjs
           mkdir -p build/web
+          touch build/.gdignore
           Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit
           Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release Web build/web/index.html
+          mkdir -p build/web/assets/fonts
+          cp assets/fonts/*.ttf assets/fonts/*OFL.txt assets/fonts/README.md build/web/assets/fonts/
           touch build/web/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

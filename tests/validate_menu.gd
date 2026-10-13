@@ -16,6 +16,8 @@ func step() -> void:
 	for i in range(3): await process_frame
 
 func find_button(text: String) -> Button:
+	if text == "Jogar solo": text = "Continuar"
+	if text.contains("partida de teste"): session.menu.open_page("development")
 	for node in session.menu.find_children("*", "Button", true, false):
 		if node.text == text: return node
 	return null

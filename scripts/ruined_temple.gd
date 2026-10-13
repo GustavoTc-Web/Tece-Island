@@ -44,4 +44,4 @@ func _draw() -> void:
 		draw_rect(Rect2(side * 205 - 145, 231, 290, 18), Color("8c8190"))
 		draw_rect(Rect2(-7, side * 150 - 90, 14, 180), Color("827688"))
 		draw_rect(Rect2(side * 205 - 145, -7, 290, 14), Color("827688"))
-	draw_string(ThemeDB.fallback_font, Vector2(-345, -276), "Templo em ruínas", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("d6c4ba"))
+	if name_visible: draw_string(IslandTheme.BODY, Vector2(-345, -276), "Templo em ruínas", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("d6c4ba"))

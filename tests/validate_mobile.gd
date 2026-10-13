@@ -33,6 +33,7 @@ func tap_button(button: Button) -> void:
 	touch(8, point, true)
 	touch(8, point, false)
 func find_button(node: Node, text: String) -> Button:
+	if text == "Jogar solo": text = "Continuar"
 	for button in node.find_children("*", "Button", true, false):
 		if button.text == text: return button
 	return null

@@ -20,6 +20,36 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"icon_gallery":
+			var gallery := CanvasLayer.new()
+			gallery.name = "IconGallery"
+			gallery.layer = 50
+			gallery.process_mode = Node.PROCESS_MODE_ALWAYS
+			world.add_child(gallery)
+			var shade := ColorRect.new()
+			shade.color = Color("172f27")
+			shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			gallery.add_child(shade)
+			var grid := GridContainer.new()
+			grid.columns = 7
+			grid.position = Vector2(16, 10)
+			gallery.add_child(grid)
+			for id in ItemIcon.IDS:
+				var cell := VBoxContainer.new()
+				cell.custom_minimum_size = Vector2(128, 100)
+				grid.add_child(cell)
+				var icon := ItemIcon.new()
+				icon.item = id
+				cell.add_child(icon)
+				var title := Label.new()
+				title.text = ItemCatalog.title(id)
+				title.add_theme_font_size_override("font_size", 13)
+				title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				cell.add_child(title)
+			get_tree().paused = true
+		"close_gallery":
+			world.get_node("IconGallery").queue_free()
+			get_tree().paused = false
 		"drop_probe":
 			for drop in get_tree().get_nodes_in_group("resource_drops"): drop.queue_free()
 			var drop: ResourceDrop = load("res://scenes/resource_drop.tscn").instantiate()
@@ -168,6 +198,10 @@ func _process(_delta: float) -> void:
 	if session.library != null: data.library = session.library.data
 	if session.menu != null:
 		data.world_name = rect(session.menu.world_name)
+		data.lobby_page = session.menu.page
+		data.dialog_mode = session.menu.dialog_mode
+		data.continue_caption = session.menu.continue_caption.text
+		data.primary_caption = session.menu.primary.text
 		data.selected_world = session.menu.selected_world
 		data.transitioning = session.transitioning
 	var buttons := {}
@@ -221,6 +255,12 @@ func _process(_delta: float) -> void:
 		data.protection = player.protection
 		data.regeneration_ticks = player.regeneration_ticks
 		data.clock_text = hud.get_node("Controls/Rows/Time").text
+		data.objective_text = hud.objective_button.text
+		data.quick_details = []
+		for button in hud.quick_buttons: data.quick_details.append({"icon": rect(button.item_icon), "quantity": rect(button.quantity), "text": button.quantity.text, "item": button.item_icon.item, "border": button.get_theme_stylebox("normal").border_width_left})
+		data.building_labels = []
+		for building in world.get_node("WorldObjects").get_children():
+			if building is AbandonedBuilding: data.building_labels.append({"x": building.position.x, "y": building.position.y, "visible": building.name_visible})
 		data.status_bars = [rect(hud.get_node("Controls/Rows/Health"))]
 		for kind in ["Sede", "Fome", "Proteção"]: data.status_bars.append(rect(hud.needs_bars[kind]))
 		data.poison = player.poison_remaining

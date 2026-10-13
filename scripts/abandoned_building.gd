@@ -13,6 +13,12 @@ var guardian: ForestCreature
 var loot: Node2D
 var guardians: Array[ForestCreature] = []
 var guardian_count := 0
+var name_visible := false
+
+func show_name(value: bool) -> void:
+	if name_visible == value: return
+	name_visible = value
+	queue_redraw()
 
 func _ready() -> void:
 	if kind == "castelo": footprint = Vector2(320, 240)
@@ -99,4 +105,4 @@ func _draw() -> void:
 	if kind == "fazenda":
 		for x in range(-100, 101, 40):
 			draw_line(Vector2(x, -60), Vector2(x + 10, -25), Color("615336"), 5)
-	draw_string(ThemeDB.fallback_font, Vector2(-half.x, -half.y - 22), {"casa": "Casa quebrada", "castelo": "Castelo abandonado", "fazenda": "Fazenda misteriosa", "barro": "Ruína de barro", "posto": "Posto abandonado"}[kind], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("eee0b7"))
+	if name_visible: draw_string(IslandTheme.BODY, Vector2(-half.x, -half.y - 22), {"casa": "Casa quebrada", "castelo": "Castelo abandonado", "fazenda": "Fazenda misteriosa", "barro": "Ruína de barro", "posto": "Posto abandonado"}[kind], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("eee0b7"))

@@ -40,6 +40,7 @@ var feedback_notice: Label
 
 
 func initialize(source: ResourceInventory) -> void:
+	ThemeDB.get_default_theme().default_font = IslandTheme.BODY
 	inventory = source
 	inventory.changed.connect(_refresh_recipes)
 	inventory.changed.connect(_refresh_inventory)
@@ -55,6 +56,9 @@ func initialize(source: ResourceInventory) -> void:
 	var backpack_label := Label.new()
 	backpack_label.text = "Bolsa: "
 	backpack_row.add_child(backpack_label)
+	var bag_icon := ItemIcon.new()
+	bag_icon.name = "ItemIcon"
+	backpack_row.add_child(bag_icon)
 	var backpack_button := Button.new()
 	backpack_button.name = "Remove"
 	backpack_button.focus_mode = Control.FOCUS_NONE
@@ -125,7 +129,8 @@ func initialize(source: ResourceInventory) -> void:
 	quick.position = Vector2(-260, -68)
 	add_child(quick)
 	for index in range(5):
-		var button := Button.new()
+		var button := preload("res://scripts/item_slot.gd").new()
+		button.compact = true
 		button.custom_minimum_size = Vector2(100, 54)
 		button.focus_mode = Control.FOCUS_NONE
 		button.add_theme_font_size_override("font_size", 12)
@@ -136,10 +141,7 @@ func initialize(source: ResourceInventory) -> void:
 			else: inventory.select_quick(index))
 		quick.add_child(button)
 		quick_buttons.append(button)
-		var icon := preload("res://scripts/recipe_icon.gd").new()
-		icon.position = Vector2(6, 4)
-		button.add_child(icon)
-		quick_icons.append(icon)
+		quick_icons.append(button.item_icon)
 	$Controls/Rows/EquipmentKeys.text = "1–5 / scroll: barra · Q / Shift+Q: jogar 1 / pilha\nR recarregar · C receitas · I inventário · E interagir"
 	$InventoryPanel/Panel/Scroll/Rows/Equip.text = "Equipar este item"
 	_create_needs_ui()
@@ -195,14 +197,13 @@ func mobile_layout(value: bool) -> void:
 	if value:
 		for panel in [$InventoryPanel, $Crafting, get_node("WellPanel")]: touch_sizes(panel)
 	var view := get_viewport().get_visible_rect().size
-	var display_scale := maxf(1, 0.72 / MobileInput.css_scale()) if value else 1.0
+	var display_scale := maxf(1, 0.9 / MobileInput.css_scale()) if value else 1.0
 	$Controls.scale = Vector2.ONE * display_scale
 	for button in quick_buttons:
 		button.custom_minimum_size = Vector2(unit, unit)
 		button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(12 / MobileInput.css_scale()))) if value else 14)
 	for index in range(quick_icons.size()):
-		quick_icons[index].scale = Vector2.ONE * unit / 64
-		quick_icons[index].position = Vector2(unit * 0.125, 2)
+		quick_buttons[index].layout()
 	if has_node("Quickbar"):
 		var gap := ceilf(8 / MobileInput.css_scale()) if value else 8.0
 		$Quickbar.add_theme_constant_override("separation", int(gap))
@@ -220,14 +221,14 @@ func mobile_layout(value: bool) -> void:
 		button.custom_minimum_size.x = 200
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if menu_button != null:
-		menu_button.custom_minimum_size = Vector2(unit * 1.25, unit)
+		menu_button.custom_minimum_size = Vector2(unit * 1.15, unit)
 		menu_button.size = menu_button.custom_minimum_size
-		menu_button.position = Vector2(view.x - unit * 1.25 - 16, 16)
+		menu_button.position = Vector2(view.x - unit * 1.15 - 12, 12)
 		menu_button.add_theme_font_size_override("font_size", int(maxf(18, 14 / MobileInput.css_scale())))
 	if menu_view != null: menu_view.layout()
 	if objective_button != null:
-		objective_button.position = Vector2(270 * display_scale, 16)
-		objective_button.custom_minimum_size = Vector2(250, unit)
+		objective_button.position = Vector2(224 * display_scale, 4)
+		objective_button.custom_minimum_size = Vector2(240, unit)
 		objective_button.size = objective_button.custom_minimum_size
 		objective_button.add_theme_font_size_override("font_size", int(maxf(16, 13 / MobileInput.css_scale())))
 	if save_button != null:
@@ -240,7 +241,7 @@ func mobile_layout(value: bool) -> void:
 		save_notice.hide()
 	for panel in [$InventoryPanel, $Crafting]: _fit_modal(panel)
 	if feedback_notice != null:
-		feedback_notice.position = Vector2(270 * display_scale, unit + 26)
+		feedback_notice.position = Vector2(224 * display_scale, unit + 14)
 		feedback_notice.size.x = minf(380, view.x - feedback_notice.position.x - 170)
 	if current_panel != "" and value:
 		for panel in [journal_view, base_view, storage_view, combat_options]:
@@ -267,7 +268,7 @@ func _sync_slots() -> void:
 		button.get_parent().remove_child(button)
 		button.queue_free()
 	for index in range(slot_buttons.size(), inventory.capacity):
-		var button := Button.new()
+		var button := preload("res://scripts/item_slot.gd").new()
 		button.custom_minimum_size = Vector2(130, 52)
 		button.add_theme_font_size_override("font_size", 12)
 		button.focus_mode = Control.FOCUS_NONE
@@ -352,12 +353,12 @@ func _create_compact_ui() -> void:
 	add_child(menu_button)
 	for path in ["Instructions", "HealthLabel", "Counts", "EquipmentKeys"]: get_node("Controls/Rows/" + path).hide()
 	$Controls/Rows/Equipment.hide()
-	$Controls/Rows/Health.custom_minimum_size = Vector2(210, 20)
+	$Controls/Rows/Health.custom_minimum_size = Vector2(184, 18)
 	for path in ["Prompt", "Pickup", "Feedback"]:
 		var label: Label = get_node("Controls/Rows/" + path)
 		label.custom_minimum_size.x = 180
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	$Controls/Rows/Time.add_theme_font_size_override("font_size", 12)
+	$Controls/Rows/Time.add_theme_font_size_override("font_size", 14)
 	feedback_notice = Label.new()
 	feedback_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	feedback_notice.add_theme_font_size_override("font_size", 16)
@@ -498,6 +499,11 @@ func initialize_objectives(source: IslandObjectives) -> void:
 	objective_button.custom_minimum_size = Vector2(260, 48)
 	objective_button.add_theme_font_size_override("font_size", 14)
 	objective_button.clip_text = true
+	objective_button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	objective_button.add_theme_stylebox_override("hover", IslandTheme.panel(Color(0.08, 0.16, 0.11, 0.5)))
+	objective_button.add_theme_color_override("font_color", Color("f4dfac"))
+	objective_button.add_theme_color_override("font_outline_color", Color("14281e"))
+	objective_button.add_theme_constant_override("outline_size", 3)
 	objective_button.pressed.connect(func(): journal_view.goals_mode = true; journal_view.refresh(); set_panel("journal"))
 	add_child(objective_button)
 	source.changed.connect(refresh_objective)
@@ -512,11 +518,11 @@ func refresh_objective() -> void:
 	var source := journal_view.objectives
 	objective_button.visible = source.enabled and current_panel == "" and not showing_death
 	if source.tracked.is_empty():
-		objective_button.text = "Objetivos\nIniciais concluídos"
+		objective_button.text = "Objetivos concluídos"
 	else:
 		var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
-		var short_title: String = {"wood":"Coletar madeiras", "stone":"Coletar pedras", "tools":"Equipamentos de pedra", "fire":"Fabricar fogueira", "bag":"Bolsa até nível 3"}[source.tracked]
-		objective_button.text = "Objetivos · %d/%d\n%s" % [source.values[source.tracked], goal.target, short_title]
+		var short_title: String = {"wood":"Coletar madeiras", "stone":"Coletar pedras", "tools":"Equipamentos de pedra", "fire":"Fabricar fogueira", "bag":"Bolsa nível 3"}[source.tracked]
+		objective_button.text = "%s: %d/%d" % [short_title, source.values[source.tracked], goal.target]
 		objective_button.tooltip_text = source.tools_description() if source.tracked == "tools" else goal.title
 
 func open_base(target: PlacedStructure = null) -> void:
@@ -586,7 +592,7 @@ func _create_needs_ui() -> void:
 	_bar_value($Controls/Rows/Health, "Vida", 100, 100)
 	for kind in ["Sede", "Fome", "Proteção"]:
 		var bar := ProgressBar.new()
-		bar.custom_minimum_size = Vector2(210, 20)
+		bar.custom_minimum_size = Vector2(184, 18)
 		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		bar.show_percentage = false
@@ -609,10 +615,10 @@ func _style_bar(bar: ProgressBar, color: Color) -> void:
 	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_font_size_override("font_size", 14)
 	label.add_theme_color_override("font_color", Color.WHITE)
 	label.add_theme_color_override("font_outline_color", Color("161b24"))
-	label.add_theme_constant_override("outline_size", 5)
+	label.add_theme_constant_override("outline_size", 3)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bar.add_child(label)
 
@@ -680,6 +686,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 	$InventoryPanel/Panel/Scroll/Rows/Title.text = "Inventário · %d espaços · I / Esc para fechar" % inventory.capacity
 	if MobileInput.enabled: $InventoryPanel/Panel/Scroll/Rows/Title.text = "Inventário · %d espaços" % inventory.capacity
 	if $InventoryPanel/Panel/Scroll/Rows.has_node("BackpackSlot"):
+		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/ItemIcon.item = inventory.backpack.get("item", "")
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.text = ItemCatalog.title(inventory.backpack.item) + " · Retirar" if not inventory.backpack.is_empty() else "Vazio"
 		$InventoryPanel/Panel/Scroll/Rows/BackpackSlot/Remove.disabled = inventory.backpack.is_empty()
 	if $InventoryPanel/Panel/Scroll/Rows.has_node("ArmorSlot"):
@@ -692,12 +699,11 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 		var text := "Mãos"
 		if not slot.is_empty():
 			text = ItemCatalog.quick_title(slot.item)
-		quick_buttons[index].text = "\n   " + ("%d/3" % slot.get("water", 0) if slot.get("item", "") == "cantil" else "×%d" % slot.get("quantity", 0)) if not slot.is_empty() else ""
+		quick_buttons[index].render(slot, index, inventory.selected_index == index)
 		quick_buttons[index].tooltip_text = "%d · %s" % [index + 1, text]
 		quick_icons[index].item = slot.get("item", "")
 		quick_icons[index].visible = not slot.is_empty()
 		quick_icons[index].queue_redraw()
-		quick_buttons[index].modulate = Color("f2d786") if inventory.selected_index == index else Color.WHITE
 	for index in range(slot_buttons.size()):
 		var slot: Dictionary = data[index]
 		var title := "Vazio"
@@ -707,8 +713,7 @@ func _refresh_inventory(_wood: int, _stone: int) -> void:
 				title += " × %d" % slot.quantity
 			if slot.item == "cantil": title += " · %d/3 doses" % slot.get("water", 0)
 			if GunRules.WEAPONS.has(slot.item) and slot.item != "arco": title += " · %d tiros" % slot.get("loaded", 0)
-		slot_buttons[index].text = "%d\n%s" % [index + 1, title]
-		slot_buttons[index].modulate = Color("f2d786") if index == selected_slot else Color.WHITE
+		slot_buttons[index].render(slot, index, index == selected_slot)
 	var item: String = data[selected_slot].get("item", "") if selected_slot >= 0 else ""
 	$InventoryPanel/Panel/Scroll/Rows/Equip.disabled = not ItemCatalog.is_equippable(item) and ItemCatalog.bag_level(item) == 0 and item != "armadura_pedra"
 	$InventoryPanel/Panel/Scroll/Rows/Selection.text = "Selecionado: " + ItemCatalog.title(item) if item != "" else "Selecione ferramenta, mochila ou objeto."

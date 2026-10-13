@@ -224,3 +224,17 @@ Validação: 591 verificações em 28 scripts headless; 72 em dois processos ENe
 28 de digitação e rejeição pelo Firebase real. Zero falhas nas execuções finais.
 Capturas de lobby/HUD/rotação revisadas. Nenhum celular físico: roteiro curto e
 detalhes em `docs/ATUALIZACAO_MUNDOS.md`. Publicação conserva o workflow Pages.
+
+## Atualização 0.8: apresentação e usabilidade
+
+Lobby principal sem rolagem, personagem/clareira decorativos, Continuar pelo último
+acesso, mundos com seleção/datas locais e nomes em diálogo nativo na Web. Histórico
+e conexão avançada separados; desenvolvimento oculto em release. Duas famílias
+locais com OFL, 33 ícones compartilhados e HUD compacto com as quatro barras,
+relógio, objetivo, seleção e aviso de save preservados. Nomes dos prédios por
+proximidade. Login, saves por UID/ID e mecânicas conservados.
+
+Validação: 591 + 51 verificações nativas; 72 ENet em dois processos a 60 FPS;
+90 de apresentação + 41 de regressão no navegador e 28 de login/Firebase real.
+Zero falhas finais. Capturas PC/mobile emulado e roteiro físico em
+`docs/APRESENTACAO_LOBBY.md`. Publicação pelo workflow Pages existente, R$ 0.

@@ -5,9 +5,11 @@ O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no 
 
 ## Começar
 
-Importe `project.godot`, execute com F5, entre com uma conta de e-mail confirmado
-e escolha um mundo no **Lobby** e **Jogar solo** para continuar. Crie ou renomeie
-mundos em **Meus mundos**. Para o primeiro acesso, use **Criar conta** e confirme
+Importe `project.godot`, execute com F5 e entre com uma conta de e-mail confirmado.
+**Continuar** identifica e abre o último mundo jogado. **Meus mundos** permite
+selecionar e jogar outro mundo, criar ou renomear com confirmar/cancelar.
+Sem partida anterior, o destaque é **Criar mundo**.
+Para o primeiro acesso, use **Criar conta** e confirme
 o link recebido por e-mail. **Voltar ao menu**
 funciona durante a pausa; iniciar novamente retoma o progresso local.
 Na primeira partida, começa com sete espaços, vida/fome/sede completas,
@@ -42,6 +44,9 @@ fogueira e bolsa nível 3. Fabricações antecipadas ficam registradas.
 Menu → Configurações permite volume/silenciar e mostrar objetivos.
 Detalhes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md) e
 [usabilidade mobile, testes e capturas](docs/USABILIDADE_MOBILE.md).
+O lobby tem clareira decorativa, fontes locais e datas no horário do aparelho.
+Barra rápida, inventário, receitas e baús compartilham desenhos dos 33 itens.
+[Apresentação, capturas PC/mobile e roteiro físico](docs/APRESENTACAO_LOBBY.md).
 O arco usa os controles de ataque/mira, consome uma flecha por tiro e dispensa
 recarga. A receita de flechas produz quatro unidades.
 
@@ -72,7 +77,8 @@ Login, cadastro e recuperação aceitam retrato ou paisagem. Após o login, o ce
 exige **paisagem** para acessar o lobby e a partida. O aviso oferece tela cheia e
 tentativa de bloqueio de orientação; a rotação manual funciona se houver recusa.
 Dispositivos de toque ativam o layout automaticamente.
-A opção **Controles de toque (testar no computador)** no menu permite ativá-lo manualmente;
+A opção **Simular controles de toque** em **Menu → Desenvolvimento**, nas builds
+de desenvolvimento, permite ativá-lo manualmente;
 os joysticks também aceitam arrastar com o mouse.
 
 - Joystick esquerdo: andar. Direito: arrastar para mirar e manter ataque fora da zona morta.
@@ -170,12 +176,14 @@ Colocação valida distância, bordas e colisões; somente confirmar consome o i
 
 ## Multiplayer desktop
 
-Abra duas instâncias. Primeira: **Criar partida de teste**. Segunda: informe IP
-do anfitrião e mesma porta UDP (padrão 7000), então **Entrar na partida de teste**.
+Nas builds de desenvolvimento, abra duas instâncias. Primeira: **Menu →
+Desenvolvimento → Criar partida de teste**. Segunda: em **Servidores → Conexão
+avançada**, informe IP do anfitrião e mesma porta UDP (padrão 7000) e use **Conectar**.
 Na mesma máquina use `127.0.0.1`. Há anfitrião e um convidado, com opção de dano
 entre jogadores. Servidor valida ações e mantém estado dos itens. A arena não
 oferece todos os sistemas solo; inventário bloqueia só o jogador local.
-Na Web, ENet/UDP não é iniciado: menu indica **Multiplayer em breve**.
+Na Web, ENet/UDP não é iniciado; Servidores informa a disponibilidade no aplicativo
+para computador. A área de desenvolvimento fica oculta na exportação pública.
 
 ## Exportar e testar por HTTP
 
@@ -239,6 +247,8 @@ exploração, sobrevivência, armas, animais e transições:
 
 `network_probe.tscn` e `network_update_probe.tscn`: duas instâncias, passando
 `-- --role=host --port=17158` e `-- --role=guest --port=17158`.
+Em execução headless, passe `--max-fps 60` aos dois processos para manter
+a temporização das entradas do probe.
 Para testes de navegador:
 
 ```powershell
@@ -248,10 +258,13 @@ node tools/serve-web.mjs 8081 .tools/web-validation
 # Outro terminal:
 node tools/mobile-hud-validation.mjs
 node tools/signal-validation.mjs
+node tools/presentation-validation.mjs
+node tools/next-update-validation.mjs
 # Login principal com Firebase real (somente credenciais inválidas):
 node tools/mobile-login-validation.mjs
 # Smoke da produção, servida na porta 8080:
 node tools/browser-smoke.mjs --touch
+node tools/presentation-release-check.mjs
 ```
 
 Fixture é uma exportação separada em `.tools/`, com itens determinísticos para

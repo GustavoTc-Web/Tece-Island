@@ -116,15 +116,13 @@ func refresh() -> void:
 		child.queue_free()
 	for index in range(source.capacity):
 		var data := source.slot_data(index)
-		var button := Button.new()
+		var button := preload("res://scripts/item_slot.gd").new()
 		button.custom_minimum_size = Vector2(138, 58)
 		button.add_theme_font_size_override("font_size", 14)
 		button.clip_text = true
-		button.text = "%d\n%s" % [index + 1, "Vazio" if data.is_empty() else ItemCatalog.title(data.item) + " ×" + str(data.quantity)]
-		if data.get("item", "") == "cantil": button.text += " · %d/3" % int(data.get("water", 0))
-		button.modulate = Color("f2d786") if index == selected else Color.WHITE
 		button.pressed.connect(func(): selected = index; refresh())
 		grid.add_child(button)
+		button.render(data, index, index == selected)
 	transfer_one.disabled = source.slot_data(selected).is_empty()
 	transfer_all.disabled = transfer_one.disabled
 

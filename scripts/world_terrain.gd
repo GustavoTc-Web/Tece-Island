@@ -126,4 +126,4 @@ func _draw() -> void:
 			for i in range(100):
 				var point := rect.position + Vector2(40 + posmod(i * 137, int(rect.size.x) - 80), 40 + posmod(i * 233, int(rect.size.y) - 80))
 				if is_water(point): draw_line(point, point + Vector2(18, 0), Color("538b9d"), 2)
-		draw_string(ThemeDB.fallback_font, rect.position + Vector2(60, 80), region.kind, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("e6e0c0"))
+		draw_string(IslandTheme.BODY, rect.position + Vector2(60, 80), region.kind, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("e6e0c0"))

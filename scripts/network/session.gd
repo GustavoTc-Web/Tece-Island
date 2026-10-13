@@ -19,6 +19,8 @@ var connected_port := 7000
 @export var connection_timeout: float = 8.0
 
 func _ready() -> void:
+	ThemeDB.get_default_theme().default_font = IslandTheme.BODY
+	ThemeDB.get_default_theme().default_font_size = 18
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	OrientationGuard.blocked_changed.connect(_orientation_changed)
 	multiplayer.connected_to_server.connect(_connected)
@@ -29,7 +31,7 @@ func _ready() -> void:
 	FirebaseAuth.signed_out.connect(_signed_out)
 	FirebaseAuth.before_logout = _save_before_logout
 	FirebaseAuth.message_changed.connect(_auth_message)
-	if FirebaseAuth.can_play(): show_menu("Teste local / rede local · anfitrião + um convidado")
+	if FirebaseAuth.can_play(): show_menu("")
 	else: show_auth()
 
 func _auth_message(text: String) -> void:
@@ -48,7 +50,7 @@ func show_auth(message: String = "", save_current: bool = true) -> void:
 
 func _authenticated() -> void:
 	await clear_scene()
-	show_menu("Conta validada. Escolha uma partida.")
+	show_menu("")
 
 func _signed_out(reason: String) -> void:
 	if FirebaseAuth.enabled(): show_auth(reason, false)
@@ -64,7 +66,6 @@ func show_menu(message: String) -> void:
 	menu.host_requested.connect(host_game)
 	menu.join_requested.connect(join_game)
 	menu.show_status(message)
-	if FirebaseAuth.enabled(): menu.show_status(message + "\nProgresso local por conta; outro aparelho não sincroniza.")
 	if FirebaseAuth.enabled():
 		var current_library := WorldLibrary.new()
 		current_library.configure(FirebaseAuth.account_uid())
@@ -73,24 +74,15 @@ func show_menu(message: String) -> void:
 		set_transition(true)
 		var loaded := await current_library.load_index(get_tree())
 		if not is_instance_valid(current_menu) or menu != current_menu or current_library.uid != FirebaseAuth.account_uid(): return
-		if loaded and library.data.worlds.is_empty():
-			selected_world = await library.create_world("Meu primeiro mundo", get_tree())
-			if selected_world.is_empty(): loaded = false
 		if not is_instance_valid(current_menu) or menu != current_menu or current_library.uid != FirebaseAuth.account_uid(): return
 		if not loaded:
 			menu.show_status(library.error + " Reabra o lobby para tentar novamente.")
 			set_transition(false)
 			for button in menu.find_children("*", "Button", true, false):
-				if button.text in ["Jogar solo", "Criar mundo", "Renomear selecionado"]: button.disabled = true
+				if button.text in ["Continuar", "Jogar mundo", "Criar mundo", "Renomear"]: button.disabled = true
 		else:
 			menu.set_library(library, selected_world)
 			set_transition(false)
-		var logout := Button.new()
-		logout.text = "Sair da conta"
-		logout.custom_minimum_size = Vector2(210, 64)
-		logout.pressed.connect(FirebaseAuth.logout)
-		menu.rows.add_child(logout)
-		menu.resize()
 		var account := AccountProgress.new()
 		var owner := FirebaseAuth.account_uid()
 		account.configure(owner)
@@ -130,7 +122,7 @@ func _import_legacy(account: AccountProgress) -> void:
 		next.migration_done = false
 		ok = await library.commit(next, get_tree()) and await library.migrate(get_tree())
 		if ok: menu.set_library(library, "first-world")
-	menu.show_status("Progresso antigo importado. Agora abra Jogar solo." if ok else account.error)
+	menu.show_status("Progresso antigo importado. Use Continuar." if ok else account.error)
 	set_transition(false)
 	for button in menu.find_children("*", "Button", true, false):
 		if button.text == "Importar save antigo": button.disabled = ok
@@ -147,6 +139,7 @@ func set_transition(value: bool) -> void:
 			transition_panel = ""
 	if is_instance_valid(menu):
 		for button in menu.find_children("*", "Button", true, false): button.disabled = value
+		if not value: menu.refresh_controls()
 
 func _save_before_logout() -> bool:
 	if not is_instance_valid(game) or not game.has_method("save_progress"): return true

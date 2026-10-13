@@ -221,6 +221,7 @@ func _physics_process(_delta: float) -> void:
 
 func update_activity() -> void:
 	for node in $WorldObjects.get_children():
+		if node is AbandonedBuilding: node.show_name(node.global_position.distance_to($WorldObjects/Player.global_position) <= maxf(180, node.footprint.length() * 0.55))
 		if node.is_queued_for_deletion() or not (node is ForestCreature or node is NeutralAnimal or node is HarvestResource or node is PlacedStructure): continue
 		var distance: float = node.global_position.distance_to($WorldObjects/Player.global_position)
 		if node is ForestCreature and node.fading:

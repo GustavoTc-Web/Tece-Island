@@ -6,17 +6,28 @@
 <title>TC Island</title>
 $GODOT_HEAD_INCLUDE
 <style>
-html,body{margin:0;width:100%;height:100%;background:#182b23;color:#edf4df;font:16px system-ui;overflow:hidden;overscroll-behavior:none}
+html,body{margin:0;width:100%;height:100%;background:#182b23;color:#edf4df;font:16px Atkinson,system-ui;overflow:hidden;overscroll-behavior:none}
 #stage{position:fixed;inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 canvas{display:block;width:100%;height:100%;touch-action:none;outline:none;image-rendering:pixelated}
 #status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;background:#182b23}
 progress{width:min(360px,80vw);height:24px}
 button{padding:14px 24px;font:inherit}
+@font-face{font-family:Atkinson;src:url('assets/fonts/AtkinsonHyperlegible-Regular.ttf') format('truetype');font-display:swap}
+@font-face{font-family:Bree;src:url('assets/fonts/BreeSerif-Regular.ttf') format('truetype');font-display:swap}
+#world-dialog{position:fixed;inset:0;z-index:30;box-sizing:border-box;display:flex;align-items:flex-start;justify-content:center;background:#0b201bed;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right));overflow:auto;touch-action:pan-y;font-family:Atkinson,system-ui}
+#world-dialog[hidden]{display:none}
+#world-dialog form{box-sizing:border-box;width:min(480px,100%);margin-block:auto;padding:22px;background:#172f27;border:1px solid #b78c51;border-radius:10px}
+#world-dialog h2{margin:0 0 16px;color:#e9bb70;font-size:26px}
+#world-dialog input{box-sizing:border-box;width:100%;min-height:48px;padding:12px;font:20px Atkinson,system-ui;background:#0e231c;color:#f5eddb;border:1px solid #647354;border-radius:6px}
+#world-dialog input:focus{outline:2px solid #e9bb70}
+#world-dialog .actions{display:flex;gap:12px;margin-top:12px}
+#world-dialog button{flex:1;min-height:48px;padding:10px;font:18px Atkinson,system-ui;background:#3e5138;color:#f5eddb;border:1px solid #b78c51;border-radius:6px}
+#world-dialog [role=status]{color:#f0c48b;margin:10px 0;min-height:20px}
 #auth{position:fixed;z-index:20;box-sizing:border-box;inset:0;background:linear-gradient(135deg,#294734ed,#122b22f5);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 #auth[hidden]{display:none}
 #auth form{box-sizing:border-box;max-width:440px;margin:auto;background:#10271f;border:1px solid #517055;border-radius:16px;padding:24px;box-shadow:0 12px 40px #0005}
-#auth h1{margin:0;color:#e1d7a4}#auth .subtitle{color:#a8c0a4;margin:8px 0 22px}
-#auth label{display:block;margin:14px 0 6px}#auth input:not([type=checkbox]){box-sizing:border-box;display:block;width:100%;min-height:48px;border:1px solid #69806b;border-radius:7px;padding:12px;background:#253b30;color:#fff;font:18px system-ui;touch-action:auto;scroll-margin:20px}
+#auth h1{margin:0;color:#e1d7a4;font-family:Bree,Atkinson,system-ui}#auth .subtitle{color:#a8c0a4;margin:8px 0 22px}
+#auth label{display:block;margin:14px 0 6px}#auth input:not([type=checkbox]){box-sizing:border-box;display:block;width:100%;min-height:48px;border:1px solid #69806b;border-radius:7px;padding:12px;background:#253b30;color:#fff;font:18px Atkinson,system-ui;touch-action:auto;scroll-margin:20px}
 #auth input:focus{outline:3px solid #d7c67f}#auth button{box-sizing:border-box;min-height:48px;border-radius:7px;border:1px solid #69806b;color:#f3f3df;background:#304f37;cursor:pointer}#auth button:disabled{opacity:.55;cursor:wait}
 #auth .actions{display:grid;gap:10px;margin-top:14px}#auth .check{display:flex;align-items:center;gap:12px;min-height:44px}#auth .check input{width:24px;height:24px}#auth p[role=status]{line-height:1.5;color:#f1d28b;overflow-wrap:anywhere;min-height:24px}#auth [hidden]{display:none!important}
 @media(max-width:480px){#auth form{padding:18px}}
@@ -48,6 +59,14 @@ window.tcAuthForm=(()=>{
  return{mount,unmount,message:text=>{if(root)field('message').textContent=text;},verification:()=>{if(root){field('resend').hidden=false;field('confirmed').hidden=false;}},setBusy:(value,ready)=>{busy=value;configured=ready;if(!root)return;field('primary').textContent=value?'Aguarde…':labels[mode];for(const button of root.querySelectorAll('button'))button.disabled=value||(!ready&&!['auth-mode','auth-recover'].includes(button.id));for(const input of root.querySelectorAll('input'))input.disabled=value;}};
 })();
 const canvas=document.querySelector('#canvas'),status=document.querySelector('#status'),message=document.querySelector('#message'),progress=document.querySelector('#progress');
+window.tcLocalDate=value=>{const date=new Date(value*1000),today=new Date(),yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);const same=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();const pad=v=>String(v).padStart(2,'0');const day=same(date,today)?'hoje':same(date,yesterday)?'ontem':pad(date.getDate())+'/'+pad(date.getMonth()+1)+'/'+date.getFullYear();return day+', '+pad(date.getHours())+'h'+pad(date.getMinutes());};
+window.tcWorldNameDialog=(()=>{
+ let root=null,handler=null,busy=false;
+ function viewport(){if(!root)return;const v=visualViewport;root.style.top=(v?.offsetTop||0)+'px';root.style.height=(v?.height||innerHeight)+'px';root.style.bottom='auto';root.hidden=navigator.maxTouchPoints>0&&(/Android|iPhone|iPad|iPod|Mobile/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1))&&innerHeight>innerWidth;}
+ function close(){if(root)root.remove();root=null;handler=null;window.removeEventListener('resize',viewport);visualViewport?.removeEventListener('resize',viewport);visualViewport?.removeEventListener('scroll',viewport);}
+ function open(title,value,callback){close();handler=callback;busy=false;root=document.createElement('section');root.id='world-dialog';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.innerHTML='<form><h2></h2><label for="world-name">Nome do mundo</label><input id="world-name" type="text" maxlength="40" autocomplete="off" spellcheck="false"><p role="status" aria-live="polite"></p><div class="actions"><button id="world-confirm" type="submit">Confirmar</button><button id="world-cancel" type="button">Cancelar</button></div></form>';root.querySelector('h2').textContent=title;root.querySelector('input').value=value;document.body.append(root);for(const event of ['keydown','keyup','keypress','pointerdown','pointerup','touchstart','touchend'])root.addEventListener(event,e=>e.stopPropagation());root.addEventListener('keydown',e=>{if(e.key==='Escape'&&!busy){e.preventDefault();handler('cancel','');}});root.querySelector('form').onsubmit=e=>{e.preventDefault();if(!busy)handler('confirm',root.querySelector('input').value);};root.querySelector('#world-cancel').onclick=()=>{if(!busy)handler('cancel','');};window.addEventListener('resize',viewport);visualViewport?.addEventListener('resize',viewport);visualViewport?.addEventListener('scroll',viewport);viewport();root.querySelector('input').focus({preventScroll:true});root.querySelector('input').select();}
+ return{open,close,setBusy:value=>{busy=value;if(root){for(const el of root.querySelectorAll('input,button'))el.disabled=value;root.querySelector('#world-confirm').textContent=value?'Salvando…':'Confirmar';}},message:text=>{if(root)root.querySelector('[role=status]').textContent=text;}};
+})();
 // Called directly from a touch gesture; rejection leaves manual rotation usable.
 window.tcRequestLandscape=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();}catch(_error){}try{await screen.orientation?.lock?.('landscape');}catch(_error){}};
 document.querySelector('#retry').onclick=()=>location.reload();

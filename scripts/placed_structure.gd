@@ -150,11 +150,6 @@ func _draw() -> void:
 		draw_rect(Rect2(-22, -14, 44, 28), Color("c7b580"))
 		draw_rect(Rect2(-20, -12, 12, 24), Color("eee2bd"))
 	else:
-		for i in range(8):
-			draw_circle(Vector2.from_angle(i * TAU / 8) * 18, 6, Color("939d91"))
-		draw_line(Vector2(-12, 8), Vector2(12, -8), Color("735038"), 6)
-		var height := 24 + sin(animation_time * 9) * 4
-		draw_colored_polygon(PackedVector2Array([Vector2(-12, 4), Vector2(0, -height), Vector2(12, 4)]), Color("eb923b"))
-		draw_circle(Vector2(0, -5), 6, Color("ffe697"))
+		IslandArt.fire(self, animation_time)
 	if highlighted:
 		draw_arc(Vector2.ZERO, 34, 0, TAU, 32, Color("f2d786"), 2)

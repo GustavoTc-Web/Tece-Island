@@ -66,8 +66,17 @@ func open(target: PlacedStructure = null) -> void:
 		var button := Button.new()
 		button.text = node.chest_name if node.kind == "bau" else ItemCatalog.title(node.kind)
 		button.custom_minimum_size.y = 56
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var style := IslandTheme.panel()
+		style.content_margin_left = 66
+		button.add_theme_stylebox_override("normal", style)
+		for state in ["hover", "pressed", "focus"]: button.add_theme_stylebox_override(state, style)
 		button.pressed.connect(select.bind(node))
 		list.add_child(button)
+		var visual := ItemIcon.new()
+		visual.item = node.kind
+		visual.position = Vector2(8, 4)
+		button.add_child(visual)
 	status.text = "Selecione uma peça próxima. Devolve 50% dos materiais; excedentes caem no chão."
 	confirm.disabled = true
 	if target != null: select(target)
