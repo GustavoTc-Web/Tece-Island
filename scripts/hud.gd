@@ -28,6 +28,7 @@ var journal_button: Button
 var objective_button: Button
 var save_button: Button
 var save_notice: Label
+var poison_status: Label
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -109,6 +110,12 @@ func initialize(source: ResourceInventory) -> void:
 	$InventoryPanel/Panel/Scroll/Rows/Equip.text = "Equipar este item"
 	_create_needs_ui()
 	_create_well_ui()
+	poison_status = Label.new()
+	poison_status.add_theme_font_size_override("font_size", 20)
+	poison_status.add_theme_color_override("font_color", Color("c7eda4"))
+	poison_status.visible = false
+	$Controls/Rows.add_child(poison_status)
+	$Controls/Rows.move_child(poison_status, $Controls/Rows/Health.get_index() + 1)
 	_refresh_recipes(inventory.wood, inventory.stone)
 	_refresh_inventory(inventory.wood, inventory.stone)
 	show_equipment(inventory.equipped_tool())
@@ -155,7 +162,8 @@ func mobile_layout(value: bool) -> void:
 	if objective_button != null: objective_button.position.y = 88 if value else 76
 	if journal_button != null: journal_button.add_theme_font_size_override("font_size", 16)
 	if save_button != null:
-		save_button.position.y = 160 if value else 130
+		save_button.custom_minimum_size.y = 64 if value and not save_button.disabled else (52 if not save_button.disabled else 28)
+		save_button.add_theme_font_size_override("font_size", 20 if value and not save_button.disabled else 16)
 		save_notice.visible = not value and current_panel == "" and not showing_death
 
 func touch_sizes(node: Node) -> void:
@@ -193,6 +201,9 @@ func _remove_backpack() -> void:
 
 func _input(event: InputEvent) -> void:
 	if showing_death or event.is_echo():
+		return
+	if current_panel == "saving":
+		get_viewport().set_input_as_handled()
 		return
 	var focus := get_viewport().gui_get_focus_owner()
 	if focus is LineEdit or focus is TextEdit: return
@@ -268,9 +279,8 @@ func initialize_journal(source: IslandJournal) -> void:
 
 func initialize_save(world: Node2D) -> void:
 	save_button = Button.new()
-	save_button.position = Vector2(420, 130)
-	save_button.custom_minimum_size = Vector2(260, 44)
-	save_button.add_theme_font_size_override("font_size", 14)
+	save_button.custom_minimum_size = Vector2(360, 28)
+	save_button.add_theme_font_size_override("font_size", 16)
 	save_button.text = "Progresso local"
 	save_button.add_theme_color_override("font_disabled_color", Color("dce8ce"))
 	var saved_style := StyleBoxFlat.new()
@@ -278,21 +288,27 @@ func initialize_save(world: Node2D) -> void:
 	saved_style.set_corner_radius_all(6)
 	save_button.add_theme_stylebox_override("disabled", saved_style)
 	save_button.disabled = true
+	save_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	save_button.pressed.connect(func(): world.save_progress(true))
-	add_child(save_button)
+	$Controls/Rows.add_child(save_button)
+	$Controls/Rows.move_child(save_button, $Controls/Rows/Time.get_index() + 1)
 	save_notice = Label.new()
-	save_notice.position = Vector2(420, 178)
-	save_notice.custom_minimum_size.x = 260
+	save_notice.custom_minimum_size.x = 360
 	save_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	save_notice.add_theme_font_size_override("font_size", 12)
 	save_notice.text = "Salvo neste aparelho. Outros aparelhos não sincronizam."
 	save_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(save_notice)
+	$Controls/Rows.add_child(save_notice)
+	$Controls/Rows.move_child(save_notice, save_button.get_index() + 1)
 
 func show_save_state(text: String, retry: bool) -> void:
 	if save_button == null: return
+	if current_panel == "saving": show_message(text)
 	save_button.text = "Falha ao salvar\nTentar novamente" if retry else text
 	save_button.disabled = not retry
+	save_button.custom_minimum_size.y = (64 if MobileInput.enabled else 52) if retry else 28
+	save_button.add_theme_font_size_override("font_size", 20 if retry and MobileInput.enabled else 16)
+	save_button.mouse_filter = Control.MOUSE_FILTER_STOP if retry else Control.MOUSE_FILTER_IGNORE
 
 func initialize_objectives(source: IslandObjectives) -> void:
 	journal_view.objectives = source
@@ -325,6 +341,11 @@ func open_base(target: PlacedStructure = null) -> void:
 		add_child(base_view)
 	base_view.open(target)
 	set_panel("base")
+
+func update_poison(remaining: float) -> void:
+	if poison_status == null: return
+	poison_status.text = "Veneno · %.1f s" % (ceilf(remaining * 10) / 10)
+	poison_status.visible = remaining > 0
 
 func update_health(current: int, maximum: int) -> void:
 	$Controls/Rows/Health.max_value = maximum
@@ -524,5 +545,6 @@ func show_message(message: String) -> void:
 
 
 func _on_feedback_timeout() -> void:
+	if current_panel == "saving": return
 	$Controls/Rows/Feedback.text = ""
 	$Controls/Rows/Feedback.visible = false

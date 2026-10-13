@@ -3,6 +3,7 @@ extends Node
 var session: Node
 var callback: JavaScriptObject
 var snapshot_time := 0.0
+var account_checks := {}
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Reproducible offline gameplay data, never authentication/session data.
@@ -19,6 +20,23 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"account_probe": account_probe(world, str(request.seed), str(request.get("phase", "write")))
+		"record":
+			for enemy in get_tree().get_nodes_in_group("enemies"): enemy.set_physics_process(false)
+			for note in get_tree().get_nodes_in_group("expedition_records"):
+				if note.journal == world.journal and note.record_id == request.id:
+					player.position = note.position + Vector2(0, 35)
+		"combat_probe":
+			for node in get_tree().get_nodes_in_group("enemies"): node.set_physics_process(false)
+			var enemy: ForestCreature = load("res://scenes/forest_creature.tscn").instantiate()
+			enemy.origin = "guardiao"
+			enemy.safe_radius = 0
+			enemy.player = player
+			enemy.set_meta("combat_probe", true)
+			enemy.position = player.position + Vector2(40, 0)
+			world.get_node("WorldObjects").add_child(enemy)
+			enemy.set_physics_process(false)
+			player.apply_poison(3)
 		"items":
 			inv.reset()
 			for item in request.items: inv.add_item(item)
@@ -79,6 +97,45 @@ func command(args: Array) -> void:
 			bird.player = player
 			world.get_node("WorldObjects").add_child(bird)
 			bird.set_physics_process(false)
+func account_probe(world: Node, seed_value: String, phase: String) -> void:
+	account_checks = {"busy": true}
+	var folder := "user://account-fixture-" + seed_value
+	var a := AccountProgress.new()
+	a.configure("fixture-web-A-" + seed_value, folder)
+	var b := AccountProgress.new()
+	b.configure("fixture-web-B-" + seed_value, folder)
+	if phase == "write":
+		var progress := WorldProgress.new()
+		progress.world = world
+		var data := progress.capture()
+		data.owner_uid = a.uid
+		data.player.health = 87
+		var other := data.duplicate(true)
+		other.owner_uid = b.uid
+		other.player.health = 62
+		other.journal = {"discovered": ["trail"], "unread": {"trail": true}}
+		var ok_a := await a.write(data, get_tree())
+		var ok_b := await b.write(other, get_tree())
+		var legacy := SaveStore.new()
+		DirAccess.make_dir_recursive_absolute(folder)
+		legacy.path = folder.path_join("solo-progress.json")
+		data.erase("owner_uid")
+		data.version = 3
+		legacy.write(data)
+		var original := FileAccess.get_file_as_string(legacy.path)
+		var c := AccountProgress.new()
+		c.configure("fixture-web-C-" + seed_value, folder)
+		var imported := await c.import_legacy(get_tree())
+		var d := AccountProgress.new()
+		d.configure("fixture-web-D-" + seed_value, folder)
+		var rejected := not await d.import_legacy(get_tree())
+		account_checks = {"written": ok_a and ok_b, "imported": imported, "second_import_blocked": rejected, "legacy_preserved": FileAccess.get_file_as_string(legacy.path) == original}
+	else: account_checks = {}
+	var one := await a.read(get_tree())
+	var two := await b.read(get_tree())
+	account_checks.isolated = not one.is_empty() and not two.is_empty() and one.player.health == 87 and two.player.health == 62 and one.owner_uid == a.uid and two.owner_uid == b.uid and two.journal.discovered == ["trail"]
+	account_checks.busy = false
+
 func rect(control: Control) -> Array:
 	var box := control.get_global_rect()
 	return [box.position.x, box.position.y, box.size.x, box.size.y]
@@ -93,6 +150,7 @@ func _process(_delta: float) -> void:
 			buttons[button.text] = rect(button)
 			if button.has_meta("gameplay_action"): buttons[button.get_meta("gameplay_action")] = rect(button)
 	data.buttons = buttons
+	data.account_checks = account_checks
 	if session.game != null:
 		var world: Node = session.game
 		var player: CharacterBody2D = world.get_node("WorldObjects/Player")
@@ -119,16 +177,35 @@ func _process(_delta: float) -> void:
 		for temple in world.ruins.temples: data.temples.append([temple.position.x, temple.position.y])
 		data.player_screen = [player.get_global_transform_with_canvas().origin.x, player.get_global_transform_with_canvas().origin.y]
 		data.backpack = inv.backpack
+		data.journal = world.journal.capture()
+		data.objectives = world.objectives.capture()
+		data.poison = player.poison_remaining
+		data.poison_text = hud.poison_status.text if hud.poison_status != null and hud.poison_status.visible else ""
+		if hud.poison_status != null: data.poison_rect = rect(hud.poison_status)
+		data.effects = get_tree().get_nodes_in_group("combat_effects").size()
+		for node in world.get_node("WorldObjects").get_children():
+			if node is ForestCreature and node.has_meta("combat_probe"):
+				var point: Vector2 = node.get_global_transform_with_canvas().origin
+				data.combat_enemy = {"health": node.health, "bar": node.combat_visible, "screen": [point.x, point.y]}
+		data.sound = {"muted": CombatAudio.muted, "volume": CombatAudio.volume}
+		if hud.combat_options != null:
+			for slider in hud.combat_options.find_children("*", "HSlider", true, false): data.volume_slider = rect(slider)
+		if hud.journal_view != null: data.journal_text = hud.journal_view.text.text
+		if hud.base_view != null:
+			data.base_status = hud.base_view.status.text
+			data.base_confirm_enabled = not hud.base_view.confirm.disabled
+		if hud.save_button != null: data.save_status = hud.save_button.text
 		if hud.storage_view != null and is_instance_valid(hud.storage_view.chest):
 			data.storage_slots = hud.storage_view.chest.storage.slots
 			data.storage_buttons = []
 			for button in hud.storage_view.grid.get_children(): data.storage_buttons.append(rect(button))
 			data.storage_status = hud.storage_view.status.text
+			data.chest_name_input = rect(hud.storage_view.name_input)
 		data.recipe_descriptions = {}
 		for id in hud.crafting_view.labels:
 			data.recipe_descriptions[id] = hud.crafting_view.labels[id].text
 		for structure in world.get_node("WorldObjects").get_children():
-			if structure is PlacedStructure: data.structures.append({"kind":structure.kind,"x":structure.position.x,"y":structure.position.y,"rotation":structure.rotation,"door_open":structure.door_open})
+			if structure is PlacedStructure: data.structures.append({"id":structure.structure_id,"chest_name":structure.chest_name,"kind":structure.kind,"x":structure.position.x,"y":structure.position.y,"rotation":structure.rotation,"door_open":structure.door_open})
 		data.scroll = hud.get_node("InventoryPanel/Panel/Scroll").scroll_vertical
 		data.bed_registered = is_instance_valid(structures.respawn_bed)
 		data.placement_points = []

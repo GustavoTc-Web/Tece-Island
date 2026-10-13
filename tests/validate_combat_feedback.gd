@@ -32,6 +32,9 @@ func run() -> void:
 	interaction.target = enemy
 	check(interaction.strike_target() and enemy.health == 25, "Golpe mantém cinco danos e registra acerto real")
 	check(player.swing_time > 0 and enemy.combat_visible > 0, "Movimento de ataque e vida temporária")
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://.tools/screenshots/signal-combat-native.png")
 	check(is_equal_approx(interaction.cooldown, 1.2), "Intervalo de mãos preservado")
 	enemy._process(5)
 	check(enemy.combat_visible == 0, "Barra some após quatro segundos sem combate")
@@ -58,9 +61,38 @@ func run() -> void:
 	world.get_node("WorldObjects").add_child(arrow)
 	await step()
 	check(enemy.health == 25, "Flecha bloqueada conserva vida do alvo")
+	var blocked := false
+	for effect in get_nodes_in_group("combat_effects"):
+		if effect.kind == "blocked": blocked = true
+	check(blocked, "Colisão produz efeito de bloqueio, sem acerto fictício")
+	wall.queue_free()
+	await step()
+	var hit_arrow: Node2D = load("res://scenes/projectile.tscn").instantiate()
+	hit_arrow.position = player.position
+	hit_arrow.direction = Vector2.RIGHT
+	hit_arrow.arrow = true
+	hit_arrow.damage = 12
+	hit_arrow.shooter = player.get_rid()
+	world.get_node("WorldObjects").add_child(hit_arrow)
+	await step()
+	var arrow_hit := false
+	for effect in get_nodes_in_group("combat_effects"):
+		if effect.kind == "arrow_hit": arrow_hit = true
+	check(enemy.health == 13 and arrow_hit, "Flecha acertada aplica doze danos e efeito próprio")
+	var miss: Node2D = load("res://scenes/projectile.tscn").instantiate()
+	miss.position = player.position
+	miss.direction = Vector2.LEFT
+	miss.remaining = 10
+	miss.shooter = player.get_rid()
+	world.get_node("WorldObjects").add_child(miss)
+	await step()
+	var missed := false
+	for effect in get_nodes_in_group("combat_effects"):
+		if effect.kind == "miss": missed = true
+	check(enemy.health == 13 and missed, "Projétil que erra desvanece sem impacto ou dano")
 	player.apply_poison(3)
 	player.step_poison(1)
-	check(player.health == 99 and is_equal_approx(player.poison_remaining, 2), "Veneno mostra duração mantendo um dano por segundo")
+	check(player.health == 99 and is_equal_approx(player.poison_remaining, 2) and world.get_node("HUD").poison_status.text.contains("2.0"), "Veneno mostra duração legível na HUD mantendo um dano por segundo")
 	check(GunRules.WEAPONS.arco.damage == 12 and GunRules.WEAPONS.arco.interval == 1, "Equilíbrio do arco preservado")
 	for i in range(30): CombatEffect.emit_at(player, player.position, "impact")
 	check(get_nodes_in_group("combat_effects").size() <= CombatEffect.LIMIT, "Efeitos limitados para desempenho")

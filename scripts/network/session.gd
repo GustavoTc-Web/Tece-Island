@@ -11,6 +11,7 @@ var connecting := false
 var closing := false
 var connection_time: float = 0
 var transitioning := false
+var transition_panel := ""
 @export var connection_timeout: float = 8.0
 
 func _ready() -> void:
@@ -22,8 +23,13 @@ func _ready() -> void:
 	FirebaseAuth.authenticated.connect(_authenticated)
 	FirebaseAuth.signed_out.connect(_signed_out)
 	FirebaseAuth.before_logout = _save_before_logout
+	FirebaseAuth.message_changed.connect(_auth_message)
 	if FirebaseAuth.can_play(): show_menu("Teste local / rede local · anfitrião + um convidado")
 	else: show_auth()
+
+func _auth_message(text: String) -> void:
+	if is_instance_valid(game) and game.has_node("HUD"): game.get_node("HUD").show_message(text)
+	elif is_instance_valid(menu): menu.show_status(text)
 
 func show_auth(message: String = "", save_current: bool = true) -> void:
 	reset_network()
@@ -55,7 +61,7 @@ func show_menu(message: String) -> void:
 		logout.text = "Sair da conta"
 		logout.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		logout.position = Vector2(-230, 16)
-		logout.custom_minimum_size = Vector2(210, 56)
+		logout.custom_minimum_size = Vector2(210, 64)
 		logout.pressed.connect(FirebaseAuth.logout)
 		menu.add_child(logout)
 		var account := AccountProgress.new()
@@ -68,13 +74,17 @@ func show_menu(message: String) -> void:
 			var import_button := Button.new()
 			import_button.text = "Importar save antigo"
 			import_button.position = Vector2(16, 16)
-			import_button.custom_minimum_size = Vector2(250, 56)
+			import_button.custom_minimum_size = Vector2(250, 64)
 			import_button.pressed.connect(func():
 				var dialog := ConfirmationDialog.new()
 				dialog.title = "Importar progresso antigo"
 				dialog.dialog_text = "Atribuir o save antigo sem dono a esta conta?\nImportação única neste aparelho, com backup.\nNão substitui progresso existente. Não sincroniza com outros aparelhos."
 				dialog.ok_button_text = "Importar para esta conta"
 				dialog.cancel_button_text = "Cancelar"
+				dialog.get_label().add_theme_font_size_override("font_size", 20)
+				for button in [dialog.get_ok_button(), dialog.get_cancel_button()]:
+					button.custom_minimum_size.y = 64
+					button.add_theme_font_size_override("font_size", 20)
 				dialog.confirmed.connect(func(): _import_legacy(account))
 				dialog.canceled.connect(dialog.queue_free)
 				menu.add_child(dialog)
@@ -94,13 +104,21 @@ func _import_legacy(account: AccountProgress) -> void:
 
 func set_transition(value: bool) -> void:
 	transitioning = value
+	if is_instance_valid(game) and game.has_method("save_progress"):
+		var hud: CanvasLayer = game.get_node("HUD")
+		if value and hud.current_panel != "saving":
+			transition_panel = hud.current_panel
+			hud.set_panel("saving")
+		elif not value and hud.current_panel == "saving":
+			hud.set_panel(transition_panel)
+			transition_panel = ""
 	if is_instance_valid(menu):
 		for button in menu.find_children("*", "Button", true, false): button.disabled = value
 
 func _save_before_logout() -> bool:
 	if not is_instance_valid(game) or not game.has_method("save_progress"): return true
-	set_transition(true)
 	var paused := get_tree().paused
+	set_transition(true)
 	get_tree().paused = true
 	MobileInput.reset()
 	var ok: bool = await game.save_progress(true)
@@ -127,6 +145,7 @@ func clear_scene(save_current: bool = true) -> void:
 	auth_screen = null
 	get_tree().paused = false
 	transitioning = false
+	transition_panel = ""
 
 func start_solo() -> void:
 	if transitioning or is_instance_valid(game): return

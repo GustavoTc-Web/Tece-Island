@@ -12,6 +12,7 @@ signal use_requested(index: int)
 var inventory: ResourceInventory
 var blocked: bool = false
 var cooldown: float = 0.0
+var miss_visual_cooldown := 0.0
 var mouse_held: bool = false
 var key_held: bool = false
 var touch_aim := Vector2.ZERO
@@ -37,6 +38,7 @@ func cursor_world() -> Vector2:
 
 func _physics_process(delta: float) -> void:
 	cooldown = maxf(0.0, cooldown - delta)
+	miss_visual_cooldown = maxf(0, miss_visual_cooldown - delta)
 	update_target(cursor_world(), key_held or touch_aim != Vector2.ZERO)
 	update_pickup()
 	# Um único relógio atende as duas entradas; F tem prioridade se ambas estão ativas.
@@ -179,7 +181,8 @@ func strike_target() -> bool:
 		var direction: Vector2 = touch_aim.normalized() if touch_aim != Vector2.ZERO else (player.facing if key_held else (cursor_world() - player.global_position).normalized())
 		return weapons.fire(direction)
 	if not is_instance_valid(target) or not can_reach(target):
-		cooldown = ResourceRules.hit_interval(tool)
+		if miss_visual_cooldown > 0: return false
+		miss_visual_cooldown = ResourceRules.hit_interval(tool)
 		var aim: Vector2 = touch_aim.normalized() if touch_aim != Vector2.ZERO else (player.facing if key_held else (cursor_world() - player.global_position).normalized())
 		player.show_swing(aim, combat_distance)
 		var ray := PhysicsRayQueryParameters2D.create(player.global_position, player.global_position + aim * combat_distance, 9)

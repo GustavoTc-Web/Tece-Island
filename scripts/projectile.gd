@@ -23,14 +23,14 @@ func _physics_process(delta: float) -> void:
 			hit = collision.collider.receive_damage(damage)
 		elif simulation_authority and hit_players and friendly_fire and collision.collider.has_method("receive_damage"):
 			hit = collision.collider.receive_damage(damage)
-		CombatEffect.emit_at(self, collision.position, "impact" if hit else "blocked", direction)
+		if simulation_authority: CombatEffect.emit_at(self, collision.position, ("arrow_hit" if arrow else "shot_hit") if hit else "blocked", direction)
 		queue_free()
 		set_physics_process(false)
 		return
 	global_position = end
 	remaining -= distance
 	if remaining <= 0:
-		CombatEffect.emit_at(self, global_position, "arrow" if arrow else "blocked", direction)
+		CombatEffect.emit_at(self, global_position, "miss", direction)
 		queue_free()
 
 func _draw() -> void:

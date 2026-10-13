@@ -8,14 +8,17 @@ try{
  for(const touch of [false,true]){
   const context=await browser.newContext({viewport:{width:960,height:540},hasTouch:touch});
   const page=await context.newPage();
-  const requests=[];
+  const requests=[],authCodes=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{
    const expected=m.location().url.startsWith('https://identitytoolkit.googleapis.com/')&&m.text().includes('400');
    if(m.type()==='error'&&!expected)errors.push(m.text());
   });
-  page.on('response',r=>{
-   if(r.url().startsWith('https://identitytoolkit.googleapis.com/'))requests.push(r.status());
+  page.on('response',async r=>{
+   if(r.url().startsWith('https://identitytoolkit.googleapis.com/')){
+    requests.push(r.status());
+    if(r.status()>=400){try{const data=await r.json(),code=String(data.error?.message||'').split(':')[0];if(/^[A-Z_]{1,80}$/.test(code))authCodes.push(code);}catch{}}
+   }
    else if(r.status()>=400)errors.push('Asset HTTP '+r.status()+': '+new URL(r.url()).pathname);
   });
   await page.goto(url);
@@ -29,8 +32,8 @@ try{
   await page.waitForResponse(r=>r.url().startsWith('https://identitytoolkit.googleapis.com/'),{timeout:25000}).catch(()=>{});
   await page.waitForTimeout(800);
   await page.screenshot({path:'.tools/screenshots/auth-release-rejected-'+(touch?'touch':'desktop')+'.png'});
-  const ok=requests.includes(400);
-  results.push({touch,invalidCredentialsRejected:ok});
+  const ok=requests.includes(400)&&authCodes.some(code=>['INVALID_LOGIN_CREDENTIALS','INVALID_PASSWORD','EMAIL_NOT_FOUND'].includes(code));
+  results.push({touch,invalidCredentialsRejected:ok,authErrorCodes:authCodes});
   console.log((ok?'PASS: ':'FAIL: ')+(touch?'Toque':'Desktop')+' — exportação principal acessa Firebase e rejeita credenciais inválidas');
   await page.reload();
   await page.waitForFunction(()=>document.querySelector('#status').style.display==='none',null,{timeout:45000});

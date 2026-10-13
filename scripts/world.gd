@@ -62,6 +62,7 @@ func _ready() -> void:
 	$HUD.add_child(minimap)
 	$HUD.update_counts($Inventory.wood, $Inventory.stone)
 	$WorldObjects/Player.health_changed.connect($HUD.update_health)
+	$WorldObjects/Player.poison_changed.connect($HUD.update_poison)
 	$WorldObjects/Player.died.connect(_on_player_died)
 	$HUD.respawn_requested.connect(respawn_player)
 	$HUD.update_health($WorldObjects/Player.health, $WorldObjects/Player.max_health)

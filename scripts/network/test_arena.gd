@@ -24,6 +24,7 @@ var dropped_items: Dictionary = {}
 var next_drop_id := 1
 
 func _ready() -> void:
+	add_to_group("arena_combat_feedback")
 	$Controls.arena = self
 	$HUD.network_mode = true
 	$HUD.panel_toggled.connect(_panel_toggled)
@@ -356,7 +357,7 @@ func make_snapshot() -> Dictionary:
 		state.actors[id].hunger = actor.body.get_node("Needs").hunger
 		state.actors[id].thirst = actor.body.get_node("Needs").thirst
 	if is_instance_valid(enemy) and not enemy.dead:
-		state.mob = {"alive": true, "position": enemy.position, "health": enemy.health, "flash": enemy.flash_time}
+		state.mob = {"alive": true, "position": enemy.position, "health": enemy.health, "flash": enemy.flash_time, "combat_visible": enemy.combat_visible, "attack_visual": enemy.attack_visual, "attack_direction": enemy.attack_direction}
 	if is_instance_valid(drop) and drop.quantity > 0:
 		state.drop = {"quantity": drop.quantity, "position": drop.position}
 	state.drops = {}
@@ -376,6 +377,7 @@ func receive_snapshot(state: Dictionary) -> void:
 	apply_snapshot(state)
 
 func apply_snapshot(state: Dictionary) -> void:
+	if not is_inside_tree(): return
 	if multiplayer.is_server() or int(state.revision) <= last_revision: return
 	last_revision = state.revision
 	for id in dropped_items.keys():
@@ -416,6 +418,9 @@ func apply_snapshot(state: Dictionary) -> void:
 		enemy.position = state.mob.position
 		enemy.health = state.mob.health
 		enemy.flash_time = state.mob.flash
+		enemy.combat_visible = state.mob.get("combat_visible", 0)
+		enemy.attack_visual = state.mob.get("attack_visual", 0)
+		enemy.attack_direction = state.mob.get("attack_direction", Vector2.RIGHT)
 		enemy.queue_redraw()
 	elif is_instance_valid(enemy):
 		enemy.queue_free()
@@ -447,8 +452,16 @@ func shot_effect(sequence: int, owner_id: int, point: Vector2, direction: Vector
 	bullet.speed = rule.speed
 	bullet.remaining = rule.range
 	bullet.damage = 0
+	bullet.arrow = weapon == "arco"
 	bullet.hit_players = true
 	bullet.simulation_authority = false # Efeito não confirma dano nem consome munição.
 	bullet.shooter = actors[owner_id].body.get_rid()
 	$Objects.add_child(bullet)
-	actors[owner_id].body.show_swing(direction, 20)
+	actors[owner_id].body.show_swing(direction, 20, "arrow" if weapon == "arco" else "shot")
+
+func send_combat_feedback(point: Vector2, effect: String, aim: Vector2) -> void:
+	for id in multiplayer.get_peers(): combat_feedback.rpc_id(id, point, effect, aim)
+
+@rpc("authority", "call_remote", "reliable")
+func combat_feedback(point: Vector2, effect: String, aim: Vector2) -> void:
+	CombatEffect.emit_at(self, point, effect, aim, false)

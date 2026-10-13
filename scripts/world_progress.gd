@@ -119,6 +119,7 @@ func _load_progress() -> void:
 	player.get_node("Needs").hunger = clampf(float(player_state.get("hunger", 100)), 0, 100)
 	player.get_node("Needs").thirst = clampf(float(player_state.get("thirst", 100)), 0, 100)
 	world.get_node("HUD").update_health(player.health, player.max_health)
+	world.get_node("HUD").update_poison(player.poison_remaining)
 	world.get_node("HUD").update_needs(player.get_node("Needs").hunger, player.get_node("Needs").thirst)
 	world.get_node("DayNight").elapsed = maxf(0, float(data.get("elapsed", 0)))
 	world.get_node("DayNight").refresh()

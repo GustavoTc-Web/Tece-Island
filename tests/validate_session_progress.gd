@@ -28,12 +28,19 @@ func run() -> void:
 	world.progress_store.store = store
 	check(await world.save_progress(true), "Save inicial válido antes de sair")
 	var bytes := FileAccess.get_file_as_string(store.path)
+	main.set_transition(true)
+	var event := InputEventKey.new()
+	event.physical_keycode = KEY_J
+	event.pressed = true
+	world.get_node("HUD")._input(event)
+	check(world.get_node("HUD").current_panel == "saving" and paused and world.get_node("WorldObjects/Player").controls_blocked, "Transição de gravação bloqueia atalhos, interfaces e personagem antes de limpar a sessão")
+	main.set_transition(false)
 	store.fail = true
 	world.get_node("Inventory").add_resource("madeira", 7)
 	await main.return_to_menu("Teste")
 	check(main.game == world and main.menu == null and not paused, "Falha de save conserva partida e permite retry antes do menu")
 	check(FileAccess.get_file_as_string(store.path) == bytes and not world.get_node("HUD").save_button.disabled, "Último save preservado e botão de nova tentativa disponível")
-	check(not await auth.logout() and main.game == world and not main.transitioning, "Logout voluntário falho mantém partida utilizável")
+	check(not await auth.logout() and main.game == world and not main.transitioning and world.get_node("HUD/Controls/Rows/Feedback").text.contains("Falha ao salvar"), "Logout voluntário falho mantém partida utilizável e informa nova tentativa")
 	store.fail = false
 	await main.return_to_menu("Teste")
 	check(main.game == null and main.menu != null and store.read().inventory.slots[0].quantity == 7, "Nova tentativa grava antes de limpar mundo e abrir menu")

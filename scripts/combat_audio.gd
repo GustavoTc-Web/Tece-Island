@@ -32,6 +32,7 @@ func configure(level: float, silent: bool) -> void:
 	prefs.save(preferences_path)
 
 func play(kind: String) -> bool:
+	if DisplayServer.get_name() == "headless": return false
 	if muted or volume <= 0 or not sounds.has(kind): return false
 	var now := Time.get_ticks_msec()
 	if now - int(last_played.get(kind, -1000)) < 90: return false
@@ -43,6 +44,11 @@ func play(kind: String) -> bool:
 		voice.play()
 		return true
 	return false
+
+func _exit_tree() -> void:
+	for voice in voices:
+		voice.stop()
+		voice.stream = null
 
 func tone(kind: String) -> AudioStreamWAV:
 	var stream := AudioStreamWAV.new()

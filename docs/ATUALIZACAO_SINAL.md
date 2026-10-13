@@ -56,4 +56,53 @@ contas. Diário e objetivos inexistentes. Baseline: 18 testes de monstros passam
 Referência: [armazenamento user:// na Web](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html).
 O arquivo virtual anterior do Godot é usado somente para ler/importar legado;
 novos saves de conta na Web têm confirmação explícita da transação IndexedDB.
-6. Pendente: testes nativos/Web/toque, commits, push e verificação do Pages.
+6. Verificação final concluída; commit/push/deploy em sequência.
+   Etapa 5: 928600d. Correções finais: relógio visual dos erros separado do
+   cooldown de gameplay (regressão da troca mãos→pistola corrigida), efeitos
+   próprios de flecha/tiro/acerto/bloqueio e desvanecimento sem falso impacto.
+   Multiplayer envia feedback real do servidor e ignora snapshots após remoção
+   da cena. Sons desativados em headless e liberados ao encerrar.
+   Veneno junto à vida e status de save no painel lateral, sem cobrir combate.
+   Gravação de saída bloqueia atalhos/interface até concluir ou permitir retry.
+
+## Testes realmente executados nesta atualização
+
+| Ambiente | Resultado |
+| --- | --- |
+| Godot headless | Suíte completa de 488 verificações, mais três casos de impacto/erro/bloqueio e um de transição: 492 verificações distintas aprovadas |
+| Godot nativo Compatibility | 14 de menu, 24 de controles móveis injetados, 10 de autenticação obrigatória e 15 de combate/render: 63 aprovadas |
+| Dois processos ENet | 43 host + 4 guest, 24 de inventário/consumo/coleta, seis de feedback de acerto/bloqueio/erro: 77 aprovadas |
+| Edge desktop e toque emulado | 50 verificações novas, incluindo rolagem, diário/objetivos, nome/ID, transferências, desmontagem, combate, IndexedDB real e reload |
+| Firebase | Configuração pública e bloqueio sem sessão; smoke da exportação principal com rejeição real de credenciais inválidas. Nenhum login positivo inventado |
+| Celular físico | Não executado; legibilidade revisada em capturas emuladas 852×393/DPR3, desempenho no aparelho permanece manual |
+
+Fixtures de gameplay desativam auth somente na cópia isolada. Testes de contas
+usam UIDs de fixture e armazenamento real; falhas de I/O são injetadas e
+identificadas. Não comprovam troca entre duas contas Firebase reais. Todos os
+saves dos testes ficam separados do progresso pessoal. A migração real de um
+save legado acontece apenas se o usuário confirmar a importação no menu.
+Erro proposital de cena no teste do menu verifica a nova tentativa. O sandbox
+headless avisa sobre certificados Windows; checks nativos e REST no navegador
+executados fora dessa restrição. Não há alteração de dano, alcance, intervalos,
+poços, login obrigatório ou faturamento.
+
+## Verificação manual necessária
+
+1. No [Pages](https://gustavotc-web.github.io/Tece-Island/) ou Godot/F5, entre
+   com sua conta A confirmada. Havendo save antigo e conta sem progresso, clique
+   Importar save antigo, leia a confirmação e escolha Importar para esta conta.
+   Cancelar deve deixar o original sem dono. Importação não substitui outro save.
+2. Na conta A, renomeie um baú, guarde um item, descubra um registro e acompanhe
+   um objetivo. Espere Progresso salvo, volte ao menu e saia da conta.
+3. Entre com uma conta B confirmada no mesmo aparelho: deve começar com seu
+   próprio progresso, sem baú/diário/objetivo da A. A importação antiga já usada
+   não deve aparecer. Saia de B e retorne a A para conferir seus dados.
+4. Em celular físico, confirme sons discretos, volume/silenciar e FPS com
+   combate; use dois dedos, troque de aba/bloqueie tela e confira entradas soltas.
+   Percorra a lista de objetivos/diário por rolagem e confirme/cancele desmontagem.
+5. Mantenha uma sessão real por mais de uma hora para renovação. Ao perder rede,
+   confira mensagem e nova tentativa. Expiração deve retornar à entrada.
+
+Não envie senhas ou tokens ao assistente. Armazenamento continua local: conta
+igual em outro navegador/aparelho não sincroniza. Sons são sintetizados no jogo;
+controles de áudio foram verificados, mas apreciação sonora no aparelho é manual.

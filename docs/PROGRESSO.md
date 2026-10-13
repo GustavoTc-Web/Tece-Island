@@ -1,5 +1,10 @@
 # Atualização — registro para retomada
 
+A atualização seguinte (combate, base, O Último Sinal, objetivos e saves por
+conta) está registrada em [ATUALIZACAO_SINAL.md](ATUALIZACAO_SINAL.md), com
+commits por etapa, testes e verificação manual. O histórico abaixo corresponde
+à expansão anterior, publicada em cf5bc20.
+
 ## Etapa 0: autenticação obrigatória
 
 Implementado: Firebase REST, cadastro, confirmação de e-mail, login,

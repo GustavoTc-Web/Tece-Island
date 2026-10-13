@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 signal health_changed(current: int, maximum: int)
 signal died
+signal poison_changed(remaining: float)
 
 @export var speed: float = 210.0
 @export var max_health: int = 100
@@ -31,16 +32,19 @@ func apply_poison(duration: float = 3.0) -> void:
 	if dead or not simulation_authority: return
 	if poison_remaining <= 0: poison_tick = 1.0
 	poison_remaining = duration
+	poison_changed.emit(poison_remaining)
 	queue_redraw()
 
 func step_poison(delta: float) -> void:
 	if poison_remaining <= 0 or dead or not simulation_authority or get_tree().paused: return
 	var active_delta := minf(delta, poison_remaining)
+	var previous_tenth := ceili(poison_remaining * 10)
 	poison_remaining = maxf(0, poison_remaining - delta)
 	poison_tick -= active_delta
 	while poison_tick <= 0.00001 and not dead:
 		receive_damage(1, true)
 		poison_tick += 1.0
+	if ceili(poison_remaining * 10) != previous_tenth: poison_changed.emit(poison_remaining)
 	queue_redraw()
 
 
@@ -81,6 +85,7 @@ func respawn(point: Vector2) -> void:
 	invulnerability = invulnerability_duration
 	damage_flash = 0.0
 	poison_remaining = 0
+	poison_changed.emit(0)
 	poison_tick = 0
 	modulate = Color.WHITE
 	health_changed.emit(health, max_health)
@@ -136,7 +141,6 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(-15, -52), "Nado", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("c2e4e9"))
 	if poison_remaining > 0:
 		draw_arc(Vector2.ZERO, 17, 0, TAU, 20, Color("89c866"), 2)
-		draw_string(ThemeDB.fallback_font, Vector2(-28, -52), "Veneno %.1fs" % poison_remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("b0db87"))
 	if swing_time > 0.0 and swing_kind == "swing":
 		var angle := swing_direction.angle()
 		draw_arc(Vector2.ZERO, swing_radius, angle - PI / 4, angle + PI / 4, 20, Color(1, 0.9, 0.65, swing_time / 0.16), 3)
@@ -148,8 +152,9 @@ func _draw() -> void:
 	draw_circle(Vector2(0, -31), 9.0, Color("e6bb8d"))
 	draw_circle(Vector2(0, -35), 10.0, Color("68462f"))
 	draw_circle(Vector2(0, -31) + facing * 6.0, 3.0, Color("e6bb8d"))
-	draw_line(Vector2(-13, -21), Vector2(-13, -11), Color("e6bb8d"), 5.0)
-	draw_line(Vector2(13, -21), Vector2(13, -11), Color("e6bb8d"), 5.0)
+	var arm_motion := swing_direction * sin(swing_time / 0.16 * PI) * 7 if swing_time > 0 else Vector2.ZERO
+	draw_line(Vector2(-13, -21), Vector2(-13, -11) + arm_motion, Color("e6bb8d"), 5.0)
+	draw_line(Vector2(13, -21), Vector2(13, -11) + arm_motion, Color("e6bb8d"), 5.0)
 	draw_tool()
 	if identity_label != "":
 		draw_string(ThemeDB.fallback_font, Vector2(-27, -53), identity_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, identity_color)

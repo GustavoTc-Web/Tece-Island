@@ -241,6 +241,7 @@ func _draw() -> void:
 	draw_set_transform(Vector2(0, 3), 0.0, Vector2(1, 0.4))
 	draw_circle(Vector2.ZERO, 22, Color(0.08, 0.1, 0.12, 0.35))
 	draw_set_transform(Vector2.ZERO)
+	if attack_visual > 0: draw_set_transform(attack_direction * sin(attack_visual / 0.2 * PI) * 5)
 	draw_circle(Vector2(-10, 1), 7, Color("403d52"))
 	draw_circle(Vector2(10, 1), 7, Color("403d52"))
 	draw_colored_polygon(PackedVector2Array([Vector2(-18, -15), Vector2(-21, -36), Vector2(-6, -25)]), Color("a592b2"))
