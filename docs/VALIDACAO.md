@@ -1,3 +1,12 @@
+# Validação da atualização 0.8.1 · Atalhos mobile
+
+Godot: 30 verificações mobile, 12 de fabricação e 7 de controles, zero falhas.
+Navegador: 58 verificações, zero falhas; toque emulado 852×393 e 640×360,
+PC 1280×720; fluxo direto de fabricação,
+categorias/ingredientes, alternância/fechar, coleta/baú, multitoque, combate,
+seleção e comandos contextuais. Captura, métodos e roteiro físico em
+[ATALHOS_MOBILE.md](ATALHOS_MOBILE.md). Aparelho físico não executado.
+
 # Validação da atualização 0.8 · Apresentação
 
 Em 13/10/2026: 591 regressões nativas + 51 de apresentação; 72 ENet em dois

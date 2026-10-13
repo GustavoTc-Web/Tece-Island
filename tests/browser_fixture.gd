@@ -115,7 +115,7 @@ func command(args: Array) -> void:
 			chest.system = world.get_node("Structures")
 			chest.position = player.position + Vector2(65, 0)
 			world.get_node("WorldObjects").add_child(chest)
-			chest.interact(inv)
+			if bool(request.get("open", true)): chest.interact(inv)
 		"monsters":
 			for kind in ["esqueleto", "aranha"]:
 				var enemy: ForestCreature = load("res://scenes/forest_creature.tscn").instantiate()
@@ -233,6 +233,7 @@ func _process(_delta: float) -> void:
 			if hud.recipe_buttons[id].is_visible_in_tree(): data.recipes[id] = rect(hud.recipe_buttons[id])
 		data.search = rect(hud.crafting_view.search)
 		data.crafting_scroll = rect(hud.get_node("Crafting/Panel/Rows/Scroll"))
+		data.open_item_panels = {"inventory": hud.get_node("InventoryPanel").visible, "crafting": hud.get_node("Crafting").visible}
 		data.capacity = inv.capacity
 		data.swimming = player.swimming
 		data.dark = world.get_node("DayNight").local_darkness
@@ -304,5 +305,9 @@ func _process(_delta: float) -> void:
 		data.viewport = [get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]
 		if is_instance_valid(MobileInput.overlay):
 			data.portrait = MobileInput.overlay.portrait
+			data.stick_radius = MobileInput.overlay.radius
+			data.action_shortcuts = []
+			for shortcut in MobileInput.overlay.actions.get_children():
+				data.action_shortcuts.append({"caption": shortcut.text, "icon": shortcut.icon.resource_path, "rect": rect(shortcut)})
 			data.sticks = {"move":[MobileInput.overlay.centers.move.x, MobileInput.overlay.centers.move.y], "aim":[MobileInput.overlay.centers.aim.x, MobileInput.overlay.centers.aim.y]}
 	JavaScriptBridge.eval("window.tcState = " + JSON.stringify(data))

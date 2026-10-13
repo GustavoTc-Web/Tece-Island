@@ -238,3 +238,13 @@ Validação: 591 + 51 verificações nativas; 72 ENet em dois processos a 60 FPS
 90 de apresentação + 41 de regressão no navegador e 28 de login/Firebase real.
 Zero falhas finais. Capturas PC/mobile emulado e roteiro físico em
 `docs/APRESENTACAO_LOBBY.md`. Publicação pelo workflow Pages existente, R$ 0.
+
+## Atualização 0.8.1: atalhos mobile
+
+Mão Coletar/Interagir, mochila Inventário e martelo Fabricar formam o grupo de
+atalhos durante a partida. Fabricação abre o painel existente diretamente.
+Comer/Beber e Recarregar aparecem numa linha separada. Ícones SVG transparentes,
+legendas e alvos de aproximadamente 44px CSS; os joysticks e cinco espaços conservados.
+Pausa, liberação de comandos, alternância exclusiva e Fechar reutilizados.
+49 verificações nativas e 58 de navegador PC/toque emulado aprovadas. Captura e
+roteiro para celular físico em `docs/ATALHOS_MOBILE.md`. Workflow Pages existente.

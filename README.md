@@ -83,10 +83,12 @@ os joysticks também aceitam arrastar com o mouse.
 
 - Joystick esquerdo: andar. Direito: arrastar para mirar e manter ataque fora da zona morta.
   Soltar para parar. Dois dedos controlam movimento e mira separadamente.
-- **Interagir** mostra o alvo próximo; **Inventário** fica sempre acessível.
-  **Comer/Beber** e **Recarregar** aparecem quando o item permite a ação.
+- Mão **Coletar/Interagir**, mochila **Inventário** e martelo **Fabricar** ficam
+  juntos acima da barra rápida, com ícones e legendas. **Fabricar** abre diretamente
+  as categorias, receitas e ingredientes existentes.
+  **Comer/Beber** e **Recarregar** aparecem em uma linha separada quando o item permite.
   Consumíveis usam uma unidade por toque.
-- **Fabricação** e **Base** ficam no inventário. **Menu** reúne diário/objetivos,
+- O inventário também mantém o acesso a **Fabricação** e **Base**. **Menu** reúne diário/objetivos,
   configurações, ajuda, dados/salvamento, retorno ao menu principal e logout.
 - Toque na barra rápida para selecionar.
 - Inventário: selecione origem → **Mover / trocar** → toque no destino.
@@ -94,6 +96,8 @@ os joysticks também aceitam arrastar com o mouse.
 - Cama/fogueira: **Colocar selecionado** → toque no terreno para ajustar prévia →
   **Confirmar** / **Cancelar**. Tocar no terreno não confirma sozinho.
 - Painéis têm **Fechar**. Nenhuma dessas ações exige teclado.
+
+[Captura dos atalhos e roteiro em aparelho físico](docs/ATALHOS_MOBILE.md).
 
 Painéis pausam a simulação solo e limpam entradas mantidas. Perda de foco,
 suspensão e mudança de orientação também limpam entradas. Voltar ao retrato pausa
@@ -259,6 +263,7 @@ node tools/serve-web.mjs 8081 .tools/web-validation
 node tools/mobile-hud-validation.mjs
 node tools/signal-validation.mjs
 node tools/presentation-validation.mjs
+node tools/mobile-shortcuts-validation.mjs
 node tools/next-update-validation.mjs
 # Login principal com Firebase real (somente credenciais inválidas):
 node tools/mobile-login-validation.mjs

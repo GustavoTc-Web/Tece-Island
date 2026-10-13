@@ -8,6 +8,7 @@ var fingers := {"move": -1, "aim": -1}
 var vectors := {"move": Vector2.ZERO, "aim": Vector2.ZERO}
 var centers := {"move": Vector2.ZERO, "aim": Vector2.ZERO}
 var actions: HBoxContainer
+var item_actions: HBoxContainer
 var interact_button: Button
 var placement: HBoxContainer
 var rotate: Label
@@ -29,15 +30,23 @@ func _ready() -> void:
 	hud.panel_toggled.connect(func(_open): reset())
 	actions = HBoxContainer.new()
 	add_child(actions)
-	for action in ["Interagir", "Usar item", "Recarregar", "Inventário"]:
+	item_actions = HBoxContainer.new()
+	add_child(item_actions)
+	for action in ["Interagir", "Inventário", "Fabricar", "Usar item", "Recarregar"]:
 		var button := Button.new()
 		button.text = action
 		button.set_meta("gameplay_action", action)
 		button.custom_minimum_size = Vector2(112, 64)
 		button.add_theme_font_size_override("font_size", 20)
 		button.focus_mode = Control.FOCUS_NONE
+		IslandTheme.decorate(button)
+		var symbol: String = {"Interagir": "interact", "Inventário": "inventory", "Fabricar": "crafting"}.get(action, "")
+		if not symbol.is_empty():
+			button.icon = load("res://assets/ui/%s.svg" % symbol)
+			button.expand_icon = true
 		button.pressed.connect(invoke.bind(action))
-		actions.add_child(button)
+		if symbol.is_empty(): item_actions.add_child(button)
+		else: actions.add_child(button)
 		if action == "Interagir": interact_button = button
 		if action == "Usar item": use_button = button
 		if action == "Recarregar": reload_button = button
@@ -74,7 +83,8 @@ func update_interaction_label(_message: String) -> void:
 		elif pickup is WaterWell: caption = "Beber"
 		elif pickup is PlacedStructure: caption = {"cama": "Usar cama", "fogueira": "Cozinhar", "bau": "Abrir", "porta_madeira": "Fechar" if pickup.door_open else "Abrir"}.get(pickup.kind, "Interagir")
 		else: caption = "Abrir"
-	interact_button.text = caption
+	interact_button.text = "Coletar" if is_instance_valid(pickup) and pickup is ResourceDrop else "Interagir"
+	interact_button.tooltip_text = caption
 
 func layout() -> void:
 	reset()
@@ -86,13 +96,20 @@ func layout() -> void:
 	radius = maxf(RADIUS, unit * 0.78)
 	centers.move = Vector2(radius + 24, viewport_size.y - unit * 2 - gap * 3 - radius)
 	centers.aim = Vector2(viewport_size.x - radius - 24, centers.move.y)
-	for container in [actions, placement]:
+	for container in [actions, item_actions, placement]:
 		container.add_theme_constant_override("separation", int(gap))
 		for button in container.get_children():
-			button.custom_minimum_size = Vector2(unit * 1.75, unit)
+			button.custom_minimum_size = Vector2(unit * 2.2 if container == actions else unit * 1.75, unit)
 			button.add_theme_font_size_override("font_size", int(maxf(20, ceilf(14 / MobileInput.css_scale()))))
+			button.add_theme_constant_override("icon_max_width", int(ceilf(22 / MobileInput.css_scale())))
+			button.add_theme_constant_override("h_separation", int(ceilf(6 / MobileInput.css_scale())))
+			if container == actions:
+				var label_width: float = button.get_theme_font("font").get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x
+				var style: StyleBox = button.get_theme_stylebox("normal")
+				button.custom_minimum_size.x = maxf(button.custom_minimum_size.x, label_width + button.get_theme_constant("icon_max_width") + button.get_theme_constant("h_separation") + style.get_content_margin(SIDE_LEFT) + style.get_content_margin(SIDE_RIGHT))
 		container.size = container.get_combined_minimum_size()
 	actions.position.y = viewport_size.y - unit * 2 - gap * 2
+	item_actions.position.y = actions.position.y - unit - gap
 	placement.position.y = actions.position.y
 	rotate.position = Vector2(0, viewport_size.y / 2)
 	rotate.size.x = viewport_size.x
@@ -110,8 +127,10 @@ func _process(_delta: float) -> void:
 	use_button.visible = item == "cantil" or ItemCatalog.category(item) == "comida"
 	use_button.text = "Beber" if item == "cantil" else "Comer"
 	actions.position.x = (get_viewport_rect().size.x - actions.get_combined_minimum_size().x) / 2
+	item_actions.position.x = (get_viewport_rect().size.x - item_actions.get_combined_minimum_size().x) / 2
 	placement.position.x = (get_viewport_rect().size.x - placement.get_combined_minimum_size().x) / 2
 	actions.visible = hud.current_panel == "" and not hud.showing_death and not structures.active
+	item_actions.visible = actions.visible
 	placement.visible = structures.active and hud.current_panel == ""
 
 func reset() -> void:
@@ -171,7 +190,7 @@ func update_stick(side: String, point: Vector2) -> void:
 func invoke(action: String) -> void:
 	if action == "Inventário":
 		hud.set_panel("inventory")
-	elif action == "Fabricação":
+	elif action == "Fabricar":
 		hud.set_panel("crafting")
 	elif hud.current_panel == "" and not player.dead and not structures.active:
 		var interaction := player.get_node("Interaction")
