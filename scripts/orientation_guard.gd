@@ -22,8 +22,10 @@ func _ready() -> void:
 	var rows := VBoxContainer.new()
 	rows.add_theme_constant_override("separation", 20)
 	center.add_child(rows)
+	var icon := preload("res://scripts/rotation_icon.gd").new()
+	rows.add_child(icon)
 	message = Label.new()
-	message.text = "↻\nGire o celular para jogar.\nUse a posição horizontal para visualizar melhor o mundo e os controles."
+	message.text = "Gire o celular para jogar. Use a posição horizontal para visualizar melhor o mundo e os controles."
 	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	message.custom_minimum_size.x = 340
@@ -37,7 +39,7 @@ func _ready() -> void:
 	notice.hide()
 
 func mobile() -> bool:
-	return bool(JavaScriptBridge.eval("navigator.maxTouchPoints > 0")) if OS.has_feature("web") else OS.has_feature("mobile")
+	return bool(JavaScriptBridge.eval("navigator.maxTouchPoints > 0 && (navigator.userAgentData?.mobile === true || /Android|iPhone|iPad|iPod|Mobile/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1))")) if OS.has_feature("web") else OS.has_feature("mobile")
 
 func set_authenticated(value: bool) -> void:
 	authenticated = value

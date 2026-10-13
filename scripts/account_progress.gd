@@ -5,18 +5,24 @@ var root_path := "user://"
 var error := ""
 var store := SaveStore.new()
 var native_only := false
+var world_id := ""
 
-func configure(owner: String, folder: String = "user://") -> void:
+func configure(owner: String, folder: String = "user://", selected_world: String = "") -> void:
 	uid = owner
 	root_path = folder
+	world_id = selected_world
 	store.path = folder.path_join("accounts").path_join(uid.sha256_text()).path_join("solo-progress.json")
+	if not world_id.is_empty(): store.path = folder.path_join("accounts").path_join(uid.sha256_text()).path_join("worlds").path_join(world_id).path_join("progress.json")
 
 func browser() -> bool: return OS.has_feature("web") and not native_only
-func browser_key() -> String: return "account/" + uid.sha256_text()
+func browser_key() -> String: return "account/" + uid.sha256_text() + ("/world/" + world_id if not world_id.is_empty() else "")
 func legacy_path() -> String: return root_path.path_join("solo-progress.json")
 
 func read(tree: SceneTree) -> Dictionary:
 	error = ""
+	if not world_id.is_empty() and not SaveStore.safe_world_id(world_id):
+		error = "ID de mundo inválido. Original preservado."
+		return {}
 	if uid.is_empty():
 		error = "Conta indisponível. Entre novamente."
 		return {}
@@ -38,6 +44,9 @@ func read(tree: SceneTree) -> Dictionary:
 	if not data.is_empty() and str(data.get("owner_uid", "")) != uid:
 		error = "Este progresso pertence a outra conta. Arquivo preservado."
 		return {}
+	if not data.is_empty() and not world_id.is_empty() and str(data.get("world_id", "")) != world_id:
+		error = "Progresso pertence a outro mundo. Arquivo preservado."
+		return {}
 	if not data.is_empty() and (not data.get("inventory") is Dictionary or int(data.get("version", -1)) < 0 or int(data.get("version", -1)) > SaveStore.VERSION):
 		error = "Progresso incompatível: original preservado."
 		return {}
@@ -45,8 +54,14 @@ func read(tree: SceneTree) -> Dictionary:
 
 func write(data: Dictionary, tree: SceneTree) -> bool:
 	error = ""
+	if not world_id.is_empty() and not SaveStore.safe_world_id(world_id):
+		error = "ID de mundo inválido. Original preservado."
+		return false
 	if uid.is_empty() or str(data.get("owner_uid", "")) != uid:
 		error = "Conta do progresso inválida. Entre novamente."
+		return false
+	if not world_id.is_empty() and str(data.get("world_id", "")) != world_id:
+		error = "Mundo do progresso inválido. Arquivo preservado."
 		return false
 	if browser():
 		var result: Dictionary = await tree.root.get_node("BrowserPersistence").request("write", browser_key(), JSON.stringify(data))

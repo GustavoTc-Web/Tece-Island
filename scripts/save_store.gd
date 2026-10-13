@@ -1,6 +1,6 @@
 class_name SaveStore
 extends RefCounted
-const VERSION := 4
+const VERSION := 5
 var path := "user://solo-progress.json"
 var error := ""
 
@@ -55,3 +55,9 @@ static func vector(value: Variant, fallback: Vector2 = Vector2.ZERO) -> Vector2:
 
 static func key(value: Vector2) -> String:
 	return "%d,%d" % [roundi(value.x), roundi(value.y)]
+
+static func safe_world_id(id: String) -> bool:
+	if id.is_empty() or id.length() > 64: return false
+	for character in id:
+		if character not in "abcdefghijklmnopqrstuvwxyz0123456789-": return false
+	return true

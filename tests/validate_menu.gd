@@ -21,6 +21,11 @@ func find_button(text: String) -> Button:
 	return null
 
 func click(control: Control) -> void:
+	var parent := control.get_parent()
+	while parent != null:
+		if parent is ScrollContainer: parent.ensure_control_visible(control)
+		parent = parent.get_parent()
+	await step()
 	var point := control.get_global_rect().get_center()
 	var motion := InputEventMouseMotion.new()
 	motion.position = point

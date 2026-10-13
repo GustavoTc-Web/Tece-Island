@@ -63,7 +63,8 @@ window.tcLocalProgress={request:async(operation,key,payload,claim,done)=>{
   tx.onabort=()=>{db.close();done(JSON.stringify({ok:false,error:'Falha no armazenamento local. O progresso anterior foi preservado. Tente novamente.'}));};
   tx.onerror=()=>{};
   if(operation==='read'){const r=store.get(key);r.onsuccess=()=>{value=r.result??null;};}
-  else if(operation==='write'){const r=store.get(key);r.onsuccess=()=>{if(r.result!==undefined){store.put(r.result,key+':backup');try{if(JSON.parse(r.result).version<4){const old=store.get(key+':before-v4');old.onsuccess=()=>{if(old.result===undefined)store.put(r.result,key+':before-v4');};}}catch(_error){tx.abort();return;}}store.put(payload,key);};}
+  else if(operation==='write'){const r=store.get(key);r.onsuccess=()=>{if(r.result!==undefined){store.put(r.result,key+':backup');try{if(JSON.parse(r.result).inventory&&JSON.parse(r.result).version<5){const old=store.get(key+':before-v5');old.onsuccess=()=>{if(old.result===undefined)store.put(r.result,key+':before-v5');};}}catch(_error){tx.abort();return;}}store.put(payload,key);};}
+  else if(operation==='migrate'){const original=store.get(claim);original.onsuccess=()=>{if(original.result===undefined){tx.abort();return;}const backup=store.get(claim+':before-worlds');backup.onsuccess=()=>{if(backup.result===undefined)store.put(original.result,claim+':before-worlds');};const target=store.get(key);target.onsuccess=()=>{if(target.result===undefined)store.put(payload,key);};};}
   else if(operation==='import'){
    const r=store.get('legacy-import-v4');r.onsuccess=()=>{if(r.result!==undefined){tx.abort();return;}const target=store.get(key);target.onsuccess=()=>{if(target.result!==undefined){tx.abort();return;}store.put(payload,key);store.put(claim,'legacy-import-v4');};};
   }else tx.abort();

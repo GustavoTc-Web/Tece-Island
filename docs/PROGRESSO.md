@@ -203,3 +203,24 @@ animais/aquático/expansão (77) e smoke da exportação principal Firebase.
 Falha de cena proposital verifica mensagem e nova tentativa; não é falha
 da partida normal. Sem teste em celular físico ou login positivo simulado.
 Etapa 10: commit 571577f. Histórico mantém um commit por etapa funcional.
+
+## Atualização 0.7: sobrevivência e mundos locais
+
+Interface/orientação: `519454c`. Mecânicas/mundo: `158cb60`. Terceira etapa
+reúne lobby, saves por UID + mundo, migração confirmada e validação final.
+Barras coloridas com valores internos, relógio global, cura sem acumular,
+armadura de pedra e cinco objetivos sequenciais. Regiões terrestres da expansão
+recebem prédios com IDs persistentes, preservando bases, recursos e os 16 poços.
+Loot consumido não é reposto ao carregar.
+
+Lobby mostra personagem, lista/nome/último acesso dos mundos e histórico apenas
+de conexões realizadas. Save v5 com backups e migração do mundo anterior, mantendo
+o original. Falha de gravação impede retorno/logout voluntário sem descartar estado.
+Mobile exige horizontal após autenticação, com pausa solo e entradas liberadas.
+Login nativo no navegador e controle de toque em computadores permanecem.
+
+Validação: 591 verificações em 28 scripts headless; 72 em dois processos ENet;
+41 no navegador PC/mobile emulado, com autenticação positiva isolada na fixture;
+28 de digitação e rejeição pelo Firebase real. Zero falhas nas execuções finais.
+Capturas de lobby/HUD/rotação revisadas. Nenhum celular físico: roteiro curto e
+detalhes em `docs/ATUALIZACAO_MUNDOS.md`. Publicação conserva o workflow Pages.

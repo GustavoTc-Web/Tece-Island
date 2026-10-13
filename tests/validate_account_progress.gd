@@ -68,7 +68,7 @@ func run() -> void:
 	check(not await a.import_legacy(self), "Importação nunca substitui conta com progresso")
 	check(await c.import_legacy(self), "Importação explícita atribui progresso a C")
 	check((await c.read(self)).owner_uid == "fixture-C" and FileAccess.get_file_as_string(legacy.path) == bytes, "Importação preserva original e marca dono")
-	check(FileAccess.get_file_as_string(legacy.path + ".before-v4.json") == bytes, "Backup versionado exato antes da migração")
+	check(FileAccess.get_file_as_string(legacy.path + ".before-v%d.json" % SaveStore.VERSION) == bytes, "Backup versionado exato antes da migração")
 	var d := AccountProgress.new()
 	d.configure("fixture-D", folder)
 	check(not await d.legacy_available(self) and not await d.import_legacy(self), "Importação única impede outra conta apropriar-se do legado")
@@ -85,7 +85,7 @@ func run() -> void:
 	controller.flush()
 	check(controller.saving and saved_world.get_node("HUD").save_button.text == "Salvando…", "Salvando antecede conclusão real")
 	for i in range(4): await process_frame
-	check(failing.writes == 1 and saved_world.get_node("HUD").save_button.text == "Progresso salvo.", "Pedidos simultâneos coalescem e sucesso vem após gravação")
+	check(failing.writes == 1 and saved_world.get_node("HUD").save_button.text == "Salvo", "Pedidos simultâneos coalescem e sucesso vem após gravação")
 	var valid_bytes := FileAccess.get_file_as_string(failing.path)
 	failing.fail = true
 	saved_world.get_node("Inventory").add_resource("madeira", 5)

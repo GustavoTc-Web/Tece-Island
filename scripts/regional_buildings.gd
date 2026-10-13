@@ -25,7 +25,7 @@ static func generate(world: Node2D) -> Dictionary:
 		var covered := false
 		for node in world.get_node("WorldObjects").get_children():
 			if node is AbandonedBuilding and region.rect.has_point(node.position): covered = true
-		if covered or result.has(region.id): continue
+		if covered or (result.has(region.id) and not result[region.id].is_empty()): continue
 		var states: Array = []
 		var rect: Rect2 = region.rect
 		for y in range(int(rect.position.y) + 210, int(rect.end.y) - 210, 96):
@@ -58,6 +58,7 @@ static func spawn(world: Node2D, metadata: Dictionary) -> void:
 			var building := AbandonedBuilding.new()
 			building.position = SaveStore.vector(state.position)
 			building.kind = state.kind
+			if WorldTerrain.region_at(building.position).get("kind", "") == "Pântano": building.modulate = Color("a2bbb0")
 			building.set_meta("building_id", state.id)
 			building.set_meta("region_id", region_id)
 			world.get_node("WorldObjects").add_child(building)

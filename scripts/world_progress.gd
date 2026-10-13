@@ -21,6 +21,7 @@ func capture() -> Dictionary:
 	result.journal = world.journal.capture()
 	result.objectives = world.objectives.capture()
 	if not world.owner_uid.is_empty(): result.owner_uid = world.owner_uid
+	if not world.world_id.is_empty(): result.world_id = world.world_id
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -105,6 +106,8 @@ func _load_progress() -> void:
 			break
 		if not ItemCatalog.NAMES.has(state.get("item", "")) and not ResourceRules.RECIPES.has(state.get("item", "")): valid = false
 	for state in data.get("loot", {}).values():
+		if not state is Dictionary or not state.get("contents") is Dictionary or not state.get("released") is bool: valid = false
+	for state in data.get("building_loot", {}).values():
 		if not state is Dictionary or not state.get("contents") is Dictionary or not state.get("released") is bool: valid = false
 	if not valid:
 		writable = false

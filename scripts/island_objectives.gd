@@ -69,7 +69,7 @@ func visit(_world: Node2D, _quiet: bool = false) -> void:
 func tools_description() -> String:
 	var parts: Array[String] = []
 	for id in STONE_TOOLS:
-		parts.append(("✓ " if crafted_tools[id] else "○ ") + ItemCatalog.title(id))
+		parts.append(("[x] " if crafted_tools[id] else "[ ] ") + {"picareta_pedra":"Picareta", "machado_pedra":"Machado", "espada_pedra":"Espada"}[id])
 	return " · ".join(parts)
 
 func capture() -> Dictionary:

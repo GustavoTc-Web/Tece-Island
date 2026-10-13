@@ -13,7 +13,7 @@ func run() -> void:
 	audio.preferences_path = "res://.tools/test-audio.cfg"
 	audio.configure(0.3, true)
 	check(not audio.play("shot"), "Silenciar bloqueia áudio")
-	check(audio.voices.size() == 4 and audio.sounds.size() == 6, "Áudio curto com quatro vozes e seis efeitos distintos")
+	check(audio.voices.size() == 4 and audio.sounds.size() == 7 and audio.sounds.has("objective"), "Áudio curto com quatro vozes, combate e conquista de objetivo")
 	var world: Node2D = load("res://scenes/world.tscn").instantiate()
 	root.add_child(world)
 	await step()

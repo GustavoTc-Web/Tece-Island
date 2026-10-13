@@ -11,6 +11,7 @@ var progress_store: WorldProgress
 var save_controller: ProgressController
 var account_store: AccountProgress
 var owner_uid := ""
+var world_id := ""
 var terrain: WorldTerrain
 var world_seed := 0
 var ruins: Node

@@ -27,7 +27,10 @@ func reveal() -> void:
 func _process(delta: float) -> void:
 	var hud := get_parent()
 	visible = hud.current_panel == "" and not hud.showing_death
-	if hud.menu_button != null: offset_top = hud.menu_button.size.y + 32
+	if hud.menu_button != null:
+		var touch: Node = get_tree().root.get_node("MobileInput")
+		offset_top = 16 if touch.enabled else hud.menu_button.size.y + 32
+		offset_left = -touch.touch_minimum() * 1.25 - 164 if touch.enabled else -124
 	clock += delta
 	if clock < 0.2 or not is_instance_valid(player): return
 	clock = 0

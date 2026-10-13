@@ -21,6 +21,7 @@ func set_enabled(value: bool) -> void:
 	mode_changed.emit()
 
 func css_scale() -> float:
+	if DisplayServer.get_name() == "headless": return 1.0
 	var logical := get_viewport().get_visible_rect().size
 	var pixels := Vector2(DisplayServer.window_get_size())
 	if OS.has_feature("web"):

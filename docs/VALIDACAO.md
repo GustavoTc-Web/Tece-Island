@@ -1,4 +1,31 @@
-# Validação desta atualização
+# Validação da atualização 0.7 · Mundos
+
+Em 13/10/2026, Godot 4.7.2 e Edge/Playwright no Windows:
+
+| Ambiente | Resultado |
+| --- | --- |
+| Godot headless, 28 scripts | 591 verificações, zero falhas |
+| Dois processos ENet locais | 72 verificações, zero falhas, incluindo histórico de conexões e reconexão |
+| Navegador, PC e mobile emulado | 41 verificações, zero falhas; autenticação positiva interceptada somente na fixture |
+| Exportação principal, Firebase real | 28 verificações de edição do login, cadastro/recuperação e rejeição de credenciais inválidas |
+| Celular físico | Não executado; roteiro curto em [ATUALIZACAO_MUNDOS.md](ATUALIZACAO_MUNDOS.md) |
+
+Cobertura nova: cinco ticks de cura sem acumulação; pausa/morte; dano fracionário e
+armadura sem perda em inventário cheio; contagem global; sequência de objetivos
+antecipados e ausência de notificações repetidas; construções em cada região e loot
+sem reposição; migração com backup intacto; duas contas e dois mundos independentes.
+O fluxo login → rotação → lobby → jogo foi testado no navegador. Voltar ao retrato
+pausa o solo e libera dedos/comandos; os botões não sobrepõem a barra rápida.
+A falha de persistência injetada conserva o mundo até nova tentativa bem-sucedida.
+Capturas de HUD, lobby e aviso de rotação foram revisadas visualmente.
+
+Scripts: `tools/validate-next-update.ps1`, `tools/next-update-validation.mjs`,
+`tools/mobile-login-validation.mjs`; testes ENet usam `tests/network_probe.tscn`
+e `tests/network_update_probe.tscn` em dois processos. O preset público exclui
+fixtures e ferramentas. Resultados detalhados ficam em `.tools/next-*.json` e logs.
+As métricas abaixo são o histórico da atualização anterior.
+
+# Validação anterior
 
 Executada no Windows com Godot 4.7.2, renderer Compatibility; navegador Edge
 com Playwright e toque emulado. Capturas revisadas em `.tools/screenshots/`.

@@ -36,6 +36,7 @@ var saved_timer: Timer
 var compact_ready := false
 var touch_goal_initialized := false
 var inventory_actions: GridContainer
+var feedback_notice: Label
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -220,21 +221,27 @@ func mobile_layout(value: bool) -> void:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if menu_button != null:
 		menu_button.custom_minimum_size = Vector2(unit * 1.25, unit)
+		menu_button.size = menu_button.custom_minimum_size
 		menu_button.position = Vector2(view.x - unit * 1.25 - 16, 16)
 		menu_button.add_theme_font_size_override("font_size", int(maxf(18, 14 / MobileInput.css_scale())))
 	if menu_view != null: menu_view.layout()
 	if objective_button != null:
-		objective_button.position = Vector2(16, 142 * display_scale)
-		objective_button.custom_minimum_size = Vector2(unit * 2.6, unit)
+		objective_button.position = Vector2(270 * display_scale, 16)
+		objective_button.custom_minimum_size = Vector2(250, unit)
+		objective_button.size = objective_button.custom_minimum_size
 		objective_button.add_theme_font_size_override("font_size", int(maxf(16, 13 / MobileInput.css_scale())))
 	if save_button != null:
 		save_button.custom_minimum_size.y = unit if not save_button.disabled else 28
 		save_button.custom_minimum_size.x = 210 if not save_button.disabled else 110
 		save_button.size = save_button.custom_minimum_size
-		save_button.position = Vector2(view.x - save_button.size.x - 16, unit + 170)
+		save_button.position = Vector2(view.x - save_button.size.x - 16, unit + 22 if value else unit + 170)
+		if value and not save_button.disabled: save_button.position = Vector2((view.x - 210) / 2, unit + 24)
 		save_button.add_theme_font_size_override("font_size", int(maxf(12, ceilf(11 / MobileInput.css_scale()))))
 		save_notice.hide()
 	for panel in [$InventoryPanel, $Crafting]: _fit_modal(panel)
+	if feedback_notice != null:
+		feedback_notice.position = Vector2(270 * display_scale, unit + 26)
+		feedback_notice.size.x = minf(380, view.x - feedback_notice.position.x - 170)
 	if current_panel != "" and value:
 		for panel in [journal_view, base_view, storage_view, combat_options]:
 			if panel != null and panel.visible: touch_sizes(panel); _fit_modal(panel)
@@ -351,6 +358,15 @@ func _create_compact_ui() -> void:
 		label.custom_minimum_size.x = 180
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	$Controls/Rows/Time.add_theme_font_size_override("font_size", 12)
+	feedback_notice = Label.new()
+	feedback_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	feedback_notice.add_theme_font_size_override("font_size", 16)
+	feedback_notice.add_theme_color_override("font_color", Color("f6edcb"))
+	feedback_notice.add_theme_color_override("font_outline_color", Color("142b24"))
+	feedback_notice.add_theme_constant_override("outline_size", 5)
+	feedback_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(feedback_notice)
+	feedback_notice.hide()
 	compact_ready = true
 	mobile_layout(MobileInput.enabled)
 
@@ -499,7 +515,8 @@ func refresh_objective() -> void:
 		objective_button.text = "Objetivos\nIniciais concluídos"
 	else:
 		var goal: Dictionary = IslandObjectives.GOALS[source.tracked]
-		objective_button.text = "Objetivos · %s\n%d/%d" % [goal.title, source.values[source.tracked], goal.target]
+		var short_title: String = {"wood":"Coletar madeiras", "stone":"Coletar pedras", "tools":"Equipamentos de pedra", "fire":"Fabricar fogueira", "bag":"Bolsa até nível 3"}[source.tracked]
+		objective_button.text = "Objetivos · %d/%d\n%s" % [source.values[source.tracked], goal.target, short_title]
 		objective_button.tooltip_text = source.tools_description() if source.tracked == "tools" else goal.title
 
 func open_base(target: PlacedStructure = null) -> void:
@@ -750,7 +767,10 @@ func show_pickup(message: String) -> void:
 
 func show_message(message: String) -> void:
 	$Controls/Rows/Feedback.text = message
-	$Controls/Rows/Feedback.visible = true
+	$Controls/Rows/Feedback.visible = false
+	if feedback_notice != null:
+		feedback_notice.text = message
+		feedback_notice.visible = true
 	$FeedbackTimer.start()
 
 
@@ -758,3 +778,4 @@ func _on_feedback_timeout() -> void:
 	if current_panel == "saving": return
 	$Controls/Rows/Feedback.text = ""
 	$Controls/Rows/Feedback.visible = false
+	if feedback_notice != null: feedback_notice.hide()

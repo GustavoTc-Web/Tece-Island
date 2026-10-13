@@ -12,6 +12,10 @@ var closing := false
 var connection_time: float = 0
 var transitioning := false
 var transition_panel := ""
+var library: WorldLibrary
+var selected_world := ""
+var connected_address := ""
+var connected_port := 7000
 @export var connection_timeout: float = 8.0
 
 func _ready() -> void:
@@ -34,6 +38,8 @@ func _auth_message(text: String) -> void:
 
 func show_auth(message: String = "", save_current: bool = true) -> void:
 	OrientationGuard.set_authenticated(false)
+	library = null
+	selected_world = ""
 	reset_network()
 	await clear_scene(save_current)
 	auth_screen = AUTH.instantiate()
@@ -60,6 +66,25 @@ func show_menu(message: String) -> void:
 	menu.show_status(message)
 	if FirebaseAuth.enabled(): menu.show_status(message + "\nProgresso local por conta; outro aparelho não sincroniza.")
 	if FirebaseAuth.enabled():
+		var current_library := WorldLibrary.new()
+		current_library.configure(FirebaseAuth.account_uid())
+		library = current_library
+		var current_menu := menu
+		set_transition(true)
+		var loaded := await current_library.load_index(get_tree())
+		if not is_instance_valid(current_menu) or menu != current_menu or current_library.uid != FirebaseAuth.account_uid(): return
+		if loaded and library.data.worlds.is_empty():
+			selected_world = await library.create_world("Meu primeiro mundo", get_tree())
+			if selected_world.is_empty(): loaded = false
+		if not is_instance_valid(current_menu) or menu != current_menu or current_library.uid != FirebaseAuth.account_uid(): return
+		if not loaded:
+			menu.show_status(library.error + " Reabra o lobby para tentar novamente.")
+			set_transition(false)
+			for button in menu.find_children("*", "Button", true, false):
+				if button.text in ["Jogar solo", "Criar mundo", "Renomear selecionado"]: button.disabled = true
+		else:
+			menu.set_library(library, selected_world)
+			set_transition(false)
 		var logout := Button.new()
 		logout.text = "Sair da conta"
 		logout.custom_minimum_size = Vector2(210, 64)
@@ -100,6 +125,11 @@ func _import_legacy(account: AccountProgress) -> void:
 	menu.show_status("Importando progresso antigo…")
 	var ok := await account.import_legacy(get_tree())
 	if not is_instance_valid(menu): return
+	if ok and library != null:
+		var next := library.data.duplicate(true)
+		next.migration_done = false
+		ok = await library.commit(next, get_tree()) and await library.migrate(get_tree())
+		if ok: menu.set_library(library, "first-world")
 	menu.show_status("Progresso antigo importado. Agora abra Jogar solo." if ok else account.error)
 	set_transition(false)
 	for button in menu.find_children("*", "Button", true, false):
@@ -153,6 +183,7 @@ func clear_scene(save_current: bool = true) -> void:
 func start_solo() -> void:
 	if OrientationGuard.blocked: return
 	if transitioning or is_instance_valid(game): return
+	if is_instance_valid(menu) and menu.worlds_busy: return
 	if not FirebaseAuth.can_play():
 		show_auth("Entre com uma conta confirmada para jogar.")
 		return
@@ -162,7 +193,13 @@ func start_solo() -> void:
 	if FirebaseAuth.enabled():
 		var account := AccountProgress.new()
 		var owner := FirebaseAuth.account_uid()
-		account.configure(owner)
+		selected_world = menu.selected_world
+		if not WorldLibrary.safe_id(selected_world):
+			scene.free()
+			menu.show_status("Crie e selecione um mundo para jogar.")
+			set_transition(false)
+			return
+		account.configure(owner, "user://", selected_world)
 		menu.show_status("Carregando progresso desta conta…")
 		var data := await account.read(get_tree())
 		if not FirebaseAuth.can_play() or FirebaseAuth.account_uid() != owner:
@@ -176,14 +213,21 @@ func start_solo() -> void:
 			return
 		scene.account_store = account
 		scene.owner_uid = owner
+		scene.world_id = selected_world
 		scene.progress_path = account.store.path
 		scene.initial_progress = data
+		if not await library.touch_world(selected_world, get_tree()):
+			scene.free()
+			menu.show_status(library.error)
+			set_transition(false)
+			return
 	reset_network()
 	await clear_scene()
 	game = scene
 	game.name = "Solo"
 	game.persistence_enabled = true
 	add_child(game)
+	if game.get_node("WorldObjects/Player").dead or OrientationGuard.blocked: game._on_panel_toggled(false)
 	add_exit_button("Voltar ao menu")
 	var layer := CanvasLayer.new()
 	layer.layer = 9
@@ -197,6 +241,7 @@ func start_solo() -> void:
 	layer.add_child(controls)
 
 func host_game(port: int = 7000, allow_damage: bool = true) -> void:
+	if is_instance_valid(menu) and menu.worlds_busy: return
 	if not FirebaseAuth.can_play():
 		show_auth()
 		return
@@ -223,6 +268,7 @@ func host_game(port: int = 7000, allow_damage: bool = true) -> void:
 	game.get_node("HUD").show_message("Anfitrião · porta %d · aguardando convidado" % port)
 
 func join_game(address: String = "127.0.0.1", port: int = 7000) -> void:
+	if is_instance_valid(menu) and menu.worlds_busy: return
 	if not FirebaseAuth.can_play():
 		show_auth()
 		return
@@ -240,6 +286,8 @@ func join_game(address: String = "127.0.0.1", port: int = 7000) -> void:
 		return
 	multiplayer.multiplayer_peer = peer
 	connecting = true
+	connected_address = address
+	connected_port = port
 	connection_time = 0
 	menu.show_status("Conectando a %s:%d…" % [address, port])
 
@@ -250,6 +298,8 @@ func _connected() -> void:
 	connecting = false
 	var scene := prepare_game(ARENA)
 	if scene == null: return
+	if library != null:
+		if not await library.record_server(connected_address, connected_port, get_tree()): menu.show_status("Conexão realizada, mas o histórico local falhou: " + library.error)
 	await clear_scene()
 	game = scene
 	game.name = "Arena"
@@ -288,7 +338,12 @@ func _orientation_changed(value: bool) -> void:
 		if value: hud.set_panel("menu")
 
 func add_exit_button(text: String) -> void:
-	game.get_node("HUD").menu_view.leave_action = leave_game
+	# Guests build their HUD after the first authoritative actor snapshot.
+	var current_game := game
+	while is_instance_valid(current_game) and game == current_game and current_game.get_node("HUD").menu_view == null:
+		await get_tree().process_frame
+	if is_instance_valid(current_game) and game == current_game:
+		current_game.get_node("HUD").menu_view.leave_action = leave_game
 
 func leave_game() -> void:
 	if transitioning or FirebaseAuth.logging_out: return

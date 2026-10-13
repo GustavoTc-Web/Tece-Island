@@ -18,6 +18,10 @@ func _ready() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
 	main.set_script(load("res://tests/native_fixture_session.gd"))
 	add_child(main)
+	if role != "host":
+		main.library = WorldLibrary.new()
+		main.library.configure("fixture-network-%d" % OS.get_process_id(), "res://.tools/network-history-%d" % OS.get_process_id())
+		await main.library.load_index(get_tree())
 	if role == "host":
 		main.host_game(port, true)
 		arena = main.game
@@ -226,5 +230,7 @@ func run_host() -> void:
 	finish()
 
 func finish() -> void:
+	if role == "guest": check(main.library.data.servers.size() == 1 and int(main.library.data.servers[0].port) == port, "Conexão e reconexão reais registram um único servidor acessado")
+	if role == "extra": check(main.library.data.servers.is_empty(), "Conexão recusada não cria histórico de servidor")
 	print("NETWORK ", role, ": ", checks, " verificações, ", failures, " falhas")
 	get_tree().quit(1 if failures else 0)

@@ -59,6 +59,14 @@ func command(args: Array) -> void:
 		"needs":
 			player.get_node("Needs").hunger = request.hunger
 			player.get_node("Needs").thirst = request.thirst
+		"health": player.health = float(request.value); world.get_node("HUD").update_health(player.health, player.max_health)
+		"goals":
+			world.objectives.collected("madeira", 10)
+			world.objectives.collected("pedra", 10)
+			for id in IslandObjectives.STONE_TOOLS: world.objectives.crafted(id)
+			world.objectives.crafted("fogueira")
+			world.objectives.crafted("mochila_3")
+		"save": world.save_progress(true)
 		"night":
 			var cycle: DayNightCycle = world.get_node("DayNight")
 			cycle.elapsed = cycle.day_duration + 40
@@ -155,12 +163,27 @@ func _process(_delta: float) -> void:
 	if snapshot_time < 0.1: return
 	snapshot_time = 0.0
 	var data := {"menu": session.menu != null, "paused": get_tree().paused, "viewport":[get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]}
+	data.auth = session.auth_screen != null
+	data.orientation_blocked = OrientationGuard.blocked
+	if session.library != null: data.library = session.library.data
+	if session.menu != null:
+		data.world_name = rect(session.menu.world_name)
+		data.selected_world = session.menu.selected_world
+		data.transitioning = session.transitioning
 	var buttons := {}
+	var clips := {}
 	for button in session.find_children("*", "Button", true, false):
 		if button.is_visible_in_tree():
 			buttons[button.text] = rect(button)
+			var bounds := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
+			var parent: Node = button.get_parent()
+			while parent != null:
+				if parent is Control and parent.clip_contents: bounds = bounds.intersection(parent.get_global_rect())
+				parent = parent.get_parent()
+			clips[button.text] = [bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y]
 			if button.has_meta("gameplay_action"): buttons[button.get_meta("gameplay_action")] = rect(button)
 	data.buttons = buttons
+	data.button_clips = clips
 	data.account_checks = account_checks
 	if session.game != null:
 		var world: Node = session.game
@@ -191,6 +214,15 @@ func _process(_delta: float) -> void:
 		data.backpack = inv.backpack
 		data.journal = world.journal.capture()
 		data.objectives = world.objectives.capture()
+		data.world_id = world.world_id
+		data.health = player.health
+		data.dead = player.dead
+		data.armor = inv.armor
+		data.protection = player.protection
+		data.regeneration_ticks = player.regeneration_ticks
+		data.clock_text = hud.get_node("Controls/Rows/Time").text
+		data.status_bars = [rect(hud.get_node("Controls/Rows/Health"))]
+		for kind in ["Sede", "Fome", "Proteção"]: data.status_bars.append(rect(hud.needs_bars[kind]))
 		data.poison = player.poison_remaining
 		data.poison_text = hud.poison_status.text if hud.poison_status != null and hud.poison_status.visible else ""
 		if hud.poison_status != null: data.poison_rect = rect(hud.poison_status)

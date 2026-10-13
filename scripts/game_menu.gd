@@ -99,11 +99,11 @@ func layout() -> void:
 			button.clip_text = true
 
 func diagnostic() -> String:
-	var stamp := {"version":"0.6-usabilidade", "commit":"desenvolvimento"}
+	var stamp := {"version":"0.7-mundos", "commit":"desenvolvimento"}
 	if FileAccess.file_exists("res://config/build-public.json"):
 		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://config/build-public.json"))
 		if data is Dictionary: stamp = data
 	var screen := DisplayServer.window_get_size()
 	if OS.has_feature("web"):
 		screen = Vector2i(int(JavaScriptBridge.eval("innerWidth")), int(JavaScriptBridge.eval("innerHeight")))
-	return "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.6-usabilidade")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
+	return "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.7-mundos")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]

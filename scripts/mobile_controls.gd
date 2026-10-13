@@ -91,12 +91,13 @@ func layout() -> void:
 		for button in container.get_children():
 			button.custom_minimum_size = Vector2(unit * 1.75, unit)
 			button.add_theme_font_size_override("font_size", int(maxf(20, ceilf(14 / MobileInput.css_scale()))))
+		container.size = container.get_combined_minimum_size()
 	actions.position.y = viewport_size.y - unit * 2 - gap * 2
 	placement.position.y = actions.position.y
 	rotate.position = Vector2(0, viewport_size.y / 2)
 	rotate.size.x = viewport_size.x
 	rotate.visible = false
-	player.controls_blocked = hud.current_panel != "" or player.dead
+	player.controls_blocked = hud.current_panel != "" or player.dead or OrientationGuard.blocked
 	hud.mobile_layout(MobileInput.enabled)
 	queue_redraw()
 

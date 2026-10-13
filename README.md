@@ -6,7 +6,8 @@ O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no 
 ## Começar
 
 Importe `project.godot`, execute com F5, entre com uma conta de e-mail confirmado
-e escolha **Jogar solo**. Para o primeiro acesso, use **Criar conta** e confirme
+e escolha um mundo no **Lobby** e **Jogar solo** para continuar. Crie ou renomeie
+mundos em **Meus mundos**. Para o primeiro acesso, use **Criar conta** e confirme
 o link recebido por e-mail. **Voltar ao menu**
 funciona durante a pausa; iniciar novamente retoma o progresso local.
 Na primeira partida, começa com sete espaços, vida/fome/sede completas,
@@ -14,11 +15,14 @@ posição inicial (1152, 768) e dia 1. **Reaparecer** mantém itens, estruturas,
 mesma partida, restaurando vida, fome e sede. Usa a cama definida ou a clareira inicial.
 
 O modo solo salva mundo, inventário, equipamento, bases, baús, diário e objetivos
-por UID da conta Firebase. Salva periodicamente a cada 30 segundos, após mudanças
+por UID da conta Firebase **e ID do mundo**. Salva periodicamente a cada 30 segundos, após mudanças
 importantes, ao perder foco e antes de retornar ao menu ou sair da conta.
-O indicador distingue Salvando, Progresso salvo e falha com nova tentativa.
-Godot usa `user://accounts/<SHA-256 do UID>/solo-progress.json`, temporário,
-cópia anterior `.backup.json` e backup versionado antes da migração para v4.
+O indicador lateral distingue Salvando…, Salvo e falha com nova tentativa.
+Godot usa `user://accounts/<SHA-256 do UID>/worlds/<ID>/progress.json`, temporário,
+cópia anterior `.backup.json` e backup versionado antes da migração para v5.
+O catálogo fica em `worlds.json` na pasta da conta. O save anterior dessa conta
+migra uma vez para **Meu primeiro mundo**, com verificação e backup, mantendo o
+arquivo original. Inventário, equipamento, baús, objetivos e mundo são independentes.
 Na Web, uma transação IndexedDB confirma a gravação e conserva a cópia anterior.
 O arquivo antigo `user://solo-progress.json` permanece intacto: o menu oferece
 uma importação única e confirmada para a conta atual, sem sobrescrever progresso.
@@ -32,7 +36,9 @@ O baú construído guarda 12 pilhas: abra, selecione Inventário ou Baú, seleci
 um item e use Guardar/Retirar pilha ou T; transferências parciais conservam o resto.
 Renomeie o baú em até 24 caracteres. O painel Base seleciona e confirma desmontagem:
 50% dos materiais, arredondados para baixo, com excedentes no chão; baú cheio bloqueado.
-Diário por J ou Menu → Diário e objetivos reúne O Último Sinal e objetivos opcionais.
+Diário por J ou Menu → Diário e objetivos reúne O Último Sinal e a sequência inicial.
+Objetivos mostra uma etapa por vez: madeira, pedra, três equipamentos de pedra,
+fogueira e bolsa nível 3. Fabricações antecipadas ficam registradas.
 Menu → Configurações permite volume/silenciar e mostrar objetivos.
 Detalhes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md) e
 [usabilidade mobile, testes e capturas](docs/USABILIDADE_MOBILE.md).
@@ -62,7 +68,10 @@ Armas iguais têm identidade e carregadores independentes.
 
 ## Celular
 
-Use retrato ou paisagem. Dispositivos de toque ativam o layout automaticamente.
+Login, cadastro e recuperação aceitam retrato ou paisagem. Após o login, o celular
+exige **paisagem** para acessar o lobby e a partida. O aviso oferece tela cheia e
+tentativa de bloqueio de orientação; a rotação manual funciona se houver recusa.
+Dispositivos de toque ativam o layout automaticamente.
 A opção **Controles de toque (testar no computador)** no menu permite ativá-lo manualmente;
 os joysticks também aceitam arrastar com o mouse.
 
@@ -81,7 +90,8 @@ os joysticks também aceitam arrastar com o mouse.
 - Painéis têm **Fechar**. Nenhuma dessas ações exige teclado.
 
 Painéis pausam a simulação solo e limpam entradas mantidas. Perda de foco,
-suspensão e mudança de orientação também limpam entradas. O retrato permite jogar.
+suspensão e mudança de orientação também limpam entradas. Voltar ao retrato pausa
+o solo e mostra o aviso; girar novamente preserva a conta, o mundo e a pausa dos painéis.
 A página respeita áreas seguras
 e acompanha o tamanho disponível do navegador.
 
@@ -108,7 +118,9 @@ Fabricação valida consumo e inclusão juntos; consome primeiro pilhas menores 
 
 Fome diminui 5/minuto e sede 8/minuto. Abaixo de 25 há alerta. Uma necessidade
 zerada causa 1 de dano a cada 5 segundos; ambas zeradas, 2. Carne cozida restaura
-30 de fome; água, 40 de sede. Cantil guarda três doses e permanece quando vazio.
+30 de fome e inicia cinco recuperações de 5 HP, uma por segundo; outro alimento
+renova cinco segundos sem acumular taxa. É possível comer com fome cheia para
+recuperar vida. Água restaura 40 de sede. Cantil guarda três doses e permanece quando vazio.
 Poços oferecem **Beber** / **Encher cantil**. Pausa e morte suspendem necessidades.
 Coelhos fogem e deixam uma carne crua. Vacas começam passivas, fogem quando
 atacadas e deixam duas ou três. Animais nascem em regiões com vegetação,
@@ -124,6 +136,8 @@ Garça-azul foge rapidamente, deixa uma carne e aparece raramente.
 Ruínas mantêm escuridão, bloqueiam sono e têm quatro templos com 3–5 baús,
 seis unidades de saque por templo e limite próprio de guardiões.
 As nove construções anteriores e quatro poços originais permanecem.
+Cada região terrestre da expansão recebe construções com IDs persistentes,
+sem mover bases ou recursos. Loot consumido permanece consumido após recarregar.
 Cada nova região mantém a regra de um
 poço fixo; a mudança de chance foi adiada. Dia e noite duram cinco minutos cada, incluindo
 transições de 30 segundos. HUD mostra tempo até a próxima fase. Monstros noturnos

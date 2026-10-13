@@ -104,7 +104,7 @@ func run() -> void:
 	await tap_button(hud.slot_buttons[4])
 	check(inv.slot_data(4).get("item", "") == "carne_cozida" and inv.slot_data(0).is_empty(), "Origem e destino por toque reorganizam itens")
 	await tap_button(find_button(hud, "Jogar 1"))
-	check(inv.slot_data(4).quantity == 1, "Descarte pelo inventário remove uma unidade")
+	check(inv.slot_data(4).get("quantity", 0) == 1, "Descarte pelo inventário remove uma unidade")
 	await tap_button(find_button(hud.get_node("InventoryPanel"), "Fechar"))
 	await step()
 	check(not paused and hud.current_panel == "", "Fechar painel funciona sem teclado")

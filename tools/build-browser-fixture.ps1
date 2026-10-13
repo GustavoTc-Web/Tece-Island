@@ -1,4 +1,4 @@
-param([string]$Godot = $env:GODOT_EXE, [switch]$AuthPreview)
+param([string]$Godot = $env:GODOT_EXE, [switch]$AuthPreview, [switch]$NextUpdate)
 $ErrorActionPreference = "Stop"
 if (-not $Godot) { throw "Passe -Godot com o caminho do Godot 4.7.2." }
 $taskRoot = Split-Path $PSScriptRoot -Parent
@@ -16,7 +16,7 @@ foreach ($taskName in @("project.godot", "icon.svg", "export_presets.cfg")) {
 New-Item -ItemType Directory -Force (Join-Path $taskCopy "tests") | Out-Null
 Copy-Item -Path (Join-Path $taskRoot "tests/browser_fixture.*") -Destination (Join-Path $taskCopy "tests") -Force
 if ($AuthPreview) { Copy-Item -Path (Join-Path $taskRoot "tests/auth_ui_fixture.*") -Destination (Join-Path $taskCopy "tests") -Force }
-if (-not $AuthPreview) {
+if (-not $AuthPreview -and -not $NextUpdate) {
     # Offline gameplay fixture only. The source and published config stay mandatory.
     $taskConfigPath = Join-Path $taskCopy "config/firebase-public.json"
     $taskConfig = Get-Content -LiteralPath $taskConfigPath -Raw | ConvertFrom-Json
