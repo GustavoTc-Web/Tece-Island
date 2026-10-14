@@ -11,7 +11,8 @@ try {
     $env:FIREBASE_AUTH_ENABLED = "true"
     node tools/configure-firebase.mjs --output (Join-Path $taskCopy "config/firebase-public.json")
     if ($LASTEXITCODE -ne 0) { throw "Complete a configuração pública do Firebase antes de gerar o teste real." }
-    foreach ($taskName in @("scripts", "scenes", "web")) {
+    Copy-Item -LiteralPath (Join-Path $taskRoot "config/world-sync.json") -Destination (Join-Path $taskCopy "config/world-sync.json") -Force
+    foreach ($taskName in @("scripts", "scenes", "web", "assets")) {
         Copy-Item -LiteralPath (Join-Path $taskRoot $taskName) -Destination $taskCopy -Recurse -Force
     }
     foreach ($taskName in @("project.godot", "icon.svg", "export_presets.cfg")) {

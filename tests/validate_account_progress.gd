@@ -85,7 +85,7 @@ func run() -> void:
 	controller.flush()
 	check(controller.saving and saved_world.get_node("HUD").save_button.text == "Salvando…", "Salvando antecede conclusão real")
 	for i in range(4): await process_frame
-	check(failing.writes == 1 and saved_world.get_node("HUD").save_button.text == "Salvo", "Pedidos simultâneos coalescem e sucesso vem após gravação")
+	check(failing.writes == 1 and saved_world.get_node("HUD").save_button.text == "Salvo neste aparelho", "Pedidos simultâneos coalescem e sucesso vem após gravação")
 	var valid_bytes := FileAccess.get_file_as_string(failing.path)
 	failing.fail = true
 	saved_world.get_node("Inventory").add_resource("madeira", 5)

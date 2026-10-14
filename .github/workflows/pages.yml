@@ -34,6 +34,7 @@ jobs:
         run: node tools/configure-firebase.mjs
       - name: Exportar
         run: |
+          node tools/configure-world-sync.mjs
           node tools/stamp-build.mjs
           mkdir -p build/web
           touch build/.gdignore

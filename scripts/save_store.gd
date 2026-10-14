@@ -4,6 +4,43 @@ const VERSION := 5
 var path := "user://solo-progress.json"
 var error := ""
 
+static func parse(content: String) -> Variant:
+	var parser := JSON.new()
+	return parser.data if parser.parse(content) == OK else null
+
+static func acquire_lock(target: String) -> bool:
+	var directory := target + ".lock"
+	var marker := directory.path_join("owner.json")
+	# Fail closed after a crash. Godot's process API does not guarantee probing
+	# unrelated processes on all native platforms; never steal their write lock.
+	if DirAccess.make_dir_absolute(directory) != OK: return false
+	var file := FileAccess.open(marker, FileAccess.WRITE)
+	if file == null:
+		DirAccess.remove_absolute(directory)
+		return false
+	file.store_string(JSON.stringify({"pid": OS.get_process_id()}))
+	file.flush()
+	var ok := file.get_error() == OK
+	file.close()
+	if not ok: release_lock(target)
+	return ok
+
+static func release_lock(target: String) -> void:
+	DirAccess.remove_absolute((target + ".lock").path_join("owner.json"))
+	DirAccess.remove_absolute(target + ".lock")
+
+func preserve(content: String, reason: String) -> String:
+	var destination := path + "." + reason + "-" + Crypto.new().generate_random_bytes(8).hex_encode() + ".json"
+	var file := FileAccess.open(destination, FileAccess.WRITE)
+	if file == null:
+		error = "Não foi possível preservar o original. Operação cancelada."
+		return ""
+	file.store_string(content)
+	file.flush()
+	var ok := file.get_error() == OK
+	file.close()
+	return destination if ok and FileAccess.get_file_as_string(destination) == content else ""
+
 func read() -> Dictionary:
 	error = ""
 	if not FileAccess.file_exists(path): return {}
@@ -36,9 +73,16 @@ func write(data: Dictionary) -> bool:
 	if result != OK or not JSON.parse_string(FileAccess.get_file_as_string(temporary)) is Dictionary:
 		error = "Falha ao gravar o progresso; o save anterior foi preservado."
 		return false
-	if FileAccess.file_exists(path) and DirAccess.copy_absolute(path, path + ".backup.json") != OK:
-		error = "Falha ao criar backup; o save anterior foi preservado."
-		return false
+	if FileAccess.file_exists(path):
+		var original := FileAccess.get_file_as_string(path)
+		if parse(original) is Dictionary:
+			if FileAccess.file_exists(path + ".backup.json") and DirAccess.copy_absolute(path + ".backup.json", path + ".backup-2.json") != OK:
+				error = "Falha ao preservar backup anterior."
+				return false
+			if DirAccess.copy_absolute(path, path + ".backup.json") != OK:
+				error = "Falha ao criar backup; o save anterior foi preservado."
+				return false
+		elif preserve(original, "unreadable") == "": return false
 	if DirAccess.rename_absolute(temporary, path) != OK:
 		error = "Não foi possível substituir o save; o progresso anterior foi preservado."
 		return false

@@ -72,7 +72,7 @@ func open(value: String = "menu") -> void:
 		var controls := "Use os joysticks para andar e mirar/atacar. Toque Interagir para coletar ou abrir o alvo próximo. Toque nos cinco slots para selecionar; Inventário permite usar, equipar e jogar itens." if MobileInput.enabled else "WASD/setas: andar. Mouse/F: atacar. E: coletar/interagir. 1–5/scroll: selecionar. I: inventário; C: fabricação; J: diário; R: recarregar."
 		text.text = controls + "\n\nFabricação e Base ficam no inventário. Para construir, selecione cama, fogueira ou peça e use Colocar selecionado; escolha terreno próximo e livre. " + ("Toque no mapa para ajustar e use Confirmar/Cancelar." if MobileInput.enabled else "Clique confirma, Esc cancela, R gira peças.") + "\n\nComida e cantil: Usar no inventário ou botão contextual. Poços permitem beber e encher o cantil. Cozinhe perto de uma fogueira.\n\nO solo salva automaticamente neste aparelho. Confira Dados e salvamento se houver uma falha. Para relatar um problema, copie as informações abaixo e envie manualmente com sua descrição; não inclua senha."
 	elif value == "data":
-		text.text = "O progresso solo é salvo localmente por conta neste aparelho/navegador. Outro aparelho não sincroniza. Limpar dados do navegador pode apagar o progresso local.\n\n" + (hud.save_button.text if hud.save_button != null else "A arena multiplayer não usa o save do mundo solo.")
+		text.text = "O progresso é salvo periodicamente neste aparelho. A sincronização entre aparelhos depende da confirmação do serviço. Confira o aviso de save antes de trocar de aparelho.\n\n" + (hud.save_button.text if hud.save_button != null else "A arena multiplayer não usa o save do mundo solo.")
 	layout()
 
 func invoke(caption: String) -> void:

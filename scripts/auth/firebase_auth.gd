@@ -41,6 +41,11 @@ func can_play() -> bool:
 func account_uid() -> String:
 	return _user_id if has_session() and not logging_out else ""
 
+func access_token(owner: String) -> String:
+	return _id_token if owner != "" and account_uid() == owner else ""
+
+func session_generation() -> int: return _generation
+
 func _begin() -> bool:
 	if busy: return false
 	if not configured():

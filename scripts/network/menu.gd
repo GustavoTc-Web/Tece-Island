@@ -124,7 +124,7 @@ func _create_pages() -> void:
 	rows = VBoxContainer.new()
 	pages.worlds.add_child(rows)
 	var local := Label.new()
-	local.text = "Mundos salvos neste aparelho"
+	local.text = "Mundos desta conta · cópias locais preservadas"
 	local.add_theme_color_override("font_color", Color("b5bea5"))
 	rows.add_child(local)
 	var server_scroll := ScrollContainer.new()
@@ -291,7 +291,11 @@ func refresh_library() -> void:
 	if library != null:
 		for world in library.data.worlds:
 			if world.id == last: continue_caption.text = world.name
-			var entry := button(worlds_list, world.name + "\n" + last_access(float(world.last_access)), select_world.bind(str(world.id)))
+			var caption: String = world.name + "\n" + last_access(float(world.last_access))
+			if WorldSync.enabled(library.uid):
+				var save_state: Dictionary = WorldSync.states.get(library.uid + ":" + str(world.id), {})
+				if save_state.has("text"): caption += "\n" + str(save_state.text)
+			var entry := button(worlds_list, caption, select_world.bind(str(world.id)))
 			entry.set_meta("world_id", world.id)
 			IslandTheme.decorate(entry, selected_world == world.id)
 		if library.data.worlds.is_empty():
@@ -375,6 +379,9 @@ func create_world() -> void:
 		open_page("worlds")
 		refresh_library()
 		show_status("Mundo criado. Selecione Jogar mundo para começar.")
+		if WorldSync.enabled(library.uid):
+			var result := await WorldSync.refresh_library(library)
+			if is_inside_tree(): show_status(("Mundo salvo neste aparelho · Sincronização pendente." if result.get("pending", false) else "Mundo criado e sincronização confirmada.") if result.get("ok", false) else str(result.get("error", "Sincronização pendente.")))
 
 func rename_world() -> void:
 	if library == null or worlds_busy: return
@@ -387,6 +394,9 @@ func rename_world() -> void:
 		close_name()
 		refresh_library()
 		show_status("Nome do mundo salvo.")
+		if WorldSync.enabled(library.uid):
+			var result := await WorldSync.refresh_library(library, true)
+			if is_inside_tree(): show_status(("Nome salvo neste aparelho · Sincronização pendente." if result.get("pending", false) else "Nome sincronizado.") if result.get("ok", false) else str(result.get("error", "Sincronização pendente.")))
 
 func set_busy(value: bool) -> void:
 	worlds_busy = value

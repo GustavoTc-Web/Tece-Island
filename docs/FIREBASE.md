@@ -1,8 +1,10 @@
 # Firebase Authentication — teste real e publicação
 
-O projeto usa somente Firebase Authentication por e-mail/senha no plano Spark.
-Não foram habilitados faturamento, SMS, banco de dados, Functions ou serviços
-adicionais. O serviço REST GDScript é compartilhado pelo PC e pela Web.
+O projeto usa Firebase Authentication por e-mail/senha no plano Spark. A nova
+sincronização Firestore está preparada e permanece desativada para publicação.
+Configuração, piloto, regras e pendências: [Saves e sincronização](SAVES_E_SINCRONIZACAO.md).
+Nesta implementação não foram habilitados faturamento, SMS, banco remoto ou
+Functions. O serviço REST GDScript é compartilhado pelo PC e pela Web.
 
 ## Configuração atual
 
