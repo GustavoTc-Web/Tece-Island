@@ -1,5 +1,11 @@
 # Piloto Web do PR #1
 
+**Atualização em 15/10/2026:** o mesmo endereço privado agora serve
+`0.8.2-chat-pilot.2`, com chat e sincronização somente para as duas contas
+de teste. A correção de `0.8.1-sync-pilot.2` está incluída. Os retestes físicos
+continuam pendentes. Veja [publicação do chat](PUBLICACAO_CHAT.md).
+O registro abaixo descreve a publicação anterior, versão 2 do Sites.
+
 URL: https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/
 
 Publicação privada atualizada e confirmada pelo Sites (`succeeded`, versão 2)

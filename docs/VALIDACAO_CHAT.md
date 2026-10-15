@@ -3,6 +3,9 @@
 Versão: `0.8.2-chat-pilot.1`, branch `feat/global-chat-pilot`.
 Estado da configuração remota: não alterada/não validada nesta entrega.
 Plano de teste em Firebase real: [Chat global](CHAT_GLOBAL.md).
+Continuação publicada como `0.8.2-chat-pilot.2`: [registro da publicação privada](PUBLICACAO_CHAT.md).
+Os resultados da interface abaixo pertencem à implementação inicial; a continuação
+reexecutou as regras e os saves e conferiu o pacote combinado, conforme o registro.
 
 ## Automatizados: regras locais
 

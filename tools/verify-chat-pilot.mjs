@@ -15,7 +15,12 @@ assert.equal(chat.allowed_uids.length,2);
 assert.deepEqual([...chat.allowed_uids].sort(),[...previous.allowed_uids].sort());
 assert.deepEqual([...sync.allowed_uids].sort(),[...chat.allowed_uids].sort());
 assert.equal(sync.interval_seconds,120);assert.equal(stamp.emulated,false);
-assert.equal(stamp.working_tree,false);assert.equal(stamp.commit,git('rev-parse','HEAD'));
+assert.equal(stamp.working_tree,false);assert.match(stamp.commit,/^[a-f0-9]{40}$/);
+git('merge-base','--is-ancestor',stamp.commit,'HEAD');
+// Publication records may advance HEAD without changing the exported game.
+const appPaths=['scripts','scenes','assets','web','project.godot','config/firebase-public.json','config/global-chat.json','config/world-sync.json','export_presets.cfg'];
+assert.equal(git('diff','--name-only',stamp.commit,'--',...appPaths),'','Game source changed after the exported commit');
+assert.equal(git('status','--porcelain','--untracked-files=all','--',...appPaths),'','Uncommitted game source must be exported first');
 assert.equal(stamp.sync_pilot_base,'0.8.1-sync-pilot.2');
 assert.equal((await read('config/global-chat.json')).enabled,false);
 assert.equal((await read('config/world-sync.json')).enabled,false);

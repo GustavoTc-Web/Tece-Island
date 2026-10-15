@@ -1,12 +1,13 @@
 # Chat global — 0.8.2-chat-pilot.2
 
-Versão preparada na branch `feat/global-chat-pilot`. **Preparada para publicação privada,
-não integrada à main e desativada no projeto principal.** Nenhuma configuração
-remota ou de faturamento foi alterada. O pacote real está em `build/chat-pilot/`;
+Versão preparada na branch `feat/global-chat-pilot`. **Publicada privadamente,
+não integrada à main e desativada no projeto principal.** As configurações do
+Firebase e de faturamento não foram alteradas. O pacote real está em `build/chat-pilot/`;
 o projeto de desenvolvimento nativo usa `.tools/chat-pilot-project/project.godot`.
 Não há servidor multiplayer novo nesta entrega.
 O pacote portátil reúne Web, projeto nativo, capturas e arquivos pendentes do
 backend em `build/tece-island-0.8.2-chat-pilot.2.zip`.
+Link, versão publicada e evidências: [Publicação privada](PUBLICACAO_CHAT.md).
 
 ## Dependência e preservação dos saves
 
