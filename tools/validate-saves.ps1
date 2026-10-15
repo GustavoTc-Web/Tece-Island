@@ -5,7 +5,7 @@ $taskRoot = Split-Path $PSScriptRoot -Parent
 Push-Location $taskRoot
 try {
     New-Item -ItemType Directory -Force .tools | Out-Null
-    foreach ($taskTest in @("validate_world_library", "validate_account_progress", "validate_session_progress", "validate_save_reliability", "validate_world_sync", "validate_chest_bow_save", "validate_auth_release")) {
+    foreach ($taskTest in @("validate_world_library", "validate_account_progress", "validate_session_progress", "validate_save_reliability", "validate_world_sync", "validate_chest_bow_save", "validate_auth_release", "validate_sync_pilot")) {
         $taskOutput = Join-Path $taskRoot ".tools/save-suite-$taskTest.log"
         $ErrorActionPreference = "Continue"
         & $Godot --headless --path . --script "tests/$taskTest.gd" --log-file ".tools/save-suite-$taskTest-engine.log" *> $taskOutput

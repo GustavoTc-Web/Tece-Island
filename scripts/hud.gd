@@ -472,7 +472,7 @@ func initialize_save(world: Node2D) -> void:
 	save_notice.custom_minimum_size.x = 360
 	save_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	save_notice.add_theme_font_size_override("font_size", 12)
-	save_notice.text = "Salvo neste aparelho. Outros aparelhos não sincronizam."
+	save_notice.text = "Salvo neste aparelho. Confira a confirmação de sincronização antes de trocar de aparelho."
 	save_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$Controls/Rows.add_child(save_notice)
 	save_notice.hide()
@@ -481,6 +481,7 @@ func show_save_state(text: String, retry: bool) -> void:
 	if save_button == null: return
 	if current_panel == "saving": show_message(text)
 	save_button.text = text
+	if menu_view != null: menu_view.refresh_save_details()
 	save_button.disabled = not retry
 	save_button.custom_minimum_size.y = MobileInput.touch_minimum() if retry else 28
 	save_button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(14 / MobileInput.css_scale()))) if MobileInput.enabled else 16)

@@ -9,6 +9,7 @@ var failures := {}
 var conflicts := {}
 var states := {}
 var attempted_at := {}
+var last_errors := {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -23,8 +24,13 @@ func enabled(uid: String) -> bool:
 func key(account: AccountProgress) -> String: return account.uid + ":" + account.world_id
 
 func status(account: AccountProgress, text: String, retry: bool = false) -> void:
+	if text == "Sincronizado": last_errors.erase(key(account))
 	states[key(account)] = {"text": text, "retry": retry}
 	state_changed.emit(account.uid, account.world_id, text, retry)
+
+func report_failure(account: AccountProgress, result: Dictionary) -> void:
+	last_errors[key(account)] = {"error": str(result.get("error", "Sincronização pendente. Save local preservado.")), "status": int(result.get("status", 0)), "code": str(result.get("code", ""))}
+	status(account, "Sincronização pendente · Tentar novamente", true)
 
 func interval() -> int: return maxi(120, int(config.get("interval_seconds", 120)))
 
@@ -109,7 +115,7 @@ func prepare(account: AccountProgress, library: WorldLibrary) -> Dictionary:
 	status(account, "Sincronizando")
 	var response: Dictionary = await client.head(account.uid, account.world_id)
 	if not response.get("ok", false):
-		status(account, "Sincronização pendente · Tentar novamente", true)
+		report_failure(account, response)
 		if local.is_empty() and not new_allowed(library, account.world_id): return response
 		return {"ok": true, "data": local, "warning": response.get("error", "Sincronização pendente.")}
 	if response.get("missing", false):
@@ -127,7 +133,7 @@ func prepare(account: AccountProgress, library: WorldLibrary) -> Dictionary:
 	if action == "download":
 		var downloaded: Dictionary = await client.download(account.uid, account.world_id, head)
 		if not downloaded.get("ok", false):
-			status(account, "Sincronização pendente · Tentar novamente", true)
+			report_failure(account, downloaded)
 			# Never continue a blank or stale world after an incomplete remote load.
 			return downloaded
 		local = downloaded.data
@@ -177,7 +183,7 @@ func sync(account: AccountProgress, library: WorldLibrary, snapshot: Dictionary)
 	else:
 		failures[id] = int(failures.get(id, 0)) + 1
 		retry_at[id] = Time.get_ticks_msec() + mini(900, interval() * int(pow(2, mini(3, failures[id] - 1)))) * 1000
-		if not result.get("conflict", false): status(account, "Sincronização pendente · Tentar novamente", true)
+		if not result.get("conflict", false): report_failure(account, result)
 	return result
 
 func synchronize(account: AccountProgress, library: WorldLibrary, snapshot: Dictionary) -> Dictionary:

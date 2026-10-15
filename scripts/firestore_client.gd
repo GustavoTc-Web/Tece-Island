@@ -28,16 +28,23 @@ func request(uid: String, path: String, method: int = HTTPClient.METHOD_GET, bod
 	http.queue_free()
 	if auth.account_uid() != uid or auth.session_generation() != generation: return {"ok": false, "error": "A conta mudou. Operação cancelada."}
 	if response[0] != HTTPRequest.RESULT_SUCCESS: return {"ok": false, "status": 0, "error": "Sem conexão. Save local preservado."}
-	var status := int(response[1])
 	var data: Variant = JSON.parse_string((response[3] as PackedByteArray).get_string_from_utf8())
-	if status == 404 and data is Dictionary and data.get("error", {}).get("status", "") == "NOT_FOUND":
+	return classify(int(response[1]), data, method)
+
+static func classify(status: int, data: Variant, method: int = HTTPClient.METHOD_GET) -> Dictionary:
+	var code := ""
+	if data is Dictionary and data.get("error", {}) is Dictionary:
+		code = str(data.get("error", {}).get("status", ""))
+	if method == HTTPClient.METHOD_GET and status == 404 and code == "NOT_FOUND":
 		# Only a successful service response declaring NOT_FOUND means absent.
 		return {"ok": true, "missing": true, "status": status}
 	if status < 200 or status >= 300 or not data is Dictionary:
 		var message := "Sincronização falhou. Save local preservado; tente novamente."
 		if status == 429: message = "Limite temporário do serviço. Save local preservado; tente mais tarde."
-		if status in [401, 403]: message = "Sem permissão para sincronizar. Confira a sessão e a configuração do serviço."
-		return {"ok": false, "status": status, "conflict": status in [409, 412], "error": message}
+		if status == 401: message = "Sessão expirada ou inválida. Salve neste aparelho e entre novamente para sincronizar."
+		if status == 403: message = "Sem permissão para sincronizar. Confirme o e-mail, entre novamente e confira as regras do Firebase. Save local preservado."
+		if status == 404: message = "Banco remoto ou endereço indisponível. Save local preservado; confira a configuração do Firestore."
+		return {"ok": false, "status": status, "code": code, "conflict": status in [409, 412], "error": message}
 	return {"ok": true, "data": data}
 
 static func fields(data: Dictionary) -> Dictionary:
