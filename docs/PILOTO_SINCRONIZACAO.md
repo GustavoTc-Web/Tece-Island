@@ -15,6 +15,8 @@ continuam sendo a barreira de segurança por UID e e-mail verificado.
 
 A versão pública não foi alterada; `config/world-sync.json` continua desativado.
 O PR permanece em revisão. Nenhum faturamento ou serviço pago foi ativado.
+O piloto atualizado identifica-se como `0.8.1-sync-pilot.2` em Ajuda e suporte.
+Recarregue normalmente para baixar a versão nova, preservando os dados do site.
 O navegador mantém seu armazenamento por origem: os mundos do endereço público
 não aparecem automaticamente neste endereço de teste. Não importe saves reais
 para o primeiro ensaio. Use um mundo novo e mantenha os backups originais.
@@ -81,7 +83,9 @@ Se houver bloqueio, no console do projeto confira:
 Não limpe cookies, cache, dados do site ou IndexedDB; não use janela anônima.
 Anote aparelho/navegador, conta A ou B, quantidade esperada e aviso exibido.
 Em **Ajuda e suporte → Copiar informações para relatar problema**, copie versão,
-commit, origem, ID, revisão confirmada e último erro. O texto não inclui tokens,
+commit, origem, ID, revisão confirmada, hashes local/confirmado e último erro.
+Dados e salvamento também informa se o progresso local corresponde à última
+versão sincronizada ou possui alterações pendentes. O texto não inclui tokens,
 senha ou inventário. HTTP 401 indica sessão; 403 indica permissão; 429 indica
 limite. Um erro de acesso nunca significa que o mundo não existe.
 
@@ -94,7 +98,7 @@ se o mundo ausente foi criado lá, conforme [RECUPERAR_MUNDO.md](RECUPERAR_MUNDO
 
 ## Evidência e limites de validação
 
-- 141 verificações em oito suítes Godot: persistência, conta/catálogo, backup,
+- 155 verificações em nove suítes Godot: persistência, conta/catálogo, backup,
   migração, conflitos, captura/restauração de equipamentos e 100 baús, autenticação
   e classificação de erros/renovação de verificação. Os testes positivos de
   autenticação desta última suíte usam transporte controlado, identificado como fixture.
@@ -113,9 +117,43 @@ se o mundo ausente foi criado lá, conforme [RECUPERAR_MUNDO.md](RECUPERAR_MUNDO
   do jogo/login e rejeição de credenciais inválidas pelo Firebase a partir da origem
   HTTPS do piloto. Isso verifica a hospedagem e o acesso básico de autenticação nessa
   origem; não comprova a permissão Firestore com uma conta verificada.
-- Login positivo das duas contas, permissões das regras publicadas, fluxo real
-  PC → celular → PC e migração de um save real permanecem pendentes do responsável.
-  Emulação mobile não comprova execução em um celular físico.
+- O responsável confirmou PC → celular → PC com o progresso correto ao escolher
+  “Continuar versão da nuvem”. Isso confirma essa recuperação entre aparelhos;
+  ainda não confirma uma troca sem conflitos com a cópia local limpa. Separação
+  entre duas contas, persistência após fechar/reabrir e migração de um save real
+  permanecem pendentes da confirmação do responsável. Emulação mobile não
+  comprova execução em um celular físico.
+
+## Correção de conflitos na troca de aparelho
+
+Reprodução automatizada com dados próprios em `tests/validate_sync_handoff.gd`:
+o PC confirma revisão 1; o celular publica revisão 2; o PC tenta enviar uma cópia
+que ainda tem exatamente o hash confirmado da revisão 1. A comparação já retornava
+`download`, mas o caminho de envio tratava esse resultado como `conflict`.
+Além disso, carregar depois a nuvem não limpava esse registro em memória, que
+podia bloquear novas sincronizações. Dois testes falharam antes da correção.
+
+Agora essa tentativa indica **Progresso na nuvem · Voltar ao lobby**, sem publicar
+o estado antigo, avançar sua base ou substituir uma simulação em execução.
+Na reentrada, o save local final é relido: se permanece igual à sua base confirmada,
+a nuvem é carregada automaticamente com backup; se existem mudanças independentes,
+continua o diálogo **Duas versões do mundo**, preservando ambas as cópias.
+Conflitos obsoletos só são removidos após carga/comparação válida bem-sucedida.
+
+As 14 verificações adicionais incluem o retorno real da sessão ao lobby, carga
+do mundo completo, alteração local durante uma consulta remota atrasada, diálogo
+de conflito real e conservação das duas versões ao continuar a nuvem. Transporte
+de teste substitui o Firebase nessa suíte; não são novos testes em aparelhos físicos.
+O caso individual ainda depende de identificar se havia mudanças locais pendentes.
+Tempo do mundo, necessidades do personagem e outros campos também são progresso;
+não foram excluídos do hash para suprimir avisos.
+
+Para repetir o caso no piloto atualizado: sincronize com a partida pausada em
+Dados e salvamento e confira **Progresso local: igual à última versão sincronizada**.
+Volte ao lobby no PC antes de jogar no celular. Sincronize no celular e volte ao
+lobby. No PC, use Atualizar mundos / Tentar sincronização e reabra o mesmo ID.
+O avanço exclusivo da nuvem deve carregar sem diálogo. Caso apareça um conflito,
+copie o diagnóstico antes de escolher uma versão; ele contém os hashes comparáveis.
 
 Não mesclar o PR ou ativar sincronização para todos antes de registrar os
 resultados do roteiro e validar migração com cópias de teste.

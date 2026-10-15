@@ -24,7 +24,7 @@ try {
     $taskText = [IO.File]::ReadAllText($taskProject).Replace('config/name="TC Island"', 'config/name="TC Island Sync Test"')
     [IO.File]::WriteAllText($taskProject, $taskText)
     $taskCommit = (git rev-parse HEAD).Trim()
-    $taskStamp = @{ version = "0.8.1-sync-pilot"; commit = $taskCommit } | ConvertTo-Json
+    $taskStamp = @{ version = "0.8.1-sync-pilot.2"; commit = $taskCommit } | ConvertTo-Json
     [IO.File]::WriteAllText((Join-Path $taskCopy "config/build-public.json"), $taskStamp)
     $taskPreset = Join-Path $taskCopy "export_presets.cfg"
     $taskText = [IO.File]::ReadAllText($taskPreset).Replace("res://.tools/godot-templates/", ($taskRoot.Replace("\", "/") + "/.tools/godot-templates/"))

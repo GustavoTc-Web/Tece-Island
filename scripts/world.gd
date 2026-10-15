@@ -197,6 +197,7 @@ func save_progress(force: bool = false) -> bool:
 	return ok
 
 func _sync_state(uid: String, id: String, text: String, retry: bool) -> void:
+	if not is_inside_tree(): return
 	if uid == owner_uid and id == world_id:
 		if text == "Sincronizado" and save_controller != null and save_controller.dirty:
 			$HUD.show_save_state("Alterações pendentes · Salvar agora", true)

@@ -81,7 +81,12 @@ func save_details() -> String:
 	var account: AccountProgress = world.account_store
 	var sync := get_tree().root.get_node("WorldSync")
 	var detail := "Mundo: " + account.world_id + "\nÚltima revisão confirmada: " + str(account.sync_state.get("revision", 0))
+	if world.progress_store != null:
+		var unchanged: bool = CloudCodec.hash_state(world.progress_store.capture()) == account.sync_state.get("hash", "")
+		detail += "\nProgresso local: " + ("igual à última versão sincronizada." if unchanged else "alterações ainda não sincronizadas.")
 	if not sync.enabled(account.uid): detail += "\nSincronização indisponível para esta conta nesta versão."
+	var notice := str(sync.states.get(sync.key(account), {}).get("detail", ""))
+	if notice != "": detail += "\n" + notice
 	var failure: Dictionary = sync.last_errors.get(sync.key(account), {})
 	if not failure.is_empty(): detail += "\n" + str(failure.error) + "\nHTTP: " + str(failure.status) + " " + str(failure.code)
 	return detail
@@ -123,4 +128,7 @@ func diagnostic() -> String:
 		screen = Vector2i(int(JavaScriptBridge.eval("innerWidth")), int(JavaScriptBridge.eval("innerHeight")))
 	var info := "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.8.1-atalhos-mobile")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
 	if OS.has_feature("web"): info += "\nOrigem: " + str(JavaScriptBridge.eval("location.origin"))
+	var world := hud.get_parent()
+	if world.account_store != null and world.progress_store != null:
+		info += "\nHash local: " + CloudCodec.hash_state(world.progress_store.capture()) + "\nHash confirmado: " + str(world.account_store.sync_state.get("hash", ""))
 	return info + "\n" + (hud.save_button.text if hud.save_button != null else "") + "\n" + save_details()

@@ -15,13 +15,14 @@ jogadores, regras do projeto real e faturamento não foram alterados.
 | Baús, armas e restauração de saves | 26 verificações, 0 falhas |
 | Regressão de autenticação obrigatória | 10 verificações, 0 falhas |
 | Piloto: renovação após confirmar e-mail, erros e diagnóstico | 13 verificações, 0 falhas |
+| Troca de aparelho, lobby, avanço remoto limpo e alterações durante a rede | 14 verificações, 0 falhas |
 | Navegador Edge, IndexedDB e Godot Web | 12 verificações, 0 falhas |
 | Pacote Web do piloto, PC/mobile emulado, falha de rede e download incompleto | 12 verificações, 0 falhas |
 | Endereço privado publicado e autenticação negativa na origem do piloto | 2 verificações, 0 falhas |
 | Regras Firestore no emulador | 10 subtestes aprovados, incluindo integração nativa |
 | Cliente REST nativo dentro do emulador | 12 verificações, 0 falhas: CAS, multipartes, integridade e limpeza |
 
-As oito suítes GDScript totalizam **141 verificações**. A integração REST é um
+As nove suítes GDScript totalizam **155 verificações**. A integração REST é um
 subteste da suíte do emulador, não dez testes adicionais de autenticação real.
 
 Comandos e arquivos para reproduzir:
@@ -65,8 +66,16 @@ enviado exclusivamente ao domínio do Site, nunca ao Firebase. Isso comprova
 a configuração básica de autenticação,
 sem comprovar login positivo, verificação de e-mail ou regras remotas das contas reais.
 
-Pendências: o responsável informou base `(default)` e regras publicadas.
-Ainda faltam conferir índices, permissões com login positivo, ida/volta em
-celular físico/PC Web/Godot nativo e migração real usando cópias próprias.
+O responsável confirmou ida/volta PC → celular → PC ao escolher a versão da
+nuvem, com o progresso correto. Um conflito apareceu e a existência de mudanças
+locais ainda não foi confirmada. Reproduzido separadamente um conflito falso no
+caminho de envio de snapshot limpo (e registro obsoleto depois do download);
+14 testes de regressão agora passam, incluindo alterações independentes.
+Detalhes e reteste no documento do piloto. A suíte de regras foi repetida:
+10 subtestes aprovados, com 12 verificações REST nativas incluídas.
+
+Pendências: conferir a troca com cópia local limpa no novo piloto, isolamento
+de duas contas e fechar/reabrir com contas reais (ainda não confirmados pelo
+responsável), índices, Godot nativo e migração real usando cópias próprias.
 O roteiro está em [Piloto de sincronização](PILOTO_SINCRONIZACAO.md).
 A ativação pública continua desabilitada e não faz parte deste PR.

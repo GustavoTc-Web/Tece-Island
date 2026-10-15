@@ -23,9 +23,9 @@ func enabled(uid: String) -> bool:
 
 func key(account: AccountProgress) -> String: return account.uid + ":" + account.world_id
 
-func status(account: AccountProgress, text: String, retry: bool = false) -> void:
+func status(account: AccountProgress, text: String, retry: bool = false, detail: String = "") -> void:
 	if text == "Sincronizado": last_errors.erase(key(account))
-	states[key(account)] = {"text": text, "retry": retry}
+	states[key(account)] = {"text": text, "retry": retry, "detail": detail}
 	state_changed.emit(account.uid, account.world_id, text, retry)
 
 func report_failure(account: AccountProgress, result: Dictionary) -> void:
@@ -139,10 +139,12 @@ func prepare(account: AccountProgress, library: WorldLibrary) -> Dictionary:
 		local = downloaded.data
 		local._sync = base(head)
 		if not await account.preserve(get_tree()) or not await account.write(local, get_tree()): return {"ok": false, "error": account.error}
+		conflicts.erase(key(account))
 		status(account, "Sincronizado")
 	elif action == "equal":
 		local._sync = base(head)
 		if not await account.write(local, get_tree()): return {"ok": false, "error": account.error}
+		conflicts.erase(key(account))
 		status(account, "Sincronizado")
 	elif action == "upload": status(account, "Salvo neste aparelho · Sincronização pendente", true)
 	return {"ok": true, "data": local}
@@ -180,6 +182,12 @@ func sync(account: AccountProgress, library: WorldLibrary, snapshot: Dictionary)
 		failures[id] = 0
 		retry_at[id] = Time.get_ticks_msec() + interval() * 1000
 		if result.get("published", false): client.prune(account.uid, account.world_id)
+	elif result.get("remote_advanced", false):
+		# This is a successful remote read, not a network failure or a fork.
+		failures[id] = 0
+		retry_at[id] = Time.get_ticks_msec() + interval() * 1000
+		last_errors.erase(id)
+		status(account, "Progresso na nuvem · Voltar ao lobby", true, str(result.error))
 	else:
 		failures[id] = int(failures.get(id, 0)) + 1
 		retry_at[id] = Time.get_ticks_msec() + mini(900, interval() * int(pow(2, mini(3, failures[id] - 1)))) * 1000
@@ -194,8 +202,13 @@ func synchronize(account: AccountProgress, library: WorldLibrary, snapshot: Dict
 	if previous.is_empty() and int(snapshot.get("_sync", {}).get("revision", 0)) > 0: return {"ok": false, "error": "Versão remota esperada ausente. Cópia local preservada."}
 	if not previous.is_empty():
 		var action := decision(snapshot, previous)
-		if action == "conflict" or action == "download":
-			# A running simulation may have advanced since the snapshot; resolve at lobby.
+		if action == "download":
+			# The submitted snapshot still matches its confirmed base. Do not invent
+			# a conflict and do not replace a running simulation with a downloaded
+			# file: it may have advanced during HTTP. prepare() at the lobby re-reads
+			# the final local save, downloads if clean, or preserves a genuine fork.
+			return {"ok": false, "remote_advanced": true, "error": "O outro aparelho avançou este mundo. Volte ao lobby e abra o mundo para carregar a nuvem; alterações locais serão conferidas antes."}
+		if action == "conflict":
 			return await conflict(account, library, snapshot, previous)
 		if action == "equal": return await acknowledge(account, snapshot, previous)
 		if action == "accepted": return await acknowledge(account, snapshot, previous)
