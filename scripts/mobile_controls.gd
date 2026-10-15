@@ -114,7 +114,7 @@ func layout() -> void:
 	rotate.position = Vector2(0, viewport_size.y / 2)
 	rotate.size.x = viewport_size.x
 	rotate.visible = false
-	player.controls_blocked = hud.current_panel != "" or player.dead or OrientationGuard.blocked
+	player.controls_blocked = hud.current_panel != "" or player.dead or OrientationGuard.blocked or GlobalChat.opened
 	hud.mobile_layout(MobileInput.enabled)
 	queue_redraw()
 
@@ -129,9 +129,9 @@ func _process(_delta: float) -> void:
 	actions.position.x = (get_viewport_rect().size.x - actions.get_combined_minimum_size().x) / 2
 	item_actions.position.x = (get_viewport_rect().size.x - item_actions.get_combined_minimum_size().x) / 2
 	placement.position.x = (get_viewport_rect().size.x - placement.get_combined_minimum_size().x) / 2
-	actions.visible = hud.current_panel == "" and not hud.showing_death and not structures.active
+	actions.visible = not GlobalChat.opened and hud.current_panel == "" and not hud.showing_death and not structures.active
 	item_actions.visible = actions.visible
-	placement.visible = structures.active and hud.current_panel == ""
+	placement.visible = not GlobalChat.opened and structures.active and hud.current_panel == ""
 
 func reset() -> void:
 	fingers = {"move": -1, "aim": -1}
@@ -159,7 +159,7 @@ func mouse_touch(event: InputEventMouseButton) -> bool:
 	return true
 
 func touch(event: InputEvent) -> void:
-	if not MobileInput.enabled or hud.current_panel != "" or player.dead: return
+	if GlobalChat.opened or not MobileInput.enabled or hud.current_panel != "" or player.dead: return
 	if event is InputEventScreenTouch and event.pressed:
 		if structures.active:
 			if MobileInput.button_at(get_tree().root, event.position) == null:
@@ -188,6 +188,7 @@ func update_stick(side: String, point: Vector2) -> void:
 	queue_redraw()
 
 func invoke(action: String) -> void:
+	if GlobalChat.opened: return
 	if action == "Inventário":
 		hud.set_panel("inventory")
 	elif action == "Fabricar":
@@ -200,7 +201,7 @@ func invoke(action: String) -> void:
 			"Recarregar": interaction.weapons.reload()
 
 func _draw() -> void:
-	if hud.current_panel != "" or hud.showing_death or structures.active: return
+	if GlobalChat.opened or hud.current_panel != "" or hud.showing_death or structures.active: return
 	for side in ["move", "aim"]:
 		draw_circle(centers[side], radius, Color(0.08, 0.14, 0.11, 0.6))
 		draw_arc(centers[side], radius, 0, TAU, 48, Color(1, 1, 1, 0.5), 2)

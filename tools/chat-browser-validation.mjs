@@ -1,0 +1,101 @@
+import {chromium} from '../.tools/browser-test/node_modules/playwright/index.mjs';
+import {initializeTestEnvironment} from '@firebase/rules-unit-testing';
+import {doc,setDoc,Timestamp} from 'firebase/firestore';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import assert from 'node:assert/strict';
+if(process.env.FIRESTORE_EMULATOR_HOST!=='127.0.0.1:8085')throw Error('Exige emulador demo local. Nunca use produção.');
+const results=[],errors=[],requests=[];
+const check=(value,name)=>{results.push({name,ok:!!value});assert.ok(value,name);console.log('PASS: '+name);};
+const env=await initializeTestEnvironment({projectId:'demo-tece-island',firestore:{rules:await readFile('firestore.rules','utf8')}});
+await env.clearFirestore();
+await env.withSecurityRulesDisabled(async c=>{
+ const d=c.firestore();await setDoc(doc(d,'chatSettings/global'),{enabled:true,allowed_uids:['chat-a','chat-b','chat-admin'],admin_uids:['chat-admin']});
+ await setDoc(doc(d,'chatProfiles/chat-b'),{nickname:'Beto'});await setDoc(doc(d,'chatProfiles/chat-admin'),{nickname:'Moderador'});
+ await setDoc(doc(d,'chatRuntime/global'),{sequence:1,sent_at:Timestamp.now()});
+ await setDoc(doc(d,'globalMessages/1'),{sequence:1,uid:'chat-b',nickname:'Beto',text:'Bem-vinda à ilha! O chat já está aberto no celular.',sent_at:Timestamp.now()});
+});
+const server=spawn(process.execPath,['tools/serve-web.mjs','8087','build/chat-emulated'],{stdio:['ignore','pipe','pipe'],windowsHide:true});
+await new Promise((resolve,reject)=>{server.stdout.once('data',resolve);server.once('error',reject);});
+const browser=await chromium.launch({executablePath:process.env.BROWSER_EXE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});
+await mkdir('docs/images',{recursive:true});await mkdir('.tools/screenshots',{recursive:true});
+const command=(page,value)=>page.evaluate(value=>window.tcChatFixture(JSON.stringify(value)),value);
+const settled=async page=>{
+ await page.waitForTimeout(150);
+ await page.waitForFunction(()=>window.tcChatSnapshot&&!tcChatSnapshot.busy&&!tcChatSnapshot.reading&&!/Conectando|Salvando|Enviando|Removendo/.test(document.querySelector('#chat-notice')?.textContent||''),{timeout:20000});
+};
+const poll=async(page,full=false)=>{await command(page,{action:full?'refresh':'poll'});await settled(page);};
+const textCount=(page,text)=>page.locator('#chat-list li').filter({hasText:text}).count();
+try{
+ const desktop=await browser.newContext({viewport:{width:1280,height:800}}),mobile=await browser.newContext({viewport:{width:852,height:393},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+ const a=await desktop.newPage(),b=await mobile.newPage();
+ for(const page of [a,b]){page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&m.text().includes('SCRIPT ERROR'))errors.push(m.text());});page.on('request',r=>{if(r.url().includes('8085/v1/'))requests.push({page:page===a?'a':'b',url:r.url(),method:r.method()});});await page.route('https://**',route=>route.abort());await page.goto('http://127.0.0.1:8087/Tece-Island/');await page.waitForFunction(()=>!!window.tcChatFixture,{timeout:60000});}
+ await command(a,{action:'login',uid:'chat-a'});await command(b,{action:'login',uid:'chat-b'});
+ await a.locator('#chat-launch').waitFor();await b.locator('#chat-launch').waitFor();check(true,'botão Chat disponível nas duas sessões autenticadas');
+ await a.locator('#chat-launch').click();await settled(a);await a.locator('#chat-nickname').fill('Ana');await a.getByRole('button',{name:'Definir',exact:true}).click();await a.locator('#chat-composer').waitFor();
+ check(await a.locator('#chat-nickname').isHidden(),'apelido exigido e persistido antes do primeiro envio');
+ await b.locator('#chat-launch').tap();await settled(b);check(await b.locator('#chat-nickname').isHidden(),'segunda sessão reutiliza apelido da conta');
+ await a.locator('#chat-text').fill('Olá do PC! Vamos explorar a floresta?');await a.locator('#chat-send').click();await settled(a);await poll(b);
+ await b.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Olá do PC!'));
+ check(await textCount(b,'Olá do PC!')===1,'Godot Web → regras do emulador → segunda sessão recebe mensagem uma vez');
+ await b.locator('#chat-text').fill('Sim! Recebi aqui no celular.');await b.locator('#chat-text').press('Enter');await settled(b);await poll(a);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recebi aqui'));
+ check(await textCount(a,'Recebi aqui')===1,'resposta da sessão mobile chega ao PC');
+ // Force past the client cooldown. The actual service rules still reject it.
+ await command(b,{action:'force_send',text:'SPAM RECUSADO'});await b.waitForFunction(()=>tcChatSnapshot.status.includes('negado'));
+ check(await textCount(b,'SPAM RECUSADO')===0,'backend recusa excesso mesmo removendo o timer do cliente');
+ await poll(b,true);
+ await a.screenshot({path:'docs/images/chat-lobby-pc.png'});await b.screenshot({path:'docs/images/chat-mobile-paisagem.png'});
+ // Select another author's row by its known text, never expose a UID in the UI.
+ await a.locator('#chat-list li').filter({hasText:'Recebi aqui'}).getByRole('button',{name:'Silenciar',exact:true}).click();
+ check(await textCount(a,'Recebi aqui')===0&&await a.locator('#chat-unmute').isVisible(),'silenciar remove mensagens localmente');
+ await a.locator('#chat-unmute').click();check(await textCount(a,'Recebi aqui')===1,'reativar restaura a visualização');
+ await a.getByRole('button',{name:'Recolher',exact:true}).click();await b.getByRole('button',{name:'Recolher',exact:true}).tap();
+ await a.waitForFunction(()=>tcChatSnapshot.requests===0);const before=requests.length;
+ await command(a,{action:'poll'});await command(b,{action:'poll'});await a.waitForTimeout(1300);
+ check(requests.length===before,'painéis fechados encerram consultas, sem assinaturas persistentes');
+ await a.locator('#chat-launch').click();await settled(a);const cached=requests.length;
+ for(let i=0;i<3;i++){await a.getByRole('button',{name:'Recolher',exact:true}).click();await a.locator('#chat-launch').click();}
+ check(requests.length===cached,'abrir e recolher repetidamente reutiliza o serviço sem duplicar consultas');
+ await a.getByRole('button',{name:'Recolher',exact:true}).click();
+ await command(a,{action:'play'});await a.waitForFunction(()=>tcChatSnapshot.playing,{timeout:30000});
+ await a.locator('#chat-launch').click();await settled(a);await a.locator('#chat-text').fill('wasd ficqre 12345');
+ const position=await a.evaluate(()=>tcChatSnapshot.position);await a.locator('#chat-text').pressSequentially('wasdficqre12345',{delay:15});await a.waitForTimeout(300);
+ check(await a.evaluate(position=>tcChatSnapshot.paused&&!tcChatSnapshot.attacking&&tcChatSnapshot.panel===''&&JSON.stringify(tcChatSnapshot.position)===JSON.stringify(position),position),'digitação bloqueia movimento, ataque, inventário e atalhos durante a partida');
+ await a.locator('#chat-text').fill('Quem vem explorar a floresta?');await a.screenshot({path:'docs/images/chat-partida-pc.png'});
+ await command(b,{action:'play'});await b.waitForFunction(()=>tcChatSnapshot.playing,{timeout:30000});await b.locator('#chat-launch').tap();await settled(b);await b.locator('#chat-text').tap();await b.locator('#chat-text').fill('Mensagem com teclado aberto');
+ await b.setViewportSize({width:852,height:230});
+ check(await b.locator('#chat-send').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=visualViewport.height;}),'enviar permanece acessível com viewport de teclado reduzido (emulação)');
+ check(await b.getByRole('button',{name:'Recolher',exact:true}).evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=visualViewport.height;}),'recolher permanece acessível com viewport reduzido');
+ await b.screenshot({path:'docs/images/chat-mobile-teclado-emulado.png'});
+ await b.setViewportSize({width:393,height:852});check(await b.locator('#chat-panel').isVisible(),'chat pode continuar em retrato sobre a orientação do jogo');
+ await b.screenshot({path:'docs/images/chat-mobile-retrato.png'});await b.setViewportSize({width:852,height:393});
+ // Fail only chat requests. Save storage and the simulation remain independent.
+ await a.route('http://127.0.0.1:8085/**',route=>route.abort());await command(a,{action:'refresh'});await a.waitForFunction(()=>tcChatSnapshot.status.includes('sem conexão'));
+ check(true,'queda de rede mostra falha compreensível');
+ await a.locator('#chat-text').fill('Rascunho preservado');await command(a,{action:'force_send',text:'Rascunho preservado'});await settled(a);
+ check(await a.locator('#chat-text').inputValue()==='Rascunho preservado','falha no envio preserva rascunho');
+ await a.unroute('http://127.0.0.1:8085/**');await poll(a,true);await a.waitForFunction(()=>tcChatSnapshot.status.includes('50 mensagens'));
+ check(true,'reconexão recupera o histórico sem duplicar mensagens');
+ await a.locator('#chat-text').fill('x'.repeat(240));check((await a.locator('#chat-text').inputValue()).length===200,'campo limita digitação a 200 caracteres');
+ const markup='<img src=x onerror=alert(1)> [b]texto[/b]';await a.locator('#chat-text').fill(markup);await a.locator('#chat-send').click();await settled(a);await poll(b,true);
+ await b.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('[b]texto[/b]'));
+ check(await b.locator('#chat-list img').count()===0&&await textCount(b,markup)===1,'HTML e marcação aparecem como texto, sem elementos executáveis');
+ // Full refresh reconciles admin deletion, including reused slot preconditions.
+ await command(b,{action:'login',uid:'chat-admin'});await b.waitForFunction(()=>tcChatSnapshot.uid==='chat-admin'&&!tcChatSnapshot.opened);
+ await b.locator('#chat-launch').tap();await settled(b);b.once('dialog',dialog=>dialog.accept());await b.locator('#chat-list li').filter({hasText:'Olá do PC!'}).getByRole('button',{name:'Remover',exact:true}).tap();await settled(b);await poll(a,true);
+ await a.waitForFunction(()=>!document.querySelector('#chat-list').textContent.includes('Olá do PC!'));check(true,'administrador remove e a consulta completa reconcilia a remoção');
+ await a.locator('#chat-text').fill('Segredo do rascunho A');
+ let held;await a.route('**/chatRuntime/global',route=>{held=route;});
+ await command(a,{action:'force_send',text:'ENVIO DA SESSÃO ANTIGA'});await a.waitForFunction(()=>tcChatSnapshot.requests>0&&tcChatSnapshot.busy);
+ await command(a,{action:'logout'});await a.locator('#chat-launch').waitFor({state:'hidden'});
+ await a.waitForFunction(()=>tcChatSnapshot.uid===''&&!tcChatSnapshot.opened&&tcChatSnapshot.requests===0);
+ check(await a.locator('#chat-text').inputValue()===''&&await a.evaluate(()=>tcChatSnapshot.requests===0),'logout limpa rascunho, histórico, requisições e interface');
+ if(held)await held.abort().catch(()=>{});await a.unroute('**/chatRuntime/global');
+ await command(a,{action:'login',uid:'chat-b'});await a.locator('#chat-launch').click();await settled(a);
+ check(await a.locator('#chat-text').inputValue()===''&&await a.locator('#chat-nickname').isHidden(),'troca de conta usa apelido próprio e não restaura rascunho anterior');
+ check(errors.length===0,'sem erros GDScript ou JavaScript na execução Web');
+ await desktop.close();await mobile.close();
+}finally{
+ await writeFile('.tools/chat-browser-results.json',JSON.stringify({kind:'automated-browser-and-local-emulator',physical:false,results,errors,chat_requests:requests.length},null,2));
+ await browser.close();server.kill();await env.cleanup();
+}

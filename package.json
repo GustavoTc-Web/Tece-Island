@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:chat": "firebase emulators:exec --project demo-tece-island --only firestore,auth \"node --test --test-concurrency=1 tests/firestore-rules.test.mjs tests/chat-rules.test.mjs\"",
     "test:rules": "firebase emulators:exec --project demo-tece-island --only firestore,auth \"node --test tests/firestore-rules.test.mjs\"",
     "test:browser-saves": "node tools/save-browser-validation.mjs"
   },

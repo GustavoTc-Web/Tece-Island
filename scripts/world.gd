@@ -33,6 +33,7 @@ var loading_progress := false
 
 
 func _ready() -> void:
+	GlobalChat.panel_changed.connect(func(): _on_panel_toggled($HUD.current_panel != ""))
 	if world_seed == 0: world_seed = int($Exploration.random_seed) if $Exploration.random_seed > 0 else randi_range(1, 2147480000)
 	if persistence_enabled:
 		if account_store == null:
@@ -269,9 +270,9 @@ func update_activity() -> void:
 
 
 func _on_panel_toggled(open: bool) -> void:
-	if open and $Structures.active:
+	if (open or GlobalChat.opened) and $Structures.active:
 		$Structures.cancel()
-	var stopped: bool = open or $WorldObjects/Player.dead or OrientationGuard.blocked
+	var stopped: bool = open or $WorldObjects/Player.dead or OrientationGuard.blocked or GlobalChat.opened
 	$WorldObjects/Player.controls_blocked = stopped
 	$WorldObjects/Player/Interaction.set_blocked(stopped)
 	# HUD usa Always; o restante herda a pausa e congela relógios e física.

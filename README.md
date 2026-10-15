@@ -297,3 +297,8 @@ na validação. Resultados e capturas ficam em `.tools/`, fora do Git.
 
 Avalie desempenho no aparelho alvo. Movimento, combate, necessidades e ciclo
 usam tempo de simulação; valores não foram alterados para compensar FPS.
+
+## Piloto de chat global
+
+Preparado separadamente na branch `feat/global-chat-pilot`, desativado por padrão.
+Veja [configuração e execução](docs/CHAT_GLOBAL.md) e [validação e capturas](docs/VALIDACAO_CHAT.md).

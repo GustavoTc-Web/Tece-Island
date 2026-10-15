@@ -84,6 +84,7 @@ func cancel() -> void:
 	queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if not active:
 		return
 	if event is InputEventMouseMotion and not MobileInput.enabled:

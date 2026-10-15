@@ -286,6 +286,7 @@ func _remove_backpack() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if showing_death or event.is_echo():
 		return
 	if current_panel == "saving":

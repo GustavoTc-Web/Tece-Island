@@ -253,6 +253,7 @@ func _exit_tree() -> void:
 	if FirebaseAuth.before_logout == _save_before_logout: FirebaseAuth.before_logout = Callable()
 
 func clear_scene(save_current: bool = true) -> void:
+	if GlobalChat.opened: GlobalChat.toggle()
 	MobileInput.reset()
 	MobileInput.overlay = null
 	if is_instance_valid(game) and game.has_method("save_progress") and save_current:
