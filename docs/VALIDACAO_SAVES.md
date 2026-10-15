@@ -18,7 +18,7 @@ jogadores, regras do projeto real e faturamento não foram alterados.
 | Troca de aparelho, lobby, avanço remoto limpo e alterações durante a rede | 14 verificações, 0 falhas |
 | Navegador Edge, IndexedDB e Godot Web | 12 verificações, 0 falhas |
 | Pacote Web do piloto, PC/mobile emulado, falha de rede e download incompleto | 12 verificações, 0 falhas |
-| Endereço privado publicado e autenticação negativa na origem do piloto | 2 verificações, 0 falhas |
+| Endereço privado atualizado, versão do pacote e autenticação negativa | 3 verificações, 0 falhas |
 | Regras Firestore no emulador | 10 subtestes aprovados, incluindo integração nativa |
 | Cliente REST nativo dentro do emulador | 12 verificações, 0 falhas: CAS, multipartes, integridade e limpeza |
 
@@ -58,6 +58,15 @@ as duas contas de teste informadas. Deploy Sites confirmado com status
 `succeeded`, versão 1. Código do jogo compilado: `e88d055`; pacote hospedado:
 `99cb051cb01b17fff446caa51dca95ed62095c62`. A hospedagem separada usa origem própria;
 nenhum save do site público foi movido ou apagado.
+
+Atualização da correção de troca: versão Sites 2 confirmada (`succeeded`), mesmo
+endereço privado e mesma origem IndexedDB. Jogo `0.8.1-sync-pilot.2`, compilado
+da revisão `5af37a6dfbd0d09068e9e7f4e357ad1d2fe25c53`; pacote hospedado
+`120026e06aa25d014f12d6f318677e4f3e4298d4`. As 155 verificações Godot, 10
+subtestes de regras (incluindo 12 verificações REST) e 12 verificações Web do
+pacote atualizado passaram nesta execução. O CI da correção também passou.
+Após o deploy, o Edge confirmou carregamento, versão/commit dentro do pacote
+servido e rejeição de credenciais inválidas na origem HTTPS do piloto.
 
 Backend Firebase real: credenciais inválidas rejeitadas corretamente no Godot
 nativo e na exportação Web, inclusive a partir do endereço HTTPS publicado.

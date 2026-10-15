@@ -105,6 +105,9 @@ func run() -> void:
 	await sync.sync(phone_account, phone, phone_progress)
 	var retry: Dictionary = await sync.sync(pc.account(id), pc, after_lobby)
 	check(not retry.get("conflict", false) and not sync.conflicts.has(sync.key(account)), "Tentativa com snapshot local limpo reconhece avanço remoto sem criar conflito")
+	# Reproduce a cache entry left by the old upload path. A successful clean
+	# download must retire the marker without deleting any durable backup.
+	sync.conflicts[sync.key(account)] = {"local": after_lobby.duplicate(true)}
 	var next: Dictionary = await sync.prepare(pc.account(id), pc)
 	check(next.get("ok", false) and not next.get("conflict", false) and next.data.inventory.slots[0].quantity == 10, "PC recebe avanço exclusivo do celular depois de sincronizar e voltar ao lobby")
 	check(not sync.conflicts.has(sync.key(account)), "Carregamento remoto limpo não deixa conflito antigo travando a próxima partida")

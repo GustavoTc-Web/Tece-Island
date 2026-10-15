@@ -2,8 +2,9 @@
 
 URL: https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/
 
-Publicação privada confirmada pelo Sites (`succeeded`, versão 1) em 14/10/2026.
-Código do jogo: `e88d055`; pacote hospedado: `99cb051`. O PR não foi integrado.
+Publicação privada atualizada e confirmada pelo Sites (`succeeded`, versão 2)
+em 14/10/2026. Código do jogo: `5af37a6`; pacote hospedado: `120026e`.
+O PR não foi integrado. A versão 1 anterior usava `e88d055` / `99cb051`.
 
 Este endereço é separado do GitHub Pages. A hospedagem Sites é privada: abra
 com a mesma conta ChatGPT usada nesta conversa, no PC e no celular. Depois,
@@ -113,8 +114,8 @@ se o mundo ausente foi criado lá, conforme [RECUPERAR_MUNDO.md](RECUPERAR_MUNDO
   verificações REST no Godot nativo. Não são uma prova das regras já publicadas.
 - Backend real: chamada nativa com credenciais inválidas foi rejeitada corretamente,
   sem cadastro, envio de e-mail ou leitura/escrita de mundos de jogadores.
-- Endereço publicado: duas verificações adicionais passaram no Edge — carregamento
-  do jogo/login e rejeição de credenciais inválidas pelo Firebase a partir da origem
+- Endereço atualizado: três verificações adicionais passaram no Edge — carregamento
+  do jogo/login, versão/commit do pacote servido e rejeição de credenciais inválidas pelo Firebase a partir da origem
   HTTPS do piloto. Isso verifica a hospedagem e o acesso básico de autenticação nessa
   origem; não comprova a permissão Firestore com uma conta verificada.
 - O responsável confirmou PC → celular → PC com o progresso correto ao escolher
