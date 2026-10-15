@@ -4,6 +4,11 @@ Implementação para revisão na branch `fix/reliable-saves-world-sync`.
 A sincronização pública permanece **desativada** em `config/world-sync.json`.
 Não foram alterados faturamento, plano, regras remotas ou saves de jogadores.
 
+Atualização do piloto: o responsável informou criação do Firestore `(default)`
+e publicação das regras do PR #1, mantendo Spark sem faturamento. A versão Web
+privada e o roteiro atual estão em [PILOTO_SINCRONIZACAO.md](PILOTO_SINCRONIZACAO.md).
+A configuração pública segue desativada; os testes reais ainda precisam de confirmação.
+
 ## Investigação e causa reproduzida
 
 Na revisão anterior `e89b0ed`, uma cópia isolada reproduziu três problemas:
@@ -188,8 +193,10 @@ o armazenamento nativo; navegador/origem de teste e conta própria isolam os
 dados Web. Use perfil de teste e mantenha exportações antes de ensaiar migração.
 
 6. Execute o roteiro abaixo e registre UID, IDs, revisões e hashes, sem tokens.
-   A disponibilidade/configuração da base e o login real ainda não foram
-   confirmados nesta entrega. Nenhum deploy Firebase foi feito pelo assistente.
+   A criação da base e a publicação das regras foram informadas pelo responsável;
+   as permissões com login positivo e os índices ainda precisam ser conferidos.
+   Nenhum deploy Firebase foi feito pelo assistente. Há um piloto privado pronto,
+   descrito em [PILOTO_SINCRONIZACAO.md](PILOTO_SINCRONIZACAO.md).
 7. Só depois de validar migração e ida/volta reais, revise/mescle o PR. A exportação
    pública gera sincronização desativada por padrão. Uma ativação posterior exige
    configurar `TECE_SYNC_ENABLED=true` e `TECE_SYNC_VALIDATED=true` no passo de

@@ -14,11 +14,13 @@ jogadores, regras do projeto real e faturamento não foram alterados.
 | Sincronização com transporte controlado | 22 verificações, 0 falhas |
 | Baús, armas e restauração de saves | 26 verificações, 0 falhas |
 | Regressão de autenticação obrigatória | 10 verificações, 0 falhas |
+| Piloto: renovação após confirmar e-mail, erros e diagnóstico | 13 verificações, 0 falhas |
 | Navegador Edge, IndexedDB e Godot Web | 12 verificações, 0 falhas |
+| Pacote Web do piloto, PC/mobile emulado, falha de rede e download incompleto | 12 verificações, 0 falhas |
 | Regras Firestore no emulador | 10 subtestes aprovados, incluindo integração nativa |
 | Cliente REST nativo dentro do emulador | 12 verificações, 0 falhas: CAS, multipartes, integridade e limpeza |
 
-As sete suítes GDScript totalizam **128 verificações**. A integração REST é um
+As oito suítes GDScript totalizam **141 verificações**. A integração REST é um
 subteste da suíte do emulador, não dez testes adicionais de autenticação real.
 
 Comandos e arquivos para reproduzir:
@@ -28,6 +30,10 @@ Comandos e arquivos para reproduzir:
   nesta execução; ambiente exige emulador e recusa acesso a produção.
 - `tools/build-browser-fixture.ps1` + `tools/serve-web.mjs` +
   `tools/save-browser-validation.mjs`: `.tools/save-browser-results.json`.
+- `tools/export-sync-test.ps1` + `tools/package-sync-pilot.mjs` +
+  `tools/sync-pilot-browser-validation.mjs --live-invalid`:
+  `.tools/sync-pilot-browser-results.json`. Usa contas inválidas para a prova
+  negativa de autenticação; não há sessão positiva simulada no piloto hospedado.
 - `tests/audit_save_loss_baseline.gd` somente no checkout anterior isolado:
   `.tools/baseline-save-loss.log`.
 
@@ -45,8 +51,18 @@ Os logs locais do Godot podem incluir a restrição do sandbox ao repositório d
 certificados do Windows. Os testes REST de integração usam HTTP apenas no
 emulador local. Isso não valida TLS/login Firebase em uma instalação nativa real.
 
-Pendências: criação/configuração da base Firestore no projeto existente,
-deploy revisado das regras/índices, login real e ida/volta em celular físico,
-PC Web e Godot nativo. Os passos e o roteiro estão em
-[Saves e sincronização](SAVES_E_SINCRONIZACAO.md). A ativação pública continua
-desabilitada e não faz parte deste PR.
+Piloto privado publicado em 14/10/2026, com configuração habilitada apenas para
+as duas contas de teste informadas. Deploy Sites confirmado com status
+`succeeded`, versão 1. Código do jogo compilado: `e88d055`; pacote hospedado:
+`99cb051cb01b17fff446caa51dca95ed62095c62`. A hospedagem separada usa origem própria;
+nenhum save do site público foi movido ou apagado.
+
+Backend Firebase real: credenciais inválidas rejeitadas corretamente no Godot
+nativo e na exportação Web. Isso comprova a configuração básica de autenticação,
+sem comprovar login positivo, verificação de e-mail ou regras remotas das contas reais.
+
+Pendências: o responsável informou base `(default)` e regras publicadas.
+Ainda faltam conferir índices, permissões com login positivo, ida/volta em
+celular físico/PC Web/Godot nativo e migração real usando cópias próprias.
+O roteiro está em [Piloto de sincronização](PILOTO_SINCRONIZACAO.md).
+A ativação pública continua desabilitada e não faz parte deste PR.

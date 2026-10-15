@@ -30,6 +30,7 @@ const loader = `
  window.fetch = async (input, init) => {
   const url = new URL(input instanceof Request ? input.url : input, location.href);
   if (url.href !== target) return originalFetch(input, init);
+  try {
   const buffers = await Promise.all(manifest.parts.map(async part => {
    const response = await originalFetch(new URL(part.name, directory), init);
    if (!response.ok) throw new Error('Falha ao carregar parte do jogo: HTTP ' + response.status);
@@ -42,6 +43,7 @@ const loader = `
   const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
   if (hash !== manifest.sha256) throw new Error('O jogo baixado está incompleto. Recarregue a página.');
   return new Response(bytes, {headers: {'Content-Type': 'application/wasm', 'Content-Length': String(bytes.length)}});
+  } catch (error) { fail(error); throw error; }
  };
 })();
 `;
