@@ -1,12 +1,12 @@
-# Chat global — 0.8.2-chat-pilot.1
+# Chat global — 0.8.2-chat-pilot.2
 
-Primeira versão preparada na branch `feat/global-chat-pilot`. **Não publicada,
+Versão preparada na branch `feat/global-chat-pilot`. **Preparada para publicação privada,
 não integrada à main e desativada no projeto principal.** Nenhuma configuração
 remota ou de faturamento foi alterada. O pacote real está em `build/chat-pilot/`;
 o projeto de desenvolvimento nativo usa `.tools/chat-pilot-project/project.godot`.
 Não há servidor multiplayer novo nesta entrega.
 O pacote portátil reúne Web, projeto nativo, capturas e arquivos pendentes do
-backend em `build/tece-island-0.8.2-chat-pilot.1.zip`.
+backend em `build/tece-island-0.8.2-chat-pilot.2.zip`.
 
 ## Dependência e preservação dos saves
 
@@ -19,9 +19,11 @@ As políticas `/users/{uid}/worlds/...` permaneceram iguais. O chat tem coleçõ
 transporte e estado próprios. Não participa da fila de salvamento e uma falha
 do serviço não bloqueia jogar, salvar localmente ou sair da partida. O painel
 pausa a simulação solo pelos mecanismos já existentes e bloqueia entradas até
-ser recolhido. A exportação do piloto mantém a sincronização de mundos desativada.
-Essa escolha evita que este teste publique progresso de mundos durante a
-validação separada dos saves. O código de saves continua na base da branch.
+ser recolhido. O pacote privado combinado é exportado com `-WithWorldSync`:
+a sincronização fica ativa somente para os mesmos dois UIDs do piloto anterior.
+A correção do `0.8.1-sync-pilot.2` está incluída sem alterações no protocolo de
+saves. O padrão da exportação sem essa opção e os arquivos do projeto principal
+continuam desativados. Isso é uma habilitação de teste, não aprovação física.
 
 O teste físico PC → celular → PC já preservou posição e itens, conforme relato
 do responsável. **Continuam pendentes** o reteste do falso conflito corrigido no
@@ -155,8 +157,9 @@ PC: `http://localhost:8088/Tece-Island/`. Celular na mesma rede:
 `http://IP-DO-PC:8088/Tece-Island/`. O servidor escuta na rede local, sem túnel ou
 hospedagem contratada. Se necessário, liberar essa porta somente na rede privada
 do PC. Restrições de contexto seguro do navegador podem exigir uma origem HTTPS
-de teste já disponível; a versão pública não deve ser substituída. O endereço
-do piloto anterior de sincronização não foi modificado.
+de teste já disponível; a versão pública não deve ser substituída. A publicação
+privada reutiliza o endereço do piloto anterior de sincronização e preserva
+a origem do armazenamento; não limpe os dados desse site.
 
 Login usa o Firebase real e exige e-mail verificado. Senhas só no formulário.
 Para PC nativo, abrir `.tools/chat-pilot-project/project.godot` no Godot 4.7.2 e F5.
@@ -169,7 +172,7 @@ Reproduzir o pacote usando os mesmos UIDs existentes, sem imprimi-los:
 
 ```powershell
 $chatUids = ((Get-Content .tools/sync-real-project/config/world-sync.json -Raw | ConvertFrom-Json).allowed_uids -join ',')
-powershell -NoProfile -ExecutionPolicy Bypass -File tools/export-chat-pilot.ps1 -Godot "CAMINHO/Godot_console.exe" -AllowedUid $chatUids
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/export-chat-pilot.ps1 -Godot "CAMINHO/Godot_console.exe" -AllowedUid $chatUids -WithWorldSync
 ```
 
 O modo `-Emulated` exporta para `build/chat-emulated/` e inclui comandos de fixture

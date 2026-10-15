@@ -1,8 +1,9 @@
-param([string]$Godot = $env:GODOT_EXE, [Parameter(Mandatory=$true)][string]$AllowedUid, [switch]$Emulated)
+param([string]$Godot = $env:GODOT_EXE, [Parameter(Mandatory=$true)][string]$AllowedUid, [switch]$Emulated, [switch]$WithWorldSync)
 $ErrorActionPreference = "Stop"
 if (-not $Godot) { throw "Passe -Godot com o Godot 4.7.2." }
 $taskUids = @($AllowedUid.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 if ($taskUids.Count -eq 0) { throw "Informe apenas os UIDs das contas de teste." }
+if ($Emulated -and $WithWorldSync) { throw "O teste emulado de chat não deve acessar a sincronização real." }
 $taskRoot = Split-Path $PSScriptRoot -Parent
 $taskLabel = if ($Emulated) { "chat-emulated" } else { "chat-pilot" }
 $taskCopy = Join-Path $taskRoot ".tools/$taskLabel-project"
@@ -16,8 +17,11 @@ foreach ($taskName in @("project.godot","icon.svg","export_presets.cfg")) {
 }
 $taskConfig = @{ enabled = $true; allowed_uids = $taskUids } | ConvertTo-Json
 [IO.File]::WriteAllText((Join-Path $taskCopy "config/global-chat.json"),$taskConfig)
-# Keep save sync disabled in the chat pilot; its separate manual validation is pending.
-[IO.File]::WriteAllText((Join-Path $taskCopy "config/world-sync.json"),'{"enabled":false,"allowed_uids":[],"interval_seconds":120}')
+# Opt in only for the combined private pilot. The source/public defaults stay off.
+$taskSyncUids = @()
+if ($WithWorldSync) { $taskSyncUids = $taskUids }
+$taskSync = @{ enabled = [bool]$WithWorldSync; allowed_uids = @($taskSyncUids); interval_seconds = 120 } | ConvertTo-Json
+[IO.File]::WriteAllText((Join-Path $taskCopy "config/world-sync.json"),$taskSync)
 $taskProject = Join-Path $taskCopy "project.godot"
 $taskText = [IO.File]::ReadAllText($taskProject).Replace('config/name="TC Island"','config/name="TC Island Chat Pilot"')
 if ($Emulated) {
@@ -31,7 +35,7 @@ if ($Emulated) {
 [IO.File]::WriteAllText($taskProject,$taskText)
 $taskCommit = (git -C $taskRoot rev-parse HEAD).Trim()
 $taskDirty = [bool](git -C $taskRoot status --porcelain)
-$taskStamp = @{ version="0.8.2-chat-pilot.1"; commit=$taskCommit; working_tree=$taskDirty; emulated=[bool]$Emulated } | ConvertTo-Json
+$taskStamp = @{ version="0.8.2-chat-pilot.2"; commit=$taskCommit; working_tree=$taskDirty; emulated=[bool]$Emulated; world_sync=[bool]$WithWorldSync; sync_pilot_base="0.8.1-sync-pilot.2" } | ConvertTo-Json
 [IO.File]::WriteAllText((Join-Path $taskCopy "config/build-public.json"),$taskStamp)
 $taskPreset = Join-Path $taskCopy "export_presets.cfg"
 $taskText = [IO.File]::ReadAllText($taskPreset).Replace("res://.tools/godot-templates/",($taskRoot.Replace("\","/")+"/.tools/godot-templates/"))
