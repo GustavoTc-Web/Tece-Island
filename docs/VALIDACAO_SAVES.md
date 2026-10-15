@@ -17,6 +17,7 @@ jogadores, regras do projeto real e faturamento não foram alterados.
 | Piloto: renovação após confirmar e-mail, erros e diagnóstico | 13 verificações, 0 falhas |
 | Navegador Edge, IndexedDB e Godot Web | 12 verificações, 0 falhas |
 | Pacote Web do piloto, PC/mobile emulado, falha de rede e download incompleto | 12 verificações, 0 falhas |
+| Endereço privado publicado e autenticação negativa na origem do piloto | 2 verificações, 0 falhas |
 | Regras Firestore no emulador | 10 subtestes aprovados, incluindo integração nativa |
 | Cliente REST nativo dentro do emulador | 12 verificações, 0 falhas: CAS, multipartes, integridade e limpeza |
 
@@ -58,7 +59,10 @@ as duas contas de teste informadas. Deploy Sites confirmado com status
 nenhum save do site público foi movido ou apagado.
 
 Backend Firebase real: credenciais inválidas rejeitadas corretamente no Godot
-nativo e na exportação Web. Isso comprova a configuração básica de autenticação,
+nativo e na exportação Web, inclusive a partir do endereço HTTPS publicado.
+O teste desse endereço usou somente acesso privado da hospedagem em memória,
+enviado exclusivamente ao domínio do Site, nunca ao Firebase. Isso comprova
+a configuração básica de autenticação,
 sem comprovar login positivo, verificação de e-mail ou regras remotas das contas reais.
 
 Pendências: o responsável informou base `(default)` e regras publicadas.

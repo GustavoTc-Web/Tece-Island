@@ -109,6 +109,10 @@ se o mundo ausente foi criado lá, conforme [RECUPERAR_MUNDO.md](RECUPERAR_MUNDO
   verificações REST no Godot nativo. Não são uma prova das regras já publicadas.
 - Backend real: chamada nativa com credenciais inválidas foi rejeitada corretamente,
   sem cadastro, envio de e-mail ou leitura/escrita de mundos de jogadores.
+- Endereço publicado: duas verificações adicionais passaram no Edge — carregamento
+  do jogo/login e rejeição de credenciais inválidas pelo Firebase a partir da origem
+  HTTPS do piloto. Isso verifica a hospedagem e o acesso básico de autenticação nessa
+  origem; não comprova a permissão Firestore com uma conta verificada.
 - Login positivo das duas contas, permissões das regras publicadas, fluxo real
   PC → celular → PC e migração de um save real permanecem pendentes do responsável.
   Emulação mobile não comprova execução em um celular físico.
