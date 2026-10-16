@@ -126,13 +126,13 @@ service cloud.firestore {
     }
     match /chatProfiles/{uid} {
       allow get: if chatAccess() && request.auth.uid == uid;
-      allow create: if chatAccess() && request.auth.uid == uid
+      allow create, update: if chatAccess() && request.auth.uid == uid
         && request.resource.data.keys().hasAll(['nickname'])
         && request.resource.data.keys().hasOnly(['nickname'])
         && request.resource.data.nickname is string
         && request.resource.data.nickname.size() >= 2 && request.resource.data.nickname.size() <= 20
         && request.resource.data.nickname.matches('^[A-Za-z0-9_À-ÖØ-öø-ÿ-][A-Za-z0-9_À-ÖØ-öø-ÿ -]{0,18}[A-Za-z0-9_À-ÖØ-öø-ÿ-]$');
-      allow update, delete, list: if false;
+      allow delete, list: if false;
     }
     match /chatRates/{uid} {
       allow get: if chatAccess() && request.auth.uid == uid;

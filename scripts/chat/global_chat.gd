@@ -2,13 +2,19 @@ extends Node
 
 signal panel_changed
 signal changed
-const POLL_SECONDS := 15.0
+const POLL_SECONDS := 5.0
 const REFRESH_SECONDS := 120.0
 var client: ChatClient
 var config := {}
 var uid := ""
 var opened := false
 var nickname := ""
+var editing_nickname := false
+var connection_error := ""
+var last_sync := ""
+var last_attempt := -5000
+var session_epoch := -1
+var was_foreground := true
 var messages: Array = []
 var muted: Array = []
 var admin := false
@@ -31,6 +37,7 @@ func _ready() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://config/global-chat.json"))
 	config = parsed if parsed is Dictionary else {}
 	client = ChatClient.new()
+	client.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(client)
 	FirebaseAuth.signed_out.connect(func(_reason): reset_session())
 	if OS.has_feature("web"):
@@ -40,15 +47,27 @@ func _ready() -> void:
 		native_panel = preload("res://scripts/chat/chat_panel.gd").new()
 		add_child(native_panel)
 	changed.connect(render)
+	# Exactly one timer, owned by the service, independent of panel/game pause.
+	var timer := Timer.new()
+	timer.process_mode = Node.PROCESS_MODE_ALWAYS
+	timer.wait_time = 0.5
+	timer.timeout.connect(poll_due)
+	add_child(timer)
+	timer.start()
 
 func available() -> bool:
 	return config.get("enabled", false) == true and uid != "" and uid in config.get("allowed_uids", [])
 
 func reset_session() -> void:
 	uid = ""
+	session_epoch = -1
 	opened = false
 	client.cancel()
 	nickname = ""
+	editing_nickname = false
+	connection_error = ""
+	last_sync = ""
+	last_attempt = -5000
 	messages.clear()
 	muted.clear()
 	admin = false
@@ -68,9 +87,10 @@ func reset_session() -> void:
 
 func _process(_delta: float) -> void:
 	var account := FirebaseAuth.account_uid()
-	if account != uid:
+	if account != uid or (account != "" and session_epoch != FirebaseAuth.session_generation()):
 		reset_session()
 		uid = account
+		session_epoch = FirebaseAuth.session_generation()
 		if uid != "":
 			var path := mute_path()
 			if OS.has_feature("web") or FileAccess.file_exists(path):
@@ -78,13 +98,39 @@ func _process(_delta: float) -> void:
 				if saved is Array: muted = saved.slice(0, 100)
 		changed.emit()
 	if not available(): return
+	var visible := foreground()
+	if visible and not was_foreground: wake()
+	was_foreground = visible
 	var countdown := remaining()
 	if countdown != last_countdown:
 		last_countdown = countdown
 		changed.emit()
-	if opened and not reading and Time.get_ticks_msec() >= next_poll and foreground():
-		if initialized: refresh()
-		else: initialize()
+
+func poll_due() -> void:
+	if not available() or not opened or reading or busy or not foreground(): return
+	if Time.get_ticks_msec() < next_poll: return
+	last_attempt = Time.get_ticks_msec()
+	if initialized: refresh()
+	else: initialize()
+
+func wake() -> void:
+	# Focus, online and pageshow events coalesce; retain quota/permission backoff.
+	if failures == 0 or connection_error.begins_with("Sem conexão"):
+		next_poll = mini(next_poll, maxi(Time.get_ticks_msec(), last_attempt + 5000))
+
+func current(owner: String, epoch: int) -> bool:
+	return owner == uid and epoch == FirebaseAuth.session_generation() and epoch == session_epoch
+
+func wait_for_read(owner: String, epoch: int) -> bool:
+	while reading and current(owner, epoch): await changed
+	return current(owner, epoch)
+
+func read_failed(result: Dictionary) -> void:
+	reading = false
+	failures = mini(6, failures + 1)
+	next_poll = Time.get_ticks_msec() + int(minf(240, POLL_SECONDS * pow(2, failures)) * 1000)
+	connection_error = failure(result, "Atualização")
+	changed.emit()
 
 func foreground() -> bool:
 	return not bool(JavaScriptBridge.eval("document.hidden")) if OS.has_feature("web") else true
@@ -98,11 +144,10 @@ func toggle() -> void:
 	MobileInput.reset()
 	panel_changed.emit()
 	changed.emit()
-	if opened and not initialized and not reading: initialize()
-	elif opened and Time.get_ticks_msec() >= next_poll and not reading: refresh(true)
+	if opened: poll_due()
 
 func initialize() -> void:
-	if reading or uid == "": return
+	if reading or busy or not available(): return
 	var owner := uid
 	var epoch := FirebaseAuth.session_generation()
 	reading = true
@@ -110,24 +155,12 @@ func initialize() -> void:
 	changed.emit()
 	var settings := await client.settings(owner)
 	if owner != uid or epoch != FirebaseAuth.session_generation(): return
-	if not settings.ok:
-		reading = false
-		failures = mini(4, failures + 1)
-		next_poll = Time.get_ticks_msec() + int(POLL_SECONDS * pow(2, failures) * 1000)
-		status = failure(settings)
-		changed.emit()
-		return
+	if not settings.ok: read_failed(settings); return
 	var raw: Dictionary = settings.data.get("fields", {})
 	admin = owner in raw.get("admin_uids", {}).get("arrayValue", {}).get("values", []).map(func(v): return str(v.get("stringValue", "")))
 	var profile := await client.read_document(owner, "chatProfiles", owner)
 	if owner != uid or epoch != FirebaseAuth.session_generation(): return
-	if not profile.ok:
-		reading = false
-		failures = mini(4, failures + 1)
-		next_poll = Time.get_ticks_msec() + int(POLL_SECONDS * pow(2, failures) * 1000)
-		status = failure(profile)
-		changed.emit()
-		return
+	if not profile.ok: read_failed(profile); return
 	nickname = str(profile.get("document", {}).get("nickname", ""))
 	reading = false
 	initialized = true
@@ -139,31 +172,67 @@ func refresh(full: bool = false) -> void:
 	var owner := uid
 	var epoch := FirebaseAuth.session_generation()
 	full = full or Time.get_ticks_msec() >= next_full
-	var result := await client.recent(owner, 0 if full else sequence)
-	if owner != uid or epoch != FirebaseAuth.session_generation(): return
-	reading = false
-	if result.ok:
-		if full: messages.clear()
+	# Poll the small counter; query messages only on change or reconciliation.
+	var head := await client.read_document(owner, "chatRuntime", "global")
+	if not current(owner, epoch): return
+	if not head.ok: read_failed(head); return
+	var remote_sequence := int(head.get("document", {}).get("sequence", 0))
+	full = full or remote_sequence < sequence
+	var query_warning := connection_error if connection_error.begins_with("Consulta incremental") else ""
+	if full or remote_sequence != sequence:
+		var result := await client.recent(owner, 0 if full else sequence)
+		if not current(owner, epoch): return
+		if result.ok and not full: query_warning = ""
+		# Fall back once to the initial bounded query if the filtered query fails.
+		if not result.ok and not full and int(result.get("status", 0)) in [400, 412, 500]:
+			query_warning = failure(result, "Consulta incremental") + " Recebimento recuperado pelo histórico."
+			result = await client.recent(owner)
+			full = true
+			if not current(owner, epoch): return
+		if not result.ok: read_failed(result); return
+		if full:
+			messages.clear()
+			sequence = remote_sequence
 		for item in result.messages:
 			messages = messages.filter(func(old): return old.id != item.id)
 			messages.append(item)
 			sequence = maxi(sequence, int(item.sequence))
 		messages.sort_custom(func(a, b): return int(a.sequence) < int(b.sequence))
 		messages = messages.slice(maxi(0, messages.size() - 50))
-		if full: next_full = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
-		failures = 0
-		if not busy: status = "Chat global · até 50 mensagens recentes"
-	else:
-		failures = mini(4, failures + 1)
-		status = failure(result)
-	next_poll = Time.get_ticks_msec() + int(POLL_SECONDS * pow(2, failures) * 1000)
+	if full:
+		var profile := await client.read_document(owner, "chatProfiles", owner)
+		if not current(owner, epoch): return
+		if not profile.ok: read_failed(profile); return
+		nickname = str(profile.get("document", {}).get("nickname", ""))
+		var settings := await client.settings(owner)
+		if not current(owner, epoch): return
+		if not settings.ok: read_failed(settings); return
+		var raw: Dictionary = settings.data.get("fields", {})
+		admin = owner in raw.get("admin_uids", {}).get("arrayValue", {}).get("values", []).map(func(v): return str(v.get("stringValue", "")))
+		next_full = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
+	reading = false
+	failures = 0
+	connection_error = query_warning
+	last_sync = Time.get_time_string_from_system()
+	if not busy: status = "Chat global · até 50 mensagens recentes"
+	next_poll = Time.get_ticks_msec() + int(POLL_SECONDS * 1000)
 	changed.emit()
 
 static func valid_nickname(value: String) -> bool:
 	return RegEx.create_from_string("^[A-Za-z0-9_À-ÖØ-öø-ÿ -]{2,20}$").search(value) != null and value == value.strip_edges()
 
+func edit_nickname() -> void:
+	if busy or not initialized: return
+	editing_nickname = true
+	changed.emit()
+
+func cancel_nickname() -> void:
+	if busy: return
+	editing_nickname = false
+	changed.emit()
+
 func save_nickname(value: String) -> void:
-	if busy or not initialized or nickname != "": return
+	if busy or not initialized or not available(): return
 	value = value.strip_edges()
 	if not valid_nickname(value):
 		status = "Use 2 a 20 letras, números, espaços, _ ou hífen. Evite dados pessoais."
@@ -174,16 +243,15 @@ func save_nickname(value: String) -> void:
 	busy = true
 	status = "Salvando apelido…"
 	changed.emit()
+	if not await wait_for_read(owner, epoch): return
 	var result := await client.set_nickname(owner, value)
-	if owner != uid or epoch != FirebaseAuth.session_generation(): return
-	# Another tab may already have chosen the account's immutable nickname.
-	if result.ok: nickname = value
-	else:
-		var existing := await client.read_document(owner, "chatProfiles", owner)
-		if owner != uid or epoch != FirebaseAuth.session_generation(): return
-		nickname = str(existing.get("document", {}).get("nickname", ""))
+	if not current(owner, epoch): return
 	busy = false
-	status = "Apelido definido. Você já pode conversar." if nickname != "" else failure(result)
+	if result.ok:
+		nickname = value
+		editing_nickname = false
+		status = "Apelido salvo para esta conta."
+	else: status = failure(result, "Salvar apelido")
 	changed.emit()
 
 func send_text(value: String) -> void:
@@ -198,8 +266,15 @@ func send_text(value: String) -> void:
 	busy = true
 	status = "Enviando…"
 	changed.emit()
-	var result := await client.send_message(owner, nickname, value)
-	if owner != uid or epoch != FirebaseAuth.session_generation(): return
+	if not await wait_for_read(owner, epoch): return
+	# Resolve changes made on another device before stamping the next message.
+	var profile := await client.read_document(owner, "chatProfiles", owner)
+	if not current(owner, epoch): return
+	var result := profile
+	if profile.ok:
+		nickname = str(profile.get("document", {}).get("nickname", ""))
+		result = await client.send_message(owner, nickname, value)
+	if not current(owner, epoch): return
 	busy = false
 	if result.ok:
 		clear_draft += 1
@@ -213,14 +288,21 @@ func send_text(value: String) -> void:
 		status = failure(result) + " Texto preservado. Confira o histórico antes de reenviar."
 	changed.emit()
 
-func failure(result: Dictionary) -> String:
+func failure(result: Dictionary, operation: String = "Chat") -> String:
+	var http := int(result.get("status", 0))
+	var code := str(result.get("code", ""))
+	# Show safe codes only, never backend payloads, tokens or account identifiers.
+	if RegEx.create_from_string("^[A-Z_0-9]{1,60}$").search(code) == null: code = ""
+	var detail := " (HTTP %d%s)" % [http, " · " + code if code != "" else ""] if http > 0 else ""
 	match int(result.get("status", 0)):
-		401: return "Sessão do chat expirada. Entre novamente."
-		403: return "Envio/acesso negado. Aguarde 5 s entre mensagens; confira e-mail verificado e acesso ao piloto."
-		404: return "Chat ainda não configurado no Firebase. A partida continua disponível."
-		429: return "Limite gratuito do chat atingido. Tente mais tarde."
-		409, 412: return "Outra mensagem chegou ao mesmo tempo. Tente novamente."
-	return "Chat sem conexão. Tentaremos reconectar enquanto estiver aberto."
+		401: return operation + ": sessão expirada. Entre novamente." + detail
+		403: return operation + ": acesso negado. Confira e-mail verificado, acesso e regras; no envio, aguarde 5 s." + detail
+		404: return operation + ": chat não configurado no Firebase." + detail
+		429: return operation + ": cota do serviço atingida. Tente mais tarde." + detail
+		400, 412: return operation + ": consulta recusada. Confira as regras e o índice de sequence." + detail
+		409: return operation + ": alteração simultânea. Tente novamente." + detail
+		0: return "Sem conexão no chat. Reconexão automática enquanto aberto." + (" (" + code + ")" if code != "" else "")
+	return operation + ": falha do serviço. Reconexão automática." + detail
 
 func mute_path() -> String: return "user://chat-mutes-" + uid.sha256_text() + ".json"
 
@@ -248,6 +330,7 @@ func remove_message(id: String) -> void:
 	busy = true
 	status = "Removendo mensagem…"
 	changed.emit()
+	if not await wait_for_read(owner, epoch): return
 	var result := await client.remove_message(owner, id, found[0].update_time)
 	if owner != uid or epoch != FirebaseAuth.session_generation(): return
 	busy = false
@@ -260,17 +343,19 @@ func _web_action(args: Array) -> void:
 	var value := str(args[1]) if args.size() > 1 else ""
 	match action:
 		"toggle": toggle()
+		"edit_nickname": edit_nickname()
+		"cancel_nickname": cancel_nickname()
 		"nickname": save_nickname(value)
 		"send": send_text(value)
 		"mute": mute(value)
 		"unmute": muted.clear(); persist_mutes()
 		"remove": remove_message(value)
+		"wake": wake()
 		"retry":
-			if not initialized: initialize()
-			elif not reading and Time.get_ticks_msec() >= next_poll: refresh(true)
+			if not connection_error.is_empty() and Time.get_ticks_msec() >= next_poll: poll_due()
 
 func view_state() -> Dictionary:
-	return {"uid": uid, "available": available(), "opened": opened, "nickname": nickname, "messages": messages.filter(func(m): return not str(m.uid) in muted), "muted": muted.size(), "admin": admin, "busy": busy, "ready": initialized, "status": status, "remaining": remaining(), "clear_draft": clear_draft}
+	return {"uid": uid, "available": available(), "opened": opened, "nickname": nickname, "editing_nickname": editing_nickname, "messages": messages.filter(func(m): return not str(m.uid) in muted), "muted": muted.size(), "admin": admin, "busy": busy, "ready": initialized, "status": status, "connection_error": connection_error, "last_sync": last_sync, "retry_seconds": maxi(0, ceili((next_poll - Time.get_ticks_msec()) / 1000.0)), "remaining": remaining(), "clear_draft": clear_draft}
 
 func render() -> void:
 	if OS.has_feature("web"):

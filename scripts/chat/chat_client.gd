@@ -10,6 +10,7 @@ func call_api(uid: String, path: String, method: int = HTTPClient.METHOD_GET, bo
 	var token: String = auth.access_token(uid)
 	if token == "": return {"ok": false, "cancelled": true}
 	var http := HTTPRequest.new()
+	http.process_mode = Node.PROCESS_MODE_ALWAYS
 	http.timeout = 12
 	http.accept_gzip = not OS.has_feature("web")
 	add_child(http)
@@ -22,9 +23,16 @@ func call_api(uid: String, path: String, method: int = HTTPClient.METHOD_GET, bo
 	http.queue_free()
 	if auth.account_uid() != uid or auth.session_generation() != generation: return {"ok": false, "cancelled": true}
 	var status := int(response[1])
-	if response[0] != HTTPRequest.RESULT_SUCCESS: return {"ok": false, "status": 0}
+	if response[0] != HTTPRequest.RESULT_SUCCESS: return {"ok": false, "status": 0, "code": "TRANSPORT_" + str(response[0])}
 	var data: Variant = JSON.parse_string((response[3] as PackedByteArray).get_string_from_utf8())
-	return {"ok": status >= 200 and status < 300 and (data is Dictionary or data is Array), "status": status, "data": data}
+	# Streaming REST may carry an error inside a successful HTTP array.
+	var api_error: Dictionary = data.get("error", {}) if data is Dictionary else {}
+	if data is Array:
+		for row in data:
+			if row is Dictionary and row.get("error") is Dictionary: api_error = row.error
+	var code := str(api_error.get("status", ""))
+	if not (data is Dictionary or data is Array): code = "INVALID_RESPONSE"
+	return {"ok": status >= 200 and status < 300 and code == "", "status": int(api_error.get("code", status)), "code": code, "data": data}
 
 func cancel() -> void:
 	for http in pending.duplicate():
@@ -65,7 +73,7 @@ func recent(uid: String, after_sequence: int = 0) -> Dictionary:
 	return result
 
 func set_nickname(uid: String, nickname: String) -> Dictionary:
-	return await call_api(uid, database() + "/documents:commit", HTTPClient.METHOD_POST, {"writes": [{"update": {"name": document_path("chatProfiles", uid), "fields": fields({"nickname": nickname})}, "currentDocument": {"exists": false}}]})
+	return await call_api(uid, database() + "/documents:commit", HTTPClient.METHOD_POST, {"writes": [{"update": {"name": document_path("chatProfiles", uid), "fields": fields({"nickname": nickname})}}]})
 
 func send_message(uid: String, nickname: String, text: String) -> Dictionary:
 	# Preconditions make concurrent senders contend safely for the next ring slot.

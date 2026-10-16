@@ -1,5 +1,10 @@
 # Chat global — 0.8.2-chat-pilot.2
 
+**Guia histórico do .2. A revisão atual é `0.8.2-chat-pilot.3`:**
+[alterações, atualização segura das regras e roteiro de reteste](RETESTE_CHAT_PILOT3.md).
+Ela permite alterar apelido e substitui o ciclo de recebimento descrito abaixo.
+Não recriar `chatSettings/global` para atualizar do .2 para o .3.
+
 Versão preparada na branch `feat/global-chat-pilot`. **Publicada privadamente,
 não integrada à main e desativada no projeto principal.** As configurações do
 Firebase e de faturamento não foram alteradas. O pacote real está em `build/chat-pilot/`;

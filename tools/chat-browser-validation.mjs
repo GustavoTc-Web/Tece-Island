@@ -1,11 +1,12 @@
 import {chromium} from '../.tools/browser-test/node_modules/playwright/index.mjs';
 import {initializeTestEnvironment} from '@firebase/rules-unit-testing';
-import {doc,setDoc,Timestamp} from 'firebase/firestore';
+import {doc,getDoc,setDoc,Timestamp} from 'firebase/firestore';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import assert from 'node:assert/strict';
 if(process.env.FIRESTORE_EMULATOR_HOST!=='127.0.0.1:8085')throw Error('Exige emulador demo local. Nunca use produção.');
-const results=[],errors=[],requests=[];
+const results=[],errors=[],requests=[],latencies=[];
+const active=new Set();let maxActive=0;
 const check=(value,name)=>{results.push({name,ok:!!value});assert.ok(value,name);console.log('PASS: '+name);};
 const env=await initializeTestEnvironment({projectId:'demo-tece-island',firestore:{rules:await readFile('firestore.rules','utf8')}});
 await env.clearFirestore();
@@ -29,26 +30,50 @@ const textCount=(page,text)=>page.locator('#chat-list li').filter({hasText:text}
 try{
  const desktop=await browser.newContext({viewport:{width:1280,height:800}}),mobile=await browser.newContext({viewport:{width:852,height:393},isMobile:true,hasTouch:true,deviceScaleFactor:1});
  const a=await desktop.newPage(),b=await mobile.newPage();
- for(const page of [a,b]){page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&m.text().includes('SCRIPT ERROR'))errors.push(m.text());});page.on('request',r=>{if(r.url().includes('8085/v1/'))requests.push({page:page===a?'a':'b',url:r.url(),method:r.method()});});await page.route('https://**',route=>route.abort());await page.goto('http://127.0.0.1:8087/Tece-Island/');await page.waitForFunction(()=>!!window.tcChatFixture,{timeout:60000});}
+ for(const page of [a,b]){page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&m.text().includes('SCRIPT ERROR'))errors.push(m.text());});page.on('request',r=>{if(r.url().includes('8085/v1/')){requests.push({page:page===a?'a':'b',url:r.url(),method:r.method(),time:Date.now(),body:r.postData()});active.add(r);maxActive=Math.max(maxActive,[...active].filter(x=>x.frame().page()===page).length);}});for(const e of ['requestfinished','requestfailed'])page.on(e,r=>active.delete(r));await page.route('https://**',route=>route.abort());await page.goto('http://127.0.0.1:8087/Tece-Island/');await page.waitForFunction(()=>!!window.tcChatFixture,{timeout:60000});}
  await command(a,{action:'login',uid:'chat-a'});await command(b,{action:'login',uid:'chat-b'});
  await a.locator('#chat-launch').waitFor();await b.locator('#chat-launch').waitFor();check(true,'botão Chat disponível nas duas sessões autenticadas');
- await a.locator('#chat-launch').click();await settled(a);await a.locator('#chat-nickname').fill('Ana');await a.getByRole('button',{name:'Definir',exact:true}).click();await a.locator('#chat-composer').waitFor();
+ await a.locator('#chat-launch').click();await settled(a);await a.locator('#chat-nickname').fill('Ana');await a.getByRole('button',{name:'Salvar',exact:true}).click();await a.locator('#chat-composer').waitFor();
  check(await a.locator('#chat-nickname').isHidden(),'apelido exigido e persistido antes do primeiro envio');
  await b.locator('#chat-launch').tap();await settled(b);check(await b.locator('#chat-nickname').isHidden(),'segunda sessão reutiliza apelido da conta');
- await a.locator('#chat-text').fill('Olá do PC! Vamos explorar a floresta?');await a.locator('#chat-send').click();await settled(a);await poll(b);
- await b.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Olá do PC!'));
+ await b.locator('#chat-text').fill('Rascunho durante recebimento');
+ let start=Date.now();await a.locator('#chat-text').fill('Olá do PC! Vamos explorar a floresta?');await a.locator('#chat-send').click();await settled(a);
+ await b.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Olá do PC!'),null,{timeout:20000});latencies.push({phase:'lobby-pc-mobile',ms:Date.now()-start});
  check(await textCount(b,'Olá do PC!')===1,'Godot Web → regras do emulador → segunda sessão recebe mensagem uma vez');
- await b.locator('#chat-text').fill('Sim! Recebi aqui no celular.');await b.locator('#chat-text').press('Enter');await settled(b);await poll(a);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recebi aqui'));
+ check(await b.locator('#chat-text').inputValue()==='Rascunho durante recebimento','recebimento automático preserva texto digitado');
+ start=Date.now();await b.locator('#chat-text').fill('Sim! Recebi aqui no celular.');await b.locator('#chat-text').press('Enter');await settled(b);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recebi aqui'),null,{timeout:20000});latencies.push({phase:'lobby-mobile-pc',ms:Date.now()-start});
  check(await textCount(a,'Recebi aqui')===1,'resposta da sessão mobile chega ao PC');
  // Force past the client cooldown. The actual service rules still reject it.
  await command(b,{action:'force_send',text:'SPAM RECUSADO'});await b.waitForFunction(()=>tcChatSnapshot.status.includes('negado'));
  check(await textCount(b,'SPAM RECUSADO')===0,'backend recusa excesso mesmo removendo o timer do cliente');
+ await a.waitForTimeout(17000);check(await a.locator('#chat-panel').isVisible()&&await b.locator('#chat-panel').isVisible()&&await textCount(a,'Recebi aqui')===1,'dois painéis permanecem abertos por mais de 15 s, sem consulta forçada ou duplicação');
+ check(await a.locator('#chat-retry').isHidden()&&await b.locator('#chat-retry').isHidden(),'Tentar conexão só aparece quando existe falha');
+ await a.locator('#chat-text').fill('Rascunho na edição');await a.locator('#chat-edit-nickname').click();
+ check(await a.locator('#chat-nickname').inputValue()==='Ana','Alterar apelido mostra nome atual');
+ await a.locator('#chat-nickname').fill('Cancelado');await a.getByRole('button',{name:'Cancelar',exact:true}).click();
+ check(await a.locator('#chat-profile').textContent()==='Apelido atual: AnaAlterar apelido'&&await a.locator('#chat-text').inputValue()==='Rascunho na edição','cancelar preserva apelido e rascunho');
+ await a.locator('#chat-edit-nickname').click();await a.locator('#chat-nickname').fill('@inválido');await a.locator('#chat-save-nickname').click();await a.waitForFunction(()=>tcChatSnapshot.status.includes('2 a 20'));
+ check(await a.locator('#chat-nickname').isVisible(),'validação mantém edição aberta para corrigir caracteres');
+ await a.locator('#chat-nickname').fill('Ana Nova');await a.locator('#chat-save-nickname').click();await settled(a);
+ check((await a.locator('#chat-profile').textContent()).includes('Ana Nova')&&await a.locator('#chat-text').inputValue()==='Rascunho na edição','salvar atualiza apelido sem apagar mensagem em edição');
+ await command(b,{action:'login',uid:'chat-a'});await b.waitForFunction(()=>!tcChatSnapshot.opened);await b.locator('#chat-launch').tap();await settled(b);
+ check((await b.locator('#chat-profile').textContent()).includes('Ana Nova'),'apelido persistido aparece em outra sessão/aparelho da conta');
+ await a.locator('#chat-edit-nickname').click();await a.locator('#chat-nickname').fill('Ana Atual');await a.locator('#chat-save-nickname').click();await settled(a);
+ await b.locator('#chat-text').fill('Nome atualizado entre aparelhos');await b.locator('#chat-send').tap();await settled(b);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Nome atualizado entre aparelhos'),null,{timeout:20000});
+ check((await a.locator('#chat-list li').filter({hasText:'Nome atualizado entre aparelhos'}).locator('.author').textContent())==='Ana Atual','próximo envio consulta perfil atual mesmo com apelido antigo no outro aparelho');
+ check(await a.locator('#chat-list li').filter({hasText:'Olá do PC!'}).locator('.author').textContent()==='Ana','mensagens antigas conservam apelido do envio');
+ await b.reload();await b.waitForFunction(()=>!!window.tcChatFixture,{timeout:60000});await command(b,{action:'login',uid:'chat-a'});await b.locator('#chat-launch').tap();await settled(b);
+ check((await b.locator('#chat-profile').textContent()).includes('Ana Atual'),'apelido persiste após recarregar e autenticar novamente');
+ await command(b,{action:'login',uid:'chat-b'});await b.waitForFunction(()=>!tcChatSnapshot.opened);await b.locator('#chat-launch').tap();await settled(b);
  await poll(b,true);
  await a.screenshot({path:'docs/images/chat-lobby-pc.png'});await b.screenshot({path:'docs/images/chat-mobile-paisagem.png'});
  // Select another author's row by its known text, never expose a UID in the UI.
  await a.locator('#chat-list li').filter({hasText:'Recebi aqui'}).getByRole('button',{name:'Silenciar',exact:true}).click();
  check(await textCount(a,'Recebi aqui')===0&&await a.locator('#chat-unmute').isVisible(),'silenciar remove mensagens localmente');
+ await b.locator('#chat-edit-nickname').tap();await b.locator('#chat-nickname').fill('Beto Novo');await b.locator('#chat-save-nickname').tap();await settled(b);await b.locator('#chat-text').fill('Silenciado após renomear');await b.locator('#chat-send').tap();await settled(b);await a.waitForTimeout(6500);
+ check(await textCount(a,'Silenciado após renomear')===0,'silenciamento continua vinculado ao UID após mudar apelido');
  await a.locator('#chat-unmute').click();check(await textCount(a,'Recebi aqui')===1,'reativar restaura a visualização');
+ check(await textCount(a,'Silenciado após renomear')===1,'reativar também mostra mensagens com o novo apelido');
  await a.getByRole('button',{name:'Recolher',exact:true}).click();await b.getByRole('button',{name:'Recolher',exact:true}).tap();
  await a.waitForFunction(()=>tcChatSnapshot.requests===0);const before=requests.length;
  await command(a,{action:'poll'});await command(b,{action:'poll'});await a.waitForTimeout(1300);
@@ -63,6 +88,25 @@ try{
  check(await a.evaluate(position=>tcChatSnapshot.paused&&!tcChatSnapshot.attacking&&tcChatSnapshot.panel===''&&JSON.stringify(tcChatSnapshot.position)===JSON.stringify(position),position),'digitação bloqueia movimento, ataque, inventário e atalhos durante a partida');
  await a.locator('#chat-text').fill('Quem vem explorar a floresta?');await a.screenshot({path:'docs/images/chat-partida-pc.png'});
  await command(b,{action:'play'});await b.waitForFunction(()=>tcChatSnapshot.playing,{timeout:30000});await b.locator('#chat-launch').tap();await settled(b);await b.locator('#chat-text').tap();await b.locator('#chat-text').fill('Mensagem com teclado aberto');
+ start=Date.now();await a.locator('#chat-text').fill('Recepção automática na partida A');await a.locator('#chat-send').click();await settled(a);await b.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recepção automática na partida A'),null,{timeout:20000});latencies.push({phase:'paused-pc-mobile',ms:Date.now()-start});
+ start=Date.now();await b.locator('#chat-text').fill('Recepção automática na partida B');await b.locator('#chat-send').tap();await settled(b);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recepção automática na partida B'),null,{timeout:20000});latencies.push({phase:'paused-mobile-pc',ms:Date.now()-start});
+ await b.waitForTimeout(17000);check(await a.evaluate(()=>tcChatSnapshot.paused)&&await b.evaluate(()=>tcChatSnapshot.paused),'recebimento nas duas direções com partida pausada e painéis continuamente abertos por mais de 15 s');
+ // Deterministic history for scrolling; only this fixture bypasses the backend.
+ await env.withSecurityRulesDisabled(async c=>{const d=c.firestore();let seq=(await getDoc(doc(d,'chatRuntime/global'))).data().sequence;for(let i=0;i<32;i++){seq++;await setDoc(doc(d,'globalMessages/'+seq%100),{sequence:seq,uid:'chat-b',nickname:'Beto',text:'Histórico para leitura '+i+' — uma mensagem anterior na conversa.',sent_at:Timestamp.now()});}await setDoc(doc(d,'chatRuntime/global'),{sequence:seq,sent_at:Timestamp.now()});});
+ await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Histórico para leitura 31'),null,{timeout:20000});
+ check(await a.locator('#chat-list').evaluate(el=>el.scrollHeight-el.scrollTop-el.clientHeight<5),'novas mensagens acompanham automaticamente quem está no fim');
+ await a.locator('#chat-list').evaluate(el=>{el.scrollTop=0;});await a.waitForTimeout(100);const oldScroll=await a.locator('#chat-list').evaluate(el=>el.scrollTop);await a.locator('#chat-text').fill('Rascunho lendo histórico');
+ await b.locator('#chat-text').fill('Nova enquanto leio o histórico');await b.locator('#chat-send').tap();await settled(b);await a.locator('#chat-new').waitFor({state:'visible',timeout:20000});
+ check(Math.abs(await a.locator('#chat-list').evaluate(el=>el.scrollTop)-oldScroll)<3&&await a.locator('#chat-text').inputValue()==='Rascunho lendo histórico','quem lê mensagens antigas mantém posição e rascunho e recebe aviso');
+ await a.locator('#chat-new').click();check(await a.locator('#chat-new').isHidden()&&await a.locator('#chat-list').evaluate(el=>el.scrollHeight-el.scrollTop-el.clientHeight<5),'Ver novas mensagens leva ao fim e limpa aviso');
+ // Production-style filtered query failure must recover without closing panels.
+ let injected=false;await a.route('**/documents:runQuery',route=>{if(!injected&&route.request().postDataJSON().structuredQuery.where){injected=true;return route.fulfill({status:400,contentType:'application/json',body:JSON.stringify({error:{code:400,status:'FAILED_PRECONDITION',message:'fixture index failure'}})});}return route.continue();});
+ await b.waitForTimeout(5500);await b.locator('#chat-text').fill('Recebida mesmo com consulta incremental recusada');await b.locator('#chat-send').tap();await settled(b);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recebida mesmo com consulta incremental recusada'),null,{timeout:20000});
+ check(injected&&(await a.locator('#chat-connection').textContent()).includes('HTTP 400'),'falha incremental mostra código e recupera mensagem por consulta limitada');await a.unroute('**/documents:runQuery');
+ await a.evaluate(()=>{window.tcTestHidden=true;Object.defineProperty(document,'hidden',{configurable:true,get:()=>window.tcTestHidden});document.dispatchEvent(new Event('visibilitychange'));});await settled(a);const hiddenRequests=requests.filter(r=>r.page==='a').length;await a.waitForTimeout(6000);
+ check(requests.filter(r=>r.page==='a').length===hiddenRequests,'aba oculta simulada suspende consultas de chat');
+ await b.locator('#chat-text').fill('Mensagem durante aba suspensa');await b.locator('#chat-send').tap();await settled(b);start=Date.now();await a.evaluate(()=>{window.tcTestHidden=false;document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pageshow'));window.dispatchEvent(new Event('focus'));});await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Mensagem durante aba suspensa'),null,{timeout:20000});latencies.push({phase:'simulated-tab-resume',ms:Date.now()-start});
+ check(await a.locator('#chat-text').inputValue()==='Rascunho lendo histórico','retorno à aba recupera mensagens automaticamente sem apagar rascunho');
  await b.setViewportSize({width:852,height:230});
  check(await b.locator('#chat-send').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=visualViewport.height;}),'enviar permanece acessível com viewport de teclado reduzido (emulação)');
  check(await b.getByRole('button',{name:'Recolher',exact:true}).evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=visualViewport.height;}),'recolher permanece acessível com viewport reduzido');
@@ -70,11 +114,11 @@ try{
  await b.setViewportSize({width:393,height:852});check(await b.locator('#chat-panel').isVisible(),'chat pode continuar em retrato sobre a orientação do jogo');
  await b.screenshot({path:'docs/images/chat-mobile-retrato.png'});await b.setViewportSize({width:852,height:393});
  // Fail only chat requests. Save storage and the simulation remain independent.
- await a.route('http://127.0.0.1:8085/**',route=>route.abort());await command(a,{action:'refresh'});await a.waitForFunction(()=>tcChatSnapshot.status.includes('sem conexão'));
+ await a.route('http://127.0.0.1:8085/**',route=>route.abort());await command(a,{action:'refresh'});await a.waitForFunction(()=>tcChatSnapshot.connection_error.includes('Sem conexão'));
  check(true,'queda de rede mostra falha compreensível');
  await a.locator('#chat-text').fill('Rascunho preservado');await command(a,{action:'force_send',text:'Rascunho preservado'});await settled(a);
  check(await a.locator('#chat-text').inputValue()==='Rascunho preservado','falha no envio preserva rascunho');
- await a.unroute('http://127.0.0.1:8085/**');await poll(a,true);await a.waitForFunction(()=>tcChatSnapshot.status.includes('50 mensagens'));
+ await a.unroute('http://127.0.0.1:8085/**');await a.evaluate(()=>{window.dispatchEvent(new Event('online'));window.dispatchEvent(new Event('focus'));document.dispatchEvent(new Event('visibilitychange'));});await a.waitForFunction(()=>!tcChatSnapshot.connection_error&&!tcChatSnapshot.reading,null,{timeout:20000});
  check(true,'reconexão recupera o histórico sem duplicar mensagens');
  await a.locator('#chat-text').fill('x'.repeat(240));check((await a.locator('#chat-text').inputValue()).length===200,'campo limita digitação a 200 caracteres');
  const markup='<img src=x onerror=alert(1)> [b]texto[/b]';await a.locator('#chat-text').fill(markup);await a.locator('#chat-send').click();await settled(a);await poll(b,true);
@@ -82,8 +126,8 @@ try{
  check(await b.locator('#chat-list img').count()===0&&await textCount(b,markup)===1,'HTML e marcação aparecem como texto, sem elementos executáveis');
  // Full refresh reconciles admin deletion, including reused slot preconditions.
  await command(b,{action:'login',uid:'chat-admin'});await b.waitForFunction(()=>tcChatSnapshot.uid==='chat-admin'&&!tcChatSnapshot.opened);
- await b.locator('#chat-launch').tap();await settled(b);b.once('dialog',dialog=>dialog.accept());await b.locator('#chat-list li').filter({hasText:'Olá do PC!'}).getByRole('button',{name:'Remover',exact:true}).tap();await settled(b);await poll(a,true);
- await a.waitForFunction(()=>!document.querySelector('#chat-list').textContent.includes('Olá do PC!'));check(true,'administrador remove e a consulta completa reconcilia a remoção');
+ await b.locator('#chat-launch').tap();await settled(b);b.once('dialog',dialog=>dialog.accept());start=Date.now();await b.locator('#chat-list li').filter({hasText:'Olá do PC!'}).getByRole('button',{name:'Remover',exact:true}).tap();await settled(b);
+ console.log('Aguardando reconciliação natural de remoção (até 120 s, sem forçar consulta)...');await a.waitForFunction(()=>!document.querySelector('#chat-list').textContent.includes('Olá do PC!'),null,{timeout:135000});latencies.push({phase:'admin-removal',ms:Date.now()-start});check(true,'administrador remove e reconciliação automática reflete exclusão sem fechar painel');
  await a.locator('#chat-text').fill('Segredo do rascunho A');
  let held;await a.route('**/chatRuntime/global',route=>{held=route;});
  await command(a,{action:'force_send',text:'ENVIO DA SESSÃO ANTIGA'});await a.waitForFunction(()=>tcChatSnapshot.requests>0&&tcChatSnapshot.busy);
@@ -93,9 +137,10 @@ try{
  if(held)await held.abort().catch(()=>{});await a.unroute('**/chatRuntime/global');
  await command(a,{action:'login',uid:'chat-b'});await a.locator('#chat-launch').click();await settled(a);
  check(await a.locator('#chat-text').inputValue()===''&&await a.locator('#chat-nickname').isHidden(),'troca de conta usa apelido próprio e não restaura rascunho anterior');
+ check(maxActive<=1,'um único pedido de chat por sessão, inclusive ao enviar durante atualização');
  check(errors.length===0,'sem erros GDScript ou JavaScript na execução Web');
  await desktop.close();await mobile.close();
 }finally{
- await writeFile('.tools/chat-browser-results.json',JSON.stringify({kind:'automated-browser-and-local-emulator',physical:false,results,errors,chat_requests:requests.length},null,2));
+ await writeFile('.tools/chat-browser-results.json',JSON.stringify({kind:'automated-browser-and-local-emulator',physical:false,results,errors,latencies,max_requests_per_session:maxActive,chat_requests:requests.length},null,2));
  await browser.close();server.kill();await env.cleanup();
 }

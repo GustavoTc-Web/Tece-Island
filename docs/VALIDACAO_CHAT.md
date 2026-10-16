@@ -1,4 +1,49 @@
-# Validação do chat — 15/10/2026
+# Validação do chat
+
+## Revisão 0.8.2-chat-pilot.3 — 16/10/2026
+
+Regras locais: **21 subtestes aprovados**, incluindo update do próprio perfil,
+recusa de alteração alheia (inclusive por admin), limites/caracteres/campos,
+nome antigo preservado nas mensagens, rejeição do apelido desatualizado no envio
+e ausência de promoção por usar um nome administrativo. Incluem os 12 checks
+REST nativos dos saves. **155 verificações de saves aprovadas** novamente.
+O diff de regras só altera duas linhas de `chatProfiles`; todo o restante é
+idêntico ao .2, e o bloco de mundos continua idêntico à base `f2dd666`.
+
+**44 verificações Web aprovadas**, zero erros GDScript/JavaScript, máximo de
+**1 pedido de chat simultâneo por sessão**. Duas sessões Edge/Playwright usam
+transporte REST Godot contra o emulador, com painéis continuamente abertos por
+mais de 15 s no lobby e na partida pausada. Incluem salvar/cancelar/validar
+apelido, persistência em outra sessão e reload, envio com nome atualizado em
+outro aparelho, histórico antigo, silêncio após renomear, rolagem/aviso/rascunho,
+erro de consulta injetado e fallback, perda de rede, despertar por eventos,
+logout com pedido pendente, troca de conta e remoção por reconciliação natural.
+**9 checks nativos** de transporte/perfil e **7 de controles** também aprovados.
+
+Latências medidas do acionamento de Enviar à exibição no destinatário:
+
+| Situação | Tempo |
+| --- | ---: |
+| Lobby, PC → mobile emulado | 5,171 s |
+| Lobby, mobile emulado → PC | 1,416 s |
+| Partida pausada, PC → mobile emulado | 5,214 s |
+| Partida pausada, mobile emulado → PC | 1,000 s |
+| Retorno de aba oculta simulada | 0,422 s |
+| Remoção administrativa no outro painel | 118,986 s |
+
+[Resultado bruto sanitizado](chat-pilot3-results.json). Essas medidas incluem
+envio, rede local, renderização e polling; não caracterizam uma distribuição
+estatística nem a latência do Firebase real. Não houve login positivo no
+Firebase de produção. Teclado/visibilidade de aba são simulados. Testes físicos
+permanecem pendentes. [Diagnóstico e reteste](RETESTE_CHAT_PILOT3.md).
+
+O responsável já confirmou envio/visualização entre PC e celular no .2,
+com falhas de apelido e atualização automática. A tentativa automatizada de
+reproduzir no .2 com 18 s abertos no lobby e 18 s pausado recebeu as mensagens;
+a causa em produção não foi confirmada. A nova suíte mede recebimento natural,
+sem comandos de polling, e testa recuperação de uma falha de consulta injetada.
+
+## Histórico — 15/10/2026
 
 Versão: `0.8.2-chat-pilot.1`, branch `feat/global-chat-pilot`.
 Estado da configuração remota: não alterada/não validada nesta entrega.

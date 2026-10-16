@@ -1,5 +1,15 @@
 # Publicação privada do chat e sincronização
 
+## Revisão .3 — preparação de 16/10/2026
+
+Continuação solicitada do piloto .2, na mesma branch, endereço e audiência
+privada. [Reteste, regras completas e passos exatos](RETESTE_CHAT_PILOT3.md).
+A publicação desta revisão será registrada aqui após confirmação da hospedagem.
+Firebase real não foi atualizado: aplicar somente as duas linhas de regras de
+perfil sobre a base exportada atual. Preservar `chatSettings/global` e os saves.
+
+## Histórico da publicação .2
+
 URL: https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/
 
 Publicação confirmada pelo Sites em **15/10/2026 às 19h04 (Brasília)**,

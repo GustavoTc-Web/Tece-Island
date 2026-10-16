@@ -70,11 +70,28 @@ test('limites de texto e consulta; marcação permanece texto literal',async()=>
  assert.equal((await getDoc(doc(db(),'globalMessages/2'))).data().text,text);
  await assertSucceeds(getDocs(query(collection(db(),'globalMessages'),where('sequence','>',1),orderBy('sequence','desc'),limit(50))));
 });
-test('perfil imutável, sem acesso ao perfil alheio nem concessão de privilégio',async()=>{
- await assertFails(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname:'Outro'}));
+test('apelido mutável só pelo dono, com esquema e caracteres validados',async()=>{
+ await reset();await assertSucceeds(send(db()));
+ await assertSucceeds(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname:'João 7'}));
+ assert.equal((await getDoc(doc(db(),'chatProfiles/chat-a'))).data().nickname,'João 7');
+ assert.equal((await getDoc(doc(db(),'globalMessages/1'))).data().nickname,'Ana');
+ await age('chat-a');await assertFails(send(db()));
+ await assertSucceeds(send(db(),'chat-a',{nickname:'João 7'}));
+ for(const nickname of ['x','a'.repeat(21),'@nome',' Nome','Nome ','','<b>'])await assertFails(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname}));
+ await assertFails(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname:'João',admin:true}));
+ await assertFails(setDoc(doc(db(),'chatProfiles/chat-b'),{nickname:'Outro'}));
+ await assertFails(setDoc(doc(db('chat-admin'),'chatProfiles/chat-a'),{nickname:'Admin forjado'}));
+ await assertFails(deleteDoc(doc(db(),'chatProfiles/chat-a')));
  await assertFails(getDoc(doc(db(),'chatProfiles/chat-b')));
+ await assertSucceeds(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname:'Ana'}));
+});
+test('alterar apelido não concede cargo ou acesso às configurações',async()=>{
+ await assertSucceeds(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname:'Moderador'}));
+ await reset();await send(db(),'chat-a',{nickname:'Moderador'});
+ await assertFails(deleteDoc(doc(db(),'globalMessages/1')));
  await assertFails(setDoc(doc(db(),'chatSettings/global'),{enabled:true,allowed_uids:users,admin_uids:['chat-a']}));
  await assertFails(setDoc(doc(db('chat-admin'),'chatSettings/global'),{enabled:true,allowed_uids:users,admin_uids:users}));
+ await assertSucceeds(setDoc(doc(db(),'chatProfiles/chat-a'),{nickname:'Ana'}));
 });
 test('apenas administrador validado nas regras pode remover mensagens',async()=>{
  await reset();await send(db());await assertFails(deleteDoc(doc(db(),'globalMessages/1')));
