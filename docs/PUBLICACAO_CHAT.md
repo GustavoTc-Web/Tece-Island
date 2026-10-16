@@ -1,12 +1,40 @@
 # Publicação privada do chat e sincronização
 
-## Revisão .3 — preparação de 16/10/2026
+## Revisão .3 — publicada em 16/10/2026
 
-Continuação solicitada do piloto .2, na mesma branch, endereço e audiência
-privada. [Reteste, regras completas e passos exatos](RETESTE_CHAT_PILOT3.md).
-A publicação desta revisão será registrada aqui após confirmação da hospedagem.
-Firebase real não foi atualizado: aplicar somente as duas linhas de regras de
-perfil sobre a base exportada atual. Preservar `chatSettings/global` e os saves.
+**0.8.2-chat-pilot.3**, publicada pelo Sites às **16h07 (Brasília)**, estado
+`succeeded`, versão da hospedagem **4**. Mesmo endereço:
+https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/
+A audiência foi relida após o deploy: `custom`, somente o proprietário, sem
+convites ou alterações de acesso. Usar a mesma conta ChatGPT nos dois aparelhos.
+Recarregar o jogo para atualizar; preservar os dados do navegador/IndexedDB.
+
+- Commit do jogo enviado ao GitHub: `f7e7bd2cbedea04efca593d6b372e2519b10a545`.
+- Commit do pacote de hospedagem: `cad22d2fcb8bbaf5d58e160e56d620d11ad102ab`.
+- Deployment: `appgdep_6ad275d9189481918938e9c1bb2f4a4b`.
+- Versão Sites: `appgprj_6ad0212da2388191920d282fd2dd7f32~appgver_0ebe3c7ca0b4819188b927dbae56a530`.
+- Arquivo portátil: `build/tece-island-0.8.2-chat-pilot.3.zip`, incluindo projeto
+  nativo, Web, regras completas e roteiro. Compilação real sem fixture,
+  `working_tree:false`, mesmos dois UIDs, chat e sync ativos só no pacote privado.
+
+Validação: 44 checks Web, 9 de transporte nativo, 21 subtestes de regras (incluem
+12 checks REST dos saves), 155 verificações de saves, 7 de controles e 11 do pacote
+final aprovados. Mensagens no emulador: 1,000–5,214 s; exclusão automática no outro
+painel: 118,986 s. [Evidências e limites](VALIDACAO_CHAT.md).
+Leitura autenticada da hospedagem confirmou o manifesto .3/commit `f7e7bd2`,
+os mesmos dois UIDs, sync ativo e o **SHA-256 do index.pck idêntico ao exportado**.
+Essa leitura confirma o pacote entregue; não é login ou teste no Firebase real.
+
+**Firebase real não foi atualizado.** Aplicar somente as duas linhas de regras
+de perfil sobre a base exportada atual. **Preservar `chatSettings/global` e os
+saves**, sem recriar documentos. [Regras completas e passos exatos](RETESTE_CHAT_PILOT3.md).
+O .3 exibe acesso negado se a regra antiga ainda bloquear update do perfil.
+A causa específica da falha de recebimento relatada no .2 não foi reproduzida
+no emulador; o novo ciclo e a recuperação de falhas precisam do reteste real.
+
+Não houve merge na main nem publicação definitiva no GitHub Pages. O endereço
+oficial continua `https://gustavotc-web.github.io/Tece-Island/`. O caminho de
+publicação está documentado no roteiro; aguarda reteste físico e decisão posterior.
 
 ## Histórico da publicação .2
 

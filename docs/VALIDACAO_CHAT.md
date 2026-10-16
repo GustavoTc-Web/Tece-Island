@@ -19,6 +19,10 @@ outro aparelho, histórico antigo, silêncio após renomear, rolagem/aviso/rascu
 erro de consulta injetado e fallback, perda de rede, despertar por eventos,
 logout com pedido pendente, troca de conta e remoção por reconciliação natural.
 **9 checks nativos** de transporte/perfil e **7 de controles** também aprovados.
+O pacote real final passou em **11 verificações** adicionais no Edge: carregamento
+das cinco partes do engine e hash, configuração/formulário, IndexedDB e preservação
+de bytes após falha de rede/reload, viewport mobile/retrato e rejeição de parte
+incompleta. Nenhum login positivo de produção foi usado.
 
 Latências medidas do acionamento de Enviar à exibição no destinatário:
 
