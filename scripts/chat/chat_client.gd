@@ -59,9 +59,9 @@ func read_document(uid: String, collection: String, id: String) -> Dictionary:
 func settings(uid: String) -> Dictionary:
 	return await call_api(uid, document_path("chatSettings", "global"))
 
-func recent(uid: String, after_sequence: int = 0) -> Dictionary:
+func recent(uid: String, after_sequence: int = -1) -> Dictionary:
 	var query := {"from": [{"collectionId": "globalMessages"}], "orderBy": [{"field": {"fieldPath": "sequence"}, "direction": "DESCENDING"}], "limit": 50}
-	if after_sequence > 0: query.where = {"fieldFilter": {"field": {"fieldPath": "sequence"}, "op": "GREATER_THAN", "value": {"integerValue": str(after_sequence)}}}
+	if after_sequence >= 0: query.where = {"fieldFilter": {"field": {"fieldPath": "sequence"}, "op": "GREATER_THAN", "value": {"integerValue": str(after_sequence)}}}
 	var result := await call_api(uid, database() + "/documents:runQuery", HTTPClient.METHOD_POST, {"structuredQuery": query})
 	if result.ok:
 		if not result.data is Array: return {"ok": false, "status": 0}
@@ -70,6 +70,25 @@ func recent(uid: String, after_sequence: int = 0) -> Dictionary:
 			if row is Dictionary and row.get("document") is Dictionary:
 				var message := decode(row.document)
 				if message.has_all(["sequence", "sent_at", "uid", "nickname", "text"]): result.messages.append(message)
+	return result
+
+func window_count(uid: String, first: int, last: int) -> Dictionary:
+	# Frozen sequence bounds: new messages cannot replace a deletion in this range.
+	# Count the RAW cache, including muted authors. Same list rules and limit apply.
+	var filters := []
+	for bound in [["GREATER_THAN_OR_EQUAL", first], ["LESS_THAN_OR_EQUAL", last]]:
+		filters.append({"fieldFilter": {"field": {"fieldPath": "sequence"}, "op": bound[0], "value": {"integerValue": str(bound[1])}}})
+	var query := {"from": [{"collectionId": "globalMessages"}], "where": {"compositeFilter": {"op": "AND", "filters": filters}}, "limit": 50}
+	var result := await call_api(uid, database() + "/documents:runAggregationQuery", HTTPClient.METHOD_POST, {"structuredAggregationQuery": {"structuredQuery": query, "aggregations": [{"alias": "visible_count", "count": {}}]}})
+	if result.ok:
+		if result.data is Array:
+			for row in result.data:
+				if row is Dictionary and row.get("result") is Dictionary:
+					var value: Dictionary = row.result.get("aggregateFields", {}).get("visible_count", {})
+					if value.has("integerValue"):
+						result.count = int(value.integerValue)
+						return result
+		return {"ok": false, "status": 0, "code": "INVALID_AGGREGATE_RESPONSE"}
 	return result
 
 func set_nickname(uid: String, nickname: String) -> Dictionary:
