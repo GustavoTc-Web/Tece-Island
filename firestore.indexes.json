@@ -1,0 +1,9 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    {"collectionGroup": "chunks", "fieldPath": "payload", "indexes": []},
+    {"collectionGroup": "chunks", "fieldPath": "index", "indexes": []},
+    {"collectionGroup": "versions", "fieldPath": "*", "indexes": []},
+    {"collectionGroup": "worlds", "fieldPath": "*", "indexes": []}
+  ]
+}

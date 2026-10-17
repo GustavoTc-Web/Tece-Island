@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) {
+      return request.auth != null && request.auth.uid == uid
+        && request.auth.token.email_verified == true;
+    }
+    function safeId(id) { return id.matches('^[a-z0-9-]{1,64}$'); }
+    function metadata(d, uid, world) {
+      return d.keys().hasAll(['schema', 'owner_uid', 'world_id', 'name', 'revision',
+          'snapshot', 'previous_snapshot', 'hash', 'chunk_count', 'raw_bytes', 'encoded_bytes'])
+        && d.keys().hasOnly(['schema', 'owner_uid', 'world_id', 'name', 'revision',
+          'snapshot', 'previous_snapshot', 'hash', 'chunk_count', 'raw_bytes', 'encoded_bytes'])
+        && safeId(world) && d.schema == 1 && d.owner_uid == uid && d.world_id == world
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 40
+        && d.revision is int && d.revision > 0
+        && d.snapshot is string && safeId(d.snapshot)
+		&& d.previous_snapshot is string
+        && d.hash is string && d.hash.matches('^[a-f0-9]{64}$')
+        && d.chunk_count is int && d.chunk_count >= 1 && d.chunk_count <= 8
+        && d.raw_bytes is int && d.raw_bytes > 0 && d.raw_bytes <= 16777216
+        && d.encoded_bytes is int && d.encoded_bytes > 0 && d.encoded_bytes <= 1600000;
+    }
+    function part(uid, world, version, index) {
+      return getAfter(/databases/$(database)/documents/users/$(uid)/worlds/$(world)/versions/$(version)/chunks/$(index)).data.index == int(index);
+    }
+    function complete(uid, world, d) {
+      // At most 9 dependent documents per head write, under the limit of 10.
+      return getAfter(/databases/$(database)/documents/users/$(uid)/worlds/$(world)/versions/$(d.snapshot)).data == d
+        && part(uid, world, d.snapshot, '0')
+        && (d.chunk_count < 2 || part(uid, world, d.snapshot, '1'))
+        && (d.chunk_count < 3 || part(uid, world, d.snapshot, '2'))
+        && (d.chunk_count < 4 || part(uid, world, d.snapshot, '3'))
+        && (d.chunk_count < 5 || part(uid, world, d.snapshot, '4'))
+        && (d.chunk_count < 6 || part(uid, world, d.snapshot, '5'))
+        && (d.chunk_count < 7 || part(uid, world, d.snapshot, '6'))
+        && (d.chunk_count < 8 || part(uid, world, d.snapshot, '7'));
+    }
+    match /users/{uid}/worlds/{world} {
+      allow read: if owner(uid);
+      allow create: if owner(uid) && metadata(request.resource.data, uid, world)
+        && request.resource.data.revision == 1 && request.resource.data.previous_snapshot == ''
+		&& complete(uid, world, request.resource.data);
+      allow update: if owner(uid) && metadata(request.resource.data, uid, world)
+        && request.resource.data.revision == resource.data.revision + 1
+        && request.resource.data.snapshot != resource.data.snapshot
+		&& request.resource.data.previous_snapshot == resource.data.snapshot
+        && complete(uid, world, request.resource.data);
+      allow delete: if false;
+      match /versions/{version} {
+        allow read: if owner(uid);
+        allow create: if owner(uid) && metadata(request.resource.data, uid, world)
+          && request.resource.data.snapshot == version
+          && getAfter(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data == request.resource.data;
+        allow update: if false;
+		allow delete: if owner(uid)
+		  && get(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data.snapshot != version
+		  && get(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data.previous_snapshot != version;
+        match /chunks/{chunk} {
+          allow read: if owner(uid);
+          allow create: if owner(uid)
+            && request.resource.data.keys().hasOnly(['index', 'payload'])
+            && request.resource.data.index is int && request.resource.data.index >= 0
+            && request.resource.data.index < 8 && chunk == string(request.resource.data.index)
+            && request.resource.data.payload is string
+            && request.resource.data.payload.size() > 0 && request.resource.data.payload.size() <= 200000
+            && getAfter(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data.snapshot == version
+            && request.resource.data.index < getAfter(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data.chunk_count;
+          allow update: if false;
+		  allow delete: if owner(uid)
+		    && get(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data.snapshot != version
+		    && get(/databases/$(database)/documents/users/$(uid)/worlds/$(world)).data.previous_snapshot != version;
+        }
+      }
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

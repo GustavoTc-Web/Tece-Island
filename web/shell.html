@@ -72,23 +72,55 @@ window.tcRequestLandscape=async()=>{try{if(!document.fullscreenElement)await doc
 document.querySelector('#retry').onclick=()=>location.reload();
 function fail(error){status.style.display='flex';message.textContent='Não foi possível iniciar o jogo. Verifique sua conexão e o suporte a WebGL 2 do navegador. Você pode recarregar e tentar novamente.';progress.hidden=true;document.querySelector('#retry').hidden=false;console.error(error);}
 const engine=new Engine($GODOT_CONFIG);
-// Local game progress only. A transaction acknowledges durable browser storage.
+// Keep this database name stable across releases. Never clear it on login/logout.
+// getRandomValues also works on the HTTP LAN origin used by the mobile pilot.
+function tcBackupId(){const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);return Array.from(bytes,v=>v.toString(16).padStart(2,'0')).join('');}
 window.tcLocalProgress={request:async(operation,key,payload,claim,done)=>{
  let db;
  try{
   db=await new Promise((resolve,reject)=>{const r=indexedDB.open('tece-island-progress-v4',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onblocked=()=>reject(new Error('blocked'));});
-  const tx=db.transaction('saves',operation==='read'?'readonly':'readwrite'),store=tx.objectStore('saves');let value=null;
-  tx.oncomplete=()=>{db.close();done(JSON.stringify({ok:true,value}));};
+  const mode=['read','scan'].includes(operation)?'readonly':'readwrite';
+  let tx;try{tx=db.transaction('saves',mode,{durability:'strict'});}catch{tx=db.transaction('saves',mode);}
+  const store=tx.objectStore('saves');let value=null,failure=null;
+  tx.oncomplete=()=>{db.close();done(JSON.stringify(failure||{ok:true,value}));};
   tx.onabort=()=>{db.close();done(JSON.stringify({ok:false,error:'Falha no armazenamento local. O progresso anterior foi preservado. Tente novamente.'}));};
   tx.onerror=()=>{};
   if(operation==='read'){const r=store.get(key);r.onsuccess=()=>{value=r.result??null;};}
-  else if(operation==='write'){const r=store.get(key);r.onsuccess=()=>{if(r.result!==undefined){store.put(r.result,key+':backup');try{if(JSON.parse(r.result).inventory&&JSON.parse(r.result).version<5){const old=store.get(key+':before-v5');old.onsuccess=()=>{if(old.result===undefined)store.put(r.result,key+':before-v5');};}}catch(_error){tx.abort();return;}}store.put(payload,key);};}
+  else if(operation==='scan'){value=[];const r=store.openCursor();r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(key))value.push({key:c.key,value:c.value});c.continue();};}
+  else if(operation==='preserve'){const r=store.get(key);r.onsuccess=()=>{if(r.result===undefined)return;const target=key+':'+claim+(claim==='before-cloud'?'':'-'+tcBackupId());const before=store.get(target);before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,target);};};}
+  else if(operation==='write'){
+   const r=store.get(key);r.onsuccess=()=>{
+    if(claim&&JSON.parse(claim).expected!==(r.result??null)){
+     store.put(payload,key+':conflict-'+tcBackupId());
+     failure={ok:false,conflict:true,error:'Outra sessão alterou este mundo. Sua versão foi preservada como backup; reabra o lobby.'};return;
+    }
+    if(r.result!==undefined){
+     let old;try{old=JSON.parse(r.result);}catch{old=null;}
+     if(old&&typeof old==='object'){
+      const previous=store.get(key+':backup');previous.onsuccess=()=>{if(previous.result!==undefined)store.put(previous.result,key+':backup-2');store.put(r.result,key+':backup');};
+      if(old.inventory&&old.version<5){const before=store.get(key+':before-v5');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-v5');};}
+     }else store.put(r.result,key+':unreadable-'+tcBackupId());
+    }
+    store.put(payload,key);
+   };
+  }
   else if(operation==='migrate'){const original=store.get(claim);original.onsuccess=()=>{if(original.result===undefined){tx.abort();return;}const backup=store.get(claim+':before-worlds');backup.onsuccess=()=>{if(backup.result===undefined)store.put(original.result,claim+':before-worlds');};const target=store.get(key);target.onsuccess=()=>{if(target.result===undefined)store.put(payload,key);};};}
   else if(operation==='import'){
-   const r=store.get('legacy-import-v4');r.onsuccess=()=>{if(r.result!==undefined){tx.abort();return;}const target=store.get(key);target.onsuccess=()=>{if(target.result!==undefined){tx.abort();return;}store.put(payload,key);store.put(claim,'legacy-import-v4');};};
+   const r=store.get('legacy-import-v4');r.onsuccess=()=>{if(r.result!==undefined){tx.abort();return;}const target=store.get(key);target.onsuccess=()=>{if(target.result!==undefined){tx.abort();return;}const imported=JSON.parse(claim);store.put(imported.original,'legacy-original-v4');store.put(payload,key);store.put(imported.uid_hash,'legacy-import-v4');};};
   }else tx.abort();
  }catch(_error){if(db)db.close();done(JSON.stringify({ok:false,error:'Armazenamento do navegador indisponível. Libere espaço e tente novamente.'}));}
 }};
+// A background/focus save supplements periodic saves; unload is never the only save.
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&window.tcSaveOnHide)window.tcSaveOnHide();});
+window.tcRequestPersistence=async()=>navigator.storage?.persist?await navigator.storage.persist():false;
+// Read-only diagnostics. Contains game progress, never authentication tokens.
+window.tcExportLocalSaves=async()=>{
+ const result=await new Promise(resolve=>window.tcLocalProgress.request('scan','', '', '',r=>resolve(JSON.parse(r))));
+ if(!result.ok)throw new Error(result.error);
+ const blob=new Blob([JSON.stringify({format:1,origin:location.origin,exportedAt:new Date().toISOString(),entries:result.value},null,2)],{type:'application/json'});
+ const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='tece-island-saves.json';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+ return {entries:result.value.length,bytes:blob.size};
+};
 // Render at display density, capped at 2 to bound fill-rate on mobile GPUs.
 function resize(){const r=document.querySelector('#stage').getBoundingClientRect(),density=Math.min(window.devicePixelRatio||1,2);const width=Math.max(1,Math.round(r.width*density)),height=Math.max(1,Math.round(r.height*density));if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;}
 window.addEventListener('resize',resize);new ResizeObserver(resize).observe(document.querySelector('#stage'));

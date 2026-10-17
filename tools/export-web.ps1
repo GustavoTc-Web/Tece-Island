@@ -5,6 +5,8 @@ Push-Location (Split-Path $PSScriptRoot -Parent)
 try {
     node tools/configure-firebase.mjs
     if ($LASTEXITCODE -ne 0) { throw "Configuração pública do Firebase inválida." }
+    node tools/configure-world-sync.mjs
+    if ($LASTEXITCODE -ne 0) { throw "Configuração de sincronização inválida." }
     if (-not (Test-Path ".tools/godot-templates/4.7.2/web_nothreads_release.zip")) {
         node tools/fetch-web-templates.mjs 4.7.2
         if ($LASTEXITCODE -ne 0) { throw "Falha ao baixar os templates oficiais." }

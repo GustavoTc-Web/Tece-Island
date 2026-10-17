@@ -1,0 +1,13 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import path from 'node:path';
+const base=JSON.parse(await readFile('config/world-sync.json','utf8'));
+const enabled=process.env.TECE_SYNC_ENABLED==='true';
+if(process.env.TECE_SYNC_ENABLED&&!['true','false'].includes(process.env.TECE_SYNC_ENABLED))throw Error('TECE_SYNC_ENABLED deve ser true/false.');
+const allowed_uids=(process.env.TECE_SYNC_ALLOWED_UIDS||'').split(',').map(s=>s.trim()).filter(Boolean);
+if(enabled&&!allowed_uids.length&&process.env.TECE_SYNC_VALIDATED!=='true')throw Error('Ativação pública exige TECE_SYNC_VALIDATED=true após validar migração e aparelhos reais. Use uma lista de UIDs no piloto.');
+const config={enabled,allowed_uids,interval_seconds:Math.max(120,Number(base.interval_seconds)||120)};
+const index=process.argv.indexOf('--output'),output=index<0?'config/world-sync.json':process.argv[index+1];
+if(!output)throw Error('Saída ausente.');
+await mkdir(path.dirname(output),{recursive:true});
+await writeFile(output,JSON.stringify(config,null,2)+'\n');
+console.log(enabled?`Sincronização configurada para ${allowed_uids.length?'piloto por UID':'ativação validada'}.`:'Sincronização pública desativada.');
