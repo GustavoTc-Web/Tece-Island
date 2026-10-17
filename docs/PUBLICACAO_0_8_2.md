@@ -1,7 +1,19 @@
 # Integração 0.8.2 — 17/10/2026
 
 Destino oficial: https://gustavotc-web.github.io/Tece-Island/
-Estado: candidato integrado; registro do deploy será acrescentado após sucesso.
+**Publicado: 0.8.2, deploy concluído com `success`.**
+[Run oficial 38999412608](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/38999412608)
+concluiu validação, exportação e deploy com sucesso em 17/10/2026.
+O [manifesto servido](https://gustavotc-web.github.io/Tece-Island/version.json)
+confirma versão `0.8.2`, commit `81aa0f9`, chat/sync habilitados para duas contas.
+A verificação no endereço público confirmou o SHA-256 do PCK e passou em 11
+checks no PC/mobile emulado, incluindo reload/armazenamento de dados próprios de
+fixture. Não usou conta Firebase real nem dados de jogadores.
+
+Integração na main: `81aa0f96afe8aa0ded0a3d520183a332f05ea745`, por meio do
+[PR #2](https://github.com/GustavoTc-Web/Tece-Island/pull/2). O PR #1 foi marcado
+como incorporado pelo GitHub. A árvore desse merge é idêntica à do candidato
+`0419750`, aprovado no CI e nas verificações locais.
 
 ## Dependências e preservação
 
@@ -20,6 +32,15 @@ Excluir/listar perfis e editar perfil alheio continuam proibidos. As regras
 dos mundos são idênticas à base dos saves: revisão consecutiva, snapshots
 completos e proteção das versões atual/anterior, com isolamento por UID e
 e-mail verificado. O deploy Web não executa nenhum comando Firebase.
+
+Validação local sobre a árvore integrada: **155 checks de saves, 21 subtestes
+de regras (incluem 12 checks REST nativos dos saves), 44 de chat Web, 12 de
+persistência Web, 9 de chat nativo, 7 de controles e 11 do build Web**, sem falhas.
+O CI do PR #2 passou; o Pages repetiu saves e regras combinadas antes de exportar.
+Recebimento no emulador nesta execução: 1,883–5,333 s; retorno da aba simulada,
+0,658 s; remoção administrativa no outro painel, 119,120 s. São medidas locais,
+não uma distribuição estatística ou medição de latência móvel/Firebase real.
+[Resumo sanitizado](validation-0.8.2.json).
 
 Não se troca o endereço, nome do banco IndexedDB, chaves de armazenamento ou
 formato dos saves nesta preparação. Não limpar dados do navegador ou apagar
@@ -81,13 +102,22 @@ O commit público anterior é `e89b0ed`. O artefato desse run expirou; antes da
 publicação foi preparado um backup dos arquivos estáticos públicos em
 `build/rollback/public-e89b0ed/`, com hashes em `rollback-manifest.json`.
 
-Para reverter via Git, em uma nova branch a partir da main publicada, reverter
-primeiro o commit de configuração da versão (registrado no deploy), depois o
-merge do chat `4902a55` e por fim o merge dos saves `2aee921`, usando `-m 1`
-nos dois merges. Preservar no commit de rollback os arquivos de regras/índices
-Firebase da versão publicada, sem fazer deploy Firebase. Revisar/exportar e
-enviar a reversão à main: o workflow anterior volta a publicar o jogo antigo
-no mesmo endereço. Não usar reset/force-push na main.
+Existe também a tag `pages-before-0.8.2`, apontando para `e89b0ed`. Para reverter
+via Git, em um checkout limpo, criar uma nova branch a partir da main e executar:
+
+```powershell
+git fetch origin
+git switch -c rollback/pages-0.8.2 origin/main
+git restore --source=pages-before-0.8.2 --staged --worktree -- project.godot export_presets.cfg scripts scenes assets web config tools tests .github/workflows
+git commit -m "Rollback Web to pre-0.8.2; preserve Firebase protections"
+git push -u origin rollback/pages-0.8.2
+```
+
+Essa restauração atua somente no aplicativo e seus workflows; mantém as regras
+Firebase, índices e relatórios versionados. Revisar/exportar e mesclar esse
+rollback na main. O workflow anterior volta a publicar o jogo antigo no mesmo
+endereço, preservando as regras versionadas.
+Não executar deploy Firebase, reset/force-push ou remoção de dados para isso.
 
 O jogo antigo pode não listar mundos criados no catálogo novo. Isso não significa
 que foram apagados: manter dados, backups e nuvem intactos para recuperação ou

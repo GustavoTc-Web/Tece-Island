@@ -1,5 +1,9 @@
 # Publicação privada do chat e sincronização
 
+**Histórico do piloto privado.** Em 17/10/2026, a versão `0.8.2` foi integrada
+à main e publicada no GitHub Pages, mantendo as duas contas autorizadas.
+[Resultado atual, retestes relatados e reversão](PUBLICACAO_0_8_2.md).
+
 ## Revisão .3 — publicada em 16/10/2026
 
 **0.8.2-chat-pilot.3**, publicada pelo Sites às **16h07 (Brasília)**, estado

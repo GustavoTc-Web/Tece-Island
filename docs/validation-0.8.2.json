@@ -1,0 +1,102 @@
+{
+  "version": "0.8.2",
+  "deployed_commit": "81aa0f96afe8aa0ded0a3d520183a332f05ea745",
+  "url": "https://gustavotc-web.github.io/Tece-Island/",
+  "actions_run": 38999412608,
+  "deploy": "success",
+  "local": {
+    "saves": 155,
+    "rules_subtests": 21,
+    "native_save_transport": 12,
+    "chat_browser": 44,
+    "save_browser": 12,
+    "chat_native": 9,
+    "controls": 7,
+    "web_build": 11,
+    "failures": 0
+  },
+  "emulated_chat_latencies": [
+    {
+      "phase": "lobby-pc-mobile",
+      "ms": 5333
+    },
+    {
+      "phase": "lobby-mobile-pc",
+      "ms": 1883
+    },
+    {
+      "phase": "paused-pc-mobile",
+      "ms": 5176
+    },
+    {
+      "phase": "paused-mobile-pc",
+      "ms": 2423
+    },
+    {
+      "phase": "simulated-tab-resume",
+      "ms": 658
+    },
+    {
+      "phase": "admin-removal",
+      "ms": 119120
+    }
+  ],
+  "live_smoke": {
+    "version": "0.8.2",
+    "commit": "81aa0f96afe8aa0ded0a3d520183a332f05ea745",
+    "physical": false,
+    "results": [
+      {
+        "ok": true,
+        "name": "manifesto 0.8.2 identifica rollout das duas contas"
+      },
+      {
+        "ok": true,
+        "name": "PC: build completo apresenta login obrigatório"
+      },
+      {
+        "ok": true,
+        "name": "pacote servido corresponde ao hash do manifesto"
+      },
+      {
+        "ok": true,
+        "name": "build confirma armazenamento local de fixture isolada"
+      },
+      {
+        "ok": true,
+        "name": "reload preserva os bytes do dado de teste"
+      },
+      {
+        "ok": true,
+        "name": "Mobile emulado: build completo apresenta login obrigatório"
+      },
+      {
+        "ok": true,
+        "name": "pacote servido corresponde ao hash do manifesto"
+      },
+      {
+        "ok": true,
+        "name": "build confirma armazenamento local de fixture isolada"
+      },
+      {
+        "ok": true,
+        "name": "reload preserva os bytes do dado de teste"
+      },
+      {
+        "ok": true,
+        "name": "login mobile permanece acessível em retrato"
+      },
+      {
+        "ok": true,
+        "name": "nenhum erro GDScript ou JavaScript na exportação integrada"
+      }
+    ],
+    "errors": []
+  },
+  "manual_report": {
+    "nickname_saved": true,
+    "open_panel_receive_both_directions_lobby_and_game": true,
+    "save_round_trip_reopen_uid_isolation": "User reports apparently all queried cases passed",
+    "all_physical_tests_approved": false
+  }
+}

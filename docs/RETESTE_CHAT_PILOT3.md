@@ -1,5 +1,11 @@
 # Reteste — 0.8.2-chat-pilot.3
 
+**Atualização em 17/10/2026:** o responsável confirmou a renomeação, o recebimento
+automático nos dois sentidos/contextos e relatou sucesso dos retestes consultados
+de sincronização, reabertura e isolamento. A versão `0.8.2` foi publicada no Pages.
+[Registro atual e pendências que continuam sem confirmação](PUBLICACAO_0_8_2.md).
+O restante abaixo preserva o roteiro e o estado histórico da entrega do piloto .3.
+
 Branch `feat/global-chat-pilot`, continuação do `0.8.2-chat-pilot.2`.
 Piloto: https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/
 Publicação e commits: [registro](PUBLICACAO_CHAT.md).
