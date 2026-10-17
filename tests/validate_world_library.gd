@@ -34,7 +34,7 @@ func run() -> void:
 	var first := a.account(one)
 	var second := a.account(two)
 	check(await first.write(state, self), "Primeiro mundo salva estado real com dono e ID")
-	check((await second.read(self)).is_empty() and (await b.account(one).read(self)).is_empty(), "Segundo mundo e outra conta não herdam inventário ou progresso")
+	check((await second.read(self)).inventory.slots.is_empty() and (await b.account(one).read(self)).is_empty(), "Segundo mundo possui save inicial próprio e outra conta não herda progresso")
 	check(not await second.write(state, self), "Escrita com ID de outro mundo é bloqueada")
 	world.world_id = two
 	inv.reset()

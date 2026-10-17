@@ -22,6 +22,9 @@ func capture() -> Dictionary:
 	result.objectives = world.objectives.capture()
 	if not world.owner_uid.is_empty(): result.owner_uid = world.owner_uid
 	if not world.world_id.is_empty(): result.world_id = world.world_id
+	if world.account_store != null:
+		result._sync = world.account_store.sync_state.duplicate(true)
+		result.world_name = world.world_name
 	result.generated_regions = []
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
@@ -177,6 +180,8 @@ func _load_progress() -> void:
 
 func save() -> bool:
 	if not writable: return false
-	var ok: bool = await world.account_store.write(capture(), world.get_tree()) if world.account_store != null else store.write(capture())
+	var snapshot := capture()
+	var ok: bool = await world.account_store.write(snapshot, world.get_tree()) if world.account_store != null else store.write(snapshot)
 	if not ok: world.get_node("HUD").show_message(world.account_store.error if world.account_store != null else store.error)
+	if ok: world.last_local_snapshot = JSON.parse_string(str(world.account_store.expected)) if world.account_store != null else snapshot
 	return ok

@@ -1,4 +1,5 @@
 extends Node2D
+signal local_conflict_found
 
 const MAP_SIZE := Vector2(6912, 1536)
 const TREE := preload("res://scenes/obstacles/tree.tscn")
@@ -12,6 +13,10 @@ var save_controller: ProgressController
 var account_store: AccountProgress
 var owner_uid := ""
 var world_id := ""
+var world_name := "Meu mundo"
+var world_library: WorldLibrary
+var last_local_snapshot := {}
+var save_hide_callback: JavaScriptObject
 var terrain: WorldTerrain
 var world_seed := 0
 var ruins: Node
@@ -28,6 +33,7 @@ var loading_progress := false
 
 
 func _ready() -> void:
+	GlobalChat.panel_changed.connect(func(): _on_panel_toggled($HUD.current_panel != ""))
 	if world_seed == 0: world_seed = int($Exploration.random_seed) if $Exploration.random_seed > 0 else randi_range(1, 2147480000)
 	if persistence_enabled:
 		if account_store == null:
@@ -172,6 +178,10 @@ func _ready() -> void:
 		save_controller.world = self
 		add_child(save_controller)
 		$HUD.initialize_save(self)
+		WorldSync.state_changed.connect(_sync_state)
+		if OS.has_feature("web"):
+			save_hide_callback = JavaScriptBridge.create_callback(func(_args): save_progress(true))
+			JavaScriptBridge.get_interface("window").tcSaveOnHide = save_hide_callback
 		$Inventory.changed.connect(save_controller.changed)
 		journal.changed.connect(save_controller.changed)
 		objectives.changed.connect(save_controller.changed)
@@ -183,11 +193,24 @@ func queue_save() -> void:
 	if save_controller != null: save_controller.changed()
 
 func save_progress(force: bool = false) -> bool:
-	return await save_controller.flush(force) if save_controller != null else true
+	var ok: bool = await save_controller.flush(force) if save_controller != null else true
+	if not ok and force and account_store != null and account_store.local_conflict: local_conflict_found.emit()
+	return ok
+
+func _sync_state(uid: String, id: String, text: String, retry: bool) -> void:
+	if not is_inside_tree(): return
+	if uid == owner_uid and id == world_id:
+		if text == "Sincronizado" and save_controller != null and save_controller.dirty:
+			$HUD.show_save_state("Alterações pendentes · Salvar agora", true)
+		else: $HUD.show_save_state(text, retry)
+
+func _exit_tree() -> void:
+	if save_hide_callback != null:
+		JavaScriptBridge.get_interface("window").tcSaveOnHide = null
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_CLOSE_REQUEST] and is_node_ready():
-		save_progress()
+		save_progress(true)
 
 func _discard(index: int, whole: bool) -> void:
 	if not DropRules.discard($Inventory, index, whole, $WorldObjects/Player, $WorldObjects, MAP_SIZE):
@@ -247,9 +270,9 @@ func update_activity() -> void:
 
 
 func _on_panel_toggled(open: bool) -> void:
-	if open and $Structures.active:
+	if (open or GlobalChat.opened) and $Structures.active:
 		$Structures.cancel()
-	var stopped: bool = open or $WorldObjects/Player.dead or OrientationGuard.blocked
+	var stopped: bool = open or $WorldObjects/Player.dead or OrientationGuard.blocked or GlobalChat.opened
 	$WorldObjects/Player.controls_blocked = stopped
 	$WorldObjects/Player/Interaction.set_blocked(stopped)
 	# HUD usa Always; o restante herda a pausa e congela relógios e física.

@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "allowed_uids": [],
+  "interval_seconds": 120
+}

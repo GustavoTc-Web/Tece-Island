@@ -286,6 +286,7 @@ func _remove_backpack() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if showing_death or event.is_echo():
 		return
 	if current_panel == "saving":
@@ -472,7 +473,7 @@ func initialize_save(world: Node2D) -> void:
 	save_notice.custom_minimum_size.x = 360
 	save_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	save_notice.add_theme_font_size_override("font_size", 12)
-	save_notice.text = "Salvo neste aparelho. Outros aparelhos não sincronizam."
+	save_notice.text = "Salvo neste aparelho. Confira a confirmação de sincronização antes de trocar de aparelho."
 	save_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$Controls/Rows.add_child(save_notice)
 	save_notice.hide()
@@ -480,14 +481,15 @@ func initialize_save(world: Node2D) -> void:
 func show_save_state(text: String, retry: bool) -> void:
 	if save_button == null: return
 	if current_panel == "saving": show_message(text)
-	save_button.text = "Falha ao salvar\nTentar novamente" if retry else text
+	save_button.text = text
+	if menu_view != null: menu_view.refresh_save_details()
 	save_button.disabled = not retry
 	save_button.custom_minimum_size.y = MobileInput.touch_minimum() if retry else 28
 	save_button.add_theme_font_size_override("font_size", int(maxf(16, ceilf(14 / MobileInput.css_scale()))) if MobileInput.enabled else 16)
 	save_button.mouse_filter = Control.MOUSE_FILTER_STOP if retry else Control.MOUSE_FILTER_IGNORE
 	save_button.visible = retry or current_panel == "" and not showing_death
 	mobile_layout(MobileInput.enabled)
-	if retry or text.begins_with("Salvando"): saved_timer.stop()
+	if retry or text.begins_with("Salvando") or text == "Sincronizando": saved_timer.stop()
 	else: saved_timer.start()
 	if menu_view != null and current_panel == "menu" and menu_view.area == "data": menu_view.open("data")
 

@@ -41,6 +41,11 @@ func can_play() -> bool:
 func account_uid() -> String:
 	return _user_id if has_session() and not logging_out else ""
 
+func access_token(owner: String) -> String:
+	return _id_token if owner != "" and account_uid() == owner else ""
+
+func session_generation() -> int: return _generation
+
 func _begin() -> bool:
 	if busy: return false
 	if not configured():
@@ -68,8 +73,10 @@ func _error_message(code: String) -> String:
 			return "Limite temporário de tentativas ou e-mails. Tente novamente mais tarde."
 		"INVALID_ID_TOKEN", "TOKEN_EXPIRED", "INVALID_REFRESH_TOKEN", "USER_NOT_FOUND":
 			return "Sua sessão expirou. Entre novamente."
-		"OPERATION_NOT_ALLOWED", "API_KEY_INVALID", "INVALID_API_KEY", "PROJECT_NUMBER_MISMATCH":
+		"OPERATION_NOT_ALLOWED", "API_KEY_INVALID", "INVALID_API_KEY", "PROJECT_NUMBER_MISMATCH", "API_KEY_SERVICE_BLOCKED", "SERVICE_DISABLED":
 			return "O serviço de autenticação precisa de configuração. Tente mais tarde."
+		"API_KEY_HTTP_REFERRER_BLOCKED", "PERMISSION_DENIED":
+			return "O Firebase bloqueou o acesso deste endereço. Confira a autorização do endereço e da chave no projeto. Seus saves locais foram preservados."
 		"UNAUTHORIZED_DOMAIN", "INVALID_CONTINUE_URI":
 			return "O endereço de retorno precisa ser autorizado no Firebase."
 	return "Não foi possível concluir a autenticação. Tente novamente."
@@ -182,7 +189,13 @@ func check_verification() -> void:
 		message_changed.emit("Entre novamente para validar a confirmação.")
 		return
 	if not _begin(): return
-	await _check_user()
+	# Lookup alone can report emailVerified=true while the old JWT still carries
+	# email_verified=false. Rules inspect the JWT: refresh before authorizing play.
+	_verified = false
+	var result := await _request("", {"refresh_token": _refresh_token}, true)
+	if result.get("ok", false) and _store_tokens(result.data, true):
+		await _check_user()
+	else: _report_failure(result)
 	_end()
 
 func recover_password(email: String) -> void:

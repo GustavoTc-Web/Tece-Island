@@ -21,7 +21,9 @@ MobileInput="*res://scripts/mobile_input.gd"
 FirebaseAuth="*res://scripts/auth/firebase_auth.gd"
 CombatAudio="*res://scripts/combat_audio.gd"
 BrowserPersistence="*res://scripts/browser_persistence.gd"
+WorldSync="*res://scripts/world_sync.gd"
 OrientationGuard="*res://scripts/orientation_guard.gd"
+GlobalChat="*res://scripts/chat/global_chat.gd"
 
 [display]
 

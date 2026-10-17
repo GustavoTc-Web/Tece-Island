@@ -3,6 +3,12 @@
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
 O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no desktop.
 
+Confiabilidade dos saves e piloto de sincronização Firestore:
+[investigação, configuração e testes](docs/SAVES_E_SINCRONIZACAO.md).
+A sincronização pública permanece desativada até validar a migração e a ida/volta
+em aparelhos reais. Para mundos desaparecidos, siga a
+[exportação e recuperação sem apagar armazenamento](docs/RECUPERAR_MUNDO.md).
+
 ## Começar
 
 Importe `project.godot`, execute com F5 e entre com uma conta de e-mail confirmado.
@@ -19,7 +25,8 @@ mesma partida, restaurando vida, fome e sede. Usa a cama definida ou a clareira 
 O modo solo salva mundo, inventário, equipamento, bases, baús, diário e objetivos
 por UID da conta Firebase **e ID do mundo**. Salva periodicamente a cada 30 segundos, após mudanças
 importantes, ao perder foco e antes de retornar ao menu ou sair da conta.
-O indicador lateral distingue Salvando…, Salvo e falha com nova tentativa.
+O indicador distingue gravação local, sincronizando, sincronizado e pendência/falha
+com nova tentativa. Sincronizado exige confirmação do serviço.
 Godot usa `user://accounts/<SHA-256 do UID>/worlds/<ID>/progress.json`, temporário,
 cópia anterior `.backup.json` e backup versionado antes da migração para v5.
 O catálogo fica em `worlds.json` na pasta da conta. O save anterior dessa conta
@@ -28,7 +35,8 @@ arquivo original. Inventário, equipamento, baús, objetivos e mundo são indepe
 Na Web, uma transação IndexedDB confirma a gravação e conserva a cópia anterior.
 O arquivo antigo `user://solo-progress.json` permanece intacto: o menu oferece
 uma importação única e confirmada para a conta atual, sem sobrescrever progresso.
-Desktop e navegador têm saves separados; não há sincronização em nuvem.
+Desktop e navegador mantêm cópias locais. O piloto Firestore permite continuar
+os mesmos mundos entre aparelhos; a ativação pública permanece desabilitada.
 Limpar os dados do site apaga o progresso local. Senhas e tokens continuam
 somente em memória e nunca fazem parte do save.
 
@@ -289,3 +297,8 @@ na validação. Resultados e capturas ficam em `.tools/`, fora do Git.
 
 Avalie desempenho no aparelho alvo. Movimento, combate, necessidades e ciclo
 usam tempo de simulação; valores não foram alterados para compensar FPS.
+
+## Piloto de chat global
+
+Preparado separadamente na branch `feat/global-chat-pilot`, desativado por padrão.
+Veja [configuração e execução](docs/CHAT_GLOBAL.md) e [validação e capturas](docs/VALIDACAO_CHAT.md).

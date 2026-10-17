@@ -67,28 +67,120 @@ window.tcWorldNameDialog=(()=>{
  function open(title,value,callback){close();handler=callback;busy=false;root=document.createElement('section');root.id='world-dialog';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.innerHTML='<form><h2></h2><label for="world-name">Nome do mundo</label><input id="world-name" type="text" maxlength="40" autocomplete="off" spellcheck="false"><p role="status" aria-live="polite"></p><div class="actions"><button id="world-confirm" type="submit">Confirmar</button><button id="world-cancel" type="button">Cancelar</button></div></form>';root.querySelector('h2').textContent=title;root.querySelector('input').value=value;document.body.append(root);for(const event of ['keydown','keyup','keypress','pointerdown','pointerup','touchstart','touchend'])root.addEventListener(event,e=>e.stopPropagation());root.addEventListener('keydown',e=>{if(e.key==='Escape'&&!busy){e.preventDefault();handler('cancel','');}});root.querySelector('form').onsubmit=e=>{e.preventDefault();if(!busy)handler('confirm',root.querySelector('input').value);};root.querySelector('#world-cancel').onclick=()=>{if(!busy)handler('cancel','');};window.addEventListener('resize',viewport);visualViewport?.addEventListener('resize',viewport);visualViewport?.addEventListener('scroll',viewport);viewport();root.querySelector('input').focus({preventScroll:true});root.querySelector('input').select();}
  return{open,close,setBusy:value=>{busy=value;if(root){for(const el of root.querySelectorAll('input,button'))el.disabled=value;root.querySelector('#world-confirm').textContent=value?'Salvando…':'Confirmar';}},message:text=>{if(root)root.querySelector('[role=status]').textContent=text;}};
 })();
+// Chat view only. Identity, network and permissions stay in the shared Godot
+// service and Firestore rules. User strings enter the DOM through textContent.
+window.tcChat=(()=>{
+ let root,launch,panel,list,nickForm,nick,input,send,notice,connection,profile,editNick,cancelNick,newMessages,retry,handler,state={},signature='',clearVersion=-1,unread=0,events;
+ const atBottom=()=>list.scrollHeight-list.scrollTop-list.clientHeight<60;
+ function clearUnread(){unread=0;newMessages.hidden=true;}
+ function button(text,action){const b=document.createElement('button');b.type='button';b.textContent=text;b.onclick=action;return b;}
+ function viewport(){if(!panel)return;const v=window.visualViewport,height=v?.height||innerHeight;panel.style.top=((v?.offsetTop||0)+8)+'px';panel.style.maxHeight=Math.max(100,height-16)+'px';panel.classList.toggle('compact',height<=300);}
+ function mount(callback){
+  if(root)root.remove();events?.abort();events=new AbortController();handler=callback;signature='';clearVersion=-1;
+  const style=document.createElement('style');style.textContent=`
+   #tc-chat{font:16px Atkinson,system-ui;color:#f5eddb;position:relative;z-index:80}
+   #tc-chat [hidden]{display:none!important} #tc-chat button,#tc-chat input{font:inherit;box-sizing:border-box;min-height:44px;border:1px solid #647755;border-radius:8px;color:#f5eddb;background:#213c30;padding:8px 12px}
+   #tc-chat button{cursor:pointer} #tc-chat button:hover,#tc-chat :focus-visible{border-color:#e9bb70;outline:2px solid #e9bb70;outline-offset:1px} #tc-chat button:disabled{opacity:.55;cursor:wait}
+   #chat-launch{position:fixed;left:calc(50% - 48px);top:max(10px,env(safe-area-inset-top));width:96px;background:#172f27ed!important}
+   #chat-panel{position:fixed;right:max(8px,env(safe-area-inset-right));width:min(480px,calc(100vw - 16px));height:520px;max-height:calc(100dvh - 16px);box-sizing:border-box;display:flex;flex-direction:column;gap:8px;border:1px solid #75825a;border-radius:12px;background:#172f27fa;padding:12px;box-shadow:0 8px 36px #07140fc9}
+   #chat-panel header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none} #chat-panel h2{font:22px Bree,serif;color:#e9bb70;margin:0} #chat-notice{font-size:14px;color:#d7dfc8;margin:0;flex:none;overflow-wrap:anywhere}
+   #chat-list{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;min-height:36px;flex:1;margin:0;padding:0;list-style:none} #chat-list li{padding:10px 8px;border-bottom:1px solid #41533f;overflow-wrap:anywhere} #chat-list p{margin:5px 0;white-space:pre-wrap} #chat-list .author{color:#e9bb70} #chat-list time{font-size:13px;color:#c3cbb5;margin-left:8px} #chat-list .moderation{display:flex;gap:8px} #chat-list .moderation button{font-size:13px;min-height:44px;padding:6px 10px}
+   #chat-panel form{display:flex;gap:8px;flex:none;min-width:0} #chat-panel input{min-width:0;width:0;flex:1;background:#0e241c} #chat-tools{display:flex;gap:8px;flex:none} #chat-tools button{font-size:13px;padding:6px 10px} #chat-hint{font-size:12px;color:#b9c6ac;margin:0;flex:none}
+   #chat-profile{display:flex;align-items:center;gap:8px;font-size:14px;flex:none} #chat-profile span{flex:1;overflow-wrap:anywhere} #chat-connection{font-size:12px;margin:0;flex:none;overflow-wrap:anywhere} #chat-new{flex:none}
+   #chat-panel.compact{padding:8px;gap:4px} #chat-panel.compact h2{font-size:18px} #chat-panel.compact #chat-notice{font-size:12px;max-height:2.5em;overflow:auto} #chat-panel.compact #chat-tools,#chat-panel.compact #chat-hint,#chat-panel.compact #chat-profile,#chat-panel.compact #chat-connection{display:none} #chat-panel.compact #chat-list{min-height:0}
+   @media(max-height:420px){#chat-panel{padding:8px;gap:4px;height:calc(100dvh - 16px)} #chat-panel h2{font-size:18px} #chat-hint{display:none} #chat-notice{font-size:12px} #chat-tools button{min-height:44px}}`;
+  document.head.append(style);root=document.createElement('section');root.id='tc-chat';root.hidden=true;document.body.append(root);
+  launch=button('Chat',()=>handler('toggle'));launch.id='chat-launch';launch.setAttribute('aria-controls','chat-panel');root.append(launch);
+  panel=document.createElement('section');panel.id='chat-panel';panel.hidden=true;panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Chat global');panel.setAttribute('aria-modal','true');root.append(panel);
+  const header=document.createElement('header'),title=document.createElement('h2');title.textContent='Chat global · piloto';header.append(title,button('Recolher',()=>handler('toggle')));panel.append(header);
+  notice=document.createElement('p');notice.id='chat-notice';notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');panel.append(notice);
+  connection=document.createElement('p');connection.id='chat-connection';panel.append(connection);
+  const profileRow=document.createElement('div');profileRow.id='chat-profile';profile=document.createElement('span');editNick=button('Alterar apelido',()=>handler('edit_nickname'));editNick.id='chat-edit-nickname';profileRow.append(profile,editNick);panel.append(profileRow);
+  list=document.createElement('ol');list.id='chat-list';list.setAttribute('aria-label','Mensagens recentes');panel.append(list);
+  newMessages=button('Novas mensagens · Ver',()=>{list.scrollTop=list.scrollHeight;clearUnread();});newMessages.id='chat-new';newMessages.hidden=true;newMessages.setAttribute('aria-live','polite');panel.append(newMessages);list.addEventListener('scroll',()=>{if(atBottom())clearUnread();});
+  nickForm=document.createElement('form');nick=document.createElement('input');nick.id='chat-nickname';nick.placeholder='Apelido (2 a 20 caracteres)';nick.maxLength=20;nick.autocomplete='off';nick.enterKeyHint='done';nick.setAttribute('aria-label','Seu apelido');const save=button('Salvar',()=>{});save.id='chat-save-nickname';save.type='submit';cancelNick=button('Cancelar',()=>handler('cancel_nickname'));nickForm.append(nick,save,cancelNick);nickForm.onsubmit=e=>{e.preventDefault();handler('nickname',nick.value);};panel.append(nickForm);
+  const form=document.createElement('form');form.id='chat-composer';input=document.createElement('input');input.id='chat-text';input.placeholder='Escreva uma mensagem…';input.autocomplete='off';input.enterKeyHint='send';input.setAttribute('aria-label','Mensagem, até 200 caracteres');input.oninput=()=>{input.value=Array.from(input.value).slice(0,200).join('');updateSend();};send=button('Enviar',()=>{});send.id='chat-send';send.type='submit';form.append(input,send);form.onsubmit=e=>{e.preventDefault();if(!send.disabled)handler('send',input.value);};panel.append(form);
+  const tools=document.createElement('div');tools.id='chat-tools';const unmute=button('Reativar silenciados',()=>handler('unmute'));unmute.id='chat-unmute';retry=button('Tentar conexão',()=>handler('retry'));retry.id='chat-retry';tools.append(unmute,retry);panel.append(tools);
+  const hint=document.createElement('p');hint.id='chat-hint';hint.textContent='Até 200 caracteres · intervalo de 5 s · silenciar vale neste aparelho';panel.append(hint);
+  for(const event of ['keydown','keyup','keypress','pointerdown','pointerup','mousedown','mouseup','touchstart','touchend','touchmove','wheel'])root.addEventListener(event,e=>e.stopPropagation());
+  root.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();handler('toggle');}if(e.key==='Tab'&&state.opened){const controls=[...panel.querySelectorAll('button,input')].filter(el=>!el.disabled&&el.getClientRects().length);const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+  const opts={signal:events.signal};window.addEventListener('resize',viewport,opts);window.visualViewport?.addEventListener('resize',viewport,opts);window.visualViewport?.addEventListener('scroll',viewport,opts);
+  const wake=()=>{if(!document.hidden)handler('wake');};document.addEventListener('visibilitychange',wake,opts);for(const event of ['online','pageshow','focus'])window.addEventListener(event,wake,opts);viewport();
+ }
+ function updateSend(){send.disabled=state.busy||!state.ready||state.remaining>0||!input.value.trim();send.textContent=state.busy?'Enviando…':state.remaining>0?state.remaining+' s':'Enviar';}
+ function render(next){
+  if(!root)return;const wasOpen=state.opened,wasEditing=state.editing_nickname,oldUid=state.uid,previous=state.messages||[];state=next;root.hidden=!state.available;launch.hidden=!!state.opened;launch.setAttribute('aria-expanded',String(!!state.opened));panel.hidden=!state.opened;notice.textContent=state.status;
+  connection.textContent=state.connection_error||(state.last_sync?'Conectado · atualizado às '+state.last_sync+' · automático':'Aguardando conexão');retry.hidden=!state.connection_error;retry.disabled=state.busy||state.retry_seconds>0;
+  profile.textContent=state.nickname?'Apelido atual: '+state.nickname:'Escolha seu apelido';editNick.hidden=!state.nickname||state.editing_nickname;editNick.disabled=state.busy;
+  nickForm.hidden=!!state.nickname&&!state.editing_nickname;cancelNick.hidden=!state.nickname;for(const el of nickForm.elements)el.disabled=state.busy||!state.ready;
+  document.querySelector('#chat-composer').hidden=!state.nickname||state.editing_nickname;input.disabled=state.busy;document.querySelector('#chat-unmute').hidden=!state.muted;
+  if(oldUid!==state.uid){nick.value='';clearUnread();signature='';}
+  if(state.editing_nickname&&!wasEditing){nick.value=state.nickname;nick.focus();nick.select();}
+  if(clearVersion!==state.clear_draft){input.value='';clearVersion=state.clear_draft;}updateSend();
+  const nextSignature=JSON.stringify([state.messages,state.admin]);if(signature!==nextSignature){
+   signature=nextSignature;const nearBottom=atBottom(),oldTop=list.scrollTop,top=list.getBoundingClientRect().top,anchor=[...list.children].find(el=>el.getBoundingClientRect().bottom>top),anchorKey=anchor?.dataset.sequence,anchorOffset=anchor?.getBoundingClientRect().top-top,oldMax=Math.max(0,...previous.map(m=>Number(m.sequence)));list.replaceChildren();
+   for(const message of state.messages){const li=document.createElement('li'),author=document.createElement('span'),time=document.createElement('time'),text=document.createElement('p'),actions=document.createElement('div');li.dataset.sequence=message.sequence;author.className='author';author.textContent=message.nickname;time.dateTime=message.sent_at;time.textContent=new Date(message.sent_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});text.textContent=message.text;actions.className='moderation';if(message.uid!==state.uid)actions.append(button('Silenciar',()=>handler('mute',message.uid)));if(state.admin)actions.append(button('Remover',()=>{if(confirm('Remover esta mensagem do chat global?'))handler('remove',message.id);}));li.append(author,time,text,actions);list.append(li);}
+   if(nearBottom){list.scrollTop=list.scrollHeight;clearUnread();}else{list.scrollTop=oldTop;const retained=[...list.children].find(el=>el.dataset.sequence===anchorKey);if(retained)list.scrollTop+=retained.getBoundingClientRect().top-top-anchorOffset;unread+=state.messages.filter(m=>Number(m.sequence)>oldMax).length;newMessages.hidden=!unread;newMessages.textContent=unread+' novas mensagens · Ver';}
+  }
+  if(state.opened&&!wasOpen)viewport();
+  if(!state.opened&&wasOpen){input.blur();nick.blur();document.querySelector('#canvas')?.focus();}
+ }
+ return{mount,render};
+})();
 // Called directly from a touch gesture; rejection leaves manual rotation usable.
 window.tcRequestLandscape=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();}catch(_error){}try{await screen.orientation?.lock?.('landscape');}catch(_error){}};
 document.querySelector('#retry').onclick=()=>location.reload();
 function fail(error){status.style.display='flex';message.textContent='Não foi possível iniciar o jogo. Verifique sua conexão e o suporte a WebGL 2 do navegador. Você pode recarregar e tentar novamente.';progress.hidden=true;document.querySelector('#retry').hidden=false;console.error(error);}
 const engine=new Engine($GODOT_CONFIG);
-// Local game progress only. A transaction acknowledges durable browser storage.
+// Keep this database name stable across releases. Never clear it on login/logout.
+// getRandomValues also works on the HTTP LAN origin used by the mobile pilot.
+function tcBackupId(){const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);return Array.from(bytes,v=>v.toString(16).padStart(2,'0')).join('');}
 window.tcLocalProgress={request:async(operation,key,payload,claim,done)=>{
  let db;
  try{
   db=await new Promise((resolve,reject)=>{const r=indexedDB.open('tece-island-progress-v4',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onblocked=()=>reject(new Error('blocked'));});
-  const tx=db.transaction('saves',operation==='read'?'readonly':'readwrite'),store=tx.objectStore('saves');let value=null;
-  tx.oncomplete=()=>{db.close();done(JSON.stringify({ok:true,value}));};
+  const mode=['read','scan'].includes(operation)?'readonly':'readwrite';
+  let tx;try{tx=db.transaction('saves',mode,{durability:'strict'});}catch{tx=db.transaction('saves',mode);}
+  const store=tx.objectStore('saves');let value=null,failure=null;
+  tx.oncomplete=()=>{db.close();done(JSON.stringify(failure||{ok:true,value}));};
   tx.onabort=()=>{db.close();done(JSON.stringify({ok:false,error:'Falha no armazenamento local. O progresso anterior foi preservado. Tente novamente.'}));};
   tx.onerror=()=>{};
   if(operation==='read'){const r=store.get(key);r.onsuccess=()=>{value=r.result??null;};}
-  else if(operation==='write'){const r=store.get(key);r.onsuccess=()=>{if(r.result!==undefined){store.put(r.result,key+':backup');try{if(JSON.parse(r.result).inventory&&JSON.parse(r.result).version<5){const old=store.get(key+':before-v5');old.onsuccess=()=>{if(old.result===undefined)store.put(r.result,key+':before-v5');};}}catch(_error){tx.abort();return;}}store.put(payload,key);};}
+  else if(operation==='scan'){value=[];const r=store.openCursor();r.onsuccess=()=>{const c=r.result;if(!c)return;if(String(c.key).startsWith(key))value.push({key:c.key,value:c.value});c.continue();};}
+  else if(operation==='preserve'){const r=store.get(key);r.onsuccess=()=>{if(r.result===undefined)return;const target=key+':'+claim+(claim==='before-cloud'?'':'-'+tcBackupId());const before=store.get(target);before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,target);};};}
+  else if(operation==='write'){
+   const r=store.get(key);r.onsuccess=()=>{
+    if(claim&&JSON.parse(claim).expected!==(r.result??null)){
+     store.put(payload,key+':conflict-'+tcBackupId());
+     failure={ok:false,conflict:true,error:'Outra sessão alterou este mundo. Sua versão foi preservada como backup; reabra o lobby.'};return;
+    }
+    if(r.result!==undefined){
+     let old;try{old=JSON.parse(r.result);}catch{old=null;}
+     if(old&&typeof old==='object'){
+      const previous=store.get(key+':backup');previous.onsuccess=()=>{if(previous.result!==undefined)store.put(previous.result,key+':backup-2');store.put(r.result,key+':backup');};
+      if(old.inventory&&old.version<5){const before=store.get(key+':before-v5');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-v5');};}
+     }else store.put(r.result,key+':unreadable-'+tcBackupId());
+    }
+    store.put(payload,key);
+   };
+  }
   else if(operation==='migrate'){const original=store.get(claim);original.onsuccess=()=>{if(original.result===undefined){tx.abort();return;}const backup=store.get(claim+':before-worlds');backup.onsuccess=()=>{if(backup.result===undefined)store.put(original.result,claim+':before-worlds');};const target=store.get(key);target.onsuccess=()=>{if(target.result===undefined)store.put(payload,key);};};}
   else if(operation==='import'){
-   const r=store.get('legacy-import-v4');r.onsuccess=()=>{if(r.result!==undefined){tx.abort();return;}const target=store.get(key);target.onsuccess=()=>{if(target.result!==undefined){tx.abort();return;}store.put(payload,key);store.put(claim,'legacy-import-v4');};};
+   const r=store.get('legacy-import-v4');r.onsuccess=()=>{if(r.result!==undefined){tx.abort();return;}const target=store.get(key);target.onsuccess=()=>{if(target.result!==undefined){tx.abort();return;}const imported=JSON.parse(claim);store.put(imported.original,'legacy-original-v4');store.put(payload,key);store.put(imported.uid_hash,'legacy-import-v4');};};
   }else tx.abort();
  }catch(_error){if(db)db.close();done(JSON.stringify({ok:false,error:'Armazenamento do navegador indisponível. Libere espaço e tente novamente.'}));}
 }};
+// A background/focus save supplements periodic saves; unload is never the only save.
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&window.tcSaveOnHide)window.tcSaveOnHide();});
+window.tcRequestPersistence=async()=>navigator.storage?.persist?await navigator.storage.persist():false;
+// Read-only diagnostics. Contains game progress, never authentication tokens.
+window.tcExportLocalSaves=async()=>{
+ const result=await new Promise(resolve=>window.tcLocalProgress.request('scan','', '', '',r=>resolve(JSON.parse(r))));
+ if(!result.ok)throw new Error(result.error);
+ const blob=new Blob([JSON.stringify({format:1,origin:location.origin,exportedAt:new Date().toISOString(),entries:result.value},null,2)],{type:'application/json'});
+ const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='tece-island-saves.json';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+ return {entries:result.value.length,bytes:blob.size};
+};
 // Render at display density, capped at 2 to bound fill-rate on mobile GPUs.
 function resize(){const r=document.querySelector('#stage').getBoundingClientRect(),density=Math.min(window.devicePixelRatio||1,2);const width=Math.max(1,Math.round(r.width*density)),height=Math.max(1,Math.round(r.height*density));if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;}
 window.addEventListener('resize',resize);new ResizeObserver(resize).observe(document.querySelector('#stage'));

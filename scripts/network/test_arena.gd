@@ -47,7 +47,7 @@ func local_id() -> int:
 	return multiplayer.get_unique_id()
 
 func local_blocked() -> bool:
-	return not actors.has(local_id()) or $HUD.current_panel != "" or actors[local_id()].body.dead
+	return GlobalChat.opened or not actors.has(local_id()) or $HUD.current_panel != "" or actors[local_id()].body.dead
 
 func add_actor(id: int, server: bool) -> void:
 	if actors.has(id): return

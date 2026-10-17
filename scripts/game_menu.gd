@@ -47,7 +47,7 @@ func _ready() -> void:
 	copy_button.pressed.connect(func(): DisplayServer.clipboard_set(diagnostic()); hud.show_message("Informações copiadas. Envie junto da descrição do problema."))
 	rows.add_child(copy_button)
 	retry_button = Button.new()
-	retry_button.text = "Tentar salvar novamente"
+	retry_button.text = "Salvar e tentar sincronizar"
 	retry_button.pressed.connect(func(): if hud.save_button != null: hud.save_button.pressed.emit())
 	rows.add_child(retry_button)
 	var back := Button.new()
@@ -66,14 +66,34 @@ func open(value: String = "menu") -> void:
 		button.disabled = button.text == "Diário e objetivos" and hud.journal_view == null or button.text == "Sair da conta" and not FirebaseAuth.enabled()
 	text.visible = value != "menu"
 	copy_button.visible = value == "help"
-	retry_button.visible = value == "data" and hud.save_button != null and not hud.save_button.disabled
+	retry_button.visible = value == "data" and hud.save_button != null
 	rows.get_node("Back").visible = value != "menu"
 	if value == "help":
 		var controls := "Use os joysticks para andar e mirar/atacar. Toque Interagir para coletar ou abrir o alvo próximo. Toque nos cinco slots para selecionar; Inventário permite usar, equipar e jogar itens." if MobileInput.enabled else "WASD/setas: andar. Mouse/F: atacar. E: coletar/interagir. 1–5/scroll: selecionar. I: inventário; C: fabricação; J: diário; R: recarregar."
 		text.text = controls + "\n\nFabricação e Base ficam no inventário. Para construir, selecione cama, fogueira ou peça e use Colocar selecionado; escolha terreno próximo e livre. " + ("Toque no mapa para ajustar e use Confirmar/Cancelar." if MobileInput.enabled else "Clique confirma, Esc cancela, R gira peças.") + "\n\nComida e cantil: Usar no inventário ou botão contextual. Poços permitem beber e encher o cantil. Cozinhe perto de uma fogueira.\n\nO solo salva automaticamente neste aparelho. Confira Dados e salvamento se houver uma falha. Para relatar um problema, copie as informações abaixo e envie manualmente com sua descrição; não inclua senha."
 	elif value == "data":
-		text.text = "O progresso solo é salvo localmente por conta neste aparelho/navegador. Outro aparelho não sincroniza. Limpar dados do navegador pode apagar o progresso local.\n\n" + (hud.save_button.text if hud.save_button != null else "A arena multiplayer não usa o save do mundo solo.")
+		refresh_save_details()
 	layout()
+
+func save_details() -> String:
+	var world := hud.get_parent()
+	if world.account_store == null: return "A arena multiplayer não usa o save do mundo solo."
+	var account: AccountProgress = world.account_store
+	var sync := get_tree().root.get_node("WorldSync")
+	var detail := "Mundo: " + account.world_id + "\nÚltima revisão confirmada: " + str(account.sync_state.get("revision", 0))
+	if world.progress_store != null:
+		var unchanged: bool = CloudCodec.hash_state(world.progress_store.capture()) == account.sync_state.get("hash", "")
+		detail += "\nProgresso local: " + ("igual à última versão sincronizada." if unchanged else "alterações ainda não sincronizadas.")
+	if not sync.enabled(account.uid): detail += "\nSincronização indisponível para esta conta nesta versão."
+	var notice := str(sync.states.get(sync.key(account), {}).get("detail", ""))
+	if notice != "": detail += "\n" + notice
+	var failure: Dictionary = sync.last_errors.get(sync.key(account), {})
+	if not failure.is_empty(): detail += "\n" + str(failure.error) + "\nHTTP: " + str(failure.status) + " " + str(failure.code)
+	return detail
+
+func refresh_save_details() -> void:
+	if area != "data": return
+	text.text = "O progresso é salvo periodicamente neste aparelho. Aguarde Sincronizado antes de trocar de aparelho. Tentativas automáticas têm intervalo de pelo menos 2 minutos; o botão permite tentar antes, respeitando 10 segundos entre pedidos.\n\n" + (hud.save_button.text if hud.save_button != null else "Save indisponível.") + "\n\n" + save_details()
 
 func invoke(caption: String) -> void:
 	match caption:
@@ -106,4 +126,9 @@ func diagnostic() -> String:
 	var screen := DisplayServer.window_get_size()
 	if OS.has_feature("web"):
 		screen = Vector2i(int(JavaScriptBridge.eval("innerWidth")), int(JavaScriptBridge.eval("innerHeight")))
-	return "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.8.1-atalhos-mobile")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
+	var info := "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.8.1-atalhos-mobile")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
+	if OS.has_feature("web"): info += "\nOrigem: " + str(JavaScriptBridge.eval("location.origin"))
+	var world := hud.get_parent()
+	if world.account_store != null and world.progress_store != null:
+		info += "\nHash local: " + CloudCodec.hash_state(world.progress_store.capture()) + "\nHash confirmado: " + str(world.account_store.sync_state.get("hash", ""))
+	return info + "\n" + (hud.save_button.text if hud.save_button != null else "") + "\n" + save_details()

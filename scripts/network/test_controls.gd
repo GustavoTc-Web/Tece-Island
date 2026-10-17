@@ -31,7 +31,7 @@ func send_input() -> void:
 	var movement := Input.get_vector("move_left", "move_right", "move_up", "move_down") if focused and not arena.local_blocked() else Vector2.ZERO
 	var aim := aim_direction()
 	input_sequence += 1
-	arena.submit_input(input_sequence, movement, aim, mouse_held, key_held)
+	arena.submit_input(input_sequence, movement, aim, mouse_held and not GlobalChat.opened, key_held and not GlobalChat.opened)
 
 func aim_direction() -> Vector2:
 	if not arena.actors.has(arena.local_id()): return Vector2.RIGHT
@@ -39,6 +39,7 @@ func aim_direction() -> Vector2:
 	return (body.get_canvas_transform().affine_inverse() * cursor - body.global_position).normalized()
 
 func _input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if event is InputEventMouseMotion or event is InputEventMouseButton: cursor = event.position
 	if event.is_action_released("hit"):
 		mouse_held = false
@@ -49,6 +50,7 @@ func _input(event: InputEvent) -> void:
 	if arena.local_blocked() or event.is_echo(): return
 
 func _unhandled_input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if arena.local_blocked() or event.is_echo(): return
 	var focus := get_viewport().gui_get_focus_owner()
 	if focus is LineEdit or focus is TextEdit: return
