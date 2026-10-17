@@ -2,6 +2,7 @@ name: Validar saves e regras Firestore
 on:
   pull_request:
   workflow_dispatch:
+  workflow_call:
 permissions:
   contents: read
 jobs:
@@ -31,4 +32,4 @@ jobs:
           for test in validate_world_library validate_account_progress validate_session_progress validate_save_reliability validate_world_sync validate_chest_bow_save validate_auth_release validate_sync_pilot validate_sync_handoff; do
             "$GODOT_EXE" --headless --path . --script "tests/$test.gd"
           done
-      - run: npm run test:rules
+      - run: npm run test:chat

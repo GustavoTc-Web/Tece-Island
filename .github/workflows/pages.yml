@@ -11,7 +11,10 @@ concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
+  validate:
+    uses: ./.github/workflows/save-validation.yml
   export:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,8 +36,10 @@ jobs:
           FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
         run: node tools/configure-firebase.mjs
       - name: Exportar
+        env:
+          TECE_PILOT_ALLOWED_UIDS: ${{ vars.TECE_PILOT_ALLOWED_UIDS }}
         run: |
-          node tools/configure-world-sync.mjs
+          node tools/configure-release-access.mjs
           node tools/stamp-build.mjs
           mkdir -p build/web
           touch build/.gdignore
@@ -43,6 +48,7 @@ jobs:
           mkdir -p build/web/assets/fonts
           cp assets/fonts/*.ttf assets/fonts/*OFL.txt assets/fonts/README.md build/web/assets/fonts/
           touch build/web/.nojekyll
+          node tools/write-web-manifest.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
