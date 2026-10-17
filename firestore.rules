@@ -73,6 +73,87 @@ service cloud.firestore {
         }
       }
     }
+    // Global chat pilot. World rules above are unchanged. No client may enable
+    // the pilot or grant itself administrator access, including an administrator.
+    function chatVerified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function chatAccess() {
+      let settings = get(/databases/$(database)/documents/chatSettings/global).data;
+      return chatVerified() && settings.enabled == true
+        && request.auth.uid in settings.allowed_uids;
+    }
+    function chatAdmin() {
+      return chatAccess() && request.auth.uid in
+        get(/databases/$(database)/documents/chatSettings/global).data.admin_uids;
+    }
+    function chatCounter() {
+      return getAfter(/databases/$(database)/documents/chatRuntime/global).data;
+    }
+    function chatRate() {
+      return getAfter(/databases/$(database)/documents/chatRates/$(request.auth.uid)).data;
+    }
+    function chatWaited() {
+      return !exists(/databases/$(database)/documents/chatRates/$(request.auth.uid))
+        || request.time >= get(/databases/$(database)/documents/chatRates/$(request.auth.uid)).data.sent_at + duration.value(5, 's');
+    }
+    function chatStamp(d) {
+      return d.keys().hasAll(['sequence', 'sent_at'])
+        && d.keys().hasOnly(['sequence', 'sent_at'])
+        && d.sequence is int && d.sequence > 0 && d.sequence <= 1000000000
+        && d.sent_at == request.time;
+    }
+    function chatNext(d) {
+      return (!exists(/databases/$(database)/documents/chatRuntime/global) && d.sequence == 1)
+        || d.sequence == get(/databases/$(database)/documents/chatRuntime/global).data.sequence + 1;
+    }
+    function chatMessage(d, slot) {
+      return d.keys().hasAll(['sequence', 'sent_at', 'uid', 'nickname', 'text'])
+        && d.keys().hasOnly(['sequence', 'sent_at', 'uid', 'nickname', 'text'])
+        && d.sequence is int && slot == string(d.sequence % 100)
+        && d.sequence == chatCounter().sequence && chatNext(d)
+        && d.sent_at == request.time && chatCounter().sent_at == request.time
+        && d.uid == request.auth.uid
+        && d.nickname == get(/databases/$(database)/documents/chatProfiles/$(request.auth.uid)).data.nickname
+        && d.text is string && d.text.size() > 0 && d.text.size() <= 200
+        && d.text.matches('.*[^ \\t\\n\\r].*')
+        && chatRate().sequence == d.sequence && chatRate().sent_at == request.time
+        && chatWaited();
+    }
+    match /chatSettings/global {
+      allow get: if chatAccess();
+      allow list, write: if false;
+    }
+    match /chatProfiles/{uid} {
+      allow get: if chatAccess() && request.auth.uid == uid;
+      allow create, update: if chatAccess() && request.auth.uid == uid
+        && request.resource.data.keys().hasAll(['nickname'])
+        && request.resource.data.keys().hasOnly(['nickname'])
+        && request.resource.data.nickname is string
+        && request.resource.data.nickname.size() >= 2 && request.resource.data.nickname.size() <= 20
+        && request.resource.data.nickname.matches('^[A-Za-z0-9_À-ÖØ-öø-ÿ-][A-Za-z0-9_À-ÖØ-öø-ÿ -]{0,18}[A-Za-z0-9_À-ÖØ-öø-ÿ-]$');
+      allow delete, list: if false;
+    }
+    match /chatRates/{uid} {
+      allow get: if chatAccess() && request.auth.uid == uid;
+      allow create, update: if chatAccess() && request.auth.uid == uid
+        && chatStamp(request.resource.data) && chatNext(request.resource.data)
+        && request.resource.data == chatCounter() && chatWaited();
+      allow delete, list: if false;
+    }
+    match /chatRuntime/global {
+      allow get: if chatAccess();
+      allow create, update: if chatAccess() && chatStamp(request.resource.data)
+        && chatNext(request.resource.data) && request.resource.data == chatRate()
+        && chatMessage(getAfter(/databases/$(database)/documents/globalMessages/$(string(request.resource.data.sequence % 100))).data, string(request.resource.data.sequence % 100));
+      allow delete, list: if false;
+    }
+    match /globalMessages/{slot} {
+      allow get: if chatAccess();
+      allow list: if chatAccess() && request.query.limit != null && request.query.limit <= 50;
+      allow create, update: if chatAccess() && chatMessage(request.resource.data, slot);
+      allow delete: if chatAdmin();
+    }
     match /{document=**} { allow read, write: if false; }
   }
 }

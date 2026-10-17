@@ -1,6 +1,10 @@
 {
   "indexes": [],
   "fieldOverrides": [
+    {"collectionGroup": "globalMessages", "fieldPath": "text", "indexes": []},
+    {"collectionGroup": "globalMessages", "fieldPath": "uid", "indexes": []},
+    {"collectionGroup": "globalMessages", "fieldPath": "nickname", "indexes": []},
+    {"collectionGroup": "globalMessages", "fieldPath": "sent_at", "indexes": []},
     {"collectionGroup": "chunks", "fieldPath": "payload", "indexes": []},
     {"collectionGroup": "chunks", "fieldPath": "index", "indexes": []},
     {"collectionGroup": "versions", "fieldPath": "*", "indexes": []},

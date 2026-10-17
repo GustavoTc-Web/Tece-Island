@@ -1,0 +1,23 @@
+// Portable local pilot. Explicit inputs exclude emulation hooks and user saves.
+import {cp,mkdir,writeFile,readFile} from 'node:fs/promises';
+import path from 'node:path';
+const stamp=JSON.parse(await readFile('.tools/chat-pilot-project/config/build-public.json','utf8'));
+if(!/^[0-9A-Za-z.-]+$/.test(stamp.version))throw Error('Versão inválida.');
+const target=path.resolve('build/chat-pilot-bundle-'+stamp.version);
+const sync=JSON.parse(await readFile('.tools/chat-pilot-project/config/world-sync.json','utf8'));
+if(stamp.emulated!==false)throw Error('Não empacotar fixture como piloto real.');
+await mkdir(target,{recursive:true});
+await cp('build/chat-pilot',path.join(target,'Tece-Island'),{recursive:true});
+const native=path.join(target,'native');await mkdir(native,{recursive:true});
+for(const name of ['scripts','scenes','assets','config','web','project.godot','icon.svg'])await cp(path.join('.tools/chat-pilot-project',name),path.join(native,name),{recursive:true});
+await cp('tools/serve-web.mjs',path.join(target,'serve-web.mjs'));
+await mkdir(path.join(target,'backend'),{recursive:true});
+for(const name of ['firestore.rules','firebase.json','BASELINE.txt'])await cp(path.join('.tools/chat-profile-update',name),path.join(target,'backend',name),{recursive:true});
+await cp('docs/RETESTE_CHAT_PILOT3.md',path.join(target,'RETESTE_CHAT_PILOT3.md'));
+await cp('docs/CHAT_GLOBAL.md',path.join(target,'CHAT_GLOBAL.md'));
+await cp('docs/VALIDACAO_CHAT.md',path.join(target,'VALIDACAO_CHAT.md'));
+await cp('docs/PUBLICACAO_CHAT.md',path.join(target,'PUBLICACAO_CHAT.md'));
+await cp('docs/images',path.join(target,'images'),{recursive:true,filter:source=>!path.extname(source)||path.basename(source).startsWith('chat-')&&!source.endsWith('.import')});
+await writeFile(path.join(target,'BUILD-INFO.json'),JSON.stringify(stamp,null,2)+'\n');
+await writeFile(path.join(target,'LEIA-ME.txt'),`Tece-Island ${stamp.version}\nCommit: ${stamp.commit}\n\nPiloto privado. Atualização de regras de apelido ainda precisa ser aplicada no Firebase.\nVeja RETESTE_CHAT_PILOT3.md: preservar chatSettings/global e todos os saves.\nAs regras completas em backend/ usam a base local conhecida, não comprovam as regras remotas.\nNão executar instruções históricas do .2 para recriar configurações.\n\nCom Node.js instalado, nesta pasta:\n  node serve-web.mjs 8088 Tece-Island\nPC: http://localhost:8088/Tece-Island/\nCelular na mesma rede: http://IP-DO-PC:8088/Tece-Island/\nGodot nativo: importar native/project.godot no Godot 4.7.2 e F5.\n\nSomente os mesmos dois UIDs de teste estão liberados no pacote.\nNão alterar audiência da hospedagem ou habilitar faturamento/serviços pagos.\nSincronização de mundos ${sync.enabled?'ativada somente para as duas contas de teste':'desativada neste pacote'}.\nA correção do 0.8.1-sync-pilot.2 está incluída. Testar com mundos de teste.\nReteste físico do chat corrigido, teclado mobile e pendências de saves continuam abertos.\n`,'utf8');
+console.log('Pacote local preparado em '+target);

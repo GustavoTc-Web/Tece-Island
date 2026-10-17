@@ -1,0 +1,22 @@
+// Local file preparation only. No credentials, deployments or billing API calls.
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import path from 'node:path';
+const args=process.argv.slice(2),option=name=>args[args.indexOf(name)+1];
+if(!args.includes('--base')||!args.includes('--uids-from'))throw Error('Use --base REGRAS_ATUAIS --uids-from CONFIG_DO_PILOTO [--output .tools/chat-backend]');
+const basePath=path.resolve(option('--base')),output=path.resolve(args.includes('--output')?option('--output'):'.tools/chat-backend');
+const source=JSON.parse(await readFile(option('--uids-from'),'utf8')),uids=source.allowed_uids;
+if(!Array.isArray(uids)||!uids.length||uids.some(uid=>typeof uid!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(uid)))throw Error('Lista de UIDs de teste inválida.');
+const baseline=await readFile(basePath,'utf8'),local=await readFile('firestore.rules','utf8');
+const marker='    // Global chat pilot.';
+const block=local.slice(local.indexOf(marker),local.indexOf('    match /{document=**} { allow read, write: if false; }'));
+const deny=/[ \t]*match\s+\/\{document=\*\*\}\s*\{\s*allow read, write:\s*if false;\s*\}/g;
+if(!block.startsWith(marker)||[...baseline.matchAll(deny)].length!==1||/chatSettings|globalMessages|chatRuntime|chatProfiles|chatRates/.test(baseline))throw Error('Base inesperada. Exporte as regras atuais sem chat e revise manualmente; não substituir políticas de mundos.');
+const target=baseline.replace(deny,match=>block+match);
+await mkdir(output,{recursive:true});
+await writeFile(path.join(output,'firestore.rules'),target);
+await writeFile(path.join(output,'firebase.json'),JSON.stringify({firestore:{rules:'firestore.rules'}},null,2)+'\n');
+const settings={enabled:true,allowed_uids:[...new Set(uids)],admin_uids:[]};
+await writeFile(path.join(output,'chat-settings.json'),JSON.stringify(settings,null,2)+'\n');
+await writeFile(path.join(output,'chat-settings.rest.json'),JSON.stringify({fields:{enabled:{booleanValue:true},allowed_uids:{arrayValue:{values:settings.allowed_uids.map(uid=>({stringValue:uid}))}},admin_uids:{arrayValue:{values:[]}}}},null,2)+'\n');
+await writeFile(path.join(output,'BASELINE.txt'),'Base local: '+basePath+'\nConfirme que corresponde às regras atualmente publicadas antes de qualquer deploy.\n');
+console.log('Arquivos preparados em '+output+'. Nenhuma configuração remota foi alterada. Administradores ainda devem ser definidos pelo responsável.');

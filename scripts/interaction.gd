@@ -42,11 +42,12 @@ func _physics_process(delta: float) -> void:
 	update_target(cursor_world(), key_held or touch_aim != Vector2.ZERO)
 	update_pickup()
 	# Um único relógio atende as duas entradas; F tem prioridade se ambas estão ativas.
-	if not blocked and (mouse_held or key_held or touch_aim != Vector2.ZERO):
+	if not blocked and not GlobalChat.opened and (mouse_held or key_held or touch_aim != Vector2.ZERO):
 		strike_target()
 
 
 func _input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if event is InputEventMouseMotion or event is InputEventMouseButton:
 		cursor_screen = event.position
 	if event.is_action_released("hit"):
@@ -58,6 +59,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if GlobalChat.opened: return
 	if blocked or event.is_echo():
 		return
 	var focus := get_viewport().gui_get_focus_owner()

@@ -141,7 +141,7 @@ func _physics_process(delta: float) -> void:
 func step_movement(delta: float, direction: Vector2) -> void:
 	# Na rede, só o servidor chama isto, com seu próprio passo de física.
 	invulnerability = maxf(0.0, invulnerability - delta)
-	if controls_blocked or dead:
+	if controls_blocked or dead or GlobalChat.opened:
 		velocity = Vector2.ZERO
 		return
 	# get_vector limita o comprimento a 1: a diagonal não fica mais rápida.
