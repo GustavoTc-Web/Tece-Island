@@ -132,7 +132,7 @@ try{
  let held;await a.route('**/chatRuntime/global',route=>{held=route;});
  await command(a,{action:'force_send',text:'ENVIO DA SESSÃO ANTIGA'});await a.waitForFunction(()=>tcChatSnapshot.requests>0&&tcChatSnapshot.busy);
  await command(a,{action:'logout'});await a.locator('#chat-launch').waitFor({state:'hidden'});
- await a.waitForFunction(()=>tcChatSnapshot.uid===''&&!tcChatSnapshot.opened&&tcChatSnapshot.requests===0);
+ await a.waitForFunction(()=>tcChatSnapshot.uid===''&&!tcChatSnapshot.opened&&tcChatSnapshot.requests===0&&!tcChatSnapshot.logging_out);
  check(await a.locator('#chat-text').inputValue()===''&&await a.evaluate(()=>tcChatSnapshot.requests===0),'logout limpa rascunho, histórico, requisições e interface');
  if(held)await held.abort().catch(()=>{});await a.unroute('**/chatRuntime/global');
  await command(a,{action:'login',uid:'chat-b'});await a.locator('#chat-launch').click();await settled(a);

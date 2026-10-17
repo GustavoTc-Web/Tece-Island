@@ -19,6 +19,8 @@ func command(args: Array) -> void:
 	var request: Dictionary = JSON.parse_string(str(args[0]))
 	match str(request.action):
 		"login":
+			# Match the real login UI: saving on logout must finish before login.
+			while FirebaseAuth.logging_out: await get_tree().process_frame
 			# Explicit unsigned emulator identity. Rejected by production Firebase.
 			FirebaseAuth._forget_tokens()
 			var now := int(Time.get_unix_time_from_system())
@@ -44,7 +46,7 @@ func _process(delta: float) -> void:
 	clock += delta
 	if clock < 0.1: return
 	clock = 0
-	var snapshot := {"uid": GlobalChat.uid, "opened": GlobalChat.opened, "busy": GlobalChat.busy, "reading": GlobalChat.reading, "ready": GlobalChat.initialized, "sequence": GlobalChat.sequence, "requests": GlobalChat.client.pending.size(), "status": GlobalChat.status, "connection_error": GlobalChat.connection_error, "next_poll": GlobalChat.next_poll, "last_sync": GlobalChat.last_sync, "nickname": GlobalChat.nickname, "playing": is_instance_valid(session.game), "paused": get_tree().paused}
+	var snapshot := {"uid": GlobalChat.uid, "opened": GlobalChat.opened, "busy": GlobalChat.busy, "reading": GlobalChat.reading, "ready": GlobalChat.initialized, "sequence": GlobalChat.sequence, "requests": GlobalChat.client.pending.size(), "status": GlobalChat.status, "connection_error": GlobalChat.connection_error, "next_poll": GlobalChat.next_poll, "last_sync": GlobalChat.last_sync, "nickname": GlobalChat.nickname, "playing": is_instance_valid(session.game), "paused": get_tree().paused, "logging_out": FirebaseAuth.logging_out}
 	if is_instance_valid(session.game):
 		var player: CharacterBody2D = session.game.get_node("WorldObjects/Player")
 		snapshot.position = [player.position.x, player.position.y]

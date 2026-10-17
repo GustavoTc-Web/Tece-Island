@@ -16,7 +16,10 @@ try{
   const c=await browser.newContext({viewport:mobile?{width:852,height:393}:{width:1280,height:800},isMobile:mobile,hasTouch:mobile});const p=await c.newPage();let pck='';
   p.on('pageerror',e=>errors.push(e.message));p.on('console',m=>{if(m.type()==='error'&&m.text().includes('SCRIPT ERROR'))errors.push(m.text());});
   const pckResponse=p.waitForResponse(r=>r.url().endsWith('/index.pck')&&r.status()===200,{timeout:90000});
-  await p.route('https://**',r=>new URL(r.request().url()).origin===new URL(url).origin?r.continue():r.abort());await p.goto(url);pck=createHash('sha256').update(await(await pckResponse).body()).digest('hex');await p.locator('#auth-email').waitFor({timeout:90000});await p.waitForFunction(()=>document.querySelector('#status').style.display==='none',null,{timeout:90000});
+  await p.route('https://**',r=>new URL(r.request().url()).origin===new URL(url).origin?r.continue():r.abort());await p.goto(url);await pckResponse;
+  // API response bodies survive page reloads and browser resource-cache eviction.
+  const downloaded=await c.request.get(new URL('index.pck',url).href);assert.equal(downloaded.status(),200);pck=createHash('sha256').update(await downloaded.body()).digest('hex');
+  await p.locator('#auth-email').waitFor({timeout:90000});await p.waitForFunction(()=>document.querySelector('#status').style.display==='none',null,{timeout:90000});
   check(await p.locator('#auth-primary').isEnabled(),(mobile?'Mobile emulado':'PC')+': build completo apresenta login obrigatório');
   check(pck===manifest.sha256['index.pck'],'pacote servido corresponde ao hash do manifesto');
   const data=await p.evaluate(()=>new Promise(resolve=>tcLocalProgress.request('write','release-validation/own-data','{"test":true}','',r=>resolve(JSON.parse(r)))));check(data.ok,'build confirma armazenamento local de fixture isolada');
