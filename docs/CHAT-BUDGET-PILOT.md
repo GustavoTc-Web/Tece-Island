@@ -121,7 +121,7 @@ Verificações aprovadas nesta execução:
 - **11 verificações do pacote Web real**, incluindo engine dividido e íntegro, IndexedDB/reload, login sem rede, viewport mobile e recusa de parte corrompida. Não houve login positivo automatizado em produção.
 - Auditoria do pacote: mesmos dois UIDs; código de saves e regras de mundos preservados; chat/shell iguais ao commit exportado, conferidos por SHA-256; fixture de emulação excluída.
 
-Registros resumidos: [chat-budget-2026-10-17.json](validation/chat-budget-2026-10-17.json). Todas as verificações acima são automação local; reteste físico e medição de uso no console Firebase permanecem pendentes.
+Registros resumidos: [chat-budget-2026-10-17.json](validation/chat-budget-2026-10-17.json). As verificações acima são automação local e preservam seu registro histórico. O reteste físico foi concluído posteriormente conforme relato do usuário abaixo; medição de faturamento no console Firebase continua sem confirmação.
 
 ## Piloto privado disponível
 
@@ -134,7 +134,11 @@ Registros resumidos: [chat-budget-2026-10-17.json](validation/chat-budget-2026-1
 - Oficial 0.8.2/GitHub Pages e main preservados; nenhuma alteração/deploy Firebase, billing ou migração de saves.
 - Reversão do reteste: republicar a versão privada **4** da hospedagem (piloto .3, fonte `cad22d2fcb8bbaf5d58e160e56d620d11ad102ab`), preservando regras, `chatSettings/global` e dados. Esta etapa não exige reversão da publicação oficial.
 
-## Reteste físico — pendente nesta versão
+## Reteste manual relatado pelo usuário
+
+Em 17/10/2026, o usuário informou: “Concluí o reteste físico do 0.8.2-chat-budget-pilot.1 e não encontrei novos problemas.” Autorizou integrar à main e publicar no endereço oficial. Registro: **reteste manual relatado pelo usuário**, sem observação independente do assistente e sem atribuir resultados separados a cada aparelho/caso. O relato conclui o reteste deste piloto para a publicação 0.8.3. Os valores de consumo continuam estimativas; não houve confirmação de faturamento medido.
+
+O roteiro disponibilizado para esse reteste foi:
 
 1. PC + celular, uma conta em cada: confirmar o selo **0.8.2-chat-budget-pilot.1** (recarregar normalmente se ainda mostrar o anterior; preservar os dados do site). Abrir chat no lobby, esperar **mais de 2 minutos** sem enviar, então enviar nos dois sentidos, sem recolher/atualizar. Repetir em partida. Esperado: até 15 s ocioso e depois aproximadamente 5 s + rede; nada duplicado.
 2. Digitar rascunho, receber mensagens, recolher/reabrir, entrar/sair da partida e bloquear/desbloquear o celular ou trocar de aba por >2 min. Confirmar rascunho, recepção ao voltar e rolagem/aviso de novas mensagens; abrir/fechar repetidamente.
@@ -143,4 +147,4 @@ Registros resumidos: [chat-budget-2026-10-17.json](validation/chat-budget-2026-1
 5. Conta administrativa **já autorizada**: remover uma mensagem ainda visível (também testar autor silenciado) e confirmar desaparecimento no outro aparelho em até ~135 s + rede; repetir após suspensão. Não conceder administração a outra conta para o teste.
 6. Conferir um ciclo de save/sincronização PC → celular → PC sem conflito falso e com mundo/backups preservados. Regressão física curta, sem assumir que os testes da release anterior aprovam este build.
 
-Não marcar estes itens como aprovados com base em automação/emulação ou na confirmação anterior da renomeação. Aferir o painel de uso Firebase antes/depois de uma janela isolada de reteste, anotando aparelhos, duração, saves e mensagens; o painel agrega operações de outros clientes e pode ter atraso.
+O relato geral acima é a evidência manual desta etapa; não se converte em uma lista de medições físicas independentes. Para medir consumo futuro, aferir o painel de uso Firebase antes/depois de uma janela isolada, anotando aparelhos, duração, saves e mensagens; o painel agrega operações de outros clientes e pode ter atraso.

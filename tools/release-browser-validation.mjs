@@ -6,7 +6,9 @@ import assert from 'node:assert/strict';
 const url=process.env.TEST_URL||'http://127.0.0.1:8080/Tece-Island/';
 const manifest=await(await fetch(new URL('version.json',url))).json();
 const results=[],errors=[];const check=(ok,name)=>{results.push({ok:!!ok,name});assert.ok(ok,name);console.log('PASS: '+name);};
-check(manifest.version==='0.8.2'&&manifest.allowed_account_count===2&&manifest.chat_enabled&&manifest.world_sync_enabled,'manifesto 0.8.2 identifica rollout das duas contas');
+check(manifest.version==='0.8.3'&&manifest.allowed_account_count===2&&manifest.chat_enabled&&manifest.world_sync_enabled,'manifesto 0.8.3 identifica rollout das duas contas');
+if(process.env.EXPECTED_COMMIT)check(manifest.commit===process.env.EXPECTED_COMMIT,'commit servido corresponde ao deploy esperado');
+check(manifest.chat_idle_poll_seconds===15&&manifest.chat_idle_after_seconds===60&&manifest.chat_reconcile_seconds===120&&manifest.chat_transport==='rest_incremental_with_window_count','manifesto identifica estratégia de consumo validada');
 const browser=await chromium.launch({executablePath:process.env.BROWSER_EXE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});
 await mkdir('.tools/screenshots',{recursive:true});
 try{
@@ -14,7 +16,7 @@ try{
   const c=await browser.newContext({viewport:mobile?{width:852,height:393}:{width:1280,height:800},isMobile:mobile,hasTouch:mobile});const p=await c.newPage();let pck='';
   p.on('pageerror',e=>errors.push(e.message));p.on('console',m=>{if(m.type()==='error'&&m.text().includes('SCRIPT ERROR'))errors.push(m.text());});
   const pckResponse=p.waitForResponse(r=>r.url().endsWith('/index.pck')&&r.status()===200,{timeout:90000});
-  await p.route('https://**',r=>r.abort());await p.goto(url);pck=createHash('sha256').update(await(await pckResponse).body()).digest('hex');await p.locator('#auth-email').waitFor({timeout:90000});await p.waitForFunction(()=>document.querySelector('#status').style.display==='none',null,{timeout:90000});
+  await p.route('https://**',r=>new URL(r.request().url()).origin===new URL(url).origin?r.continue():r.abort());await p.goto(url);pck=createHash('sha256').update(await(await pckResponse).body()).digest('hex');await p.locator('#auth-email').waitFor({timeout:90000});await p.waitForFunction(()=>document.querySelector('#status').style.display==='none',null,{timeout:90000});
   check(await p.locator('#auth-primary').isEnabled(),(mobile?'Mobile emulado':'PC')+': build completo apresenta login obrigatório');
   check(pck===manifest.sha256['index.pck'],'pacote servido corresponde ao hash do manifesto');
   const data=await p.evaluate(()=>new Promise(resolve=>tcLocalProgress.request('write','release-validation/own-data','{"test":true}','',r=>resolve(JSON.parse(r)))));check(data.ok,'build confirma armazenamento local de fixture isolada');
