@@ -44,7 +44,7 @@ Valores de planejamento; não medição do painel Firebase. Hora estável, 50 me
 | Cenário | 0.8.2 | Piloto otimizado |
 | --- | --- | --- |
 | Ocioso | 3.090 leituras/h | **660/h**: 240 incrementais + 30 contagens + 60 metadados + reserva de 330 regras |
-| Conversa contínua, no máximo 1 mensagem por poll | ≥3.090/h, mais consultas de novidade/envios | **1.620/h** de recepção: 720 incrementais + 30 contagens + 60 metadados + 810 regras |
+| Conversa contínua, 6 mensagens/min no grupo, até 1 por poll | ~3.750–3.810/h de recepção, antes dos envios | **1.620/h** de recepção: 720 incrementais + 30 contagens + 60 metadados + 810 regras |
 | Fechado / aba oculta | 0 novos ciclos | 0 novos ciclos; no máximo o pedido já iniciado termina |
 | Retorno sem reiniciar processo, sem prazos vencidos | contador + consulta se houver novidade | incremental: mínimo 2 leituras com reserva de regras |
 | Retorno, prazos vencidos, sem novidade/remoção | pode reler 50 + metadados/contador | incremental + contagem + 2 metadados: aproximadamente 8 leituras |
@@ -52,6 +52,8 @@ Valores de planejamento; não medição do painel Firebase. Hora estável, 50 me
 | Exclusão detectada | releitura periódica já inclusa | contagem + snapshot de até 50, uma vez por divergência |
 
 Primeira hora ociosa: planejar aproximadamente **730**, incluindo abertura (~55) e primeiro minuto em 5 s (~16 adicionais), em vez de tratar 660 como custo completo de entrada. Intervalos se contam após a resposta e o timer tem granularidade de 0,5 s; rede pode reduzir a frequência efetiva e aumentar a latência. Não extrapolar uma amostra curta que inclui inicialização como se fosse uma hora estável.
+
+Na recepção ativa antiga, às 3.090 somam-se 330–360 consultas incrementais de uma mensagem e suas regras (660–720 leituras). A faixa depende de quantas novidades coincidem com as 30 releituras periódicas já contabilizadas. Envios, disputa por slot e deletes são adicionais em ambas as versões.
 
 Com várias mensagens no mesmo poll, acrescentar `max(0, documentos retornados - 1)` às leituras de recepção. Um envio faz **3 writes**; reservar até **12 leituras adicionais por envio**, incluindo perfil/contador, refresh antecipado e dependências das regras do batch, sem disputa/retry. Isso é margem de planejamento, não contagem faturada observada. Regras consultam settings, perfil, contador, rate e slot; documentos dependentes repetidos podem ser reaproveitados na avaliação. Falhas negadas também podem consumir leituras. Conflitos/retries, reaberturas de processo e remoções devem consumir uma margem adicional.
 
@@ -91,7 +93,35 @@ Com Godot 4.7.2, Java/emulador local e dependências instaladas:
 
 O comparativo mantém ambos os painéis abertos e observa 135 s reais sem mensagens, depois novidade, fechamento, aba oculta, retorno, exclusão física com autor silenciado, fechamento durante request e backoff de cota. Registra pedidos/documentos reais do HTTP; converte em leituras **estimadas** e reserva de regras. Não mede cobrança, rádio mobile, suspensão real de Android/iOS nem latência de produção.
 
-Os resultados executados e a publicação privada serão registrados abaixo após a validação final.
+## Resultados executados — 17/10/2026
+
+Build do jogo: `f24c907d7ab0bc6a24428d036b02c0c044ba44a1`. Godot 4.7.2, Node 22.21.0, Edge headless e Firestore Emulator 1.19.8 local. O baseline emulado usa os mesmos `global_chat.gd` e `chat_client.gd` da main `b94a68a` (igualdade de conteúdo conferida), exportados anteriormente para o piloto .3. A identificação visual do baseline é .3; o algoritmo comparado é o da 0.8.2 pública.
+
+| Amostra automatizada | Antes: pedidos / diretas estimadas / reserva de regras | Depois: pedidos / diretas estimadas / reserva de regras |
+| --- | --- | --- |
+| Inicialização, 50 mensagens | 6 / 55 / 6 | 3 / 52 / 3 |
+| Ocioso por **135,002 s**, sem novidades | 28 / 77 / 28 | 19 / 19 / 19 |
+| Conversa, 3 mensagens novas | 9 / 9 / 9 | 6 / 6 / 6 |
+| Retorno à aba, uma mensagem pendente, prazos ainda válidos | 2 / 2 / 2 | 1 / 1 / 1 |
+
+Na amostra ociosa: **105 → 38 leituras estimadas**, incluindo reserva de regras; documentos efetivamente retornados **77 → 2**. O piloto fez 16 incrementais vazios, uma contagem e dois GETs de metadados; nenhuma consulta de histórico. A redução curta (~64% com reserva) difere dos ~79% da projeção estável porque a janela inclui o primeiro minuto em 5 s. Não é medição da cota/cobrança real Firebase.
+
+Fechado e oculto: zero pedidos nas respectivas janelas quietas de 6 s, comprovado por contadores antes/depois. O campo `phases.closed` do registro inclui também a **reabertura ao fim** (um pedido por cliente); não deve ser interpretado como pedido enquanto fechado. O teste de fechamento durante uma requisição também confirmou ausência de etapas subsequentes.
+
+Latências locais do piloto: **0,586–5,248 s** nas quatro entregas naturais entre duas sessões (lobby e partida pausada); **8,264 s** para a primeira novidade depois de ocioso, depois **5,469 e 5,475 s** na conversa do comparativo. Retorno à aba: **0,544 s** no comparativo e **3,454 s** na suíte funcional. Remoção administrativa natural: **121,555 s**, sem forçar consulta ou fechar painel. São poucas amostras em rede local/emulação, não percentis nem resultados físicos/produção.
+
+Verificações aprovadas nesta execução:
+
+- **22 testes de regras** de saves/chat, incluindo agregação limitada, identidade verificada, UID fora do piloto, renomeação somente do próprio perfil, atomicidade, cooldown e administração.
+- **155 verificações de saves** em 9 suítes; mundos, backups, conflitos, handoff e isolamento por UID.
+- **11 verificações REST no Godot nativo**, incluindo `count()` autenticado, incremental vazio, apelido, envio atômico e cooldown.
+- **7 verificações de controles**.
+- **45 verificações Web** em duas sessões desktop/mobile emulado: recebimento automático, pausa, rascunho na troca de cena, apelido entre sessões, mutes por UID, rolagem, falhas, remoção natural, logout e máximo de um pedido simultâneo por sessão.
+- **22 verificações de consumo/estabilidade** comparando dois builds: 135 s ocioso, 3 mensagens, fechar/ocultar/retornar, exclusão física com autor silenciado, fechamento em voo, 429 com tempestade de eventos de foco e 400 persistente. Ambos os erros respeitaram backoff; cada tentativa de consulta recusada teve no máximo um fallback completo, sem ciclo de 50 leituras a cada 5 s.
+- **11 verificações do pacote Web real**, incluindo engine dividido e íntegro, IndexedDB/reload, login sem rede, viewport mobile e recusa de parte corrompida. Não houve login positivo automatizado em produção.
+- Auditoria do pacote: mesmos dois UIDs; código de saves e regras de mundos preservados; chat/shell iguais ao commit exportado, conferidos por SHA-256; fixture de emulação excluída.
+
+Registros resumidos: [chat-budget-2026-10-17.json](validation/chat-budget-2026-10-17.json). Todas as verificações acima são automação local; reteste físico e medição de uso no console Firebase permanecem pendentes.
 
 ## Reteste físico — pendente nesta versão
 

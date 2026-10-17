@@ -98,13 +98,13 @@ try{
  await command(optimized,'poll');await optimized.waitForFunction(()=>tcChatSnapshot.reading);
  await optimized.getByRole('button',{name:'Recolher',exact:true}).click();
  const held=await heldRequest;await held.continue();await optimized.unroute('**/documents:runQuery');await optimized.waitForFunction(()=>!tcChatSnapshot.reading);
- const closedAgain=observations.length;await sleep(1500);check(observations.length===closedAgain,'closing an in-flight cycle starts no follow-up request');
+ const closedAgain=observations.filter(r=>r.client==='after').length;await sleep(1500);check(observations.filter(r=>r.client==='after').length===closedAgain,'closing an in-flight cycle starts no follow-up request');
  phase='quota';await optimized.locator('#chat-launch').click();
  await optimized.route('**/documents:runAggregationQuery',route=>route.fulfill({status:429,contentType:'application/json',body:JSON.stringify({error:{code:429,status:'RESOURCE_EXHAUSTED'}})}));
  await command(optimized,'refresh');await optimized.waitForFunction(()=>tcChatSnapshot.connection_error.includes('HTTP 429'));
- const quotaStart=observations.length;
+ const quotaStart=observations.filter(r=>r.client==='after').length;
  await optimized.evaluate(()=>{for(let i=0;i<10;i++)for(const event of ['online','focus','pageshow'])window.dispatchEvent(new Event(event));});
- await sleep(6000);check(observations.length===quotaStart,'quota failure is visible; focus events preserve backoff without fallback queries');
+ await sleep(6000);check(observations.filter(r=>r.client==='after').length===quotaStart,'quota failure is visible; focus events preserve backoff without fallback queries');
  await optimized.unroute('**/documents:runAggregationQuery');await command(optimized,'poll');await optimized.waitForFunction(()=>!tcChatSnapshot.reading&&!tcChatSnapshot.connection_error);
  check(await optimized.locator('#chat-text').inputValue()==='Draft budget','quota recovery preserves draft');
  phase='index';let rejected=0;
@@ -113,9 +113,9 @@ try{
   return route.continue();
  });
  await command(optimized,'poll');await optimized.waitForFunction(()=>tcChatSnapshot.connection_error.includes('HTTP 400')&&!tcChatSnapshot.reading);
- const indexStart=observations.length;
+ const indexStart=observations.filter(r=>r.client==='after').length;
  await optimized.evaluate(()=>{for(let i=0;i<10;i++)window.dispatchEvent(new Event('focus'));});
- await sleep(6000);check(observations.length===indexStart,'successful full fallback still backs off a persistent incremental failure');
+ await sleep(6000);check(observations.filter(r=>r.client==='after').length===indexStart,'successful full fallback still backs off a persistent incremental failure');
  const retryDeadline=Date.now()+20000;
  while(observations.filter(r=>r.client==='after'&&r.phase==='index'&&r.kind==='full').length<2){if(Date.now()>retryDeadline)throw Error('No scheduled index retry');await sleep(100);}
  await optimized.waitForFunction(()=>!tcChatSnapshot.reading);
@@ -126,4 +126,4 @@ try{
  const phases=Object.fromEntries(['startup','idle','active','closed','hidden','resume','removal','close-inflight','quota','index'].map(p=>[p,Object.fromEntries(clients.map(c=>[c.label,summary(c.label,p)]))]));
  await writeFile('.tools/chat-budget-results.json',JSON.stringify({kind:'measured-local-browser-http; reads estimated, not billed',physical:false,idle_duration_ms:idleMs,phases,latencies,checks,errors},null,2)+'\n');
  console.log(JSON.stringify({idle_duration_ms:idleMs,idle:phases.idle,active:phases.active,resume:phases.resume,latencies},null,2));
-}finally{if(browser)await browser.close();for(const s of servers)s.kill();await env.cleanup();}
+}finally{await writeFile('.tools/chat-budget-observations.json',JSON.stringify({checks,errors,observations},null,2)+'\n');if(browser)await browser.close();for(const s of servers)s.kill();await env.cleanup();}
