@@ -2,7 +2,7 @@ import {before, after, test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {initializeTestEnvironment, assertSucceeds, assertFails} from '@firebase/rules-unit-testing';
-import {doc, collection, getDoc, getDocs, setDoc, deleteDoc, writeBatch, serverTimestamp, Timestamp, query, orderBy, limit, where} from 'firebase/firestore';
+import {doc, collection, getDoc, getDocs, getCountFromServer, setDoc, deleteDoc, writeBatch, serverTimestamp, Timestamp, query, orderBy, limit, where} from 'firebase/firestore';
 
 let env;
 const users=['chat-a','chat-b','chat-admin'];
@@ -109,4 +109,18 @@ test('histórico circula em 100 documentos; consulta conserva as últimas 50',as
  const rows=await getDocs(query(collection(db(),'globalMessages'),orderBy('sequence','desc'),limit(50)));
  assert.equal(rows.size,50);assert.equal(rows.docs[0].data().sequence,105);assert.equal(rows.docs.at(-1).data().sequence,56);
  await env.withSecurityRulesDisabled(async c=>assert.equal((await getDocs(collection(c.firestore(),'globalMessages'))).size,100));
+});
+
+test('contagem limitada detecta remoção sem expor dados ou ampliar acesso',async()=>{
+ await reset();await send(db());await send(db('chat-b'),'chat-b');
+ const window=client=>query(collection(client,'globalMessages'),where('sequence','>=',1),where('sequence','<=',2),limit(50));
+ assert.equal((await assertSucceeds(getCountFromServer(window(db())))).data().count,2);
+ await assertSucceeds(deleteDoc(doc(db('chat-admin'),'globalMessages/1')));
+ assert.equal((await getCountFromServer(window(db()))).data().count,1);
+ // A later insert cannot hide a deletion in the frozen window.
+ await age('chat-a');await send(db());
+ assert.equal((await getCountFromServer(window(db()))).data().count,1);
+ for(const client of [env.unauthenticatedContext().firestore(),db('outsider'),db('chat-a',false)])await assertFails(getCountFromServer(window(client)));
+ await assertFails(getCountFromServer(collection(db(),'globalMessages')));
+ await assertFails(getCountFromServer(query(collection(db(),'globalMessages'),limit(51))));
 });

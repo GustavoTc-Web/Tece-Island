@@ -36,6 +36,7 @@ func command(args: Array) -> void:
 		"lobby": session.return_to_menu("")
 		"poll": GlobalChat.next_poll = 0
 		"refresh": GlobalChat.next_full = 0; GlobalChat.next_poll = 0
+		"idle": GlobalChat.last_activity = Time.get_ticks_msec() - 61000; GlobalChat.next_poll = 0
 		"force_send": GlobalChat.cooldown_until = 0; GlobalChat.send_text(str(request.text))
 		"cancel_requests": GlobalChat.client.cancel()
 

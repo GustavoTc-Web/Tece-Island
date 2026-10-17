@@ -35,7 +35,7 @@ if ($Emulated) {
 [IO.File]::WriteAllText($taskProject,$taskText)
 $taskCommit = (git -C $taskRoot rev-parse HEAD).Trim()
 $taskDirty = [bool](git -C $taskRoot status --porcelain)
-$taskStamp = @{ version="0.8.2-chat-pilot.3"; commit=$taskCommit; working_tree=$taskDirty; emulated=[bool]$Emulated; world_sync=[bool]$WithWorldSync; sync_pilot_base="0.8.1-sync-pilot.2" } | ConvertTo-Json
+$taskStamp = @{ version="0.8.2-chat-budget-pilot.1"; commit=$taskCommit; working_tree=$taskDirty; emulated=[bool]$Emulated; world_sync=[bool]$WithWorldSync; sync_pilot_base="0.8.1-sync-pilot.2" } | ConvertTo-Json
 [IO.File]::WriteAllText((Join-Path $taskCopy "config/build-public.json"),$taskStamp)
 $taskPreset = Join-Path $taskCopy "export_presets.cfg"
 $taskText = [IO.File]::ReadAllText($taskPreset).Replace("res://.tools/godot-templates/",($taskRoot.Replace("\","/")+"/.tools/godot-templates/"))
