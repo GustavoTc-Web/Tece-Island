@@ -1,0 +1,173 @@
+{
+    "date":  "2026-10-17",
+    "version":  "0.8.3",
+    "published_commit":  "7c17e63f634d4abbaca87c6f5ad1b5198601e99d",
+    "tag":  "v0.8.3",
+    "previous_tag":  "pages-before-0.8.3",
+    "pull_request":  "https://github.com/GustavoTc-Web/Tece-Island/pull/3",
+    "manual_retest":  {
+                          "outcome":  "Concluiu o reteste fisico e nao encontrou novos problemas",
+                          "independently_observed_by_assistant":  false,
+                          "build":  "0.8.2-chat-budget-pilot.1",
+                          "per_device_case_results_available":  false,
+                          "kind":  "manual_retest_reported_by_user"
+                      },
+    "consumption":  {
+                        "rule_read_reserve_included":  true,
+                        "active_receiving_reads_per_client_hour":  1620,
+                        "billing_measured":  false,
+                        "kind":  "estimates_not_billing_measurements",
+                        "idle_steady_reads_per_client_hour":  660,
+                        "idle_first_hour_approx":  730
+                    },
+    "integrated_checks":  {
+                              "firestore_rule_tests":  22,
+                              "save_suites":  9,
+                              "saves":  155,
+                              "native_chat_checks":  11,
+                              "physical":  false,
+                              "browser_persistence_checks":  12,
+                              "controls":  7,
+                              "local_web_build_checks":  13,
+                              "web_chat_max_requests_per_session":  1,
+                              "failed":  0,
+                              "web_chat_checks":  45,
+                              "official_web_checks":  13
+                          },
+    "chat_browser_latencies":  [
+                                   {
+                                       "phase":  "lobby-pc-mobile",
+                                       "ms":  5332
+                                   },
+                                   {
+                                       "phase":  "lobby-mobile-pc",
+                                       "ms":  727
+                                   },
+                                   {
+                                       "phase":  "paused-pc-mobile",
+                                       "ms":  4985
+                                   },
+                                   {
+                                       "phase":  "paused-mobile-pc",
+                                       "ms":  848
+                                   },
+                                   {
+                                       "phase":  "simulated-tab-resume",
+                                       "ms":  3454
+                                   },
+                                   {
+                                       "phase":  "admin-removal",
+                                       "ms":  121221
+                                   }
+                               ],
+    "source_audit":  {
+                         "preserved":  true,
+                         "development_defaults_disabled":  true,
+                         "checks":  {
+                                        "firestore.rules":  {
+                                                                "matches":  "b94a68a",
+                                                                "sha256":  "e55790951105d5bf628fe90a4dbe3f0e80a5418c1d2de689b65cbe59e11b89cf"
+                                                            },
+                                        "scripts/world_sync.gd":  {
+                                                                      "matches":  "b94a68a",
+                                                                      "sha256":  "23057c2cc1d1da1b095e60c12ad30c57b3279d58dd51f4411f04a42dd54ef47e"
+                                                                  },
+                                        "scripts/firestore_client.gd":  {
+                                                                            "matches":  "b94a68a",
+                                                                            "sha256":  "44b7d4da955b0e90218bca34027071b210ba4322b800c4ec2022ce3f499d36a0"
+                                                                        },
+                                        "scripts/account_progress.gd":  {
+                                                                            "matches":  "b94a68a",
+                                                                            "sha256":  "0f6de4b64c55e73eccb6a621cd9cf4ebe4501b99b4adf18b464a82b0c6736810"
+                                                                        },
+                                        "scripts/world_library.gd":  {
+                                                                         "matches":  "b94a68a",
+                                                                         "sha256":  "549869700377ac39a0fbd7fa19b853c8b6a16bd1c373ba21bc846a22758244aa"
+                                                                     },
+                                        "scripts/save_store.gd":  {
+                                                                      "matches":  "b94a68a",
+                                                                      "sha256":  "99e2d75b6d48976e033b441e0f87715d68cf452f559f08f334cd861dc9bbf4f7"
+                                                                  },
+                                        "scripts/save_validation.gd":  {
+                                                                           "matches":  "b94a68a",
+                                                                           "sha256":  "ec134b8fd7e381b8179af523b1727fb53e8a1dc2e6c5ad208bd0792cb0c3f4d0"
+                                                                       },
+                                        "scripts/progress_controller.gd":  {
+                                                                               "matches":  "b94a68a",
+                                                                               "sha256":  "229ab297e0bc10a898c23e9f3abf5d843b958808558dc0ae3ae168eec58e302a"
+                                                                           },
+                                        "scripts/auth/firebase_auth.gd":  {
+                                                                              "matches":  "b94a68a",
+                                                                              "sha256":  "8b19ec2fae15c3a9015af755065a15379a3f06fd9f843f13b45680aa19c9f99e"
+                                                                          },
+                                        "scripts/chat/chat_panel.gd":  {
+                                                                           "matches":  "b94a68a",
+                                                                           "sha256":  "918923f2725c23463ebbc8fba247b7065108ba97d99f10c8a3068886cef92e68"
+                                                                       },
+                                        "web/shell.html":  {
+                                                               "matches":  "b94a68a",
+                                                               "sha256":  "476fd7e8b7b00f61048fb345cf39d7b466bcf6833add06a172c006483ef25a4a"
+                                                           },
+                                        "project.godot":  {
+                                                              "matches":  "b94a68a",
+                                                              "sha256":  "b0dc4e8794f86c653aa8ba5d6ba883bb216eb7fe3770b774fff6c845d2d1a94b"
+                                                          },
+                                        "scripts/chat/global_chat.gd":  {
+                                                                            "matches":  "988530f",
+                                                                            "sha256":  "1d82e3b68ba9c48eb3398c54040d95a18484b9422e12343c6132efaf38d6ea00"
+                                                                        },
+                                        "scripts/chat/chat_client.gd":  {
+                                                                            "matches":  "988530f",
+                                                                            "sha256":  "82923f1895fa8ab285474249b8c23e4ef25c880bd71a9fada5fadd465578ee1f"
+                                                                        }
+                                    }
+                     },
+    "deployment":  {
+                       "run_url":  "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39037784828",
+                       "public_url":  "https://gustavotc-web.github.io/Tece-Island/",
+                       "fixtures_excluded":  true,
+                       "account_count":  2,
+                       "source_hashes_verified":  true,
+                       "commit":  "7c17e63f634d4abbaca87c6f5ad1b5198601e99d",
+                       "all_three_package_hashes_verified":  true,
+                       "firebase_or_billing_mutations_performed":  false,
+                       "status":  "success",
+                       "actual_public_pck_account_config_verified":  true
+                   },
+    "official_manifest":  {
+                              "version":  "0.8.3",
+                              "commit":  "7c17e63f634d4abbaca87c6f5ad1b5198601e99d",
+                              "chat_enabled":  true,
+                              "world_sync_enabled":  true,
+                              "allowed_account_count":  2,
+                              "chat_transport":  "rest_incremental_with_window_count",
+                              "chat_poll_seconds":  5,
+                              "chat_idle_poll_seconds":  15,
+                              "chat_idle_after_seconds":  60,
+                              "chat_reconcile_seconds":  120,
+                              "world_sync_interval_seconds":  120,
+                              "sha256":  {
+                                             "index.pck":  "3965a0f84884fcf641a2eab702e2c0e068767b03e79b58c83a278b574a12c04c",
+                                             "index.js":  "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+                                             "index.wasm":  "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+                                         },
+                              "source_sha256":  {
+                                                    "firestore.rules":  "e55790951105d5bf628fe90a4dbe3f0e80a5418c1d2de689b65cbe59e11b89cf",
+                                                    "scripts/world_sync.gd":  "23057c2cc1d1da1b095e60c12ad30c57b3279d58dd51f4411f04a42dd54ef47e",
+                                                    "scripts/firestore_client.gd":  "44b7d4da955b0e90218bca34027071b210ba4322b800c4ec2022ce3f499d36a0",
+                                                    "scripts/account_progress.gd":  "0f6de4b64c55e73eccb6a621cd9cf4ebe4501b99b4adf18b464a82b0c6736810",
+                                                    "scripts/world_library.gd":  "549869700377ac39a0fbd7fa19b853c8b6a16bd1c373ba21bc846a22758244aa",
+                                                    "scripts/save_store.gd":  "99e2d75b6d48976e033b441e0f87715d68cf452f559f08f334cd861dc9bbf4f7",
+                                                    "scripts/save_validation.gd":  "ec134b8fd7e381b8179af523b1727fb53e8a1dc2e6c5ad208bd0792cb0c3f4d0",
+                                                    "scripts/progress_controller.gd":  "229ab297e0bc10a898c23e9f3abf5d843b958808558dc0ae3ae168eec58e302a",
+                                                    "scripts/chat/global_chat.gd":  "1d82e3b68ba9c48eb3398c54040d95a18484b9422e12343c6132efaf38d6ea00",
+                                                    "scripts/chat/chat_client.gd":  "82923f1895fa8ab285474249b8c23e4ef25c880bd71a9fada5fadd465578ee1f"
+                                                }
+                          },
+    "rollback":  {
+                     "rules_and_publication_records_preserved":  true,
+                     "method":  "restore application/build/test paths from pages-before-0.8.3 on a new branch; PR and Pages",
+                     "dry_run_passed":  true,
+                     "application_matches_previous_tag":  true
+                 }
+}

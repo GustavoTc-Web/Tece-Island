@@ -2,7 +2,9 @@
 
 Endereço oficial preservado: https://gustavotc-web.github.io/Tece-Island/
 
-Candidato integrado a partir da main `b94a68a`, mesclando `perf/chat-read-budget` (`988530f`) sem conflitos. Preparação da versão 0.8.3 e validação sobre a árvore integrada antes de atualizar a main remota. O resultado final do deploy será registrado ao concluir.
+**Publicado: 0.8.3, deploy concluído com `success`.** [Workflow oficial](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39037784828), com validação, exportação e deploy aprovados. [Manifesto servido](https://gustavotc-web.github.io/Tece-Island/version.json) confirmado após o deploy.
+
+Integração pelo [PR #3](https://github.com/GustavoTc-Web/Tece-Island/pull/3), commit `7c17e63f634d4abbaca87c6f5ad1b5198601e99d`, tag **`v0.8.3`**. Main anterior `b94a68a`, branch incorporada `perf/chat-read-budget` (`988530f`), sem conflitos. O candidato `a057449` teve CI aprovado; o build Web local usou `d5c28f0`, com o mesmo código do jogo. Alterações posteriores do candidato tratam somente a instrumentação dos testes.
 
 ## Escopo e proteções
 
@@ -20,19 +22,32 @@ Consumo continua sendo **estimativa**, não medição de faturamento: aproximada
 
 ## Validação da versão integrada
 
-Registrar abaixo os resultados executados nesta integração, separadamente dos resultados anteriores do piloto. Conferir igualdade integral das regras e dos arquivos de saves com a main anterior e do chat com o piloto.
+Resultados executados nesta integração, separados dos resultados históricos do piloto:
+
+- **155 verificações de saves**, 9 suítes, sem falhas.
+- **22 testes de regras** de saves/chat, com transporte REST nativo dos saves, sem falhas; **7 verificações de controles**.
+- **12 verificações de persistência Web**, incluindo reabertura de navegador, backup e conflito entre abas.
+- **45 verificações de chat Web**, incluindo painéis abertos, lobby/partida pausada, apelido entre sessões, silenciamento por UID, remoção natural, reconexão, logout e máximo de um pedido simultâneo. **11 verificações do transporte de chat nativo**.
+- **13 verificações do build Web local** e **13 no endereço oficial**, após o deploy. Incluem login obrigatório, hash do PCK, fixture própria no IndexedDB/reload e viewport mobile emulado. Não foi feita autenticação positiva com conta real Firebase pelo assistente.
+- Hashes dos três arquivos servidos (`index.pck`, `index.js`, `index.wasm`) iguais ao manifesto; hashes dos fontes iguais ao commit publicado. PCK público SHA-256: `3965a0f84884fcf641a2eab702e2c0e068767b03e79b58c83a278b574a12c04c`.
+- Configuração **lida de dentro do PCK público**, em processo de auditoria sem iniciar o jogo/Firebase: chat/sync habilitados para exatamente os dois UIDs do piloto, intervalo de sync 120 s, identificação 0.8.3/commit correto e fixtures excluídas.
+- Igualdade integral de regras, saves, autenticação, painel e shell com a main anterior; serviços do chat iguais ao piloto retestado. Defaults versionados de desenvolvimento desligados. A configuração temporária de export não foi commitada.
+- CI do PR e validação repetida pelo Pages aprovados. Rollback do aplicativo conferido em checkout temporário.
+
+[Registro estruturado](validation-0.8.3.json). Automação local e Web pública não foi reclassificada como teste físico; o reteste físico é o relato do usuário registrado acima. Consumo/faturamento permanece sem medição confirmada.
 
 ## Rollback
 
-Versão oficial anterior: **0.8.2**, tag `v0.8.2`, commit `81aa0f96afe8aa0ded0a3d520183a332f05ea745`. O ponto anterior da main é `b94a68a` (somente documentação posterior ao jogo 0.8.2). Preparar também a tag `pages-before-0.8.3` antes de publicar.
+Versão oficial anterior: **0.8.2**, tag `v0.8.2`, commit `81aa0f96afe8aa0ded0a3d520183a332f05ea745`. O ponto anterior da main é `b94a68a` (somente documentação posterior ao jogo 0.8.2). A tag **`pages-before-0.8.3`** foi criada e enviada, apontando para o commit oficial 0.8.2. O manifesto anterior foi conferido antes da publicação.
 
-Após o merge, registrar o SHA real no comando abaixo. Em checkout limpo:
+Em checkout limpo, restaurar aplicativo/build/testes do ponto anterior, mantendo os registros de publicação e as regras atuais:
 
 ```powershell
 git fetch origin --tags
 git switch -c rollback/pages-0.8.3 origin/main
-git revert -m 1 MERGE_COMMIT_0_8_3
+git restore --source=pages-before-0.8.3 --staged --worktree -- project.godot export_presets.cfg scripts scenes assets web config tools tests .github/workflows
+git commit -m "Rollback Pages to 0.8.2; preserve Firebase and publication records"
 git push -u origin rollback/pages-0.8.3
 ```
 
-Abrir PR dessa branch para main, executar o CI e mesclar. O workflow volta a publicar o aplicativo 0.8.2 no **mesmo endereço**, com um novo SHA de rollback. Conferir `version.json`, hashes e login/armazenamento local após o deploy. Não fazer reset/force-push, deploy Firebase ou limpeza de dados do navegador/nuvem. O rollback do aplicativo mantém progresso, backups, regras, configurações administrativas e faturamento; saves têm o mesmo formato nas duas versões.
+Abrir PR dessa branch para main, executar o CI e mesclar. O workflow volta a publicar o aplicativo 0.8.2 no **mesmo endereço**, com um novo SHA de rollback. Conferir `version.json`, hashes e login/armazenamento local após o deploy. A restauração dos caminhos acima foi validada em checkout temporário e coincide integralmente com a tag anterior nesses caminhos, preservando regras e documentação. Não fazer reset/force-push, deploy Firebase ou limpeza de dados do navegador/nuvem. O rollback do aplicativo mantém progresso, backups, regras, configurações administrativas e faturamento; saves têm o mesmo formato nas duas versões.
