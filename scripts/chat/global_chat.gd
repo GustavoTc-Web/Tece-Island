@@ -3,6 +3,8 @@ extends Node
 signal panel_changed
 signal changed
 const POLL_SECONDS := 5.0
+const IDLE_POLL_SECONDS := 15.0
+const IDLE_AFTER_SECONDS := 60.0
 const REFRESH_SECONDS := 120.0
 var client: ChatClient
 var config := {}
@@ -26,6 +28,8 @@ var cooldown_until := 0
 var clear_draft := 0
 var next_poll := 0
 var next_full := 0
+var next_metadata := 0
+var last_activity := 0
 var sequence := 0
 var failures := 0
 var web_callback: JavaScriptObject
@@ -78,6 +82,8 @@ func reset_session() -> void:
 	cooldown_until = 0
 	next_poll = 0
 	next_full = 0
+	next_metadata = 0
+	last_activity = 0
 	sequence = 0
 	failures = 0
 	clear_draft += 1
@@ -116,10 +122,21 @@ func poll_due() -> void:
 func wake() -> void:
 	# Focus, online and pageshow events coalesce; retain quota/permission backoff.
 	if failures == 0 or connection_error.begins_with("Sem conexão"):
+		last_activity = Time.get_ticks_msec()
 		next_poll = mini(next_poll, maxi(Time.get_ticks_msec(), last_attempt + 5000))
 
 func current(owner: String, epoch: int) -> bool:
 	return owner == uid and epoch == FirebaseAuth.session_generation() and epoch == session_epoch
+
+func continue_read(owner: String, epoch: int) -> bool:
+	if not current(owner, epoch): return false
+	# Let the one in-flight request finish, but don't start the next stage while
+	# closed/hidden. Reopening resumes from the cache; writes aren't cancelled.
+	if not opened or not foreground():
+		reading = false
+		changed.emit()
+		return false
+	return true
 
 func wait_for_read(owner: String, epoch: int) -> bool:
 	while reading and current(owner, epoch): await changed
@@ -154,14 +171,16 @@ func initialize() -> void:
 	status = "Conectando ao chat…"
 	changed.emit()
 	var settings := await client.settings(owner)
-	if owner != uid or epoch != FirebaseAuth.session_generation(): return
+	if not continue_read(owner, epoch): return
 	if not settings.ok: read_failed(settings); return
 	var raw: Dictionary = settings.data.get("fields", {})
 	admin = owner in raw.get("admin_uids", {}).get("arrayValue", {}).get("values", []).map(func(v): return str(v.get("stringValue", "")))
 	var profile := await client.read_document(owner, "chatProfiles", owner)
-	if owner != uid or epoch != FirebaseAuth.session_generation(): return
+	if not continue_read(owner, epoch): return
 	if not profile.ok: read_failed(profile); return
 	nickname = str(profile.get("document", {}).get("nickname", ""))
+	next_metadata = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
+	last_activity = Time.get_ticks_msec()
 	reading = false
 	initialized = true
 	await refresh(true)
@@ -171,52 +190,66 @@ func refresh(full: bool = false) -> void:
 	reading = true
 	var owner := uid
 	var epoch := FirebaseAuth.session_generation()
-	full = full or Time.get_ticks_msec() >= next_full
-	# Poll the small counter; query messages only on change or reconciliation.
-	var head := await client.read_document(owner, "chatRuntime", "global")
-	if not current(owner, epoch): return
-	if not head.ok: read_failed(head); return
-	var remote_sequence := int(head.get("document", {}).get("sequence", 0))
-	full = full or remote_sequence < sequence
 	var query_warning := connection_error if connection_error.begins_with("Consulta incremental") else ""
-	if full or remote_sequence != sequence:
-		var result := await client.recent(owner, 0 if full else sequence)
-		if not current(owner, epoch): return
-		if result.ok and not full: query_warning = ""
-		# Fall back once to the initial bounded query if the filtered query fails.
-		if not result.ok and not full and int(result.get("status", 0)) in [400, 412, 500]:
-			query_warning = failure(result, "Consulta incremental") + " Recebimento recuperado pelo histórico."
-			result = await client.recent(owner)
-			full = true
-			if not current(owner, epoch): return
-		if not result.ok: read_failed(result); return
-		if full:
-			messages.clear()
-			sequence = remote_sequence
-		for item in result.messages:
-			messages = messages.filter(func(old): return old.id != item.id)
-			messages.append(item)
-			sequence = maxi(sequence, int(item.sequence))
-		messages.sort_custom(func(a, b): return int(a.sequence) < int(b.sequence))
-		messages = messages.slice(maxi(0, messages.size() - 50))
+	var recovered_query := false
+	# Query directly: an empty incremental costs the same minimum as the old
+	# counter heartbeat, without a second request when messages arrive.
+	if not full and Time.get_ticks_msec() >= next_full:
+		if not messages.is_empty():
+			var count_result := await client.window_count(owner, int(messages.front().sequence), int(messages.back().sequence))
+			if not continue_read(owner, epoch): return
+			if not count_result.ok:
+				read_failed(count_result)
+				return
+			full = int(count_result.count) != messages.size()
+		next_full = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
+	var result := await client.recent(owner, -1 if full else sequence)
+	if not continue_read(owner, epoch): return
+	if result.ok and not full: query_warning = ""
+	# One bounded recovery on an unsupported incremental query; backoff all
+	# transport, quota and permission errors instead of multiplying requests.
+	if not result.ok and not full and int(result.get("status", 0)) in [400, 412, 500]:
+		recovered_query = true
+		query_warning = failure(result, "Consulta incremental") + " Recebimento recuperado pelo histórico."
+		result = await client.recent(owner)
+		full = true
+		if not continue_read(owner, epoch): return
+	if not result.ok: read_failed(result); return
+	if not result.messages.is_empty(): last_activity = Time.get_ticks_msec()
 	if full:
+		messages.clear()
+		next_full = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
+	for item in result.messages:
+		messages = messages.filter(func(old): return old.id != item.id)
+		messages.append(item)
+		sequence = maxi(sequence, int(item.sequence))
+	messages.sort_custom(func(a, b): return int(a.sequence) < int(b.sequence))
+	messages = messages.slice(maxi(0, messages.size() - 50))
+	if Time.get_ticks_msec() >= next_metadata:
 		var profile := await client.read_document(owner, "chatProfiles", owner)
-		if not current(owner, epoch): return
+		if not continue_read(owner, epoch): return
 		if not profile.ok: read_failed(profile); return
 		nickname = str(profile.get("document", {}).get("nickname", ""))
 		var settings := await client.settings(owner)
-		if not current(owner, epoch): return
+		if not continue_read(owner, epoch): return
 		if not settings.ok: read_failed(settings); return
 		var raw: Dictionary = settings.data.get("fields", {})
 		admin = owner in raw.get("admin_uids", {}).get("arrayValue", {}).get("values", []).map(func(v): return str(v.get("stringValue", "")))
-		next_full = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
+		next_metadata = Time.get_ticks_msec() + int(REFRESH_SECONDS * 1000)
 	reading = false
-	failures = 0
+	# A persistent index error must not turn every 5 s poll into a 50-document
+	# download. Keep receiving via bounded recovery, with the same error backoff.
+	failures = mini(6, failures + 1) if recovered_query else 0
 	connection_error = query_warning
 	last_sync = Time.get_time_string_from_system()
 	if not busy: status = "Chat global · até 50 mensagens recentes"
-	next_poll = Time.get_ticks_msec() + int(POLL_SECONDS * 1000)
+	next_poll = Time.get_ticks_msec() + int(poll_seconds() * 1000)
+	if recovered_query:
+		next_poll = maxi(next_poll, Time.get_ticks_msec() + int(minf(240, POLL_SECONDS * pow(2, failures)) * 1000))
 	changed.emit()
+
+func poll_seconds() -> float:
+	return IDLE_POLL_SECONDS if Time.get_ticks_msec() - last_activity >= int(IDLE_AFTER_SECONDS * 1000) else POLL_SECONDS
 
 static func valid_nickname(value: String) -> bool:
 	return RegEx.create_from_string("^[A-Za-z0-9_À-ÖØ-öø-ÿ -]{2,20}$").search(value) != null and value == value.strip_edges()
@@ -280,9 +313,9 @@ func send_text(value: String) -> void:
 		clear_draft += 1
 		cooldown_until = Time.get_ticks_msec() + 5000
 		status = "Mensagem enviada."
-		# A full refresh also reconciles ambiguous prior sends and moderation.
+		last_activity = Time.get_ticks_msec()
 		changed.emit()
-		if not reading: await refresh(true)
+		if not reading: await refresh()
 	else:
 		if result.get("status", 0) == 403: cooldown_until = Time.get_ticks_msec() + 5000
 		status = failure(result) + " Texto preservado. Confira o histórico antes de reenviar."

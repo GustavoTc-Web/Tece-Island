@@ -1,0 +1,340 @@
+{
+    "date":  "2026-10-17",
+    "version":  "0.8.2-chat-budget-pilot.1",
+    "game_commit":  "f24c907d7ab0bc6a24428d036b02c0c044ba44a1",
+    "main_base":  "b94a68a83aaf205b011cc6b230dfc12c0edc510e",
+    "physical_tests_confirmed":  false,
+    "production_billing_measured":  false,
+    "rules_tests":  {
+                        "passed":  22,
+                        "failed":  0
+                    },
+    "save_checks":  {
+                        "suites":  9,
+                        "failed":  0,
+                        "passed":  155
+                    },
+    "native_chat_checks":  {
+                               "passed":  11,
+                               "failed":  0
+                           },
+    "control_checks":  {
+                           "passed":  7,
+                           "failed":  0
+                       },
+    "web_chat":  {
+                     "errors":  [
+
+                                ],
+                     "max_requests_per_session":  1,
+                     "latencies":  [
+                                       {
+                                           "phase":  "lobby-pc-mobile",
+                                           "ms":  5163
+                                       },
+                                       {
+                                           "phase":  "lobby-mobile-pc",
+                                           "ms":  749
+                                       },
+                                       {
+                                           "phase":  "paused-pc-mobile",
+                                           "ms":  5248
+                                       },
+                                       {
+                                           "phase":  "paused-mobile-pc",
+                                           "ms":  586
+                                       },
+                                       {
+                                           "phase":  "simulated-tab-resume",
+                                           "ms":  3454
+                                       },
+                                       {
+                                           "phase":  "admin-removal",
+                                           "ms":  121555
+                                       }
+                                   ],
+                     "failed":  0,
+                     "passed":  45
+                 },
+    "budget":  {
+                   "kind":  "measured-local-browser-http; reads estimated, not billed",
+                   "physical":  false,
+                   "idle_duration_ms":  135002,
+                   "phases":  {
+                                  "startup":  {
+                                                  "before":  {
+                                                                 "requests":  6,
+                                                                 "full_queries":  1,
+                                                                 "incrementals":  0,
+                                                                 "counts":  0,
+                                                                 "returned_documents":  55,
+                                                                 "estimated_direct_reads":  55,
+                                                                 "rule_read_reserve":  6
+                                                             },
+                                                  "after":  {
+                                                                "requests":  3,
+                                                                "full_queries":  1,
+                                                                "incrementals":  0,
+                                                                "counts":  0,
+                                                                "returned_documents":  52,
+                                                                "estimated_direct_reads":  52,
+                                                                "rule_read_reserve":  3
+                                                            }
+                                              },
+                                  "idle":  {
+                                               "before":  {
+                                                              "requests":  28,
+                                                              "full_queries":  1,
+                                                              "incrementals":  0,
+                                                              "counts":  0,
+                                                              "returned_documents":  77,
+                                                              "estimated_direct_reads":  77,
+                                                              "rule_read_reserve":  28
+                                                          },
+                                               "after":  {
+                                                             "requests":  19,
+                                                             "full_queries":  0,
+                                                             "incrementals":  16,
+                                                             "counts":  1,
+                                                             "returned_documents":  2,
+                                                             "estimated_direct_reads":  19,
+                                                             "rule_read_reserve":  19
+                                                         }
+                                           },
+                                  "active":  {
+                                                 "before":  {
+                                                                "requests":  9,
+                                                                "full_queries":  0,
+                                                                "incrementals":  3,
+                                                                "counts":  0,
+                                                                "returned_documents":  9,
+                                                                "estimated_direct_reads":  9,
+                                                                "rule_read_reserve":  9
+                                                            },
+                                                 "after":  {
+                                                               "requests":  6,
+                                                               "full_queries":  0,
+                                                               "incrementals":  6,
+                                                               "counts":  0,
+                                                               "returned_documents":  3,
+                                                               "estimated_direct_reads":  6,
+                                                               "rule_read_reserve":  6
+                                                           }
+                                             },
+                                  "closed":  {
+                                                 "before":  {
+                                                                "requests":  1,
+                                                                "full_queries":  0,
+                                                                "incrementals":  0,
+                                                                "counts":  0,
+                                                                "returned_documents":  1,
+                                                                "estimated_direct_reads":  1,
+                                                                "rule_read_reserve":  1
+                                                            },
+                                                 "after":  {
+                                                               "requests":  1,
+                                                               "full_queries":  0,
+                                                               "incrementals":  1,
+                                                               "counts":  0,
+                                                               "returned_documents":  0,
+                                                               "estimated_direct_reads":  1,
+                                                               "rule_read_reserve":  1
+                                                           }
+                                             },
+                                  "hidden":  {
+                                                 "before":  {
+                                                                "requests":  0,
+                                                                "full_queries":  0,
+                                                                "incrementals":  0,
+                                                                "counts":  0,
+                                                                "returned_documents":  0,
+                                                                "estimated_direct_reads":  0,
+                                                                "rule_read_reserve":  0
+                                                            },
+                                                 "after":  {
+                                                               "requests":  0,
+                                                               "full_queries":  0,
+                                                               "incrementals":  0,
+                                                               "counts":  0,
+                                                               "returned_documents":  0,
+                                                               "estimated_direct_reads":  0,
+                                                               "rule_read_reserve":  0
+                                                           }
+                                             },
+                                  "resume":  {
+                                                 "before":  {
+                                                                "requests":  2,
+                                                                "full_queries":  0,
+                                                                "incrementals":  1,
+                                                                "counts":  0,
+                                                                "returned_documents":  2,
+                                                                "estimated_direct_reads":  2,
+                                                                "rule_read_reserve":  2
+                                                            },
+                                                 "after":  {
+                                                               "requests":  1,
+                                                               "full_queries":  0,
+                                                               "incrementals":  1,
+                                                               "counts":  0,
+                                                               "returned_documents":  1,
+                                                               "estimated_direct_reads":  1,
+                                                               "rule_read_reserve":  1
+                                                           }
+                                             },
+                                  "removal":  {
+                                                  "before":  {
+                                                                 "requests":  0,
+                                                                 "full_queries":  0,
+                                                                 "incrementals":  0,
+                                                                 "counts":  0,
+                                                                 "returned_documents":  0,
+                                                                 "estimated_direct_reads":  0,
+                                                                 "rule_read_reserve":  0
+                                                             },
+                                                  "after":  {
+                                                                "requests":  2,
+                                                                "full_queries":  1,
+                                                                "incrementals":  0,
+                                                                "counts":  1,
+                                                                "returned_documents":  50,
+                                                                "estimated_direct_reads":  51,
+                                                                "rule_read_reserve":  2
+                                                            }
+                                              },
+                                  "close-inflight":  {
+                                                         "before":  {
+                                                                        "requests":  0,
+                                                                        "full_queries":  0,
+                                                                        "incrementals":  0,
+                                                                        "counts":  0,
+                                                                        "returned_documents":  0,
+                                                                        "estimated_direct_reads":  0,
+                                                                        "rule_read_reserve":  0
+                                                                    },
+                                                         "after":  {
+                                                                       "requests":  1,
+                                                                       "full_queries":  0,
+                                                                       "incrementals":  1,
+                                                                       "counts":  0,
+                                                                       "returned_documents":  0,
+                                                                       "estimated_direct_reads":  1,
+                                                                       "rule_read_reserve":  1
+                                                                   }
+                                                     },
+                                  "quota":  {
+                                                "before":  {
+                                                               "requests":  3,
+                                                               "full_queries":  0,
+                                                               "incrementals":  0,
+                                                               "counts":  0,
+                                                               "returned_documents":  3,
+                                                               "estimated_direct_reads":  3,
+                                                               "rule_read_reserve":  3
+                                                           },
+                                                "after":  {
+                                                              "requests":  4,
+                                                              "full_queries":  0,
+                                                              "incrementals":  2,
+                                                              "counts":  1,
+                                                              "returned_documents":  0,
+                                                              "estimated_direct_reads":  3,
+                                                              "rule_read_reserve":  4
+                                                          }
+                                            },
+                                  "index":  {
+                                                "before":  {
+                                                               "requests":  2,
+                                                               "full_queries":  0,
+                                                               "incrementals":  0,
+                                                               "counts":  0,
+                                                               "returned_documents":  2,
+                                                               "estimated_direct_reads":  2,
+                                                               "rule_read_reserve":  2
+                                                           },
+                                                "after":  {
+                                                              "requests":  5,
+                                                              "full_queries":  2,
+                                                              "incrementals":  1,
+                                                              "counts":  0,
+                                                              "returned_documents":  100,
+                                                              "estimated_direct_reads":  101,
+                                                              "rule_read_reserve":  5
+                                                          }
+                                            }
+                              },
+                   "latencies":  [
+                                     {
+                                         "client":  "before",
+                                         "ms":  4728
+                                     },
+                                     {
+                                         "client":  "after",
+                                         "ms":  8264
+                                     },
+                                     {
+                                         "client":  "before",
+                                         "ms":  1973
+                                     },
+                                     {
+                                         "client":  "after",
+                                         "ms":  5469
+                                     },
+                                     {
+                                         "client":  "before",
+                                         "ms":  1980
+                                     },
+                                     {
+                                         "client":  "after",
+                                         "ms":  5475
+                                     },
+                                     {
+                                         "client":  "after",
+                                         "phase":  "resume",
+                                         "ms":  544
+                                     },
+                                     {
+                                         "client":  "before",
+                                         "phase":  "resume",
+                                         "ms":  620
+                                     }
+                                 ],
+                   "checks":  [
+                                  "before: initial history contains 50 messages",
+                                  "after: initial history contains 50 messages",
+                                  "baseline actually rereads the full idle history",
+                                  "optimized idle uses count without rereading history",
+                                  "observed direct read estimate reduced by more than half",
+                                  "before: bounded history without duplicate rows",
+                                  "after: bounded history without duplicate rows",
+                                  "closed panels make zero new requests",
+                                  "reopening preserves draft",
+                                  "reopening preserves draft",
+                                  "hidden tabs make zero new requests",
+                                  "after: resume preserves draft",
+                                  "before: resume preserves draft",
+                                  "count reconciles physical delete, includes muted raw cache, refills window",
+                                  "closing an in-flight cycle starts no follow-up request",
+                                  "quota failure is visible; focus events preserve backoff without fallback queries",
+                                  "quota recovery preserves draft",
+                                  "successful full fallback still backs off a persistent incremental failure",
+                                  "persistent failure performs only one bounded fallback per backed-off attempt",
+                                  "before: maximum one concurrent request",
+                                  "after: maximum one concurrent request",
+                                  "no browser/REST errors"
+                              ],
+                   "errors":  [
+
+                              ]
+               },
+    "web_package":  {
+                        "errors":  [
+
+                                   ],
+                        "failed":  0,
+                        "passed":  11
+                    },
+    "phase_notes":  {
+                        "closed":  "Includes reopen at end. Passed separate quiet 6-second window with zero new requests for each client.",
+                        "hidden":  "Passed separate quiet 6-second window with zero new requests."
+                    }
+}

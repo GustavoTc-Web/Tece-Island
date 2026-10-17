@@ -35,6 +35,13 @@ for(const file of ['scripts/world_sync.gd','scripts/firestore_client.gd','script
  assert.equal(built,original,file+' must preserve the corrected save implementation');
  hashes[file]=createHash('sha256').update(built).digest('hex');
 }
-const result={version:stamp.version,commit:stamp.commit,sync_pilot_base:stamp.sync_pilot_base,world_rules_unchanged:true,allowed_account_count:2,world_sync_enabled:true,chat_enabled:true,public_defaults_disabled:true,save_source_sha256:hashes};
+const chatHashes={};
+for(const file of ['scripts/chat/global_chat.gd','scripts/chat/chat_client.gd','scripts/chat/chat_panel.gd','web/shell.html']){
+ const original=normalize(execFileSync('git',['show',`${stamp.commit}:${file}`],{encoding:'utf8'}));
+ const built=normalize(await readFile(source+'/'+file,'utf8'));
+ assert.equal(built,original,file+' must match the exported source commit');
+ chatHashes[file]=createHash('sha256').update(built).digest('hex');
+}
+const result={version:stamp.version,commit:stamp.commit,sync_pilot_base:stamp.sync_pilot_base,world_rules_unchanged:true,allowed_account_count:2,world_sync_enabled:true,chat_enabled:true,public_defaults_disabled:true,save_source_sha256:hashes,chat_source_sha256:chatHashes,firestore_rules_sha256:createHash('sha256').update(current).digest('hex')};
 await writeFile('build/chat-pilot/pilot-build.json',JSON.stringify(result,null,2)+'\n');
 console.log('PRIVATE PILOT: same 2 accounts; corrected sync and world rules preserved; public defaults off.');

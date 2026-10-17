@@ -81,9 +81,9 @@ try{
  await a.locator('#chat-launch').click();await settled(a);const cached=requests.length;
  for(let i=0;i<3;i++){await a.getByRole('button',{name:'Recolher',exact:true}).click();await a.locator('#chat-launch').click();}
  check(requests.length===cached,'abrir e recolher repetidamente reutiliza o serviço sem duplicar consultas');
- await a.getByRole('button',{name:'Recolher',exact:true}).click();
+ await a.locator('#chat-text').fill('Rascunho troca de cena');await a.getByRole('button',{name:'Recolher',exact:true}).click();
  await command(a,{action:'play'});await a.waitForFunction(()=>tcChatSnapshot.playing,{timeout:30000});
- await a.locator('#chat-launch').click();await settled(a);await a.locator('#chat-text').fill('wasd ficqre 12345');
+ await a.locator('#chat-launch').click();await settled(a);check(await a.locator('#chat-text').inputValue()==='Rascunho troca de cena','troca de cena conserva rascunho e reutiliza serviço');await a.locator('#chat-text').fill('wasd ficqre 12345');
  const position=await a.evaluate(()=>tcChatSnapshot.position);await a.locator('#chat-text').pressSequentially('wasdficqre12345',{delay:15});await a.waitForTimeout(300);
  check(await a.evaluate(position=>tcChatSnapshot.paused&&!tcChatSnapshot.attacking&&tcChatSnapshot.panel===''&&JSON.stringify(tcChatSnapshot.position)===JSON.stringify(position),position),'digitação bloqueia movimento, ataque, inventário e atalhos durante a partida');
  await a.locator('#chat-text').fill('Quem vem explorar a floresta?');await a.screenshot({path:'docs/images/chat-partida-pc.png'});
@@ -100,8 +100,8 @@ try{
  check(Math.abs(await a.locator('#chat-list').evaluate(el=>el.scrollTop)-oldScroll)<3&&await a.locator('#chat-text').inputValue()==='Rascunho lendo histórico','quem lê mensagens antigas mantém posição e rascunho e recebe aviso');
  await a.locator('#chat-new').click();check(await a.locator('#chat-new').isHidden()&&await a.locator('#chat-list').evaluate(el=>el.scrollHeight-el.scrollTop-el.clientHeight<5),'Ver novas mensagens leva ao fim e limpa aviso');
  // Production-style filtered query failure must recover without closing panels.
- let injected=false;await a.route('**/documents:runQuery',route=>{if(!injected&&route.request().postDataJSON().structuredQuery.where){injected=true;return route.fulfill({status:400,contentType:'application/json',body:JSON.stringify({error:{code:400,status:'FAILED_PRECONDITION',message:'fixture index failure'}})});}return route.continue();});
- await b.waitForTimeout(5500);await b.locator('#chat-text').fill('Recebida mesmo com consulta incremental recusada');await b.locator('#chat-send').tap();await settled(b);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recebida mesmo com consulta incremental recusada'),null,{timeout:20000});
+ let injected=false,armed=false;await a.route('**/documents:runQuery',route=>{if(armed&&!injected&&route.request().postDataJSON().structuredQuery.where){injected=true;return route.fulfill({status:400,contentType:'application/json',body:JSON.stringify({error:{code:400,status:'FAILED_PRECONDITION',message:'fixture index failure'}})});}return route.continue();});
+ await b.waitForTimeout(5500);await b.locator('#chat-text').fill('Recebida mesmo com consulta incremental recusada');await b.locator('#chat-send').tap();await settled(b);armed=true;await a.waitForFunction(()=>tcChatSnapshot.connection_error.includes('HTTP 400')&&document.querySelector('#chat-list').textContent.includes('Recebida mesmo com consulta incremental recusada'),null,{timeout:20000});
  check(injected&&(await a.locator('#chat-connection').textContent()).includes('HTTP 400'),'falha incremental mostra código e recupera mensagem por consulta limitada');await a.unroute('**/documents:runQuery');
  await a.evaluate(()=>{window.tcTestHidden=true;Object.defineProperty(document,'hidden',{configurable:true,get:()=>window.tcTestHidden});document.dispatchEvent(new Event('visibilitychange'));});await settled(a);const hiddenRequests=requests.filter(r=>r.page==='a').length;await a.waitForTimeout(6000);
  check(requests.filter(r=>r.page==='a').length===hiddenRequests,'aba oculta simulada suspende consultas de chat');
@@ -124,15 +124,15 @@ try{
  const markup='<img src=x onerror=alert(1)> [b]texto[/b]';await a.locator('#chat-text').fill(markup);await a.locator('#chat-send').click();await settled(a);await poll(b,true);
  await b.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('[b]texto[/b]'));
  check(await b.locator('#chat-list img').count()===0&&await textCount(b,markup)===1,'HTML e marcação aparecem como texto, sem elementos executáveis');
- // Full refresh reconciles admin deletion, including reused slot preconditions.
+ // Frozen-window count triggers a full refresh only when deletion is detected.
  await command(b,{action:'login',uid:'chat-admin'});await b.waitForFunction(()=>tcChatSnapshot.uid==='chat-admin'&&!tcChatSnapshot.opened);
  await b.locator('#chat-launch').tap();await settled(b);b.once('dialog',dialog=>dialog.accept());start=Date.now();await b.locator('#chat-list li').filter({hasText:'Olá do PC!'}).getByRole('button',{name:'Remover',exact:true}).tap();await settled(b);
- console.log('Aguardando reconciliação natural de remoção (até 120 s, sem forçar consulta)...');await a.waitForFunction(()=>!document.querySelector('#chat-list').textContent.includes('Olá do PC!'),null,{timeout:135000});latencies.push({phase:'admin-removal',ms:Date.now()-start});check(true,'administrador remove e reconciliação automática reflete exclusão sem fechar painel');
+ console.log('Aguardando reconciliação natural de remoção (120 s + próximo poll, sem forçar consulta)...');await a.waitForFunction(()=>!document.querySelector('#chat-list').textContent.includes('Olá do PC!'),null,{timeout:155000});latencies.push({phase:'admin-removal',ms:Date.now()-start});check(true,'administrador remove e reconciliação automática reflete exclusão sem fechar painel');
  await a.locator('#chat-text').fill('Segredo do rascunho A');
  let held;await a.route('**/chatRuntime/global',route=>{held=route;});
  await command(a,{action:'force_send',text:'ENVIO DA SESSÃO ANTIGA'});await a.waitForFunction(()=>tcChatSnapshot.requests>0&&tcChatSnapshot.busy);
  await command(a,{action:'logout'});await a.locator('#chat-launch').waitFor({state:'hidden'});
- await a.waitForFunction(()=>tcChatSnapshot.uid===''&&!tcChatSnapshot.opened&&tcChatSnapshot.requests===0);
+ await a.waitForFunction(()=>tcChatSnapshot.uid===''&&!tcChatSnapshot.opened&&tcChatSnapshot.requests===0&&!tcChatSnapshot.logging_out);
  check(await a.locator('#chat-text').inputValue()===''&&await a.evaluate(()=>tcChatSnapshot.requests===0),'logout limpa rascunho, histórico, requisições e interface');
  if(held)await held.abort().catch(()=>{});await a.unroute('**/chatRuntime/global');
  await command(a,{action:'login',uid:'chat-b'});await a.locator('#chat-launch').click();await settled(a);
