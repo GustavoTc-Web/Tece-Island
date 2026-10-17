@@ -123,9 +123,20 @@ Verificações aprovadas nesta execução:
 
 Registros resumidos: [chat-budget-2026-10-17.json](validation/chat-budget-2026-10-17.json). Todas as verificações acima são automação local; reteste físico e medição de uso no console Firebase permanecem pendentes.
 
+## Piloto privado disponível
+
+[Abrir 0.8.2-chat-budget-pilot.1](https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/)
+
+- Deploy **succeeded**, versão de hospedagem **5**, em 17/10/2026 às 04:13 UTC (01:13 em São Paulo).
+- Mesmo endereço/origem e audiência privada anterior (somente proprietário); o jogo conserva os mesmos dois UIDs autorizados. Nenhum acesso foi ampliado.
+- [Branch enviada ao GitHub](https://github.com/GustavoTc-Web/Tece-Island/tree/perf/chat-read-budget); build do jogo `f24c907d7ab0bc6a24428d036b02c0c044ba44a1`. Commits posteriores de documentação/verificação não alteram o jogo exportado.
+- Fonte da hospedagem: `8c60c1f3937e3d97726f3278832449acb1f71b5d`. Manifesto servido conferido integralmente e `index.pck` remoto idêntico ao local: SHA-256 `058cba012ae4b333fed502c28c2450e5055ab888e84b18358d7af1fe86b24ec3`.
+- Oficial 0.8.2/GitHub Pages e main preservados; nenhuma alteração/deploy Firebase, billing ou migração de saves.
+- Reversão do reteste: republicar a versão privada **4** da hospedagem (piloto .3, fonte `cad22d2fcb8bbaf5d58e160e56d620d11ad102ab`), preservando regras, `chatSettings/global` e dados. Esta etapa não exige reversão da publicação oficial.
+
 ## Reteste físico — pendente nesta versão
 
-1. PC + celular, uma conta em cada: abrir chat no lobby, esperar **mais de 2 minutos** sem enviar, então enviar nos dois sentidos, sem recolher/atualizar. Repetir em partida. Esperado: até 15 s ocioso e depois aproximadamente 5 s + rede; nada duplicado.
+1. PC + celular, uma conta em cada: confirmar o selo **0.8.2-chat-budget-pilot.1** (recarregar normalmente se ainda mostrar o anterior; preservar os dados do site). Abrir chat no lobby, esperar **mais de 2 minutos** sem enviar, então enviar nos dois sentidos, sem recolher/atualizar. Repetir em partida. Esperado: até 15 s ocioso e depois aproximadamente 5 s + rede; nada duplicado.
 2. Digitar rascunho, receber mensagens, recolher/reabrir, entrar/sair da partida e bloquear/desbloquear o celular ou trocar de aba por >2 min. Confirmar rascunho, recepção ao voltar e rolagem/aviso de novas mensagens; abrir/fechar repetidamente.
 3. Modo avião/rede desligada com rascunho; restaurar conexão. Confirmar erro visível, recuperação automática sem reenviar texto e sem duplicar mensagens. Teclado real: enviar/recolher acessíveis em paisagem/retrato.
 4. Renomear, recarregar/entrar em outro aparelho, enviar; silenciar esse UID e renomeá-lo novamente. Confirmar persistência e silenciamento. Logout/troca de conta deve limpar rascunho/histórico da anterior.
