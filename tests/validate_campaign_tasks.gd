@@ -93,6 +93,7 @@ func run() -> void:
 	inv.add_resource("arco")
 	world.objectives.reconcile(world)
 	check(t.ever("arco") and "arco" in t.inferred, "Item fabricável no save é reconhecido com origem indicada")
+	check(t.journal_text().contains("Reconhecido no save anterior"), "Lista compacta mantém visível a origem das evidências")
 	var bad := t.capture()
 	bad.crafted.append("arco")
 	check(not CampaignTasks.valid(bad), "Fabricação duplicada em payload é rejeitada")
@@ -102,7 +103,8 @@ func run() -> void:
 	var invalid := capture(world)
 	invalid.objectives.campaign_tasks = bad
 	check(not SaveValidation.valid(invalid), "Protocolo de save rejeita tarefas corrompidas")
-	world.campaign.encounter = "won"
+	world.campaign.restore({"version":1,"discovered":true,"clues":true,"components":["lens","coil","core"],"repaired":true,"encounter":"won","attempts":1,"victory_day":12,"deaths":0})
+	check(t.journal_text().contains("Crédito legado"), "Componentes anteriores continuam identificados como créditos no Diário")
 	check(t.task("waves").done and t.task("rescue").done, "Vitória anterior atende os marcos finais sem novo confronto")
 	world.queue_free()
 	await step()

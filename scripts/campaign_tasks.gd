@@ -111,12 +111,14 @@ func task(id: String) -> Dictionary:
 			result.requirement = inv.craft_error(craft_id)
 			if result.requirement == "Materiais insuficientes": result.requirement = "Faltam " + missing_ingredients(inv, craft_id)
 			# Making a fire is always possible before cooking is available.
-		if craft_id in inferred: result.hint = "Reconhecido no save anterior · " + result.hint
+		var from_save := craft_id in inferred or (craft_id == "machado_madeira" and "machado_pedra" in inferred) or (craft_id == "picareta_madeira" and "picareta_pedra" in inferred)
+		if from_save: result.hint = "Reconhecido no save anterior · " + result.hint
 	elif id == "stone_tools":
 		result.target = 2
 		result.value = int(ever("machado_pedra")) + int(ever("picareta_pedra"))
 		var next_tool := "machado_pedra" if not ever("machado_pedra") else "picareta_pedra"
 		result.hint = recipe_hint(next_tool)
+		if result.value == 2 and ("machado_pedra" in inferred or "picareta_pedra" in inferred): result.hint = "Reconhecido no save anterior · ferramentas registradas."
 		if result.value < 2 and not inv.can_craft(next_tool): result.requirement = "Faltam " + missing_ingredients(inv, next_tool)
 	elif id.begins_with("food"):
 		result.mode = "agora"
@@ -200,5 +202,7 @@ func journal_text() -> String:
 		for row in entries:
 			section.append("%s %s · %d/%d (%s)" % ["[x]" if row.done else "[ ]", row.title, mini(row.value, row.target), row.target, row.mode])
 			if not row.done: section.append(row.requirement if not row.requirement.is_empty() else row.hint)
+			elif row.hint.begins_with("Reconhecido no save anterior"): section.append("Reconhecido no save anterior.")
+			elif row.hint.begins_with("Crédito legado"): section.append(row.hint)
 		lines.append("\n".join(section))
 	return "\n\n".join(lines)
