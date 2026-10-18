@@ -20,6 +20,17 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"campaign_visit":
+			world.get_node("HUD").set_panel("")
+			player.position = world.campaign.points[str(request.id)].position + Vector2(0, 40)
+			world.get_node("EnemySpawner").set_physics_process(false)
+			world.get_node("DayNight").set_physics_process(false)
+		"campaign_night":
+			world.get_node("DayNight").elapsed = 6 * 600 + 320
+			world.get_node("DayNight").refresh()
+		"campaign_win":
+			if is_instance_valid(world.campaign.boss): world.campaign.boss.receive_damage(300)
+		"campaign_journal": world.get_node("HUD").set_panel("journal")
 		"icon_gallery":
 			var gallery := CanvasLayer.new()
 			gallery.name = "IconGallery"
@@ -249,6 +260,9 @@ func _process(_delta: float) -> void:
 		data.backpack = inv.backpack
 		data.journal = world.journal.capture()
 		data.objectives = world.objectives.capture()
+		data.campaign = world.campaign.capture()
+		data.campaign_text = hud.journal_view.campaign_text.text
+		data.campaign_objective_rect = rect(hud.objective_button)
 		data.world_id = world.world_id
 		data.health = player.health
 		data.dead = player.dead

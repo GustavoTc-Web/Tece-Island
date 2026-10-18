@@ -74,10 +74,15 @@ func run() -> void:
 	check(prepared.ok and prepared.data.inventory == JSON.parse_string(JSON.stringify(state.inventory)) and prepared.data.player.health == 67 and prepared.data.journal.discovered == ["arrival"], "PC continua inventário/personagem/diário do celular")
 	var changed: Dictionary = prepared.data.duplicate(true)
 	changed.player.health = 88
+	changed.version = SaveStore.VERSION
+	var campaign := SoloCampaign.new()
+	campaign.collect("lens")
+	changed.campaign = campaign.capture()
+	campaign.free()
 	await b.write(changed, self)
 	check((await sync.sync(b, pc, changed)).ok and b.sync_state.revision == 2, "PC envia revisão seguinte sem usar relógio do aparelho")
 	prepared = await sync.prepare(a, phone)
-	check(prepared.ok and prepared.data.player.health == 88, "Celular recebe progresso do PC no caminho inverso")
+	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v6 do PC sem falso conflito na migração v5")
 	var original := FileAccess.get_file_as_string(a.store.path)
 	service.reads_fail = true
 	var before: int = service.publishes

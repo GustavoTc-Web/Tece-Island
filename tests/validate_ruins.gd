@@ -60,7 +60,7 @@ func run() -> void:
 	check(saved.world_seed == world.world_seed and saved.generated_regions.has("ruins_w") and saved.loot.size() >= 21, "Save registra semente, regiões e conteúdo dos templos")
 	var kinds := {}
 	for region in WorldTerrain.regions(): kinds[region.kind] = true
-	check(kinds.size() == 6, "Apenas Aquático e Ruínas são novos tipos")
+	check(kinds.size() == 8 and kinds.has("Aquático") and kinds.has("Ruínas Escuras") and kinds.has("Serra Nebulosa") and kinds.has("Floresta Queimada"), "Biomas anteriores e os dois biomas da campanha permanecem disponíveis")
 	world.queue_free()
 	await process_frame
 	print("%d verificações, %d falhas" % [checks, failures])

@@ -39,7 +39,7 @@ try {
   const layout=await state();
   if(touch){const action=layout.buttons.Inventário;check(action[1]+action[3]<=layout.quick[0][1]+1,'Botões de ação não sobrepõem a barra rápida após rotação');}
   check((await state()).world_id===first&&(await state()).slots[0].quantity===3,'Partida carrega apenas o mundo selecionado');
-  check(/^Dia — Anoitece em 04:/.test((await state()).clock_text),'Contagem do mundo carregado aparece no HUD');
+  check(/^Dia 1 · Anoitece 04:/.test((await state()).clock_text),'Dia e contagem do mundo carregado aparecem no HUD');
   await fixture('items',{items:[{item:'carne_cozida',quantity:3},{item:'armadura_pedra',quantity:1}]});await fixture('health',{value:50});
   if(touch)await tap('Inventário');else{await page.keyboard.press('i');await wait();}
   await tap('1\n');await tap('Usar');const hp=(await state()).health;await page.waitForTimeout(1500);check((await state()).health===hp,'Painel solo congela cura');

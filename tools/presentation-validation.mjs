@@ -46,7 +46,7 @@ try{
    const hud=await state();check(hud.quick_details.map(x=>x.item).join(',')==='madeira,pedra,carne_cozida,pistola,armadura_pedra','Cinco espaços exibem os mesmos ícones do catálogo');
    check(hud.quick_details[0].text==='×15'&&hud.quick_details[1].text==='×9'&&hud.quick_details[3].text==='8','Quantidades e munição ficam identificadas');
    check(hud.objective_text==='Coletar madeiras: 0/10'&&!hud.objective_text.includes('\n'),'Objetivo ativo usa uma linha compacta');
-   check(hud.clock_text.startsWith('Dia — Anoitece em'),'Relógio permanece visível');
+   check(hud.clock_text.startsWith('Dia 1 · Anoitece'),'Dia e relógio permanecem visíveis');
    if(!touch){await page.keyboard.press('2');await wait();check((await state()).selected===1,'Teclado continua selecionando itens');await page.mouse.move(width/2,height/2);await page.mouse.wheel(0,-120);await wait();check((await state()).selected!==1,'Scroll continua selecionando itens');}
    const first=(await state()).quick[0];await point(first[0]+first[2]/2,first[1]+first[3]/2);check((await state()).selected===0&&(await state()).quick_details[0].border===2,'Mouse ou toque realça o espaço com borda');
    await page.screenshot({path:'.tools/screenshots/presentation-hud-'+width+'.png'});

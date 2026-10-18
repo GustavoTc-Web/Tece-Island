@@ -12,7 +12,7 @@ func run() -> void:
 	var metadata := NaturalWells.generate(77)
 	var all_fixed := true
 	for id in metadata: all_fixed = all_fixed and metadata[id].has_well
-	check(metadata.size() == 16 and all_fixed, "Um poço fixo em cada uma das dezesseis regiões")
+	check(metadata.size() == 18 and all_fixed, "Um poço fixo em cada uma das dezoito regiões")
 	check(NaturalWells.generate(999) == metadata, "Mundos novos não sorteiam distribuição")
 	var originals := true
 	for id in NaturalWells.LEGACY_POSITIONS:
@@ -26,7 +26,7 @@ func run() -> void:
 	var world: Node2D = load("res://scenes/world.tscn").instantiate()
 	root.add_child(world)
 	await step()
-	check(get_nodes_in_group("wells").size() == 16, "Mundo aplica regra anterior às novas regiões")
+	check(get_nodes_in_group("wells").size() == 18, "Mundo aplica regra anterior às novas regiões")
 	var inv: ResourceInventory = world.get_node("Inventory")
 	inv.add_item({"item": "cantil", "quantity": 1, "water": 2})
 	inv.add_item({"item": "pistola", "quantity": 1, "loaded": 5})
@@ -58,7 +58,7 @@ func run() -> void:
 	await restored.save_progress(true)
 	check(FileAccess.get_file_as_string(path + ".before-v%d.json" % SaveStore.VERSION) == bytes, "Backup exato antes de converter formato antigo")
 	var saved: Dictionary = restored.progress_store.store.read()
-	check(saved.version == SaveStore.VERSION and saved.region_wells.size() == 16 and saved.wells_policy == "fixed", "Layout fixo persistido")
+	check(saved.version == SaveStore.VERSION and saved.region_wells.size() == 18 and saved.wells_policy == "fixed", "Layout fixo persistido")
 	check(restored.get_node("Inventory").slots == inv.slots, "Conversão conserva inventário, munição e doses")
 	var found_base := false
 	for node in restored.get_node("WorldObjects").get_children():
@@ -80,7 +80,7 @@ func run() -> void:
 	var restored_count := 0
 	for state in repaired.values():
 		if state.has_well: restored_count += 1
-	check(restored_count == 16, "Estado da proposta descartada também retorna à regra fixa")
+	check(restored_count == 18, "Estado da proposta descartada também retorna à regra fixa")
 	world.queue_free()
 	restored.queue_free()
 	reentered.queue_free()
