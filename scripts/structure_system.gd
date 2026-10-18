@@ -51,6 +51,10 @@ func placement_size() -> Vector2:
 	return Vector2(16, 64) if preview_angle > 0 else Vector2(64, 16)
 
 func can_place(point: Vector2) -> bool:
+	var world := get_parent()
+	if "campaign" in world and world.campaign != null:
+		for marker in world.campaign.points.values():
+			if point.distance_to(marker.global_position) < 80: return false
 	if player.terrain_enabled and not WorldTerrain.solid_ground(point, placement_size()): return false
 	if not player.terrain_enabled and not Rect2(Vector2(48, 48), map_size - Vector2(96, 96)).has_point(point):
 		return false

@@ -37,6 +37,8 @@ var compact_ready := false
 var touch_goal_initialized := false
 var inventory_actions: GridContainer
 var feedback_notice: Label
+var campaign: SoloCampaign
+var victory_view: Control
 
 
 func initialize(source: ResourceInventory) -> void:
@@ -328,6 +330,7 @@ func set_panel(panel: String) -> void:
 	if combat_options != null: combat_options.visible = panel == "sound"
 	if base_view != null: base_view.visible = panel == "base"
 	if journal_view != null: journal_view.visible = panel == "journal"
+	if victory_view != null: victory_view.visible = panel == "victory"
 	if utility_buttons != null: utility_buttons.hide()
 	if menu_button != null: menu_button.visible = panel == "" and not showing_death
 	if menu_view != null:
@@ -517,8 +520,13 @@ func initialize_objectives(source: IslandObjectives) -> void:
 	mobile_layout(MobileInput.enabled)
 
 func refresh_objective() -> void:
+	if objective_button == null or journal_view == null: return
 	var source := journal_view.objectives
 	objective_button.visible = source.enabled and current_panel == "" and not showing_death
+	if campaign != null:
+		objective_button.text = campaign.objective()
+		objective_button.tooltip_text = "Diário: pistas, componentes e preparativos"
+		return
 	if source.tracked.is_empty():
 		objective_button.text = "Objetivos concluídos"
 	else:
@@ -526,6 +534,52 @@ func refresh_objective() -> void:
 		var short_title: String = {"wood":"Coletar madeiras", "stone":"Coletar pedras", "tools":"Equipamentos de pedra", "fire":"Fabricar fogueira", "bag":"Bolsa nível 3"}[source.tracked]
 		objective_button.text = "%s: %d/%d" % [short_title, source.values[source.tracked], goal.target]
 		objective_button.tooltip_text = source.tools_description() if source.tracked == "tools" else goal.title
+
+func initialize_campaign(source: SoloCampaign) -> void:
+	campaign = source
+	journal_view.campaign = source
+	source.changed.connect(refresh_objective)
+	source.changed.connect(journal_view.refresh)
+	source.won.connect(show_victory)
+	refresh_objective()
+
+func show_victory() -> void:
+	if victory_view != null: victory_view.queue_free()
+	victory_view = Control.new()
+	victory_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(victory_view)
+	var shade := ColorRect.new()
+	shade.color = Color(0.02, 0.06, 0.04, 0.94)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	victory_view.add_child(shade)
+	var panel := PanelContainer.new()
+	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(-260, -170)
+	panel.custom_minimum_size = Vector2(520, 340)
+	victory_view.add_child(panel)
+	var rows := VBoxContainer.new()
+	rows.add_theme_constant_override("separation", 18)
+	panel.add_child(rows)
+	var title := Label.new()
+	title.text = "O RESGATE CHEGOU"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 28)
+	rows.add_child(title)
+	var summary := Label.new()
+	summary.text = "Guardião da Ilha derrotado\n\nDia %d · %d tentativa(s) · %d derrota(s)\n3 componentes recuperados · sinalizador reparado\n\nSeu mundo continua: construções, itens e descobertas.\nJornada registrada no Diário." % [campaign.victory_day, campaign.attempts, campaign.deaths]
+	summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	summary.custom_minimum_size.x = 480
+	summary.add_theme_font_size_override("font_size", 20)
+	rows.add_child(summary)
+	var button := Button.new()
+	button.text = "Continuar explorando"
+	button.custom_minimum_size.y = 60
+	button.pressed.connect(func(): set_panel(""))
+	rows.add_child(button)
+	set_panel("victory")
+	if MobileInput.enabled: touch_sizes(victory_view)
+	_fit_modal(victory_view)
 
 func open_base(target: PlacedStructure = null) -> void:
 	if network_mode:
@@ -556,7 +610,7 @@ func update_time(day: int, phase: String) -> void:
 
 func update_clock(day: int, phase: String, remaining: int) -> void:
 	var night := phase in ["Noite", "Amanhecer"]
-	$Controls/Rows/Time.text = "%s — %s em %02d:%02d" % ["Noite" if night else "Dia", "Amanhece" if night else "Anoitece", maxi(0, remaining) / 60, maxi(0, remaining) % 60]
+	$Controls/Rows/Time.text = "%s %d · %s %02d:%02d" % ["Noite" if night else "Dia", day, "Amanhece" if night else "Anoitece", maxi(0, remaining) / 60, maxi(0, remaining) % 60]
 	$Controls/Rows/Time.tooltip_text = "Dia %d do mundo" % day
 
 

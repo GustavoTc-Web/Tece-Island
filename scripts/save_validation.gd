@@ -3,6 +3,7 @@ extends RefCounted
 
 static func valid(data: Variant, uid: String = "", world_id: String = "") -> bool:
 	if not data is Dictionary or not data.get("inventory") is Dictionary: return false
+	if not SoloCampaign.valid(data.get("campaign", {})): return false
 	if not data.get("version") is float and not data.get("version") is int: return false
 	if int(data.version) < 0 or int(data.version) > SaveStore.VERSION: return false
 	if uid != "" and data.get("owner_uid", "") != uid: return false

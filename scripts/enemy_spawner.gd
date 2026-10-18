@@ -17,6 +17,12 @@ var next_point: int = 0
 var next_kind := 0
 const KINDS := ["criatura", "esqueleto", "aranha"]
 
+func kinds_for_day(day: int) -> Array:
+	# Weighted rotation gives each new species a gradual introduction.
+	if day >= 4: return KINDS + ["cacador", "esqueleto", "aranha", "brutamonte"]
+	if day >= 2: return KINDS + ["cacador", "aranha"]
+	return KINDS
+
 
 func alive_count() -> int:
 	var total := 0
@@ -62,7 +68,8 @@ func try_spawn() -> ForestCreature:
 		if not player.get_world_2d().direct_space_state.intersect_shape(query).is_empty():
 			continue
 		var enemy := CREATURE.instantiate() as ForestCreature
-		enemy.kind = KINDS[next_kind % KINDS.size()]
+		var pool := kinds_for_day(cycle.day_number)
+		enemy.kind = pool[next_kind % pool.size()]
 		next_kind += 1
 		enemy.position = point
 		enemy.player = player

@@ -21,13 +21,16 @@ const NEW_LAND := [
 	{"id": "swamp_s", "kind": "Pântano", "rect": Rect2(2304, 1536, 1536, 1536)},
 	{"id": "fields_s", "kind": "Campos", "rect": Rect2(3840, 1536, 1536, 1536)},
 	{"id": "desert_s", "kind": "Deserto", "rect": Rect2(5376, 1536, 1536, 1536)}]
+const CAMPAIGN_LAND := [
+	{"id": "mist_ridge", "kind": "Serra Nebulosa", "rect": Rect2(0, -2560, 2304, 1024)},
+	{"id": "burned_forest", "kind": "Floresta Queimada", "rect": Rect2(2304, -2560, 1536, 1024)}]
 const PONDS := [Rect2(2450, 400, 130, 85), Rect2(3390, 250, 180, 100), Rect2(2770, 1250, 170, 90), Rect2(3500, 940, 160, 70)]
-const COLORS := {"Floresta": Color("567c46"), "Pântano": Color("40574b"), "Campos": Color("ad9b5c"), "Deserto": Color("dec487"), "Aquático": Color("366e86"), "Ruínas Escuras": Color("494755")}
-const BOUNDS := Rect2(-3072, -1536, 9984, 4608)
+const COLORS := {"Floresta": Color("567c46"), "Pântano": Color("40574b"), "Campos": Color("ad9b5c"), "Deserto": Color("dec487"), "Aquático": Color("366e86"), "Ruínas Escuras": Color("494755"), "Serra Nebulosa": Color("667b74"), "Floresta Queimada": Color("66574d")}
+const BOUNDS := Rect2(-3072, -2560, 9984, 5632)
 const SWIM_SPEED := 0.60
 
 static func regions() -> Array:
-	return ORIGINAL + AQUATIC + RUINS + NEW_LAND
+	return ORIGINAL + AQUATIC + RUINS + NEW_LAND + CAMPAIGN_LAND
 
 static func is_dark(point: Vector2) -> bool:
 	return region_at(point).get("kind", "") == "Ruínas Escuras"

@@ -1,6 +1,6 @@
 class_name SaveStore
 extends RefCounted
-const VERSION := 5
+const VERSION := 6
 var path := "user://solo-progress.json"
 var error := ""
 
@@ -56,7 +56,9 @@ func read() -> Dictionary:
 		if not FileAccess.file_exists(backup) and DirAccess.copy_absolute(path, backup) != OK:
 			error = "Não foi possível criar o backup. A conversão do progresso foi cancelada."
 			return {}
-		data.version = VERSION
+		# Keep the serialized version during read: changing it here would alter
+		# the confirmed cloud hash and turn a clean v5 world into a false fork.
+		# WorldProgress.capture upgrades only when the game actually saves v6.
 	return data
 
 func write(data: Dictionary) -> bool:
@@ -76,6 +78,11 @@ func write(data: Dictionary) -> bool:
 	if FileAccess.file_exists(path):
 		var original := FileAccess.get_file_as_string(path)
 		if parse(original) is Dictionary:
+			if data.has("campaign") and not parse(original).has("campaign"):
+				var before := path + ".before-campaign-v1.json"
+				if not FileAccess.file_exists(before) and DirAccess.copy_absolute(path, before) != OK:
+					error = "Falha no backup da campanha. Save anterior preservado."
+					return false
 			if FileAccess.file_exists(path + ".backup.json") and DirAccess.copy_absolute(path + ".backup.json", path + ".backup-2.json") != OK:
 				error = "Falha ao preservar backup anterior."
 				return false

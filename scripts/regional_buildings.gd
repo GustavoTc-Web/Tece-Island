@@ -20,7 +20,7 @@ static func generate(world: Node2D) -> Dictionary:
 	var result := previous.duplicate(true)
 	if not valid(previous): return {}
 	for region in WorldTerrain.regions():
-		if region.kind in ["Aquático", "Ruínas Escuras"]: continue
+		if region.kind in ["Aquático", "Ruínas Escuras", "Serra Nebulosa", "Floresta Queimada"]: continue
 		# Presence is checked in each region, including the original map.
 		var covered := false
 		for node in world.get_node("WorldObjects").get_children():

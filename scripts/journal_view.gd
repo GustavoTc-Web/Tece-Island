@@ -7,6 +7,8 @@ var text: Label
 var selected := ""
 var objectives: IslandObjectives
 var goals_mode := false
+var campaign: SoloCampaign
+var campaign_text: Label
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var shade := ColorRect.new()
@@ -40,6 +42,11 @@ func _ready() -> void:
 	var content := VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(content)
+	campaign_text = Label.new()
+	campaign_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	campaign_text.custom_minimum_size.x = 550
+	campaign_text.add_theme_font_size_override("font_size", 20)
+	content.add_child(campaign_text)
 	pages = VBoxContainer.new()
 	content.add_child(pages)
 	text = Label.new()
@@ -56,9 +63,22 @@ func _ready() -> void:
 	journal.changed.connect(refresh)
 	refresh()
 func refresh() -> void:
+	if campaign_text != null:
+		campaign_text.text = campaign.journal_text() if campaign != null else ""
 	for child in pages.get_children():
 		pages.remove_child(child)
 		child.queue_free()
+	if campaign != null:
+		for id in SoloCampaign.LOCATIONS:
+			if not campaign.blocked_by_base(id) or not campaign.points[id].can_interact(): continue
+			var recover := Button.new()
+			recover.text = "Acessar sinalizador pela base" if id == "beacon" else ("Reaver pistas pela base" if id == "clue" else "Reaver " + SoloCampaign.TITLES[id])
+			recover.custom_minimum_size.y = 56
+			recover.pressed.connect(func():
+				if not campaign.blocked_by_base(id): return
+				hud.set_panel("")
+				hud.show_message(campaign.interact(id)))
+			pages.add_child(recover)
 	if goals_mode and objectives != null:
 		var toggle := CheckButton.new()
 		toggle.text = "Mostrar objetivo na HUD"

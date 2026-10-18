@@ -1,11 +1,12 @@
 class_name ForestCreature
 extends CharacterBody2D
+signal defeated
 
 @export var max_health: int = 30
-@export_enum("criatura", "esqueleto", "aranha") var kind := "criatura"
+@export_enum("criatura", "esqueleto", "aranha", "cacador", "brutamonte", "guardiao_ilha") var kind := "criatura"
 @export var skeleton_interval := 2.5
 @export var skeleton_windup := 0.65
-@export var skeleton_arrow_speed := 240.0
+@export var skeleton_arrow_speed := 295.0
 @export var skeleton_damage := 10
 @export var spider_damage := 4
 @export var spider_interval := 1.5
@@ -15,7 +16,7 @@ var shot_direction := Vector2.RIGHT
 @export var attack_damage: int = 10
 @export_range(1.0, 10.0) var attack_interval: float = 1.0
 @export var attack_range: float = 30.0
-@export_enum("noturno", "guardiao") var origin: String = "noturno"
+@export_enum("noturno", "guardiao", "campanha") var origin: String = "noturno"
 @export var territory_radius: float = 180.0
 @export var dawn_fade_duration: float = 0.6
 @export var detection_range: float = 260.0
@@ -43,6 +44,11 @@ var fading: bool = false
 var fade_elapsed: float = 0.0
 var simulation_authority: bool = true
 var safe_centers: Array[Vector2] = []
+var charge_remaining := 0.0
+var recovery := 0.0
+var special_attack := ""
+var pattern := 0
+var charge_hit := false
 
 
 func is_safe(point: Vector2) -> bool:
@@ -71,12 +77,33 @@ func _ready() -> void:
 	if kind == "esqueleto":
 		attack_damage = skeleton_damage
 		attack_interval = maxf(2.5, skeleton_interval)
-		attack_range = 220
-		chase_speed = 75
+		attack_range = 250
+		chase_speed = 95
 	elif kind == "aranha":
 		attack_damage = spider_damage
 		attack_interval = spider_interval
 		chase_speed = 105
+	elif kind == "cacador":
+		max_health = 22
+		chase_speed = 135
+		attack_damage = 12
+		attack_range = 110
+		attack_interval = 2.5
+	elif kind == "brutamonte":
+		max_health = 100
+		chase_speed = 58
+		attack_damage = 24
+		attack_range = 68
+		attack_interval = 3.4
+	elif kind == "guardiao_ilha":
+		max_health = 300
+		chase_speed = 105
+		attack_damage = 22
+		attack_range = 460
+		attack_interval = 3.6
+		detection_range = 850
+		give_up_range = 1100
+		safe_radius = 0
 	health = max_health
 	home = global_position
 	destination = home
@@ -107,6 +134,7 @@ func try_attack() -> bool:
 		return false
 	if attack_cooldown > 0.0 or global_position.distance_to(player.global_position) > attack_range:
 		return false
+	if kind == "guardiao_ilha" and pattern % 2 == 0 and global_position.distance_to(player.global_position) > 185: return false
 	if origin == "guardiao" and player.global_position.distance_to(home) > territory_radius:
 		return false
 	if is_safe(player.global_position) or not has_line_of_sight(player.global_position):
@@ -114,8 +142,17 @@ func try_attack() -> bool:
 	attack_cooldown = attack_interval
 	combat_visible = 4
 	attack_direction = (player.global_position - global_position).normalized()
+	if kind in ["cacador", "brutamonte", "guardiao_ilha"]:
+		special_attack = "slam" if kind == "brutamonte" else "charge"
+		if kind == "guardiao_ilha":
+			special_attack = "volley" if pattern % 2 == 1 else "charge"
+			pattern += 1
+		windup_remaining = 0.65 if kind == "cacador" else 1.2
+		shot_direction = attack_direction
+		queue_redraw()
+		return true
 	if kind == "esqueleto":
-		shot_direction = (player.global_position - global_position).normalized()
+		shot_direction = predicted_direction()
 		windup_remaining = skeleton_windup
 		queue_redraw()
 		return true
@@ -129,7 +166,7 @@ func try_attack() -> bool:
 func release_arrow() -> bool:
 	if dead or fading or not is_instance_valid(player) or player.dead or is_safe(player.global_position) or not has_line_of_sight(player.global_position): return false
 	var arrow: Node2D = preload("res://scenes/projectile.tscn").instantiate()
-	arrow.position = global_position
+	arrow.position = get_parent().to_local(global_position)
 	arrow.direction = shot_direction
 	arrow.speed = skeleton_arrow_speed
 	arrow.remaining = 440
@@ -141,6 +178,36 @@ func release_arrow() -> bool:
 	attack_visual = 0.2
 	CombatEffect.emit_at(self, global_position, "arrow", shot_direction)
 	return true
+
+func predicted_direction() -> Vector2:
+	var travel := global_position.distance_to(player.global_position) / skeleton_arrow_speed
+	var lead: Vector2 = player.velocity * minf(0.38, travel * 0.5 + 0.1)
+	return (player.global_position + lead - global_position).normalized()
+
+func release_special() -> void:
+	if dead or fading or not is_instance_valid(player) or player.dead or is_safe(player.global_position): return
+	if special_attack == "charge":
+		charge_remaining = 0.32 if kind == "cacador" else 0.55
+		charge_hit = false
+	elif special_attack == "slam":
+		attack_visual = 0.2
+		if global_position.distance_to(player.global_position) <= attack_range and has_line_of_sight(player.global_position) and attack_direction.dot((player.global_position - global_position).normalized()) > 0.35:
+			player.receive_damage(attack_damage)
+		recovery = 1.0
+	else:
+		for angle in [-0.22, 0.0, 0.22]:
+			var arrow: Node2D = preload("res://scenes/projectile.tscn").instantiate()
+			arrow.position = get_parent().to_local(global_position)
+			arrow.direction = shot_direction.rotated(angle)
+			arrow.speed = 240
+			arrow.remaining = 650
+			arrow.damage = 14
+			arrow.arrow = true
+			arrow.hit_players = true
+			arrow.shooter = get_rid()
+			arrow.add_to_group("campaign_projectiles")
+			get_parent().add_child(arrow)
+		recovery = 1.1
 
 static func drop_quantity(monster: String, roll: float) -> int:
 	if monster == "esqueleto": return 1 if roll < 0.70 else (2 if roll < 0.95 else 3)
@@ -160,6 +227,7 @@ func receive_damage(amount: int) -> bool:
 		collision_layer = 0
 		collision_mask = 0
 		remove_from_group("enemies")
+		defeated.emit()
 		if kind in ["esqueleto", "aranha"]:
 			var drop: ResourceDrop = preload("res://scenes/resource_drop.tscn").instantiate()
 			drop.resource = "flecha" if kind == "esqueleto" else "linha"
@@ -190,10 +258,35 @@ func _physics_process(delta: float) -> void:
 	if not simulation_authority or dead or fading or not is_instance_valid(player):
 		return
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
+	recovery = maxf(0, recovery - delta)
+	if charge_remaining > 0:
+		charge_remaining = maxf(0, charge_remaining - delta)
+		velocity = shot_direction * (230 if kind == "cacador" else 280)
+		if is_safe(global_position + velocity * delta):
+			charge_remaining = 0
+			velocity = Vector2.ZERO
+			recovery = 1.0
+			return
+		move_and_slide()
+		if not charge_hit and not player.dead and not is_safe(player.global_position) and global_position.distance_to(player.global_position) < 36 and has_line_of_sight(player.global_position):
+			charge_hit = true
+			player.receive_damage(attack_damage)
+		if charge_remaining == 0 or get_slide_collision_count() > 0:
+			charge_remaining = 0
+			recovery = 1.0
+		return
 	if windup_remaining > 0:
+		if kind == "esqueleto" and windup_remaining > 0.2: shot_direction = predicted_direction()
 		windup_remaining = maxf(0, windup_remaining - delta)
 		queue_redraw()
-		if windup_remaining == 0: release_arrow()
+		velocity = Vector2.ZERO
+		if windup_remaining == 0:
+			if kind == "esqueleto": release_arrow()
+			else: release_special()
+		return
+	if recovery > 0:
+		velocity = Vector2.ZERO
+		return
 	var distance := global_position.distance_to(player.global_position)
 	var player_safe := is_safe(player.global_position)
 	var outside_territory := origin == "guardiao" and player.global_position.distance_to(home) > territory_radius
@@ -214,8 +307,17 @@ func _physics_process(delta: float) -> void:
 			destination = home + Vector2.from_angle(wander_angle) * wander_radius
 	var direction := (destination - global_position).normalized()
 	var speed := chase_speed if chasing else wander_speed
+	var moving := (destination - global_position).length() > 3.0 and (not chasing or distance > attack_range * 0.8)
+	if kind == "esqueleto" and chasing:
+		if distance < 130:
+			direction = -direction
+			moving = true
+		elif distance > 205 or not has_line_of_sight(player.global_position): moving = true
+		else: moving = false
+	if kind == "guardiao_ilha" and chasing: moving = distance > (175 if pattern % 2 == 0 else 330)
+	if windup_remaining > 0: moving = false
 	velocity = Vector2.ZERO
-	if (destination - global_position).length() > 3.0 and (not chasing or distance > attack_range * 0.8):
+	if moving:
 		# Desvio local simples; o corpo físico nunca atravessa árvores ou bordas.
 		for angle in [0.0, PI / 4, -PI / 4, PI / 2, -PI / 2]:
 			var motion := direction.rotated(angle) * speed * delta
@@ -257,7 +359,23 @@ func _draw() -> void:
 		draw_rect(Rect2(-22, -48, 44.0 * health / max_health, 5), Color("db866a"))
 
 func draw_monster() -> void:
-	if kind == "esqueleto":
+	if kind in ["cacador", "brutamonte", "guardiao_ilha"]:
+		var radius := 15.0 if kind == "cacador" else (28.0 if kind == "guardiao_ilha" else 23.0)
+		var body := Color("5b687d") if kind == "cacador" else (Color("566e67") if kind == "guardiao_ilha" else Color("8c7866"))
+		draw_circle(Vector2(0, -15), radius, body)
+		for side in [-1, 1]:
+			draw_circle(Vector2(side * radius, -8), radius * 0.4, body.darkened(0.2))
+			draw_circle(Vector2(side * 7, -24), 3, Color("f8d590"))
+			draw_line(Vector2(side * 10, 0), Vector2(side * 14, 9), body.darkened(0.2), 8)
+		if kind == "guardiao_ilha":
+			for side in [-1, 1]: draw_polyline(PackedVector2Array([Vector2(side * 16, -33), Vector2(side * 25, -55), Vector2(side * 34, -43)]), Color("b9c5ad"), 7)
+		if windup_remaining > 0:
+			var color := Color("93deea") if special_attack == "volley" else Color("ffcb77")
+			if special_attack == "slam": draw_arc(Vector2.ZERO, attack_range, 0, TAU, 24, color, 3)
+			else:
+				for angle in ([-0.22, 0.0, 0.22] if special_attack == "volley" else [0.0]): draw_line(Vector2.ZERO, shot_direction.rotated(angle) * (120 if special_attack == "volley" else 95), color, 3)
+			draw_arc(Vector2(0, -25), radius + 8, 0, TAU, 24, color, 3)
+	elif kind == "esqueleto":
 		draw_circle(Vector2(0, -30), 12, Color("dedbc3"))
 		for x in [-5, 5]: draw_circle(Vector2(x, -32), 3, Color("343e48"))
 		draw_line(Vector2(0, -18), Vector2(0, -4), Color("dedbc3"), 4)
