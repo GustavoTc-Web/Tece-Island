@@ -83,10 +83,15 @@ func run() -> void:
 	campaign.collect("lens")
 	changed.campaign = campaign.capture()
 	campaign.free()
+	var task_history := IslandObjectives.new()
+	task_history.crafted("fogueira")
+	changed.objectives = task_history.capture()
+	task_history.free()
 	await b.write(changed, self)
 	check((await sync.sync(b, pc, changed)).ok and b.sync_state.revision == 2, "PC envia revisão seguinte sem usar relógio do aparelho")
 	prepared = await sync.prepare(a, phone)
-	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v7 do PC sem falso conflito na migração v5")
+	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v8 do PC sem falso conflito na migração v5")
+	check(prepared.ok and "fogueira" in prepared.data.objectives.campaign_tasks.crafted, "Sincronização PC para celular transporta histórico das tarefas")
 	var original := FileAccess.get_file_as_string(a.store.path)
 	service.reads_fail = true
 	var before: int = service.publishes
@@ -144,6 +149,11 @@ func run() -> void:
 	real_inv.add_item({"item": "armadura_pedra", "quantity": 1})
 	real_inv.equip_armor(0)
 	real_inv.add_item({"item": "arco", "quantity": 1, "uid": 333})
+	real_inv.add_resource("madeira", 4)
+	real_inv.add_resource("pedra", 5)
+	check(real_inv.craft("fogueira"), "Fabricação real registra tarefa antes da transferência")
+	for index in range(real_inv.capacity):
+		if real_inv.slot_data(index).get("item") == "fogueira": real_inv.consume_slot(index, "fogueira"); break
 	for index in range(100):
 		var chest: PlacedStructure = load("res://scenes/placed_structure.tscn").instantiate()
 		chest.kind = "bau"
@@ -171,6 +181,7 @@ func run() -> void:
 	for node in resumed.get_node("WorldObjects").get_children():
 		if node is PlacedStructure and node.kind == "bau": chests.append(node)
 	check(resumed.progress_store.writable and resumed.get_node("Inventory").armor.item == "armadura_pedra" and chests.size() == 100 and chests[0].storage.count_item("madeira") == 64, "Partida restaura equipamento e baús após carregar o save transferido")
+	check(resumed.objectives.campaign_tasks.ever("fogueira") and resumed.get_node("Inventory").count_item("fogueira") == 0, "Transferência conserva fabricação mesmo depois de usar o item")
 	resumed.queue_free()
 	print("REAL SAVE: JSON=%d bytes, deflate/base64=%d bytes, chunks=%d" % [measured.raw_bytes, measured.encoded_bytes, measured.chunks.size()])
 	var report := FileAccess.open(folder + "/measurements.json", FileAccess.WRITE)
@@ -198,9 +209,9 @@ func run() -> void:
 	converted.version = SaveStore.VERSION
 	converter.free()
 	await new_pc.write(converted, self)
-	check((await sync.sync(new_pc, pc, converted)).ok and new_pc.sync_state.revision == 2, "Conversão v6 para v7 publica revisão sem falso conflito")
+	check((await sync.sync(new_pc, pc, converted)).ok and new_pc.sync_state.revision == 2, "Conversão v6 para v8 publica revisão sem falso conflito")
 	var on_phone: Dictionary = await sync.prepare(old_phone, phone)
-	check(on_phone.ok and on_phone.data.version == 7 and on_phone.data.campaign.legacy_migrated and on_phone.data.campaign.components == pilot.campaign.components, "Retorno PC para celular conserva créditos e componentes")
+	check(on_phone.ok and on_phone.data.version == SaveStore.VERSION and on_phone.data.campaign.legacy_migrated and on_phone.data.campaign.components == pilot.campaign.components, "Retorno PC para celular conserva créditos e componentes")
 	sync.client = actual
 	sync.config.enabled = false
 	service.queue_free()

@@ -26,6 +26,7 @@ var base_view: BaseView
 var journal_view: JournalView
 var journal_button: Button
 var objective_button: Button
+var task_panel: CampaignTaskPanel
 var save_button: Button
 var save_notice: Label
 var poison_status: Label
@@ -228,7 +229,9 @@ func mobile_layout(value: bool) -> void:
 		menu_button.position = Vector2(view.x - unit * 1.15 - 12, 12)
 		menu_button.add_theme_font_size_override("font_size", int(maxf(18, 14 / MobileInput.css_scale())))
 	if menu_view != null: menu_view.layout()
-	if objective_button != null:
+	if task_panel != null:
+		task_panel.layout()
+	elif objective_button != null:
 		objective_button.position = Vector2(224 * display_scale, 4)
 		objective_button.custom_minimum_size = Vector2(240, unit)
 		objective_button.size = objective_button.custom_minimum_size
@@ -522,6 +525,9 @@ func initialize_objectives(source: IslandObjectives) -> void:
 func refresh_objective() -> void:
 	if objective_button == null or journal_view == null: return
 	var source := journal_view.objectives
+	if task_panel != null:
+		task_panel.refresh()
+		return
 	objective_button.visible = source.enabled and current_panel == "" and not showing_death
 	if campaign != null:
 		objective_button.text = campaign.objective()
@@ -538,6 +544,11 @@ func refresh_objective() -> void:
 func initialize_campaign(source: SoloCampaign) -> void:
 	campaign = source
 	journal_view.campaign = source
+	objective_button.queue_free()
+	task_panel = CampaignTaskPanel.new()
+	add_child(task_panel)
+	task_panel.initialize(self, journal_view.objectives.campaign_tasks)
+	objective_button = task_panel.title
 	source.changed.connect(refresh_objective)
 	source.changed.connect(journal_view.refresh)
 	source.won.connect(show_victory)

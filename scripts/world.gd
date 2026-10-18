@@ -164,7 +164,7 @@ func _ready() -> void:
 	$Structures.placed.connect(objectives.structure_placed)
 	journal.changed.connect(func():
 		if "arrival" in journal.discovered: objectives.advance("record", 1, loading_progress))
-	objectives.completed.connect(func(title): $HUD.show_message("Objetivo concluído: " + title))
+	objectives.completed.connect(func(title): if campaign == null: $HUD.show_message("Objetivo concluído: " + title))
 	var previous_wells: Dictionary = initial_progress.get("region_wells", {}) if initial_progress.get("region_wells", {}) is Dictionary else {}
 	if NaturalWells.valid_metadata(previous_wells):
 		region_wells = NaturalWells.generate(world_seed, previous_wells, initial_progress.get("structures", []) if initial_progress.get("structures", []) is Array else [])
@@ -175,6 +175,7 @@ func _ready() -> void:
 	campaign = SoloCampaign.new()
 	add_child(campaign)
 	campaign.initialize(self)
+	objectives.campaign_tasks.initialize(self)
 	$HUD.initialize_campaign(campaign)
 	if persistence_enabled:
 		progress_store = WorldProgress.new()

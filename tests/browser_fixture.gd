@@ -20,6 +20,9 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"tasks_craft": inv.craft(str(request.id))
+		"tasks_equip_armor": inv.equip_armor(int(request.index))
+		"tasks_use": player.get_node("Needs").use_slot(inv, int(request.index))
 		"campaign_visit":
 			world.get_node("HUD").set_panel("")
 			player.position = world.campaign.points[str(request.id)].position + Vector2(0, 40)
@@ -267,6 +270,8 @@ func _process(_delta: float) -> void:
 		data.backpack = inv.backpack
 		data.journal = world.journal.capture()
 		data.objectives = world.objectives.capture()
+		data.tasks = {"state":world.objectives.campaign_tasks.capture(), "stage":world.objectives.campaign_tasks.automatic_stage(), "rows":world.objectives.campaign_tasks.rows(world.objectives.campaign_tasks.automatic_stage()), "panel_rect":rect(hud.task_panel), "collapsed":world.objectives.campaign_tasks.collapsed, "next":hud.task_panel.next_task}
+		data.tasks.conditions = {"food3":world.objectives.campaign_tasks.task("food3"), "water3":world.objectives.campaign_tasks.task("water3"), "wear":world.objectives.campaign_tasks.task("wear")}
 		data.campaign = world.campaign.capture()
 		data.campaign_text = hud.journal_view.campaign_text.text
 		data.campaign_objective_rect = rect(hud.objective_button)

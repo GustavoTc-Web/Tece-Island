@@ -16,6 +16,10 @@ var presented: Array[String] = []
 var tracked := "wood"
 var enabled := true
 var collapsed := false
+var campaign_tasks := CampaignTasks.new()
+
+func _init() -> void:
+	campaign_tasks.changed.connect(func(): changed.emit())
 
 func refresh_sequence(quiet: bool = false) -> void:
 	tracked = ""
@@ -40,6 +44,7 @@ func collected(item: String, amount: int) -> void:
 	if item == "pedra": advance("stone", amount)
 
 func crafted(id: String, quiet: bool = false) -> void:
+	campaign_tasks.record_crafted(id, quiet)
 	if id in STONE_TOOLS and not crafted_tools[id]:
 		crafted_tools[id] = true
 		advance("tools", 1, quiet)
@@ -58,6 +63,7 @@ func reconcile(world: Node2D) -> void:
 		for slot in inventory.slots:
 			if not slot.is_empty(): crafted(slot.item, true)
 		if not inventory.backpack.is_empty(): crafted(inventory.backpack.item, true)
+		if not inventory.armor.is_empty(): crafted(inventory.armor.item, true)
 	for node in world.get_node("WorldObjects").get_children():
 		if node is PlacedStructure and not node.is_queued_for_deletion(): structure_placed(node.kind, true)
 	refresh_sequence(true)
@@ -73,9 +79,10 @@ func tools_description() -> String:
 	return " · ".join(parts)
 
 func capture() -> Dictionary:
-	return {"sequence_version": 1, "values": values.duplicate(), "crafted_tools": crafted_tools.duplicate(), "presented": presented.duplicate(), "tracked": tracked, "enabled": enabled, "collapsed": false}
+	return {"sequence_version": 1, "values": values.duplicate(), "crafted_tools": crafted_tools.duplicate(), "presented": presented.duplicate(), "tracked": tracked, "enabled": enabled, "collapsed": false, "campaign_tasks": campaign_tasks.capture()}
 
 func restore(data: Dictionary) -> bool:
+	if not CampaignTasks.valid(data.get("campaign_tasks", {})): return false
 	if not data.get("values", {}) is Dictionary: return false
 	var next_values := values.duplicate()
 	for id in ORDER:
@@ -100,6 +107,12 @@ func restore(data: Dictionary) -> bool:
 		if id not in presented: presented.append(id)
 	enabled = bool(data.get("enabled", true))
 	collapsed = false
+	campaign_tasks.restore(data.get("campaign_tasks", {}))
+	# Individual legacy crafts remain evidence even after losing the item.
+	for id in STONE_TOOLS:
+		if crafted_tools[id]: campaign_tasks.record_crafted(id, true)
+	if values.fire > 0: campaign_tasks.record_crafted("fogueira", true)
+	if values.bag > 0: campaign_tasks.record_crafted("mochila", true)
 	refresh_sequence(true)
 	changed.emit()
 	return true

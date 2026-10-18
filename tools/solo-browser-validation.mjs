@@ -20,7 +20,7 @@ try{
    await page.goto('http://localhost:8081/Tece-Island/');
    await page.waitForFunction(()=>window.tcState?.menu,null,{timeout:60000});
    await tap('Continuar');await page.waitForFunction(()=>window.tcState?.position);
-   let s=await state();check(s.objective_text.includes('sinal'),'HUD mostra o objetivo da campanha');
+   let s=await state();check(s.objective_text.includes('Dia 1')&&s.objective_text.includes('/4'),'HUD mostra etapa e contador da campanha');
    const r=s.campaign_objective_rect;
    check(r[0]>=0&&r[1]>=0&&r[0]+r[2]<=s.viewport[0]+1,'Objetivo cabe no HUD');
    if(touch){
@@ -58,7 +58,7 @@ try{
     }
    }
    await fixture('campaign_journal');
-   check((await state()).campaign_text.includes('Conquistado')&&(await state()).campaign_text.includes('EXTREMO'),'Diário reúne conquistas e requisitos');
+   check((await state()).campaign_text.includes('[x] Conquistar')&&(await state()).campaign_text.includes('EXTREMO'),'Diário reúne conquistas e requisitos');
    await page.screenshot({path:`.tools/screenshots/solo2-journal-${width}.png`});
    await fixture('campaign_clock',{day:6,night:false});
    await fixture('campaign_visit',{id:'beacon'});await interact();

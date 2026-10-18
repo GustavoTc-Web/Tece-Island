@@ -71,6 +71,7 @@ func run() -> void:
 	hud._input(event)
 	check(hud.current_panel == "journal", "J abre diário sem conflito com controles")
 	hud.journal_view.selected = "signal"
+	hud.journal_view.goals_mode = false
 	hud.journal_view.refresh()
 	check(hud.journal_view.text.text.contains("Raul") and hud.journal_view.text.autowrap_mode != TextServer.AUTOWRAP_OFF, "Leitura legível com texto e rolagem")
 	hud.set_panel("")
