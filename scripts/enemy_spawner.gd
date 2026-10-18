@@ -36,6 +36,9 @@ func current_limit() -> int:
 	if not cycle.is_night() or cycle.phase == "Amanhecer": return 0
 	var campaign: SoloCampaign = get_parent().get("campaign")
 	if campaign != null and campaign.encounter in ["active", "awaiting_dawn"]: return 0
+	# Curated temple formations replace open-world pressure in these interiors,
+	# including the recovery period after conquest. Building guardians remain.
+	if campaign != null and campaign.local_darkness(player.position): return 0
 	return mini(night_limit, 3 if cycle.day_number == 1 else (4 if cycle.day_number == 2 else 5))
 
 
