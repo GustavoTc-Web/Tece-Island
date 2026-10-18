@@ -114,3 +114,21 @@ Os testes automatizados, a build e a publicação final estão registrados em
 campanha completa, tempos dos dias seguintes, conforto em aparelho físico,
 suspensão, teclado virtual, bateria/temperatura e chat/sincronização entre as duas
 contas reais. Nenhum backend, regra, lista de contas ou faturamento foi alterado.
+
+
+## Publicação verificada
+
+Piloto **0.9.0-solo-pilot.3**, versão salva **10**, deployment **succeeded**.
+Build do jogo: `0e9d27d1c534dc6b0495a9a0ca27446b57def57e`. Fonte Sites: `61284677eda2bc5a6973520c8daaab41e2457610`.
+Deployment: `appgdep_6ad51f67fd9881919cf98f9a7b3d9245`. Acesso privado preservado.
+Manifesto e PCK conferidos por HTTPS; SHA-256 do PCK: `34658997f132609bdbe3133ba4b5ceb728376005da05a18d1553e3f377671d42`.
+O pacote inclui também a correção que mantém evidências e créditos antigos visíveis no Diário.
+
+Executados **388 checks Godot em 16 suítes**, **39 checks Web de tarefas**,
+**63 de campanha Web** e **12 de persistência Web**, sem falhas.
+PC 1280×720 e toque emulado 852×393 / 640×360; não são aparelhos físicos.
+O cliente .2 foi executado contra v8: recusou a leitura e preservou os bytes.
+
+Oficial conferido em **0.8.3**, commit `7c17e63f634d4abbaca87c6f5ad1b5198601e99d`.
+Main remota preservada em `7eae4f3c6b922232dc5c1910f3fdfd26ba1a9c9d`.
+Pacote local: `build/tece-island-0.9.0-solo-pilot.3.zip`.
