@@ -139,6 +139,7 @@ func task(id: String) -> Dictionary:
 	elif id == "wear":
 		result.mode = "agora"
 		result.value = int(inv.armor.get("item") == "armadura_pedra")
+		if not result.value and inv.count_item("armadura_pedra") == 0: result.requirement = "Falta armadura na bolsa · fabrique outra ou recupere a guardada."
 		result.hint = "Inventário → selecione a armadura → equipar."
 	elif id == "weapon":
 		result.mode = "agora"
@@ -156,7 +157,9 @@ func task(id: String) -> Dictionary:
 		if c.temples[id].credit: result.hint = "Crédito legado · componente anterior preservado."
 	elif id == "repair":
 		result.value = int(c.repaired)
-		result.requirement = "Faltam mapa e 3 componentes." if not c.map_found or c.components.size() < 3 else ("Aguarde o dia 6." if world.get_node("DayNight").day_number < 6 else "")
+		if not c.map_found: result.requirement = "Falta recuperar o mapa na torre da Serra."
+		elif c.components.size() < 3: result.requirement = "Faltam %d componentes · conquiste os templos pendentes." % (3 - c.components.size())
+		elif world.get_node("DayNight").day_number < 6: result.requirement = "Aguarde o dia 6."
 		result.hint = "Interaja com o sinalizador (1152, 570)."
 	elif id == "activate":
 		result.mode = "tentativa atual"
