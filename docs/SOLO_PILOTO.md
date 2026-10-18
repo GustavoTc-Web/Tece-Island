@@ -3,6 +3,10 @@
 Base: main 0.8.3 (`7eae4f3`). Branch `feat/solo-seventh-night`.
 A publicação oficial permanece na 0.8.3 até o reteste e aprovação.
 
+**[Abrir piloto privado 0.9.0-solo-pilot.1](https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/)**.
+Publicado com Sites em 18/10/2026, versão salva da hospedagem **6**; acesso
+privado preservado. Build do jogo `12ec63d5d5233f5196462ccc45fad1b8f9f05bbc`.
+
 ## Campanha e recuperação
 
 O sinalizador quebrado fica junto à clareira inicial (1152, 570). O registro
@@ -113,3 +117,28 @@ partículas, shaders de névoa ou mudanças de infraestrutura para a beta de 25/
 O sandbox também não pôde consultar o repositório de certificados do Windows:
 o transporte REST validado foi o emulador HTTP local; TLS nativo real e chat/
 sincronização autenticados entre as duas contas reais não foram retestados.
+
+## Registro da entrega
+
+- Branch: `feat/solo-seventh-night`; implementação `f5ce71a`, validação/build
+  `12ec63d`. Commits enviados ao repositório, sem merge na main.
+- Sites: fonte `4fddd75794fee1efe126614ae66d987ab05b5375`, versão salva 6,
+  deploy `appgdep_6ad4b5c1d8148191b68a382eb9f004e1` concluído com sucesso.
+- Manifesto privado, pacote PCK e motor conferidos por HTTPS. PCK SHA-256:
+  `1b5858ccbfadb9bbd2742040733b7ec7d93a9e53ed20d26f58f72e62d1726ac7`.
+- Motor original distribuído em cinco partes de até 8 MB, usando o empacotador
+  existente e verificação SHA-256. Build final carregou motor e formulário de
+  acesso em PC e toque emulado, sem autenticação Firebase nem erros de script.
+- [Endereço oficial](https://gustavotc-web.github.io/Tece-Island/): manifesto
+  conferido após o piloto, ainda **0.8.3**, build `7c17e63`. Main remota em
+  `7eae4f3`, preservada.
+- Pacote local Web + fontes nativas: `build/tece-island-0.9.0-solo-pilot.1.zip`.
+  A versão nativa requer Godot 4.7.2; o pacote Web inclui servidor Node local.
+- Nenhum deploy Firebase, mudança de regras, ampliação de contas ou faturamento.
+  As duas alterações locais já existentes (`project.godot` e o UID de
+  `validate_sync_handoff`) ficaram fora dos commits.
+
+Rollback do piloto: republicar a versão salva **5** do mesmo Site. Manter as
+regras e dados Firebase. O cliente antigo não lê saves v6: usar uma cópia do
+backup anterior à migração ao voltar a testar a 0.8.3; não substituir silenciosamente
+um mundo com campanha pelo backup antigo.

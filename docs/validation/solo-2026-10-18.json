@@ -750,5 +750,58 @@
     "requestAnimationFrame samples under headless Edge/SwiftShader are not physical-device performance benchmarks",
     "No authenticated two-account production sync/chat test; emulator and fixture tests only",
     "Native sandbox could not read OS certificate store; live native TLS was not validated"
-  ]
+  ],
+  "release_smoke": [
+    {
+      "mobile": false,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    }
+  ],
+  "hosted": {
+    "verified": true,
+    "url": "https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+    "version": "0.9.0-solo-pilot.1",
+    "game_commit": "12ec63d5d5233f5196462ccc45fad1b8f9f05bbc",
+    "pck_sha256": "1b5858ccbfadb9bbd2742040733b7ec7d93a9e53ed20d26f58f72e62d1726ac7",
+    "engine_sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+    "engine_parts": 5,
+    "official": {
+      "version": "0.8.3",
+      "commit": "7c17e63f634d4abbaca87c6f5ad1b5198601e99d"
+    },
+    "no_firebase_authentication_performed": true
+  },
+  "release_package_probe": {
+    "passed": true,
+    "save_version": 6,
+    "campaign_points": 5,
+    "regions": 18,
+    "allowed_accounts": 2,
+    "fixtures_absent": true,
+    "log": ".tools/solo-pack.log"
+  }
 }
