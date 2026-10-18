@@ -60,10 +60,12 @@ func refresh() -> void:
 			darkness = 1.0 - smoothstep(day_duration + night_duration - transition, day_duration + night_duration, position)
 	color = Color.WHITE.lerp(night_color, 1.0 if local_darkness else darkness)
 	var remaining := ceili((day_duration if position < day_duration else day_duration + night_duration) - position)
-	if remaining != remaining_seconds or next_phase != phase:
-		remaining_seconds = remaining
-		clock_changed.emit(next_day, next_phase, remaining)
-	if next_day != day_number or next_phase != phase:
-		day_number = next_day
-		phase = next_phase
-		time_changed.emit(day_number, phase)
+	var clock_modified := remaining != remaining_seconds or next_phase != phase or next_day != day_number
+	var phase_modified := next_day != day_number or next_phase != phase
+	# Publish a consistent clock, including a restored day with the same phase
+	# and remaining seconds. HUD callbacks may inspect the cycle immediately.
+	day_number = next_day
+	phase = next_phase
+	remaining_seconds = remaining
+	if clock_modified: clock_changed.emit(day_number, phase, remaining)
+	if phase_modified: time_changed.emit(day_number, phase)

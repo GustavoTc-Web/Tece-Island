@@ -26,8 +26,15 @@ func command(args: Array) -> void:
 			world.get_node("EnemySpawner").set_physics_process(false)
 			world.get_node("DayNight").set_physics_process(false)
 		"campaign_night":
-			world.get_node("DayNight").elapsed = 6 * 600 + 320
+			world.get_node("DayNight").elapsed = 5 * 600 + 310
 			world.get_node("DayNight").refresh()
+		"campaign_clock":
+			world.get_node("DayNight").set_physics_process(false)
+			world.get_node("DayNight").elapsed = (int(request.day) - 1) * 600 + (300 if request.get("night", false) else 0) + 10
+			world.get_node("DayNight").refresh()
+		"campaign_clear":
+			for mob in get_tree().get_nodes_in_group("enemies"):
+				if world.is_ancestor_of(mob) and (mob.is_in_group("temple_enemies") or mob.is_in_group("final_encounter")): mob.receive_damage(1000)
 		"campaign_win":
 			if is_instance_valid(world.campaign.boss): world.campaign.boss.receive_damage(300)
 		"campaign_journal": world.get_node("HUD").set_panel("journal")

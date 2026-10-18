@@ -99,9 +99,52 @@ func run() -> void:
 	for i in range(hits): boss.receive_damage(ResourceRules.combat_damage("espada_pedra"))
 	check(boss.dead and hits == 20, "Espada fabricável derrota chefe em 20 acertos")
 	var spawner: Node = world.get_node("EnemySpawner")
-	check("cacador" not in spawner.kinds_for_day(1) and "cacador" in spawner.kinds_for_day(2), "Caçador entra na segunda noite")
-	check("brutamonte" not in spawner.kinds_for_day(3) and "brutamonte" in spawner.kinds_for_day(4), "Brutamonte entra na quarta noite")
+	check(spawner.kinds_for_day(1) == ["criatura"], "Primeira noite só roxos")
+	check(spawner.kinds_for_day(2) == ["criatura", "esqueleto", "aranha"], "Segunda noite acrescenta esqueleto e aranha")
+	check("cacador" not in spawner.kinds_for_day(2) and "cacador" in spawner.kinds_for_day(3), "Caçador entra na terceira noite")
+	check("brutamonte" not in spawner.kinds_for_day(5) and "brutamonte" in spawner.kinds_for_day(6) and "uivador" in spawner.kinds_for_day(6), "Brutamonte e Uivador entram na sexta noite")
 	check("guardiao_ilha" not in spawner.kinds_for_day(100), "Chefe nunca entra no sorteio comum")
+	check("sentinela" not in spawner.kinds_for_day(100) and "acolito" not in spawner.kinds_for_day(100), "Ameaças dos templos não se espalham pelo mundo aberto")
+	var sentinel := spawn(world, "sentinela", Vector2(950, 768))
+	check(sentinel.max_health == 65 and sentinel.try_attack() and sentinel.windup_remaining >= 1.2, "Sentinela anuncia golpe forte sem inflar vida")
+	sentinel.origin = "templo"
+	sentinel.home = Vector2(950, 768)
+	check(not sentinel.within_territory(Vector2(1400, 768)) and sentinel.within_territory(Vector2(1000, 768)), "Inimigo de templo permanece no recinto")
+	sentinel.queue_free()
+	var acolyte := spawn(world, "acolito", Vector2(820, 768))
+	check(acolyte.try_attack() and acolyte.windup_remaining == 0.85 and acolyte.skeleton_arrow_speed == 265, "Acólito usa tiro visível, antecipação moderada e mais tempo de esquiva")
+	acolyte.queue_free()
+	var howler := spawn(world, "uivador", Vector2(900, 768))
+	howler.reinforcement_handler = spawner.summon_for_howler
+	howler.call_cooldown = 0
+	howler._physics_process(0.01)
+	check(howler.special_attack == "call" and howler.windup_remaining == 2 and player.health == 100, "Uivador anuncia chamado por dois segundos")
+	howler.receive_damage(1)
+	check(howler.windup_remaining == 0 and howler.call_cooldown == 12, "Qualquer golpe interrompe chamado e adia nova tentativa")
+	howler.origin = "campanha"
+	howler.add_to_group("final_encounter")
+	var count: int = spawner.summon_for_howler(howler)
+	check(count == 2 and spawner.summon_for_howler(howler) == 0, "Reforços limitados a dois simultâneos")
+	howler.special_attack = "call"
+	howler.release_special()
+	check(howler.call_cooldown == 18, "Chamados completos respeitam intervalo de dezoito segundos")
+	for mob in world.campaign.final_enemies(): mob.queue_free()
+	var inv: ResourceInventory = world.get_node("Inventory")
+	inv.reset()
+	inv.add_resource("madeira", 30)
+	inv.add_resource("pedra", 26)
+	inv.add_resource("linha", 7)
+	inv.add_resource("carne_crua", 6)
+	check(inv.craft("armadura_pedra"), "Reserva de preparo fabrica armadura antes dos templos")
+	for index in range(inv.capacity):
+		if inv.slot_data(index).get("item") == "armadura_pedra": inv.equip_armor(index); break
+	check(inv.craft("espada_pedra") and inv.craft("arco"), "Espada e arco cabem na bolsa inicial junto à armadura equipada")
+	var arrows_ok := true
+	for i in range(4): arrows_ok = inv.craft("flecha") and arrows_ok
+	inv.cooking_available = true
+	var food_ok := true
+	for i in range(6): food_ok = inv.craft("carne_cozida") and food_ok
+	check(arrows_ok and inv.count_item("flecha") == 16 and food_ok and inv.count_item("carne_cozida") == 6, "Preparo reserva 16 flechas e seis comidas com recursos comuns")
 	world.queue_free()
 	await step()
 	print("%d verificações, %d falhas" % [checks, failures])

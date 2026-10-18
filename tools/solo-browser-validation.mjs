@@ -41,39 +41,52 @@ try{
    check((await state()).campaign.discovered,'Interação real descobre sinalizador');
    await fixture('campaign_visit',{id:'clue'});await interact();
    check((await state()).campaign.clues&&(await state()).journal.discovered.includes('arrival'),'Registro original revela pistas sem competir na coleta');
-   for(const id of ['lens','coil','core']){
+   await fixture('campaign_visit',{id:'map'});await interact();
+   check(!(await state()).campaign.map_found,'Mapa bloqueado antes da terceira noite');
+   await fixture('campaign_clock',{day:3,night:true});await interact();
+   check((await state()).campaign.map_found,'Terceira noite recupera mapa pela interação');
+   for(const [id,day] of [['lens',4],['coil',5],['core',5]]){
+    await fixture('campaign_clock',{day,night:true});
     await fixture('campaign_visit',{id});await interact();
-    check((await state()).campaign.components.includes(id),'Coleta real do componente '+id);
-    if(id!=='core')await page.screenshot({path:`.tools/screenshots/solo-${id}-${width}.png`});
+    check((await state()).campaign.temples[id].started,'Interação inicia templo '+id);
+    for(let i=0;i<12&&!(await state()).campaign.components.includes(id);i++)await fixture('campaign_clear');
+    check((await state()).campaign.components.includes(id),'Conquista garante componente '+id);
+    if(id!=='core')await page.screenshot({path:`.tools/screenshots/solo2-${id}-${width}.png`});
     if(id!=='core'){
      const sample=await page.evaluate(()=>new Promise(resolve=>{const deltas=[];let last;function frame(t){if(last!==undefined)deltas.push(t-last);last=t;if(deltas.length<45)requestAnimationFrame(frame);else{deltas.sort((a,b)=>a-b);resolve({median_ms:deltas[22],p95_ms:deltas[42],frames:45});}}requestAnimationFrame(frame);}));
      frameSamples.push({dimensions,region:id,...sample});
     }
    }
    await fixture('campaign_journal');
-   check((await state()).campaign_text.includes('Serra Nebulosa')&&(await state()).campaign_text.includes('[x]'),'Diário reúne pistas e componentes');
-   await page.screenshot({path:`.tools/screenshots/solo-journal-${width}.png`});
+   check((await state()).campaign_text.includes('Conquistado')&&(await state()).campaign_text.includes('EXTREMO'),'Diário reúne conquistas e requisitos');
+   await page.screenshot({path:`.tools/screenshots/solo2-journal-${width}.png`});
+   await fixture('campaign_clock',{day:6,night:false});
    await fixture('campaign_visit',{id:'beacon'});await interact();
    check((await state()).campaign.repaired,'Interação repara o sinalizador');
    await fixture('campaign_night');await interact();
-   check((await state()).campaign.encounter==='active','Sétima noite ativa confronto');
+   check((await state()).campaign.encounter==='active','Sexta noite ativa confronto');
+   for(let i=0;i<22&&(await state()).campaign.final_wave<2;i++)await fixture('campaign_clear');
+   await page.waitForTimeout(1900);
+   check((await state()).campaign.final_wave===2,'Duas formações precedem Guardião');
    await fixture('campaign_win');
+   check((await state()).campaign.encounter==='awaiting_dawn'&&!(await state()).paused,'Guardiāo vencido aguarda amanhecer');
+   await fixture('campaign_clock',{day:7,night:false});
    check((await state()).campaign.encounter==='won'&&(await state()).paused,'Vitória abre resumo e pausa combate');
-   await page.screenshot({path:`.tools/screenshots/solo-victory-${width}.png`});
+   await page.screenshot({path:`.tools/screenshots/solo2-victory-${width}.png`});
    await tap('Continuar explorando');
    check(!(await state()).paused&&(await state()).campaign.encounter==='won','Continuar por mouse/toque preserva o mundo');
    const persistence=await page.evaluate(async()=>{
     const request=(op,key,payload='',claim='')=>new Promise(resolve=>tcLocalProgress.request(op,key,payload,claim,r=>resolve(JSON.parse(r))));
     const key='campaign-validation-'+crypto.randomUUID();
-    const legacy=JSON.stringify({version:5,inventory:{slots:[]},elapsed:6400});
+    const legacy=JSON.stringify({version:6,inventory:{slots:[]},elapsed:6400,campaign:{version:1,discovered:true,clues:true,components:['lens'],repaired:false,encounter:'idle',attempts:0,victory_day:0,deaths:0}});
     await request('write',key,legacy,JSON.stringify({expected:null}));
-    const next=JSON.stringify({...JSON.parse(legacy),version:6,campaign:window.tcState.campaign});
+    const next=JSON.stringify({...JSON.parse(legacy),version:7,campaign:window.tcState.campaign});
     const first=await request('write',key,next,JSON.stringify({expected:legacy}));
-    const backup=(await request('read',key+':before-campaign-v1')).value;
+    const backup=(await request('read',key+':before-campaign-v2')).value;
     const second=await request('write',key,next,JSON.stringify({expected:next}));
-    const repeat=(await request('read',key+':before-campaign-v1')).value;
+    const repeat=(await request('read',key+':before-campaign-v2')).value;
     const stale=await request('write',key,legacy,JSON.stringify({expected:legacy}));
-    return first.ok&&second.ok&&backup===legacy&&repeat===legacy&&(await request('read',key+':before-v6')).value===legacy&&stale.conflict&&(await request('read',key)).value===next;
+    return first.ok&&second.ok&&backup===legacy&&repeat===legacy&&(await request('read',key+':before-v7')).value===legacy&&stale.conflict&&(await request('read',key)).value===next;
    });
    check(persistence,'Migração IndexedDB tem backup exato, repetível e conflito protegido');
   }finally{await context.close();}

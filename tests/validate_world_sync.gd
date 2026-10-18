@@ -76,13 +76,17 @@ func run() -> void:
 	changed.player.health = 88
 	changed.version = SaveStore.VERSION
 	var campaign := SoloCampaign.new()
+	campaign.discovered = true
+	campaign.map_found = true
+	campaign.temples.lens.started = true
+	campaign.temples.lens.cleared = CampaignEncounters.enemy_ids("lens")
 	campaign.collect("lens")
 	changed.campaign = campaign.capture()
 	campaign.free()
 	await b.write(changed, self)
 	check((await sync.sync(b, pc, changed)).ok and b.sync_state.revision == 2, "PC envia revisão seguinte sem usar relógio do aparelho")
 	prepared = await sync.prepare(a, phone)
-	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v6 do PC sem falso conflito na migração v5")
+	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v7 do PC sem falso conflito na migração v5")
 	var original := FileAccess.get_file_as_string(a.store.path)
 	service.reads_fail = true
 	var before: int = service.publishes
@@ -173,6 +177,30 @@ func run() -> void:
 	report.store_string(JSON.stringify({"raw_bytes": measured.raw_bytes, "encoded_bytes": measured.encoded_bytes, "chunks": measured.chunks.size()}))
 	report.close()
 	world.queue_free()
+	# A clean confirmed pilot .1 snapshot must remain clean until gameplay
+	# converts it; the next revision carries v7 plus explicit legacy credits.
+	var migration_id := await phone.create_world("Piloto v6", self)
+	var pilot: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/solo_v06.json"))
+	pilot.owner_uid = phone.uid
+	pilot.world_id = migration_id
+	pilot.world_name = "Piloto v6"
+	var old_phone := phone.account(migration_id)
+	await old_phone.write(pilot, self)
+	check((await sync.sync(old_phone, phone, pilot)).ok, "Fixture v6 confirma base real do protocolo")
+	await sync.refresh_library(pc)
+	var new_pc := pc.account(migration_id)
+	var old_prepared: Dictionary = await sync.prepare(new_pc, pc)
+	check(old_prepared.ok and old_prepared.data.version == 6 and CloudCodec.hash_state(old_prepared.data) == new_pc.sync_state.hash, "Download v6 conserva hash sem conversão durante leitura")
+	var converted: Dictionary = old_prepared.data.duplicate(true)
+	var converter := SoloCampaign.new()
+	converter.restore(converted.campaign)
+	converted.campaign = converter.capture()
+	converted.version = SaveStore.VERSION
+	converter.free()
+	await new_pc.write(converted, self)
+	check((await sync.sync(new_pc, pc, converted)).ok and new_pc.sync_state.revision == 2, "Conversão v6 para v7 publica revisão sem falso conflito")
+	var on_phone: Dictionary = await sync.prepare(old_phone, phone)
+	check(on_phone.ok and on_phone.data.version == 7 and on_phone.data.campaign.legacy_migrated and on_phone.data.campaign.components == pilot.campaign.components, "Retorno PC para celular conserva créditos e componentes")
 	sync.client = actual
 	sync.config.enabled = false
 	service.queue_free()

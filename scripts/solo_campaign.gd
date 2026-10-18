@@ -330,21 +330,24 @@ func _physics_process(delta: float) -> void:
 		_advance_final()
 
 func objective() -> String:
-	if encounter == "won": return "Resgate concluído · Explore a ilha"
-	if encounter == "awaiting_dawn": return "Guardião vencido · Aguarde amanhecer"
-	if encounter == "active": return "Vença o Guardião · último confronto" if final_wave == 2 else "Ataque final · invasores %d/2" % (final_wave + 1)
+	if encounter == "won": return "Resgate concluído · explore"
+	if encounter == "awaiting_dawn": return "Aguarde amanhecer · resgate"
+	if encounter == "active": return "Guardião · último confronto" if final_wave == 2 else "Ataque · invasores %d/2" % (final_wave + 1)
 	var day: int = world.get_node("DayNight").day_number if world != null else 1
-	if not discovered: return "Recursos e ferramentas · investigue o sinal"
-	if not map_found: return "Prepare equipamento · mapa na noite 3" if day < 3 else "Recupere o mapa · torre da Serra"
+	if not discovered: return "Recursos · investigue o sinal"
+	if not map_found:
+		if day < 3: return "Prepare · mapa na noite 3"
+		return "Mapa · aguarde anoitecer" if world != null and not world.get_node("DayNight").is_night() else "Mapa · torre da Serra"
 	for id in COMPONENTS:
 		if not CampaignEncounters.complete(id, temples[id]):
 			var minimum := 4 if id == "lens" else 5
-			if not temples[id].started and not night_requirement(minimum).is_empty(): return "%s · aguarde noite %d+" % [CampaignEncounters.NAMES[id], minimum]
-			return "%s · %d/%d vencidos" % [CampaignEncounters.NAMES[id], temples[id].cleared.size(), CampaignEncounters.enemy_ids(id).size()]
-	if not repaired: return "Componentes 3/3 · repare no dia 6" if day < 6 else "Componentes 3/3 · repare o sinal"
+			var number := COMPONENTS.find(id) + 1
+			if not temples[id].started and not night_requirement(minimum).is_empty(): return "Templo %d · noite %d+" % [number, minimum]
+			return "Templo %d · %d/%d vencidos" % [number, temples[id].cleared.size(), CampaignEncounters.enemy_ids(id).size()]
+	if not repaired: return "3/3 · repare no dia 6" if day < 6 else "3/3 · repare o sinal"
 	if world != null and not activation_requirement().is_empty():
-		return "Sinal 3/3 · próxima noite: pouco tempo" if world.get_node("DayNight").is_night() and day >= 6 else "Sinal pronto 3/3 · aguarde noite 6+"
-	return "Sinal pronto 3/3 · inicie o ataque"
+		return "Pronto · próxima noite" if world.get_node("DayNight").is_night() and day >= 6 else "Pronto · aguarde noite 6+"
+	return "Pronto · inicie o ataque"
 
 func base_near(point: Vector2) -> bool:
 	for node in world.get_node("WorldObjects").get_children():

@@ -8,153 +8,159 @@ func check(value: bool, label: String) -> void:
 	print("PASS: " if value else "FAIL: ", label)
 func step(frames: int = 3) -> void:
 	for i in range(frames): await physics_frame
-func make_world(seed_value: int, data: Dictionary = {}) -> Node2D:
+func make_world(seed_value: int = 77, data: Dictionary = {}) -> Node2D:
 	var world: Node2D = load("res://scenes/world.tscn").instantiate()
 	world.world_seed = seed_value
-	world.initial_progress = data
 	root.add_child(world)
-	world.get_node("EnemySpawner").set_physics_process(false)
-	world.get_node("Animals").set_physics_process(false)
-	world.get_node("DayNight").set_physics_process(false)
-	world.get_node("WorldObjects/Player").set_physics_process(false)
+	for path in ["EnemySpawner", "Animals", "DayNight", "WorldObjects/Player"]: world.get_node(path).set_physics_process(false)
+	if not data.is_empty():
+		world.initial_progress = data
+		world.account_store = AccountProgress.new()
+		var progress := WorldProgress.new()
+		progress.world = world
+		progress.load_progress()
 	return world
-
-# Real collision shapes and swept edges, rather than terrain rectangles alone.
-func routes(world: Node2D) -> Dictionary:
-	var space := world.get_world_2d().direct_space_state
-	var graph := AStar2D.new()
-	var cells := {}
-	var query := PhysicsShapeQueryParameters2D.new()
-	var shape := CircleShape2D.new()
-	shape.radius = 14
-	query.shape = shape
-	query.collision_mask = 9
-	for y in range(-2496, 1450, 48):
-		for x in range(48, 3400, 48):
-			var point := Vector2(x, y)
-			if not WorldTerrain.solid_ground(point, Vector2(28, 28)): continue
-			query.transform = Transform2D(0, point)
-			query.motion = Vector2.ZERO
-			if not space.intersect_shape(query).is_empty(): continue
-			var id := graph.get_point_count()
-			graph.add_point(id, point)
-			cells[Vector2i(x, y)] = id
-	for cell in cells:
-		for offset in [Vector2i(48, 0), Vector2i(0, 48)]:
-			if not cells.has(cell + offset): continue
-			query.transform = Transform2D(0, Vector2(cell))
-			query.motion = Vector2(offset)
-			var motion := space.cast_motion(query)
-			if motion[0] >= 0.999: graph.connect_points(cells[cell], cells[cell + offset])
-	var start := graph.get_closest_point(Vector2(1152, 768))
-	var result := {}
-	for id in SoloCampaign.LOCATIONS:
-		var point: Vector2 = world.campaign.points[id].position
-		var target := graph.get_closest_point(point)
-		var path := graph.get_point_path(start, target)
-		var ray := PhysicsRayQueryParameters2D.create(graph.get_point_position(target), point, 9)
-		result[id] = not path.is_empty() and path[-1].distance_to(point) <= 65 and space.intersect_ray(ray).is_empty()
-	return result
-
-func run() -> void:
-	var world := make_world(77)
-	await step()
-	var campaign: SoloCampaign = world.campaign
-	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
-	var cycle: DayNightCycle = world.get_node("DayNight")
-	var hud: CanvasLayer = world.get_node("HUD")
-	check(campaign.encounter == "idle" and not campaign.repaired, "Nova campanha começa sem vitória")
-	check(campaign.collect("core") and not campaign.collect("core"), "Componente antecipado é único e independente do loot")
-	check(not campaign.collect("pistola"), "Loot comum não entra na campanha")
-	for id in ["lens", "coil"]: campaign.collect(id)
-	campaign.interact("beacon")
-	check(campaign.repaired and campaign.components.size() == 3, "Três componentes reparam o sinalizador")
-	cycle.elapsed = 6 * 600 + 20
-	cycle.refresh()
-	check(not campaign.start_encounter(), "Dia 7 de dia não ativa chefe")
-	cycle.elapsed = 5 * 600 + 320
-	cycle.refresh()
-	check(not campaign.start_encounter(), "Noite 6 não ativa chefe")
-	cycle.elapsed = 6 * 600 + 320
-	cycle.refresh()
-	player.position = SoloCampaign.LOCATIONS.beacon + Vector2(0, 50)
-	check(campaign.start_encounter() and campaign.boss.kind == "guardiao_ilha", "Noite 7 ativa somente o chefe da campanha")
-	var snapshot := campaign.capture()
-	var resumed := SoloCampaign.new()
-	check(resumed.restore(snapshot) and resumed.encounter == "retry" and resumed.components.size() == 3, "Reabrir durante chefe exige reativação e preserva componentes")
-	resumed.free()
-	campaign.interrupt_battle()
-	await step()
-	check(campaign.encounter == "retry" and not is_instance_valid(campaign.boss), "Fuga limpa o chefe para nova tentativa")
-	check(campaign.start_encounter(), "Nova tentativa não gasta componentes")
-	player.invulnerability = 0
-	player.receive_damage(200)
-	check(campaign.encounter == "retry" and campaign.repaired and campaign.deaths == 1, "Derrota preserva mundo e reparo")
-	world.respawn_player()
-	await step()
-	cycle.elapsed = 10 * 600 + 320
-	cycle.refresh()
-	player.position = SoloCampaign.LOCATIONS.beacon + Vector2(0, 50)
-	check(campaign.start_encounter(), "Mundo posterior ao dia 7 ainda conclui campanha")
-	cycle.elapsed = 11 * 600
-	cycle.refresh()
-	await step()
-	check(campaign.encounter == "retry" and campaign.components.size() == 3, "Amanhecer interrompe confronto e conserva os componentes")
-	cycle.elapsed = 11 * 600 + 320
-	cycle.refresh()
-	check(campaign.start_encounter() and campaign.boss.health == 300, "Outra noite reinicia chefe em vida cheia")
-	campaign.boss.receive_damage(300)
-	check(campaign.encounter == "won" and campaign.victory_day == 12 and hud.current_panel == "victory", "Matar Guardião conclui campanha e abre resumo")
-	hud.set_panel("")
-	check(not paused and campaign.encounter == "won" and not campaign.start_encounter(), "Continuar explorando preserva vitória sem duplicar chefe")
+func clock(world: Node2D, day: int, night: bool, offset: float = 10) -> void:
+	world.get_node("DayNight").elapsed = (day - 1) * 600 + (300 if night else 0) + offset
+	world.get_node("DayNight").refresh()
+func capture(world: Node2D) -> Dictionary:
 	var progress := WorldProgress.new()
 	progress.world = world
-	var saved := progress.capture()
-	check(SaveValidation.valid(saved), "Snapshot com campanha passa pela validação de saves")
-	var encoded := CloudCodec.encode(saved)
-	check(encoded.ok and CloudCodec.hash_state(saved) != CloudCodec.hash_state(saved.merged({"campaign": {}} , true)), "Campanha participa do hash e envelope de sincronização")
-	var bad := saved.duplicate(true)
-	bad.campaign.components.append("core")
-	check(not SaveValidation.valid(bad), "Componente duplicado em save é rejeitado")
-	bad = saved.duplicate(true)
-	bad.campaign.version = 99
-	check(not SaveValidation.valid(bad), "Versão desconhecida da campanha bloqueia gravação")
-	var legacy := saved.duplicate(true)
-	legacy.erase("campaign")
-	legacy.version = 5
-	check(SaveValidation.valid(legacy), "Save 0.8.3 sem campanha continua válido")
-	var store := SaveStore.new()
-	store.path = "res://.tools/campaign-backup-%d.json" % Time.get_ticks_usec()
-	var first_write := store.write(legacy)
-	var original := FileAccess.get_file_as_string(store.path)
-	check(first_write and store.write(saved), "Inclusão da campanha salva com backup")
-	var backup := FileAccess.get_file_as_string(store.path + ".before-campaign-v1.json")
-	check(backup == original and store.write(saved) and FileAccess.get_file_as_string(store.path + ".before-campaign-v1.json") == backup, "Backup anterior à campanha permanece exato e idempotente")
-	for seed_value in [1, 77, 20261018, 2147480000]:
-		world.queue_free()
-		await step()
-		world = make_world(seed_value)
-		await step()
-		var accessibility := routes(world)
-		for id in accessibility: check(accessibility[id], "Rota física semente %d: %s" % [seed_value, id])
-	var full_inventory: ResourceInventory = world.get_node("Inventory")
-	for i in range(7): full_inventory.add_resource("cama", 1)
-	var full_state := full_inventory.network_state()
-	world.get_node("WorldObjects/Player").position = SoloCampaign.LOCATIONS.lens + Vector2(0, 35)
+	return progress.capture()
+func mobs(world: Node2D, group: String) -> Array:
+	var result := []
+	for mob in get_nodes_in_group(group):
+		if world.is_ancestor_of(mob) and not mob.dead and not mob.is_queued_for_deletion(): result.append(mob)
+	return result
+func conquer(world: Node2D, id: String) -> void:
+	world.get_node("WorldObjects/Player").position = SoloCampaign.LOCATIONS[id] + Vector2(0, 35)
+	world.campaign.interact(id)
+	for i in range(6):
+		await step(35)
+		for mob in mobs(world, "temple_enemies"):
+			mob.set_physics_process(false)
+			mob.receive_damage(1000)
+func run() -> void:
+	var world := make_world()
 	await step()
-	world.get_node("WorldObjects/Player/Interaction").collect_nearest()
-	check("lens" in world.campaign.components and full_state == full_inventory.network_state(), "Coleta física com bolsa cheia protege componente fora do inventário")
-	# Load the real captured world, without discarding inventory/resources/IDs.
+	var c: SoloCampaign = world.campaign
+	var p: CharacterBody2D = world.get_node("WorldObjects/Player")
+	check(c.encounter == "idle" and not c.repaired and c.components.is_empty(), "Mundo novo não concede etapas")
+	check(not c.collect("lens") and not c.collect("pistola"), "Componentes exigem desafio, fora do loot comum")
+	c.interact("beacon")
+	check(c.interact("map").contains("noite 3") and not c.map_found, "Mapa bloqueado explica noite 3")
+	check(not c.points.beacon.prompt().contains("ativar") and c.objective().contains("mapa"), "Noite 1 não anuncia ativação bloqueada")
+	clock(world, 3, false)
+	check(c.interact("map").contains("anoitecer") and not c.map_found, "Terceiro dia ainda exige anoitecer")
+	clock(world, 3, true)
+	c.interact("map")
+	check(c.map_found and c.journal_text().contains("EXTREMO"), "Mapa revela os três desafios e preparo")
+	check(c.temple_requirement("lens").contains("noite 4") and c.temple_requirement("coil").contains("primeiro"), "Pré-requisitos de templo e ordem concretos")
+	clock(world, 4, true)
+	check(world.get_node("HUD/Controls/Rows/Time").text.begins_with("Noite 4") and c.objective() == "Templo 1 · 0/4 vencidos", "Relógio e objetivo usam o mesmo dia ao saltar entre noites")
+	p.position = SoloCampaign.LOCATIONS.lens + Vector2(0, 35)
+	c.interact("lens")
+	await step(35)
+	var first := mobs(world, "temple_enemies")
+	check(first.size() == 2 and first.any(func(m): return m.kind == "sentinela"), "Templo alto apresenta duas ameaças antes do Acólito")
+	first[0].receive_damage(1000)
+	first[1].set_physics_process(false)
+	first[1].receive_damage(15)
+	var saved := capture(world)
+	var hp: int = first[1].health
+	check(saved.campaign.temples.lens.cleared.size() == 1 and saved.campaign.temples.lens.health.values().has(hp), "Vitória individual e dano do templo entram no save")
 	world.queue_free()
 	await step()
 	world = make_world(77, saved)
-	progress.world = world
-	world.initial_progress = saved
-	world.account_store = AccountProgress.new()
-	progress.load_progress()
+	c = world.campaign
+	p = world.get_node("WorldObjects/Player")
+	clock(world, 5, false)
+	await step(35)
+	first = mobs(world, "temple_enemies")
+	check(first.size() == 1 and first[0].health == hp, "Reentrada diurna retoma só o inimigo vivo com a vida salva")
+	await conquer(world, "lens")
+	check(c.components == ["lens"] and c.temples.lens.cleared.size() == 4, "Duas formações garantem primeiro componente")
+	check(not c.collect("lens") and c.interact("lens").contains("registrada"), "Conquista não duplica recompensa")
+	check(c.temple_requirement("coil").contains("anoitecer"), "Extremo novo não inicia de dia")
+	clock(world, 5, true)
+	await conquer(world, "coil")
+	await conquer(world, "core")
+	check(c.components.size() == 3 and c.temples.coil.cleared.size() == 6 and c.temples.core.cleared.size() == 6, "Dois extremos distintos completam três componentes")
+	check(c.interact("beacon").contains("dia 6") and not c.repaired, "Reparo aguarda sexto dia")
+	clock(world, 6, false)
+	c.interact("beacon")
+	check(c.repaired and c.activation_requirement().contains("anoitecer"), "Sexto dia repara; ataque exige noite")
+	p.position = SoloCampaign.LOCATIONS.beacon + Vector2(0, 50)
+	clock(world, 6, true, 160)
+	check(not c.start_encounter() and c.activation_requirement().contains("Pouco tempo"), "Ataque tardio explica orçamento mínimo")
+	clock(world, 6, true)
+	check(c.start_encounter() and c.attempts == 1, "Sexta noite inicia ataque sem consumir componentes")
+	await step(40)
+	check(c.final_enemies().size() == 3 and not is_instance_valid(c.boss), "Invasores precedem o Guardião")
+	var resumed := SoloCampaign.new()
+	check(resumed.restore(c.capture()) and resumed.encounter == "retry" and resumed.components.size() == 3, "Saída no ataque exige tentativa e preserva conquistas")
+	resumed.free()
+	c.interrupt_battle()
 	await step()
-	check(world.campaign.encounter == "won" and world.get_node("HUD").current_panel == "", "Vitória reabre sem bloquear continuação")
+	check(c.final_enemies().is_empty() and c.start_encounter(), "Retentativa limpa invasores sem duplicação")
+	p.invulnerability = 0
+	p.receive_damage(1000)
+	check(c.encounter == "retry" and c.deaths == 1 and c.repaired, "Morte conserva templos, componentes e reparo")
+	world.respawn_player()
+	await step()
+	p.position = SoloCampaign.LOCATIONS.beacon + Vector2(0, 50)
+	clock(world, 9, true)
+	check(c.start_encounter(), "Atraso permite tentar na noite 9")
+	clock(world, 10, false)
+	await step()
+	check(c.encounter == "retry" and c.victory_day == 0, "Relógio sem Guardião não vence")
+	clock(world, 10, true)
+	c.start_encounter()
+	for wave in range(2):
+		await step(130)
+		var active := c.final_enemies()
+		check(active.size() == 3 and active.all(func(m): return m.kind != "guardiao_ilha"), "Formação final %d precede chefe" % (wave + 1))
+		for mob in active: mob.set_physics_process(false)
+		for mob in active: mob.receive_damage(1000)
+	await step(130)
+	check(c.final_wave == 2 and c.final_enemies().size() == 1 and is_instance_valid(c.boss), "Guardião é o último encontro")
+	c.boss.receive_damage(1000)
+	check(c.encounter == "awaiting_dawn" and world.get_node("HUD").current_panel != "victory", "Matar chefe aguarda amanhecer")
+	saved = capture(world)
+	check(SaveValidation.valid(saved) and CloudCodec.encode(saved).ok, "Campanha completa cabe no protocolo validado")
 	world.queue_free()
 	await step()
+	world = make_world(77, saved)
+	c = world.campaign
+	check(c.encounter == "awaiting_dawn" and c.final_enemies().is_empty(), "Desconexão após chefe conserva resgate pendente")
+	clock(world, 11, false, 0)
+	await step()
+	check(c.encounter == "won" and c.victory_day == 11 and world.get_node("HUD").current_panel == "victory", "Amanhecer seguinte confirma vitória e resumo")
+	world.get_node("HUD").set_panel("")
+	check(not paused and not c.start_encounter(), "Continuar explora sem outro chefe")
+	saved = capture(world)
+	var bad := saved.duplicate(true)
+	bad.campaign.components.append("lens")
+	check(not SaveValidation.valid(bad), "Save com recompensa duplicada é rejeitado")
+	bad = saved.duplicate(true)
+	bad.campaign.temples.core.cleared.clear()
+	check(not SaveValidation.valid(bad), "Componente sem conquista é rejeitado")
+	world.queue_free()
+	await step()
+	world = make_world(77, saved)
+	await step()
+	check(world.campaign.encounter == "won" and world.get_node("HUD").current_panel == "", "Vitória salva reabre sem repetir tela")
+	world.queue_free()
+	await step()
+	for seed_value in [1, 77, 20261018, 2147480000]:
+		world = make_world(seed_value)
+		await step()
+		var nav: RefCounted = load("res://tests/solo_navigation.gd").new()
+		nav.build(world)
+		for id in SoloCampaign.LOCATIONS:
+			var path: PackedVector2Array = nav.path(Vector2(1152, 768), SoloCampaign.LOCATIONS[id])
+			check(not path.is_empty(), "Caminho com colisões semente %d: %s" % [seed_value, id])
+		world.queue_free()
+		await step()
 	print("%d verificações, %d falhas" % [checks, failures])
 	quit(1 if failures else 0)

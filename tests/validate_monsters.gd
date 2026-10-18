@@ -94,14 +94,14 @@ func run() -> void:
 	check(found_arrow and found_thread, "Drops caem no chão usando coleta existente")
 	check(world.get_node("DayNight").day_duration == 300 and world.get_node("DayNight").night_duration == 300, "Ciclo de cinco minutos preservado")
 	check(spawner.current_limit() == 0 and spawner.try_spawn() == null, "Dia não gera monstros noturnos")
-	world.get_node("DayNight").elapsed = 340
+	world.get_node("DayNight").elapsed = 940
 	world.get_node("DayNight").refresh()
 	var spawned := []
 	for i in range(8):
 		var enemy: ForestCreature = spawner.try_spawn()
 		if is_instance_valid(enemy): spawned.append(enemy.kind)
 		await step()
-	check(spawner.alive_count() <= 5 and spawned.has("esqueleto") and spawned.has("aranha"), "Novos tipos compartilham limite noturno")
+	check(spawner.alive_count() <= 4 and spawned.has("esqueleto") and spawned.has("aranha"), "Novos tipos compartilham limite da segunda noite")
 	world.queue_free()
 	await process_frame
 	print("%d verificações, %d falhas" % [checks, failures])

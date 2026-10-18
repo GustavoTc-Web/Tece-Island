@@ -117,7 +117,7 @@ func validate() -> void:
 	cycle.elapsed = cycle.day_duration + 1
 	cycle.refresh()
 	for i in range(3): spawner.try_spawn()
-	check(spawner.alive_count() == 5 and spawner.try_spawn() == null, "limite noturno de cinco")
+	check(spawner.alive_count() == 3 and spawner.try_spawn() == null, "primeira noite moderada limitada a três")
 	cycle.elapsed = cycle.day_duration + cycle.night_duration
 	cycle.refresh()
 	spawner._physics_process(0.01)
