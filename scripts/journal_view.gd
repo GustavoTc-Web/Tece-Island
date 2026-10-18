@@ -72,13 +72,19 @@ func refresh() -> void:
 		for id in SoloCampaign.LOCATIONS:
 			if not campaign.blocked_by_base(id) or not campaign.points[id].can_interact(): continue
 			var recover := Button.new()
-			recover.text = "Acessar sinalizador pela base" if id == "beacon" else ("Reaver pistas pela base" if id == "clue" else "Reaver " + SoloCampaign.TITLES[id])
+			recover.text = "Acessar sinalizador pela base" if id == "beacon" else ("Acessar mapa pela base" if id == "map" else ("Reaver pistas pela base" if id == "clue" else "Acessar " + CampaignEncounters.NAMES[id]))
 			recover.custom_minimum_size.y = 56
 			recover.pressed.connect(func():
 				if not campaign.blocked_by_base(id): return
 				hud.set_panel("")
 				hud.show_message(campaign.interact(id)))
 			pages.add_child(recover)
+		if campaign.encounter == "won":
+			var summary := Button.new()
+			summary.text = "Ver resumo da jornada"
+			summary.custom_minimum_size.y = 56
+			summary.pressed.connect(hud.show_victory)
+			pages.add_child(summary)
 	if goals_mode and objectives != null:
 		var toggle := CheckButton.new()
 		toggle.text = "Mostrar objetivo na HUD"

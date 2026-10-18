@@ -160,6 +160,8 @@ window.tcLocalProgress={request:async(operation,key,payload,claim,done)=>{
       const previous=store.get(key+':backup');previous.onsuccess=()=>{if(previous.result!==undefined)store.put(previous.result,key+':backup-2');store.put(r.result,key+':backup');};
       if(old.inventory&&old.version<5){const before=store.get(key+':before-v5');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-v5');};}
       if(old.inventory&&old.version<6&&JSON.parse(payload).version>=6){const before=store.get(key+':before-v6');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-v6');};}
+      if(old.inventory&&old.version<7&&JSON.parse(payload).version>=7){const before=store.get(key+':before-v7');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-v7');};}
+      if(old.campaign?.version===1&&JSON.parse(payload).campaign?.version===2){const before=store.get(key+':before-campaign-v2');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-campaign-v2');};}
       if(old.inventory&&!Object.hasOwn(old,'campaign')&&Object.hasOwn(JSON.parse(payload),'campaign')){const before=store.get(key+':before-campaign-v1');before.onsuccess=()=>{if(before.result===undefined)store.put(r.result,key+':before-campaign-v1');};}
      }else store.put(r.result,key+':unreadable-'+tcBackupId());
     }

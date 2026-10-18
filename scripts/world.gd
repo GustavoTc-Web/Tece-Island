@@ -232,7 +232,7 @@ func _use_item(index: int) -> void:
 
 func _physics_process(_delta: float) -> void:
 	objectives.visit(self)
-	var dark: bool = WorldTerrain.is_dark($WorldObjects/Player.global_position)
+	var dark: bool = WorldTerrain.is_dark($WorldObjects/Player.global_position) or campaign.local_darkness($WorldObjects/Player.global_position)
 	if $DayNight.local_darkness != dark:
 		$DayNight.local_darkness = dark
 		$DayNight.refresh()

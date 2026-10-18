@@ -52,5 +52,19 @@ func _draw() -> void:
 			if region.kind == "Aquático" and not WorldTerrain.is_water(point): color = Color("819b62")
 			draw_rect(Rect2(CENTER + offset - Vector2(4, 4), Vector2(8, 8)), color)
 	draw_arc(CENTER, 73, 0, TAU, 64, Color("d0bb81"), 2)
+	var world: Node = player.get_parent().get_parent()
+	var campaign: SoloCampaign = world.get("campaign")
+	if campaign != null:
+		if campaign.map_found:
+			for index in range(SoloCampaign.COMPONENTS.size()):
+				var id: String = SoloCampaign.COMPONENTS[index]
+				if CampaignEncounters.complete(id, campaign.temples[id]): continue
+				var offset: Vector2 = (SoloCampaign.LOCATIONS[id] - player.position) / 8
+				offset = offset.limit_length(59)
+				draw_circle(CENTER + offset, 7, Color("77568c"))
+				draw_string(IslandTheme.BODY, CENTER + offset + Vector2(-3, 4), str(index + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("fff1d7"))
+		elif campaign.discovered:
+			var offset: Vector2 = ((SoloCampaign.LOCATIONS.map - player.position) / 8).limit_length(59)
+			draw_circle(CENTER + offset, 5, Color("e6c27c"))
 	var direction: Vector2 = player.facing.normalized()
 	draw_colored_polygon(PackedVector2Array([CENTER + direction * 9, CENTER - direction * 5 + direction.orthogonal() * 5, CENTER - direction * 5 - direction.orthogonal() * 5]), Color("ffe5a1"))
