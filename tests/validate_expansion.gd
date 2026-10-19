@@ -11,34 +11,34 @@ func step(frames: int = 3) -> void:
 func run() -> void:
 	root.size = Vector2i(960, 540)
 	var regions := WorldTerrain.regions()
-	check(regions.size() == 16, "Quatro regiões preservadas mais doze novas")
+	check(regions.size() == 18, "Dezesseis regiões preservadas mais dois biomas da campanha")
 	var kinds := {}
 	var ids := {}
 	for region in regions:
 		kinds[region.kind] = int(kinds.get(region.kind, 0)) + 1
 		ids[region.id] = true
 	check(kinds.Floresta == 3 and kinds["Pântano"] == 3 and kinds.Campos == 3 and kinds.Deserto == 3 and kinds["Aquático"] == 2 and kinds["Ruínas Escuras"] == 2, "Duas novas regiões de cada tipo existente e duas de cada tipo novo")
-	check(ids.size() == 16, "IDs de regiões únicos para persistência")
+	check(ids.size() == 18, "IDs de regiões únicos para persistência")
 	var overlap := false
 	for a in regions:
 		for b in regions:
 			if a.id != b.id and a.rect.intersects(b.rect): overlap = true
 	check(not overlap, "Regiões não se sobrepõem")
 	var reachable := {"forest": true}
-	for pass_index in range(16):
+	for pass_index in range(regions.size()):
 		for a in regions:
 			if not reachable.has(a.id): continue
 			for b in regions:
 				if a.id == b.id: continue
 				if a.rect.grow(1).intersects(b.rect) and (a.rect.position.x == b.rect.end.x or a.rect.end.x == b.rect.position.x or a.rect.position.y == b.rect.end.y or a.rect.end.y == b.rect.position.y): reachable[b.id] = true
-	check(reachable.size() == 16, "Todas as regiões conectadas à floresta original")
+	check(reachable.size() == 18, "Todas as regiões conectadas à floresta original")
 	var world: Node2D = load("res://scenes/world.tscn").instantiate()
 	root.add_child(world)
 	await step()
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	player.set_physics_process(false)
 	var camera: Camera2D = player.get_node("Camera2D")
-	check(camera.limit_left == -3072 and camera.limit_top == -1536 and camera.limit_right == 6912 and camera.limit_bottom == 3072, "Câmera cobre norte, sul e oeste sem deslocar leste")
+	check(camera.limit_left == -3072 and camera.limit_top == -2560 and camera.limit_right == 6912 and camera.limit_bottom == 3072, "Câmera cobre norte, sul e oeste sem deslocar leste")
 	check(world.terrain.get_child_count() < 40, "Bordas físicas agrupadas após expansão")
 	var invalid_resources := 0
 	var new_resources := 0
@@ -73,7 +73,7 @@ func run() -> void:
 	var progress := WorldProgress.new()
 	progress.world = world
 	var state := progress.capture()
-	check(state.generated_regions.size() == 16 and state.explored == minimap.explored, "Save conserva regiões e exploração do minimapa")
+	check(state.generated_regions.size() == 18 and state.explored == minimap.explored, "Save conserva regiões e exploração do minimapa")
 	world.queue_free()
 	await process_frame
 	print("%d verificações, %d falhas" % [checks, failures])

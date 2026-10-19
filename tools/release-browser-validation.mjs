@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 const url=process.env.TEST_URL||'http://127.0.0.1:8080/Tece-Island/';
 const manifest=await(await fetch(new URL('version.json',url))).json();
 const results=[],errors=[];const check=(ok,name)=>{results.push({ok:!!ok,name});assert.ok(ok,name);console.log('PASS: '+name);};
-check(manifest.version==='0.8.3'&&manifest.allowed_account_count===2&&manifest.chat_enabled&&manifest.world_sync_enabled,'manifesto 0.8.3 identifica rollout das duas contas');
+check(manifest.version==='0.9.0'&&manifest.save_schema===8&&manifest.campaign_schema===2&&manifest.tasks_schema===1&&manifest.allowed_account_count===2&&manifest.chat_enabled&&manifest.world_sync_enabled,'manifesto 0.9.0 identifica rollout das duas contas e formatos de save');
 if(process.env.EXPECTED_COMMIT)check(manifest.commit===process.env.EXPECTED_COMMIT,'commit servido corresponde ao deploy esperado');
 check(manifest.chat_idle_poll_seconds===15&&manifest.chat_idle_after_seconds===60&&manifest.chat_reconcile_seconds===120&&manifest.chat_transport==='rest_incremental_with_window_count','manifesto identifica estratégia de consumo validada');
 const browser=await chromium.launch({executablePath:process.env.BROWSER_EXE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});

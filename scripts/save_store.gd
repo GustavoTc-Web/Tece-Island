@@ -1,6 +1,6 @@
 class_name SaveStore
 extends RefCounted
-const VERSION := 5
+const VERSION := 8
 var path := "user://solo-progress.json"
 var error := ""
 
@@ -56,7 +56,9 @@ func read() -> Dictionary:
 		if not FileAccess.file_exists(backup) and DirAccess.copy_absolute(path, backup) != OK:
 			error = "Não foi possível criar o backup. A conversão do progresso foi cancelada."
 			return {}
-		data.version = VERSION
+		# Keep the serialized version during read: changing it here would alter
+		# the confirmed cloud hash and turn a clean v5 world into a false fork.
+		# WorldProgress.capture upgrades only when the game actually saves.
 	return data
 
 func write(data: Dictionary) -> bool:
@@ -76,6 +78,21 @@ func write(data: Dictionary) -> bool:
 	if FileAccess.file_exists(path):
 		var original := FileAccess.get_file_as_string(path)
 		if parse(original) is Dictionary:
+			if int(parse(original).get("version", 0)) < VERSION and int(data.get("version", 0)) >= VERSION:
+				var before := path + ".before-v%d.json" % VERSION
+				if not FileAccess.file_exists(before) and DirAccess.copy_absolute(path, before) != OK:
+					error = "Falha no backup antes da migração. Save anterior preservado."
+					return false
+			if data.get("campaign", {}).get("version", 0) == 2 and parse(original).get("campaign", {}).get("version", 0) == 1:
+				var before := path + ".before-campaign-v2.json"
+				if not FileAccess.file_exists(before) and DirAccess.copy_absolute(path, before) != OK:
+					error = "Falha no backup da campanha anterior. Original preservado."
+					return false
+			if data.has("campaign") and not parse(original).has("campaign"):
+				var before := path + ".before-campaign-v1.json"
+				if not FileAccess.file_exists(before) and DirAccess.copy_absolute(path, before) != OK:
+					error = "Falha no backup da campanha. Save anterior preservado."
+					return false
 			if FileAccess.file_exists(path + ".backup.json") and DirAccess.copy_absolute(path + ".backup.json", path + ".backup-2.json") != OK:
 				error = "Falha ao preservar backup anterior."
 				return false

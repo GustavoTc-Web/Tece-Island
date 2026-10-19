@@ -117,7 +117,7 @@ func validate() -> void:
 	cycle.elapsed = cycle.day_duration + 1
 	cycle.refresh()
 	for i in range(3): spawner.try_spawn()
-	check(spawner.alive_count() == 5 and spawner.try_spawn() == null, "limite noturno de cinco")
+	check(spawner.alive_count() == 3 and spawner.try_spawn() == null, "primeira noite moderada limitada a três")
 	cycle.elapsed = cycle.day_duration + cycle.night_duration
 	cycle.refresh()
 	spawner._physics_process(0.01)
@@ -138,7 +138,7 @@ func validate() -> void:
 	check(cycle.phase == "Amanhecer" and cycle.color.r > cycle.night_color.r, "amanhecer gradual")
 	cycle.advance(0.25)
 	check(cycle.day_number == 2 and cycle.phase == "Dia" and cycle.color.is_equal_approx(Color.WHITE), "novo dia e iluminação restaurada")
-	check(hud.get_node("Controls/Rows/Time").text == "Dia — Anoitece em 00:03" and hud.get_node("Controls/Rows/Time").tooltip_text == "Dia 2 do mundo", "HUD recebe dia e contagem real da fase")
+	check(hud.get_node("Controls/Rows/Time").text == "Dia 2 · Anoitece 00:03" and hud.get_node("Controls/Rows/Time").tooltip_text == "Dia 2 do mundo", "HUD recebe dia e contagem real da fase")
 	cycle.time_scale = 30
 	var before_time := cycle.elapsed
 	cycle.advance(0.1)

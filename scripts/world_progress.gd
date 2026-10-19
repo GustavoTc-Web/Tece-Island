@@ -20,6 +20,7 @@ func capture() -> Dictionary:
 	result.wells_policy = "fixed"
 	result.journal = world.journal.capture()
 	result.objectives = world.objectives.capture()
+	result.campaign = world.campaign.capture()
 	if not world.owner_uid.is_empty(): result.owner_uid = world.owner_uid
 	if not world.world_id.is_empty(): result.world_id = world.world_id
 	if world.account_store != null:
@@ -61,6 +62,10 @@ func _load_progress() -> void:
 		world.get_node("HUD").show_message(store.error)
 		return
 	if data.is_empty(): return
+	if not SoloCampaign.valid(data.get("campaign", {})):
+		writable = false
+		world.get_node("HUD").show_message("Campanha incompatível: save original preservado.")
+		return
 	for field in ["structures", "drops", "wells"]:
 		if data.has(field) and not data[field] is Array:
 			writable = false
@@ -119,6 +124,7 @@ func _load_progress() -> void:
 	world.get_node("Inventory").restore_state(data.inventory)
 	world.objectives.restore(data.get("objectives", {}))
 	world.journal.restore(data.get("journal", {}))
+	world.campaign.restore(data.get("campaign", {}))
 	world.minimap.explored = data.get("explored", {}).duplicate(true)
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	var player_state: Dictionary = data.get("player", {})

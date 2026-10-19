@@ -1,0 +1,1249 @@
+{
+  "version": "0.9.0-solo-pilot.4",
+  "date_local": "2026-10-18",
+  "branch": "feat/solo-seventh-night",
+  "diagnosis": {
+    "original_published_pck_sha256": "34658997f132609bdbe3133ba4b5ceb728376005da05a18d1553e3f377671d42",
+    "tower_and_interaction_exist_in_original_pack": true,
+    "old_marker_required_beacon_discovery": true,
+    "old_marker_radius": 5,
+    "straight_north_route_requires_detour_around_swamp_obstacle": true,
+    "generation_or_migration_failure_reproduced": false,
+    "actual_user_save_inspected": false
+  },
+  "preserved": {
+    "save_schema": 8,
+    "campaign_schema": 2,
+    "tasks_schema": 1,
+    "clock": true,
+    "encounters": true,
+    "victory_conditions": true,
+    "old_structures": true,
+    "inventory": true,
+    "official_release": "0.8.3",
+    "main_remote": "7eae4f3c6b922232dc5c1910f3fdfd26ba1a9c9d",
+    "same_two_accounts": true,
+    "backend_changes": false
+  },
+  "native": {
+    "checks": 326,
+    "failures": 0,
+    "suites": [
+      {
+        "suite": "tower",
+        "checks": 125,
+        "failures": 0
+      },
+      {
+        "suite": "validate_solo_campaign",
+        "checks": 60,
+        "failures": 0
+      },
+      {
+        "suite": "validate_solo_migration",
+        "checks": 26,
+        "failures": 0
+      },
+      {
+        "suite": "validate_campaign_tasks",
+        "checks": 46,
+        "failures": 0
+      },
+      {
+        "suite": "validate_world_sync",
+        "checks": 30,
+        "failures": 0
+      },
+      {
+        "suite": "validate_controls",
+        "checks": 7,
+        "failures": 0
+      },
+      {
+        "suite": "validate_journal",
+        "checks": 18,
+        "failures": 0
+      },
+      {
+        "suite": "validate_objectives",
+        "checks": 14,
+        "failures": 0
+      }
+    ]
+  },
+  "web": {
+    "checks": 69,
+    "suites": [
+      {
+        "suite": "tower",
+        "results": [
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Torre e rumo aparecem sem examinar sinalizador"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Reproduz etapa 3 em 4/5, inclusive no dia 4"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Objetivos e minimapa não se sobrepõem"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Nome e rumo cabem no HUD"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Percurso completo até o mapa usa movimento e colisões reais"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Na base, pergaminho selecionado e restrição diurna explícita"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Interagir de dia mantém missão pendente"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "À noite informa tecla e botão de interação"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Coleta real na noite 3 conclui objetivo e remove marcador"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false,
+              "night": 3
+            },
+            "pass": true,
+            "label": "Reabrir IndexedDB mantém coleta e não recria pendência"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Torre e rumo aparecem sem examinar sinalizador"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Reproduz etapa 3 em 4/5, inclusive no dia 4"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Objetivos e minimapa não se sobrepõem"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Nome e rumo cabem no HUD"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Percurso completo até o mapa usa movimento e colisões reais"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Na base, pergaminho selecionado e restrição diurna explícita"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Interagir de dia mantém missão pendente"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "À noite informa tecla e botão de interação"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Coleta real na noite 4 conclui objetivo e remove marcador"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Reabrir IndexedDB mantém coleta e não recria pendência"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Torre e rumo aparecem sem examinar sinalizador"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Reproduz etapa 3 em 4/5, inclusive no dia 4"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Objetivos e minimapa não se sobrepõem"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Nome e rumo cabem no HUD"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Percurso completo até o mapa usa movimento e colisões reais"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Na base, pergaminho selecionado e restrição diurna explícita"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Interagir de dia mantém missão pendente"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "À noite informa tecla e botão de interação"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Coleta real na noite 4 conclui objetivo e remove marcador"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true,
+              "night": 4
+            },
+            "pass": true,
+            "label": "Reabrir IndexedDB mantém coleta e não recria pendência"
+          }
+        ],
+        "errors": [],
+        "automated": true,
+        "human_played": false,
+        "enemies_disabled": true
+      },
+      {
+        "suite": "daily_tasks",
+        "results": [
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Kit inicial tem quatro tarefas e contador"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Painel cabe acima dos controles no PC/mobile"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Fabricação real marca todas com check"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Recolher mantém contador e libera espaço"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Reload IndexedDB mantém conquistas e recolhimento"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Perder itens não apaga fabricação"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Etapa do mapa mostra requisito noturno"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Bolsa e armadura equipada são condições distintas"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Equipar conclui condição atual"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Comer e beber reduzem contadores atuais"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Diário reúne etapas, checks e pendências antigas"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Fechar diário devolve os controles"
+          },
+          {
+            "dimensions": {
+              "width": 1280,
+              "height": 720,
+              "touch": false
+            },
+            "pass": true,
+            "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Kit inicial tem quatro tarefas e contador"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Painel cabe acima dos controles no PC/mobile"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Fabricação real marca todas com check"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Recolher mantém contador e libera espaço"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Reload IndexedDB mantém conquistas e recolhimento"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Perder itens não apaga fabricação"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Etapa do mapa mostra requisito noturno"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Bolsa e armadura equipada são condições distintas"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Equipar conclui condição atual"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Comer e beber reduzem contadores atuais"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Diário reúne etapas, checks e pendências antigas"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Fechar diário devolve os controles"
+          },
+          {
+            "dimensions": {
+              "width": 852,
+              "height": 393,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Kit inicial tem quatro tarefas e contador"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Painel cabe acima dos controles no PC/mobile"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Fabricação real marca todas com check"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Recolher mantém contador e libera espaço"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Reload IndexedDB mantém conquistas e recolhimento"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Perder itens não apaga fabricação"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Etapa do mapa mostra requisito noturno"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Bolsa e armadura equipada são condições distintas"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Equipar conclui condição atual"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Comer e beber reduzem contadores atuais"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Diário reúne etapas, checks e pendências antigas"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Fechar diário devolve os controles"
+          },
+          {
+            "dimensions": {
+              "width": 640,
+              "height": 360,
+              "touch": true
+            },
+            "pass": true,
+            "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+          }
+        ],
+        "errors": []
+      }
+    ],
+    "physical_devices": false
+  },
+  "routes": {
+    "automated": true,
+    "checks": 125,
+    "enemies_disabled": true,
+    "failures": 0,
+    "human_played": false,
+    "physics_step": 0.0166666666666667,
+    "routes": [
+      {
+        "distance": 2887.50017762184,
+        "fixture": "seed 77",
+        "night": 3,
+        "seconds": 13.75,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2880.5008225441,
+        "fixture": "solo_v083.json",
+        "night": 11,
+        "seconds": 13.7166666666667,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            608
+          ],
+          [
+            1184,
+            608
+          ],
+          [
+            1184,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2880.5008225441,
+        "fixture": "solo_v06.json",
+        "night": 11,
+        "seconds": 13.7166666666667,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            608
+          ],
+          [
+            1184,
+            608
+          ],
+          [
+            1184,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2880.5008225441,
+        "fixture": "solo_v07.json",
+        "night": 4,
+        "seconds": 13.7166666666667,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            608
+          ],
+          [
+            1184,
+            608
+          ],
+          [
+            1184,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2880.5008225441,
+        "fixture": "solo_v08.json",
+        "night": 4,
+        "seconds": 13.7166666666667,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            608
+          ],
+          [
+            1184,
+            608
+          ],
+          [
+            1184,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2887.50017762184,
+        "fixture": "seed 5",
+        "night": 3,
+        "seconds": 13.75,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2887.50017762184,
+        "fixture": "seed 7",
+        "night": 3,
+        "seconds": 13.75,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      },
+      {
+        "distance": 2887.50017762184,
+        "fixture": "seed 117",
+        "night": 3,
+        "seconds": 13.75,
+        "success": true,
+        "turns": [
+          [
+            1152,
+            -1184
+          ],
+          [
+            1216,
+            -1184
+          ],
+          [
+            1216,
+            -1952
+          ],
+          [
+            1184,
+            -1952
+          ],
+          [
+            1184,
+            -2016
+          ],
+          [
+            1152,
+            -2016
+          ],
+          [
+            1152,
+            -2008
+          ]
+        ],
+        "waypoints": 93
+      }
+    ]
+  },
+  "original_pack_probe": {
+    "beacon_undiscovered_before_collect": true,
+    "build": {
+      "base_release": "0.8.3",
+      "campaign_schema": 2,
+      "commit": "0e9d27d1c534dc6b0495a9a0ca27446b57def57e",
+      "emulated": false,
+      "save_schema": 8,
+      "tasks_schema": 1,
+      "version": "0.9.0-solo-pilot.3",
+      "world_sync": true
+    },
+    "end": [
+      1154.65173339844,
+      -2012.25720214844
+    ],
+    "enemies_disabled": true,
+    "human_played": false,
+    "map_found_by_key_e": true,
+    "old_minimap_condition_hid_tower": true,
+    "pass": true,
+    "seconds": 13.75,
+    "selected_actual_map": true,
+    "start": [
+      1152,
+      768
+    ]
+  },
+  "release_pack_probe": {
+    "automated": true,
+    "build": {
+      "base_release": "0.8.3",
+      "campaign_schema": 2,
+      "commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+      "emulated": false,
+      "save_schema": 8,
+      "tasks_schema": 1,
+      "version": "0.9.0-solo-pilot.4",
+      "world_sync": true
+    },
+    "campaign_schema": 2,
+    "chat_enabled": true,
+    "daytime_hint": true,
+    "dev_config_excluded": true,
+    "enemies_disabled": true,
+    "fixtures_excluded": true,
+    "game_seconds": 13.75,
+    "human_played": false,
+    "interval_seconds": 120,
+    "key_e_recovered_map": true,
+    "map_material_unshaded": true,
+    "pass": true,
+    "same_two_accounts": true,
+    "save_schema": 8,
+    "selected_real_map": true,
+    "sync_enabled": true,
+    "tasks_schema": 1,
+    "temple_ambient_limit": 0,
+    "temple_controllers": 3,
+    "undiscovered_tower_navigation": true,
+    "walked_full_route": true
+  },
+  "release_smoke": [
+    {
+      "mobile": false,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "file": "solo_v083.json",
+      "version": 5,
+      "source": "0.8.3 unmodified main, seed 77",
+      "sha256": "5d449aefe72a522f4a3ede207088847a9b084c2c2bfd1c17c3c80287d27de90b"
+    },
+    {
+      "file": "solo_v06.json",
+      "version": 6,
+      "source": "pilot .1 captured world",
+      "sha256": "e375fdabf23d80ab47318bbd408ec80453ab926244637da4698b432689a350a4"
+    },
+    {
+      "file": "solo_v07.json",
+      "version": 7,
+      "source": "pilot .2 captured world",
+      "sha256": "0570d2b0794d602cda14b9fb2dea61f0f942bfabc9f5257f37a256256ce241cb"
+    },
+    {
+      "file": "solo_v08.json",
+      "version": 8,
+      "source": "pilot .3 runtime capture of the migrated 0.8.3 fixture, copied before changes",
+      "sha256": "546d920fbe2e5fddabd53c61e55b9efd11f51d5c98cd7a3ac1555122364a39d3"
+    }
+  ],
+  "publication": {
+    "version": "0.9.0-solo-pilot.4",
+    "site_version": 11,
+    "project_id": "appgprj_6ad0212da2388191920d282fd2dd7f32",
+    "saved_version_id": "appgprj_6ad0212da2388191920d282fd2dd7f32~appgver_473dfabdf4e48191a80a8b3e3fb0da89",
+    "deployment_id": "appgdep_6ad56571407081918d202739078606e0",
+    "status": "succeeded",
+    "url": "https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+    "updated_at": "2026-10-19T00:34:10.770377+00:00",
+    "source_commit": "a6090334702478228b7e1f7d9770e1956b1d0e56",
+    "game_commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+    "owner_private": true
+  },
+  "https": {
+    "verified": true,
+    "url": "https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+    "version": "0.9.0-solo-pilot.4",
+    "game_commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+    "pck_sha256": "3cc1609fe3a938138190c52d7e890520bde7b12993d7b4e0559d6b62d61d2d4f",
+    "engine_sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+    "engine_parts": 5,
+    "official": {
+      "version": "0.8.3",
+      "commit": "7c17e63f634d4abbaca87c6f5ad1b5198601e99d"
+    },
+    "no_firebase_authentication_performed": true
+  },
+  "limits": [
+    "Access/navigation automation controls the clock and disables enemies; times are not human survival measurements.",
+    "Browser keyboard and emulated touch; no physical PC/mobile human play.",
+    "Actual user world was unavailable; legacy fixtures cover v5/v6/v7/v8 and a manually obstructed tower.",
+    "World sync uses a memory transport and real codec/files, not two authenticated Firebase devices.",
+    "Native sandbox root-certificate warning: no claim of positive native Firebase/TLS verification."
+  ],
+  "pending": [
+    "Retest in the actual user save.",
+    "Physical mobile comfort and suspend/resume.",
+    "Continue on another real device with the same account and confirm synchronization."
+  ]
+}

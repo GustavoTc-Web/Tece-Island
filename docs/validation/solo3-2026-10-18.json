@@ -1,0 +1,1257 @@
+{
+  "date": "2026-10-18",
+  "pilot": {
+    "version": "0.9.0-solo-pilot.3",
+    "emulated": false,
+    "base_release": "0.8.3",
+    "world_sync": true,
+    "tasks_schema": 1,
+    "save_schema": 8,
+    "campaign_schema": 2,
+    "commit": "0e9d27d1c534dc6b0495a9a0ca27446b57def57e"
+  },
+  "native": {
+    "suites": 16,
+    "checks": 388,
+    "failures": 0,
+    "results": [
+      {
+        "name": "validate_world_library",
+        "checks": 19,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_world_library.log"
+      },
+      {
+        "name": "validate_account_progress",
+        "checks": 21,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_account_progress.log"
+      },
+      {
+        "name": "validate_session_progress",
+        "checks": 10,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_session_progress.log"
+      },
+      {
+        "name": "validate_save_reliability",
+        "checks": 20,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_save_reliability.log"
+      },
+      {
+        "name": "validate_world_sync",
+        "checks": 29,
+        "failures": 0,
+        "log": ".tools/solo3-validate_world_sync.log"
+      },
+      {
+        "name": "validate_chest_bow_save",
+        "checks": 26,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_chest_bow_save.log"
+      },
+      {
+        "name": "validate_auth_release",
+        "checks": 10,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_auth_release.log"
+      },
+      {
+        "name": "validate_sync_pilot",
+        "checks": 13,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_sync_pilot.log"
+      },
+      {
+        "name": "validate_sync_handoff",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_sync_handoff.log"
+      },
+      {
+        "name": "validate_campaign_tasks",
+        "checks": 46,
+        "failures": 0,
+        "log": ".tools/solo3-validate_campaign_tasks.log"
+      },
+      {
+        "name": "validate_objectives",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/solo3-validate_objectives.log"
+      },
+      {
+        "name": "validate_journal",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/solo3-validate_journal.log"
+      },
+      {
+        "name": "validate_solo_migration",
+        "checks": 26,
+        "failures": 0,
+        "log": ".tools/solo3-validate_solo_migration.log"
+      },
+      {
+        "name": "validate_controls",
+        "checks": 7,
+        "failures": 0,
+        "log": ".tools/solo3-validate_controls.log"
+      },
+      {
+        "name": "validate_v05",
+        "checks": 55,
+        "failures": 0,
+        "log": ".tools/solo3-validate_v05.log"
+      },
+      {
+        "name": "validate_solo_campaign",
+        "checks": 60,
+        "failures": 0,
+        "log": ".tools/solo3-campaign.log"
+      }
+    ]
+  },
+  "browser_tasks": {
+    "results": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Kit inicial tem quatro tarefas e contador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Painel cabe acima dos controles no PC/mobile"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Fabricação real marca todas com check"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Recolher mantém contador e libera espaço"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Reload IndexedDB mantém conquistas e recolhimento"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Perder itens não apaga fabricação"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Etapa do mapa mostra requisito noturno"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Bolsa e armadura equipada são condições distintas"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Equipar conclui condição atual"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Comer e beber reduzem contadores atuais"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Diário reúne etapas, checks e pendências antigas"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Fechar diário devolve os controles"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Kit inicial tem quatro tarefas e contador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Painel cabe acima dos controles no PC/mobile"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Fabricação real marca todas com check"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Recolher mantém contador e libera espaço"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Reload IndexedDB mantém conquistas e recolhimento"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Perder itens não apaga fabricação"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Etapa do mapa mostra requisito noturno"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Bolsa e armadura equipada são condições distintas"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Equipar conclui condição atual"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Comer e beber reduzem contadores atuais"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne etapas, checks e pendências antigas"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Fechar diário devolve os controles"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Kit inicial tem quatro tarefas e contador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Painel cabe acima dos controles no PC/mobile"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Fabricação real marca todas com check"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Recolher mantém contador e libera espaço"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Reload IndexedDB mantém conquistas e recolhimento"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Perder itens não apaga fabricação"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Etapa do mapa mostra requisito noturno"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Bolsa e armadura equipada são condições distintas"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Equipar conclui condição atual"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Comer e beber reduzem contadores atuais"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne etapas, checks e pendências antigas"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Fechar diário devolve os controles"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+      }
+    ],
+    "errors": []
+  },
+  "browser_campaign": {
+    "results": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "HUD mostra etapa e contador da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Movimento por teclado preservado"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Mapa bloqueado antes da terceira noite"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Terceira noite recupera mapa pela interação"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação inicia templo lens"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Conquista garante componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação inicia templo coil"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Conquista garante componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação inicia templo core"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Conquista garante componente core"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Diário reúne conquistas e requisitos"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Sexta noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Duas formações precedem Guardião"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Guardiāo vencido aguarda amanhecer"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "HUD mostra etapa e contador da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Dois dedos continuam movendo e mirando"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Mapa bloqueado antes da terceira noite"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Terceira noite recupera mapa pela interação"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo lens"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo coil"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo core"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente core"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne conquistas e requisitos"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Sexta noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Duas formações precedem Guardião"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Guardiāo vencido aguarda amanhecer"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "HUD mostra etapa e contador da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Dois dedos continuam movendo e mirando"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Mapa bloqueado antes da terceira noite"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Terceira noite recupera mapa pela interação"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo lens"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo coil"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo core"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente core"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne conquistas e requisitos"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Sexta noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Duas formações precedem Guardião"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Guardiāo vencido aguarda amanhecer"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      }
+    ],
+    "errors": [],
+    "frameSamples": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "region": "lens",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 16.899999999999636,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "region": "coil",
+        "median_ms": 16.700000000000728,
+        "p95_ms": 16.80000000000109,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "region": "lens",
+        "median_ms": 16.699999999999818,
+        "p95_ms": 16.899999999999636,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "region": "coil",
+        "median_ms": 16.700000000000728,
+        "p95_ms": 16.899999999999636,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "region": "lens",
+        "median_ms": 16.600000000000364,
+        "p95_ms": 17,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "region": "coil",
+        "median_ms": 16.700000000000728,
+        "p95_ms": 16.80000000000109,
+        "frames": 45
+      }
+    ]
+  },
+  "browser_persistence": {
+    "checks": 12,
+    "failures": 0
+  },
+  "preparation_measurement": {
+    "automated": true,
+    "clock_seconds": 21.1833333333334,
+    "day_budget_seconds": 300,
+    "game_seconds": 21.1833333333334,
+    "gathered": {
+      "madeira": 15,
+      "pedra": 8
+    },
+    "human_played": false,
+    "note": "Coleta e kit iniciais; não inclui colocar fogueira, caça, linha ou preparações dos dias seguintes.",
+    "physics_step_seconds": 0.0166666666666667,
+    "seed": 77,
+    "segments": [
+      {
+        "resource": "madeira",
+        "seconds": 7.83333333333331,
+        "target_in_bag": 3,
+        "tool": "maos"
+      },
+      {
+        "resource": "madeira",
+        "seconds": 4.45000000000021,
+        "target_in_bag": 8,
+        "tool": "machado_madeira"
+      },
+      {
+        "resource": "pedra",
+        "seconds": 8.89999999999989,
+        "target_in_bag": 7,
+        "tool": "picareta_madeira"
+      }
+    ],
+    "success": true,
+    "time_scale": 4
+  },
+  "release_pack": {
+    "automatic_craft": true,
+    "build": {
+      "base_release": "0.8.3",
+      "campaign_schema": 2,
+      "commit": "0e9d27d1c534dc6b0495a9a0ca27446b57def57e",
+      "emulated": false,
+      "save_schema": 8,
+      "tasks_schema": 1,
+      "version": "0.9.0-solo-pilot.3",
+      "world_sync": true
+    },
+    "campaign_version": 2,
+    "chat_enabled": true,
+    "development_config_excluded": true,
+    "fixtures_excluded": true,
+    "initial_hud": "Dia 1 · Kit · 0/4 ›",
+    "legacy_evidence_visible": true,
+    "pass": true,
+    "same_two_accounts": true,
+    "save_version": 8,
+    "stages": 8,
+    "sync_enabled": true,
+    "sync_interval": 120,
+    "tasks_version": 1,
+    "temple_ambient_limit": 0
+  },
+  "release_smoke": [
+    {
+      "mobile": false,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    }
+  ],
+  "pck_sha256": "34658997f132609bdbe3133ba4b5ceb728376005da05a18d1553e3f377671d42",
+  "unchanged_campaign": {
+    "clock": true,
+    "encounters": true,
+    "victory_conditions": true
+  },
+  "human_campaign_played": false,
+  "physical_device_tested": false,
+  "real_accounts_auth_chat_sync_retested": false,
+  "limitations": [
+    "Medição do dia 1 automatizada em segundos do jogo, escala 4x/passo 1/60 s, semente 77.",
+    "Dias 2–3: receitas e capacidade verificadas com materiais de fixture, não coleta humana cronometrada.",
+    "Testes de progressão/Web eliminam inimigos por fixture. Regras da campanha não foram modificadas.",
+    "Sem login Firebase em produção, chat entre contas reais ou aparelho físico.",
+    "Migração reconhece evidência disponível; não inventa fabricação perdida sem registro antigo."
+  ],
+  "publication": {
+    "saved_version_number": 10,
+    "saved_version_id": "appgprj_6ad0212da2388191920d282fd2dd7f32~appgver_ecfb2e4639208191829a6765cfbad711",
+    "deployment_id": "appgdep_6ad51f67fd9881919cf98f9a7b3d9245",
+    "deployment_status": "succeeded",
+    "project_id": "appgprj_6ad0212da2388191920d282fd2dd7f32",
+    "source_commit": "61284677eda2bc5a6973520c8daaab41e2457610",
+    "game_commits": [
+      "fd33db22b8579757dfb1d2711ecd34543e1bcea2",
+      "f2b717dc4a5c271f4b104dc47a7943ada75a6cfb",
+      "0e9d27d1c534dc6b0495a9a0ca27446b57def57e"
+    ],
+    "owner_private": true,
+    "url": "https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+    "rollback_site_version": 7,
+    "verified": true,
+    "version": "0.9.0-solo-pilot.3",
+    "game_commit": "0e9d27d1c534dc6b0495a9a0ca27446b57def57e",
+    "pck_sha256": "34658997f132609bdbe3133ba4b5ceb728376005da05a18d1553e3f377671d42",
+    "engine_sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+    "engine_parts": 5,
+    "official": {
+      "version": "0.8.3",
+      "commit": "7c17e63f634d4abbaca87c6f5ad1b5198601e99d"
+    },
+    "no_firebase_authentication_performed": true
+  },
+  "rollback": {
+    "pilot2_save_version": 7,
+    "rejects_v8_without_change": true,
+    "site_version": 7
+  }
+}

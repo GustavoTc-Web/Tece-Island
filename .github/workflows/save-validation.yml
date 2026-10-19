@@ -29,7 +29,10 @@ jobs:
       - name: Importar e testar persistência
         run: |
           "$GODOT_EXE" --headless --path . --editor --import --quit
-          for test in validate_world_library validate_account_progress validate_session_progress validate_save_reliability validate_world_sync validate_chest_bow_save validate_auth_release validate_sync_pilot validate_sync_handoff; do
-            "$GODOT_EXE" --headless --path . --script "tests/$test.gd"
+          mkdir -p .tools/validation
+          set -o pipefail
+          for test in validate_world_library validate_account_progress validate_session_progress validate_save_reliability validate_world_sync validate_chest_bow_save validate_auth_release validate_sync_pilot validate_sync_handoff validate_solo_campaign validate_solo_combat validate_solo_migration validate_campaign_tasks validate_tower_navigation validate_pilot_reopen validate_controls validate_monsters validate_expansion validate_wells validate_ruins; do
+            "$GODOT_EXE" --headless --path . --script "tests/$test.gd" 2>&1 | tee ".tools/validation/$test.log"
+            if grep -Eq 'SCRIPT ERROR|FAIL:' ".tools/validation/$test.log"; then exit 1; fi
           done
       - run: npm run test:chat

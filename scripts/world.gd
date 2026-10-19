@@ -30,6 +30,8 @@ var region_buildings := {}
 var journal: IslandJournal
 var objectives: IslandObjectives
 var loading_progress := false
+var campaign: SoloCampaign
+var campaign_terrain: CampaignTerrain
 
 
 func _ready() -> void:
@@ -142,6 +144,9 @@ func _ready() -> void:
 	$Exploration.random_seed = world_seed
 	$Exploration.container = $WorldObjects
 	$Exploration.initialize()
+	campaign_terrain = CampaignTerrain.new()
+	add_child(campaign_terrain)
+	campaign_terrain.initialize(self)
 	$Animals.initialize($WorldObjects/Player, $WorldObjects)
 	ruins = preload("res://scripts/ruins_system.gd").new()
 	ruins.name = "Ruins"
@@ -159,7 +164,7 @@ func _ready() -> void:
 	$Structures.placed.connect(objectives.structure_placed)
 	journal.changed.connect(func():
 		if "arrival" in journal.discovered: objectives.advance("record", 1, loading_progress))
-	objectives.completed.connect(func(title): $HUD.show_message("Objetivo concluído: " + title))
+	objectives.completed.connect(func(title): if campaign == null: $HUD.show_message("Objetivo concluído: " + title))
 	var previous_wells: Dictionary = initial_progress.get("region_wells", {}) if initial_progress.get("region_wells", {}) is Dictionary else {}
 	if NaturalWells.valid_metadata(previous_wells):
 		region_wells = NaturalWells.generate(world_seed, previous_wells, initial_progress.get("structures", []) if initial_progress.get("structures", []) is Array else [])
@@ -167,12 +172,18 @@ func _ready() -> void:
 	if initial_progress.get("region_buildings", {}) is Dictionary and RegionalBuildings.valid(initial_progress.get("region_buildings", {})):
 		region_buildings = RegionalBuildings.generate(self)
 		RegionalBuildings.spawn(self, region_buildings)
+	campaign = SoloCampaign.new()
+	add_child(campaign)
+	campaign.initialize(self)
+	objectives.campaign_tasks.initialize(self)
+	$HUD.initialize_campaign(campaign)
 	if persistence_enabled:
 		progress_store = WorldProgress.new()
 		progress_store.world = self
 		progress_store.store.path = progress_path
 		progress_store.load_progress()
 	objectives.reconcile(self)
+	if "arrival" in journal.discovered and not campaign.clues: campaign.interact("clue")
 	if persistence_enabled:
 		save_controller = ProgressController.new()
 		save_controller.world = self
@@ -185,6 +196,7 @@ func _ready() -> void:
 		$Inventory.changed.connect(save_controller.changed)
 		journal.changed.connect(save_controller.changed)
 		objectives.changed.connect(save_controller.changed)
+		campaign.changed.connect(save_controller.changed)
 		$Structures.placed.connect(save_controller.changed)
 		$WorldObjects/Player.health_changed.connect(save_controller.changed)
 		$HUD.panel_toggled.connect(save_controller.changed)
@@ -221,7 +233,7 @@ func _use_item(index: int) -> void:
 
 func _physics_process(_delta: float) -> void:
 	objectives.visit(self)
-	var dark: bool = WorldTerrain.is_dark($WorldObjects/Player.global_position)
+	var dark: bool = WorldTerrain.is_dark($WorldObjects/Player.global_position) or campaign.local_darkness($WorldObjects/Player.global_position)
 	if $DayNight.local_darkness != dark:
 		$DayNight.local_darkness = dark
 		$DayNight.refresh()
@@ -280,6 +292,9 @@ func _on_panel_toggled(open: bool) -> void:
 
 
 func _on_player_died() -> void:
+	campaign.deaths += 1
+	campaign.interrupt_battle()
+	campaign.changed.emit()
 	$Structures.cancel()
 	$HUD.set_panel("")
 	$HUD.show_death(true)

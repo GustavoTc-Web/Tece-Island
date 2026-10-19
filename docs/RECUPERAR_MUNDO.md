@@ -1,5 +1,9 @@
 # Obter os saves sem apagar armazenamento
 
+Para saves v8 da 0.9.0 ou dos pilotos .3/.4, use também
+[a recuperação compatível](RECUPERACAO_0_9_0.md). Voltar só ao aplicativo 0.8.3
+não permite abrir esses mundos.
+
 Para a jogadora:
 
 1. Abra o **mesmo endereço, navegador e perfil** usados na última partida, no

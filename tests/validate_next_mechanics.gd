@@ -69,10 +69,10 @@ func run() -> void:
 	cycle.set_physics_process(false)
 	cycle.elapsed = 28
 	cycle.refresh()
-	check(world.get_node("HUD/Controls/Rows/Time").text == "Dia — Anoitece em 04:32", "HUD consulta relógio real para dia")
+	check(world.get_node("HUD/Controls/Rows/Time").text == "Dia 1 · Anoitece 04:32", "HUD consulta dia e relógio real")
 	cycle.elapsed = 462
 	cycle.refresh()
-	check(world.get_node("HUD/Controls/Rows/Time").text == "Noite — Amanhece em 02:18", "HUD consulta relógio real para noite")
+	check(world.get_node("HUD/Controls/Rows/Time").text == "Noite 1 · Amanhece 02:18", "HUD consulta número da noite e relógio real")
 	var goals: IslandObjectives = world.objectives
 	goals.completed.connect(func(_title): notices += 1)
 	goals.crafted("fogueira")

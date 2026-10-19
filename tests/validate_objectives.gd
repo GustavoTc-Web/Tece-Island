@@ -37,11 +37,11 @@ func run() -> void:
 	legacy.free()
 	var hud: CanvasLayer = world.get_node("HUD")
 	hud.objective_button.pressed.emit()
-	check(hud.current_panel == "journal" and hud.journal_view.pages.get_child_count() == 6 and hud.journal_view.text.text == "Objetivos iniciais concluídos", "Botão abre cinco etapas e confirmação final")
+	check(hud.current_panel == "journal" and hud.journal_view.campaign_text.text.contains("Dia 1") and hud.journal_view.campaign_text.text.contains("Dia 6") and hud.journal_view.campaign_text.text.contains("[x]"), "Botão abre etapas da campanha com conquistas registradas")
 	hud.set_panel("")
 	goals.enabled = false
 	goals.changed.emit()
-	check(not hud.objective_button.visible, "Configuração permite ocultar objetivo")
+	check(not hud.task_panel.visible, "Configuração permite ocultar painel de objetivos")
 	world.queue_free()
 	await process_frame
 	print("OBJECTIVES: %d verificações, %d falhas" % [checks, failures])

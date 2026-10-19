@@ -4,6 +4,7 @@ var session: Node
 var callback: JavaScriptObject
 var snapshot_time := 0.0
 var account_checks := {}
+var checkpoint_checks := {}
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Reproducible offline gameplay data, never authentication/session data.
@@ -20,6 +21,58 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"campaign_checkpoint_write":
+			checkpoint_checks = {"busy":true}
+			var account := AccountProgress.new()
+			account.configure("tower-web-fixture", "user://", "tower-nav")
+			var snapshot: Dictionary = world.progress_store.capture()
+			snapshot.owner_uid = account.uid
+			snapshot.world_id = account.world_id
+			snapshot.world_name = "Checkpoint da torre"
+			var ok := await account.write(snapshot, get_tree())
+			var stored := await account.read(get_tree())
+			checkpoint_checks = {"busy":false,"ok":ok and not stored.is_empty(),"map_found":stored.get("campaign", {}).get("map_found", false)}
+		"campaign_checkpoint_read":
+			checkpoint_checks = {"busy":true}
+			var account := AccountProgress.new()
+			account.configure("tower-web-fixture", "user://", "tower-nav")
+			var stored := await account.read(get_tree())
+			if not stored.is_empty():
+				world.account_store = account
+				world.owner_uid = account.uid
+				world.world_id = account.world_id
+				world.world_name = stored.world_name
+				world.initial_progress = stored
+				world.progress_store.load_progress()
+			checkpoint_checks = {"busy":false,"ok":not stored.is_empty() and account.error.is_empty(),"map_found":world.campaign.map_found}
+		"tower_route":
+			# Freeze simulation hazards/clock for an input/navigation test. Never
+			# teleport or set campaign progress; movement and collection use controls.
+			world.get_node("EnemySpawner").set_physics_process(false)
+			world.get_node("Animals").set_physics_process(false)
+			world.get_node("DayNight").set_physics_process(false)
+			for enemy in get_tree().get_nodes_in_group("enemies"): enemy.set_physics_process(false)
+		"tasks_craft": inv.craft(str(request.id))
+		"tasks_equip_armor": inv.equip_armor(int(request.index))
+		"tasks_use": player.get_node("Needs").use_slot(inv, int(request.index))
+		"campaign_visit":
+			world.get_node("HUD").set_panel("")
+			player.position = world.campaign.points[str(request.id)].position + Vector2(0, 40)
+			world.get_node("EnemySpawner").set_physics_process(false)
+			world.get_node("DayNight").set_physics_process(false)
+		"campaign_night":
+			world.get_node("DayNight").elapsed = 5 * 600 + 310
+			world.get_node("DayNight").refresh()
+		"campaign_clock":
+			world.get_node("DayNight").set_physics_process(false)
+			world.get_node("DayNight").elapsed = (int(request.day) - 1) * 600 + (300 if request.get("night", false) else 0) + 10
+			world.get_node("DayNight").refresh()
+		"campaign_clear":
+			for mob in get_tree().get_nodes_in_group("enemies"):
+				if world.is_ancestor_of(mob) and (mob.is_in_group("temple_enemies") or mob.is_in_group("final_encounter")): mob.receive_damage(1000)
+		"campaign_win":
+			if is_instance_valid(world.campaign.boss): world.campaign.boss.receive_damage(300)
+		"campaign_journal": world.get_node("HUD").set_panel("journal")
 		"icon_gallery":
 			var gallery := CanvasLayer.new()
 			gallery.name = "IconGallery"
@@ -219,6 +272,7 @@ func _process(_delta: float) -> void:
 	data.buttons = buttons
 	data.button_clips = clips
 	data.account_checks = account_checks
+	data.checkpoint_checks = checkpoint_checks
 	if session.game != null:
 		var world: Node = session.game
 		var player: CharacterBody2D = world.get_node("WorldObjects/Player")
@@ -238,6 +292,11 @@ func _process(_delta: float) -> void:
 		data.swimming = player.swimming
 		data.dark = world.get_node("DayNight").local_darkness
 		data.minimap = rect(world.minimap)
+		data.tower_navigation = world.minimap.tower_navigation()
+		data.tower_caption = world.minimap.destination.text
+		data.tower_caption_rect = rect(world.minimap.destination)
+		data.pickup_kind = interaction.pickup.kind if interaction.pickup is CampaignLandmark else ""
+		data.pickup_prompt = interaction.pickup.prompt() if interaction.pickup is CampaignLandmark else ""
 		data.explored = world.minimap.explored.size()
 		data.region = WorldTerrain.region_at(player.global_position).get("id", "")
 		data.wells = []
@@ -249,6 +308,12 @@ func _process(_delta: float) -> void:
 		data.backpack = inv.backpack
 		data.journal = world.journal.capture()
 		data.objectives = world.objectives.capture()
+		data.tasks = {"state":world.objectives.campaign_tasks.capture(), "stage":world.objectives.campaign_tasks.automatic_stage(), "rows":world.objectives.campaign_tasks.rows(world.objectives.campaign_tasks.automatic_stage()), "panel_rect":rect(hud.task_panel), "collapsed":world.objectives.campaign_tasks.collapsed, "next":hud.task_panel.next_task}
+		data.tasks.conditions = {"food3":world.objectives.campaign_tasks.task("food3"), "water3":world.objectives.campaign_tasks.task("water3"), "wear":world.objectives.campaign_tasks.task("wear")}
+		data.tasks.conditions.map = world.objectives.campaign_tasks.task("map")
+		data.campaign = world.campaign.capture()
+		data.campaign_text = hud.journal_view.campaign_text.text
+		data.campaign_objective_rect = rect(hud.objective_button)
 		data.world_id = world.world_id
 		data.health = player.health
 		data.dead = player.dead

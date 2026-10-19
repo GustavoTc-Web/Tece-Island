@@ -38,6 +38,10 @@ Resultados executados nesta integração, separados dos resultados históricos d
 
 ## Rollback
 
+**Nota posterior à 0.9.0:** o procedimento histórico abaixo pressupõe os formatos
+antigos. Para mundos v8, não volte apenas ao aplicativo 0.8.3/0.8.2; siga
+[a recuperação compatível com v8](RECUPERACAO_0_9_0.md).
+
 Versão oficial anterior: **0.8.2**, tag `v0.8.2`, commit `81aa0f96afe8aa0ded0a3d520183a332f05ea745`. O ponto anterior da main é `b94a68a` (somente documentação posterior ao jogo 0.8.2). A tag **`pages-before-0.8.3`** foi criada e enviada, apontando para o commit oficial 0.8.2. O manifesto anterior foi conferido antes da publicação.
 
 Em checkout limpo, restaurar aplicativo/build/testes do ponto anterior, mantendo os registros de publicação e as regras atuais:

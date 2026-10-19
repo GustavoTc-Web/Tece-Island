@@ -3,10 +3,14 @@
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
 O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no desktop.
 
+**0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
+campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).
+Saves v8 exigem [recuperação com cliente compatível](docs/RECUPERACAO_0_9_0.md).
+
 Confiabilidade dos saves e piloto de sincronização Firestore:
 [investigação, configuração e testes](docs/SAVES_E_SINCRONIZACAO.md).
-A sincronização pública permanece desativada até validar a migração e a ida/volta
-em aparelhos reais. Para mundos desaparecidos, siga a
+Na build pública, chat e sincronização ficam restritos às mesmas duas contas
+autorizadas; os defaults de desenvolvimento continuam desligados. Para mundos desaparecidos, siga a
 [exportação e recuperação sem apagar armazenamento](docs/RECUPERAR_MUNDO.md).
 
 ## Começar

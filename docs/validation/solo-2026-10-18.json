@@ -1,0 +1,807 @@
+{
+  "date": "2026-10-18",
+  "version": "0.9.0-solo-pilot.1",
+  "base_commit": "7eae4f3c6b922232dc5c1910f3fdfd26ba1a9c9d",
+  "feature_commit": "f5ce71a2a6a252b08f01695a746696054e7feab7",
+  "engine": "Godot 4.7.2 Compatibility",
+  "save_schema": 6,
+  "campaign_schema": 1,
+  "native": {
+    "suites": [
+      {
+        "suite": "validate_world_library",
+        "checks": 19,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_world_library.log"
+      },
+      {
+        "suite": "validate_account_progress",
+        "checks": 21,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_account_progress.log"
+      },
+      {
+        "suite": "validate_session_progress",
+        "checks": 10,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_session_progress.log"
+      },
+      {
+        "suite": "validate_save_reliability",
+        "checks": 20,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_save_reliability.log"
+      },
+      {
+        "suite": "validate_world_sync",
+        "checks": 22,
+        "failures": 0,
+        "log": ".tools/solo-world-sync-migration.log"
+      },
+      {
+        "suite": "validate_chest_bow_save",
+        "checks": 26,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_chest_bow_save.log"
+      },
+      {
+        "suite": "validate_auth_release",
+        "checks": 10,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_auth_release.log"
+      },
+      {
+        "suite": "validate_sync_pilot",
+        "checks": 13,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_sync_pilot.log"
+      },
+      {
+        "suite": "validate_sync_handoff",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_sync_handoff.log"
+      },
+      {
+        "suite": "validate_combat_feedback",
+        "checks": 15,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_combat_feedback.log"
+      },
+      {
+        "suite": "validate_base_practical",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_base_practical.log"
+      },
+      {
+        "suite": "validate_journal",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/solo-validate_journal.log"
+      },
+      {
+        "suite": "validate_objectives",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/solo-validate_objectives.log"
+      },
+      {
+        "suite": "validate_crafting",
+        "checks": 12,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_crafting.log"
+      },
+      {
+        "suite": "validate_bags",
+        "checks": 25,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_bags.log"
+      },
+      {
+        "suite": "validate_monsters",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_monsters.log"
+      },
+      {
+        "suite": "validate_aquatic_animals",
+        "checks": 33,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_aquatic_animals.log"
+      },
+      {
+        "suite": "validate_ruins",
+        "checks": 27,
+        "failures": 0,
+        "log": ".tools/solo-validate_ruins.log"
+      },
+      {
+        "suite": "validate_expansion",
+        "checks": 15,
+        "failures": 0,
+        "log": ".tools/solo-validate_expansion.log"
+      },
+      {
+        "suite": "validate_wells",
+        "checks": 12,
+        "failures": 0,
+        "log": ".tools/solo-validate_wells.log"
+      },
+      {
+        "suite": "validate_base_pieces",
+        "checks": 25,
+        "failures": 0,
+        "log": ".tools/solo-validate_base_pieces.log"
+      },
+      {
+        "suite": "validate_controls",
+        "checks": 7,
+        "failures": 0,
+        "log": ".tools/solo-validate_controls.log"
+      },
+      {
+        "suite": "validate_mobile",
+        "checks": 30,
+        "failures": 0,
+        "log": ".tools/solo-validate_mobile.log"
+      },
+      {
+        "suite": "validate_auth",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/solo-validate_auth.log"
+      },
+      {
+        "suite": "validate_stage2",
+        "checks": 28,
+        "failures": 0,
+        "log": ".tools/solo-validate_stage2.log"
+      },
+      {
+        "suite": "validate_update_a",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/solo-validate_update_a.log"
+      },
+      {
+        "suite": "validate_update_b",
+        "checks": 54,
+        "failures": 0,
+        "log": ".tools/solo-validate_update_b.log"
+      },
+      {
+        "suite": "validate_update_c",
+        "checks": 29,
+        "failures": 0,
+        "log": ".tools/solo-validate_update_c.log"
+      },
+      {
+        "suite": "validate_v05",
+        "checks": 55,
+        "failures": 0,
+        "log": ".tools/solo-validate_v05.log"
+      },
+      {
+        "suite": "validate_next_mechanics",
+        "checks": 39,
+        "failures": 0,
+        "log": ".tools/solo-validate_next_mechanics.log"
+      },
+      {
+        "suite": "validate_presentation",
+        "checks": 51,
+        "failures": 0,
+        "log": ".tools/solo-validate_presentation.log"
+      },
+      {
+        "suite": "validate_solo_campaign",
+        "checks": 45,
+        "failures": 0,
+        "log": ".tools/solo-validate_solo_campaign.log"
+      },
+      {
+        "suite": "validate_solo_combat",
+        "checks": 20,
+        "failures": 0,
+        "log": ".tools/solo-validate_solo_combat.log"
+      },
+      {
+        "suite": "validate_solo_migration",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/solo-validate_solo_migration.log"
+      }
+    ],
+    "total_checks": 787
+  },
+  "backend": {
+    "tests": 22,
+    "failures": 0,
+    "skipped": 0,
+    "native_rest_checks": 12,
+    "environment": "local demo-tece-island emulator"
+  },
+  "browser": {
+    "results": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "HUD mostra o objetivo da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Movimento por teclado preservado"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Coleta real do componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Coleta real do componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Coleta real do componente core"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Diário reúne pistas e componentes"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Sétima noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "HUD mostra o objetivo da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Dois dedos continuam movendo e mirando"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Coleta real do componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Coleta real do componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Coleta real do componente core"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne pistas e componentes"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Sétima noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "HUD mostra o objetivo da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Dois dedos continuam movendo e mirando"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Coleta real do componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Coleta real do componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Coleta real do componente core"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne pistas e componentes"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Sétima noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      }
+    ],
+    "errors": [],
+    "frameSamples": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "region": "lens",
+        "median_ms": 16.699999999999818,
+        "p95_ms": 16.800000000000182,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "region": "coil",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 16.799999999999272,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "region": "lens",
+        "median_ms": 16.699999999999818,
+        "p95_ms": 16.800000000000182,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "region": "coil",
+        "median_ms": 16.699999999999818,
+        "p95_ms": 16.800000000000182,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "region": "lens",
+        "median_ms": 16.699999999999818,
+        "p95_ms": 17.099999999999454,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "region": "coil",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 16.799999999999272,
+        "frames": 45
+      }
+    ],
+    "save_regression": [
+      {
+        "pass": true,
+        "label": "Gravação só confirma após concluir transação IndexedDB"
+      },
+      {
+        "pass": true,
+        "label": "Recarregar página mantém os bytes do mundo"
+      },
+      {
+        "pass": true,
+        "label": "Fechar navegador e reabrir perfil próprio mantém save"
+      },
+      {
+        "pass": true,
+        "label": "Primeira sessão grava a alteração"
+      },
+      {
+        "pass": true,
+        "label": "Duas abas: sessão antiga não sobrescreve save recente"
+      },
+      {
+        "pass": true,
+        "label": "Conflito e backup são preservados em armazenamento durável"
+      },
+      {
+        "pass": true,
+        "label": "Varredura encontra mundo mesmo sem registro no catálogo"
+      },
+      {
+        "pass": true,
+        "label": "Dois mundos e contas não compartilham chaves"
+      },
+      {
+        "pass": true,
+        "label": "Backup antes da nuvem é único e conserva a primeira versão"
+      },
+      {
+        "pass": true,
+        "label": "Operação inválida nunca retorna sucesso"
+      },
+      {
+        "pass": true,
+        "label": "Godot Web salva contas separadas e migra legado uma vez com original preservado"
+      },
+      {
+        "pass": true,
+        "label": "Godot Web recarrega progresso das mesmas contas após reload"
+      }
+    ]
+  },
+  "old_client_rejection": {
+    "passed": true,
+    "source": "unchanged main 7eae4f3",
+    "log": ".tools/solo-old-client.log"
+  },
+  "migration_fixture": {
+    "path": "tests/fixtures/solo_v083.json",
+    "source": "Captured by running unchanged main 7eae4f3, seed 77, synthetic inventory and chest, night 11"
+  },
+  "unchanged": [
+    "scripts/chat/global_chat.gd",
+    "scripts/chat/chat_client.gd",
+    "scripts/chat/chat_panel.gd",
+    "scripts/world_sync.gd",
+    "scripts/account_progress.gd",
+    "scripts/auth/firebase_auth.gd",
+    "scripts/network/session.gd",
+    "firestore.rules",
+    "config/global-chat.json",
+    "config/world-sync.json"
+  ],
+  "limits": [
+    "No physical device test",
+    "No human-played full campaign or final combat balance sign-off",
+    "requestAnimationFrame samples under headless Edge/SwiftShader are not physical-device performance benchmarks",
+    "No authenticated two-account production sync/chat test; emulator and fixture tests only",
+    "Native sandbox could not read OS certificate store; live native TLS was not validated"
+  ],
+  "release_smoke": [
+    {
+      "mobile": false,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    }
+  ],
+  "hosted": {
+    "verified": true,
+    "url": "https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+    "version": "0.9.0-solo-pilot.1",
+    "game_commit": "12ec63d5d5233f5196462ccc45fad1b8f9f05bbc",
+    "pck_sha256": "1b5858ccbfadb9bbd2742040733b7ec7d93a9e53ed20d26f58f72e62d1726ac7",
+    "engine_sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+    "engine_parts": 5,
+    "official": {
+      "version": "0.8.3",
+      "commit": "7c17e63f634d4abbaca87c6f5ad1b5198601e99d"
+    },
+    "no_firebase_authentication_performed": true
+  },
+  "release_package_probe": {
+    "passed": true,
+    "save_version": 6,
+    "campaign_points": 5,
+    "regions": 18,
+    "allowed_accounts": 2,
+    "fixtures_absent": true,
+    "log": ".tools/solo-pack.log"
+  }
+}

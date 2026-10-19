@@ -1,0 +1,1023 @@
+{
+  "date": "2026-10-18",
+  "pilot": {
+    "commit": "5287330eb43d58019ea67b839a00bf600a9abaa7",
+    "version": "0.9.0-solo-pilot.2",
+    "emulated": false,
+    "save_schema": 7,
+    "campaign_schema": 2,
+    "base_release": "0.8.3",
+    "world_sync": true
+  },
+  "automated_native": {
+    "suites": 32,
+    "checks": 750,
+    "failures": 0,
+    "results": [
+      {
+        "name": "validate_world_library",
+        "checks": 19,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_world_library.log"
+      },
+      {
+        "name": "validate_account_progress",
+        "checks": 21,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_account_progress.log"
+      },
+      {
+        "name": "validate_session_progress",
+        "checks": 10,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_session_progress.log"
+      },
+      {
+        "name": "validate_save_reliability",
+        "checks": 20,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_save_reliability.log"
+      },
+      {
+        "name": "validate_world_sync",
+        "checks": 26,
+        "failures": 0,
+        "log": ".tools/solo2-validate_world_sync.log"
+      },
+      {
+        "name": "validate_chest_bow_save",
+        "checks": 26,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_chest_bow_save.log"
+      },
+      {
+        "name": "validate_auth_release",
+        "checks": 10,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_auth_release.log"
+      },
+      {
+        "name": "validate_sync_pilot",
+        "checks": 13,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_sync_pilot.log"
+      },
+      {
+        "name": "validate_sync_handoff",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/save-suite-validate_sync_handoff.log"
+      },
+      {
+        "name": "validate_combat_feedback",
+        "checks": 15,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_combat_feedback.log"
+      },
+      {
+        "name": "validate_base_practical",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_base_practical.log"
+      },
+      {
+        "name": "validate_journal",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_journal.log"
+      },
+      {
+        "name": "validate_objectives",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_objectives.log"
+      },
+      {
+        "name": "validate_crafting",
+        "checks": 12,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_crafting.log"
+      },
+      {
+        "name": "validate_bags",
+        "checks": 25,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_bags.log"
+      },
+      {
+        "name": "validate_monsters",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/solo2-validate_monsters.log"
+      },
+      {
+        "name": "validate_aquatic_animals",
+        "checks": 33,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_aquatic_animals.log"
+      },
+      {
+        "name": "validate_ruins",
+        "checks": 27,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_ruins.log"
+      },
+      {
+        "name": "validate_expansion",
+        "checks": 15,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_expansion.log"
+      },
+      {
+        "name": "validate_wells",
+        "checks": 12,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_wells.log"
+      },
+      {
+        "name": "validate_base_pieces",
+        "checks": 25,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_base_pieces.log"
+      },
+      {
+        "name": "validate_controls",
+        "checks": 7,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_controls.log"
+      },
+      {
+        "name": "validate_auth",
+        "checks": 14,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_auth.log"
+      },
+      {
+        "name": "validate_stage2",
+        "checks": 28,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_stage2.log"
+      },
+      {
+        "name": "validate_update_a",
+        "checks": 18,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_update_a.log"
+      },
+      {
+        "name": "validate_update_b",
+        "checks": 54,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_update_b.log"
+      },
+      {
+        "name": "validate_update_c",
+        "checks": 29,
+        "failures": 0,
+        "log": ".tools/signal-suite-validate_update_c.log"
+      },
+      {
+        "name": "validate_v05",
+        "checks": 55,
+        "failures": 0,
+        "log": ".tools/solo2-validate_v05.log"
+      },
+      {
+        "name": "validate_solo_campaign",
+        "checks": 60,
+        "failures": 0,
+        "log": ".tools/solo2-validate_solo_campaign.log"
+      },
+      {
+        "name": "validate_solo_combat",
+        "checks": 33,
+        "failures": 0,
+        "log": ".tools/solo2-validate_solo_combat.log"
+      },
+      {
+        "name": "validate_solo_migration",
+        "checks": 26,
+        "failures": 0,
+        "log": ".tools/solo2-validate_solo_migration.log"
+      },
+      {
+        "name": "validate_next_mechanics",
+        "checks": 39,
+        "failures": 0,
+        "log": ".tools/solo2-validate_next_mechanics.log"
+      }
+    ]
+  },
+  "automated_browser": {
+    "checks": 63,
+    "failures": 0,
+    "dimensions": [
+      "1280x720",
+      "852x393",
+      "640x360"
+    ],
+    "results": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "HUD mostra o objetivo da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Movimento por teclado preservado"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Mapa bloqueado antes da terceira noite"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Terceira noite recupera mapa pela interação"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação inicia templo lens"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Conquista garante componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação inicia templo coil"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Conquista garante componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação inicia templo core"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Conquista garante componente core"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Diário reúne conquistas e requisitos"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Sexta noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Duas formações precedem Guardião"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Guardiāo vencido aguarda amanhecer"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "HUD mostra o objetivo da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Dois dedos continuam movendo e mirando"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Mapa bloqueado antes da terceira noite"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Terceira noite recupera mapa pela interação"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo lens"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo coil"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo core"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente core"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne conquistas e requisitos"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Sexta noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Duas formações precedem Guardião"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Guardiāo vencido aguarda amanhecer"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "HUD mostra o objetivo da campanha"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Objetivo cabe no HUD"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Dois dedos continuam movendo e mirando"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação real descobre sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Registro original revela pistas sem competir na coleta"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Mapa bloqueado antes da terceira noite"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Terceira noite recupera mapa pela interação"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo lens"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente lens"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo coil"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente coil"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação inicia templo core"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Conquista garante componente core"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Diário reúne conquistas e requisitos"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Interação repara o sinalizador"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Sexta noite ativa confronto"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Duas formações precedem Guardião"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Guardiāo vencido aguarda amanhecer"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Vitória abre resumo e pausa combate"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Continuar por mouse/toque preserva o mundo"
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "pass": true,
+        "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+      }
+    ],
+    "frame_samples": [
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "region": "lens",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 17,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 1280,
+          "height": 720,
+          "touch": false
+        },
+        "region": "coil",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 16.799999999999272,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "region": "lens",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 16.899999999999636,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 852,
+          "height": 393,
+          "touch": true
+        },
+        "region": "coil",
+        "median_ms": 16.600000000000364,
+        "p95_ms": 16.899999999999636,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "region": "lens",
+        "median_ms": 16.699999999999818,
+        "p95_ms": 16.899999999999636,
+        "frames": 45
+      },
+      {
+        "dimensions": {
+          "width": 640,
+          "height": 360,
+          "touch": true
+        },
+        "region": "coil",
+        "median_ms": 16.69999999999891,
+        "p95_ms": 16.80000000000109,
+        "frames": 45
+      }
+    ]
+  },
+  "browser_persistence": {
+    "checks": 12,
+    "failures": 0
+  },
+  "firebase_emulator": {
+    "tests": 22,
+    "failures": 0,
+    "skipped": 0,
+    "native_rest_checks": 12,
+    "production_changed": false
+  },
+  "fifth_night_measurement": {
+    "ambient_spawns": true,
+    "automated": true,
+    "budget_seconds": 300,
+    "clock_seconds": 86.283333334432,
+    "damage_received": 59.9090909090909,
+    "elapsed_seconds": 86.2833333333297,
+    "equipment": [
+      "espada_pedra",
+      "armadura_pedra"
+    ],
+    "error_reserve_seconds": 30,
+    "food_used": 3,
+    "health": 95.0909090909091,
+    "human_played": false,
+    "physics_step_seconds": 0.0166666666666667,
+    "seed": 77,
+    "segments": [
+      {
+        "label": "route_high_to_ashes",
+        "position": [
+          3052.42578125,
+          -2011.40893554688
+        ],
+        "seconds": 11.5666666666668,
+        "success": true
+      },
+      {
+        "health": 82.4545454545455,
+        "kills": 6,
+        "label": "combat_coil",
+        "seconds": 13.9499999999997,
+        "success": true
+      },
+      {
+        "label": "route_ashes_to_echo",
+        "position": [
+          -2335.99951171875,
+          557.347961425781
+        ],
+        "seconds": 42.0666666666643,
+        "success": true
+      },
+      {
+        "health": 75.0909090909091,
+        "kills": 6,
+        "label": "combat_core",
+        "seconds": 14.6999999999992,
+        "success": true
+      },
+      {
+        "label": "recovery",
+        "seconds": 3.99999999999977
+      }
+    ],
+    "success": true,
+    "time_scale": 4
+  },
+  "release_pack": {
+    "build": {
+      "base_release": "0.8.3",
+      "campaign_schema": 2,
+      "commit": "5287330eb43d58019ea67b839a00bf600a9abaa7",
+      "emulated": false,
+      "save_schema": 7,
+      "version": "0.9.0-solo-pilot.2",
+      "world_sync": true
+    },
+    "campaign_schema": 2,
+    "chat_enabled": true,
+    "fixtures_excluded": true,
+    "open_world_night5_limit": 5,
+    "pass": true,
+    "points": 6,
+    "regions": 18,
+    "same_two_accounts": true,
+    "save_version": 7,
+    "sync_enabled": true,
+    "sync_interval": 120,
+    "temple_ambient_limit": 0,
+    "temples": 3
+  },
+  "release_smoke": [
+    {
+      "mobile": false,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "parts": 5,
+      "script_errors": 0,
+      "checks": [
+        "split engine loads",
+        "release login renders",
+        "correct pilot badge",
+        "password field",
+        "five parts succeed",
+        "no script errors"
+      ]
+    }
+  ],
+  "human_full_campaign_played": false,
+  "physical_device_tests_performed": false,
+  "limitations": [
+    "Tempo medido por automação em segundos do jogo, com escala 4x e passo físico de 1/60 s. Equipamento e primeira conquista preparados por fixture.",
+    "Combate dos testes de progressão e Web usa dano de fixture; a medição da quinta noite usa movimento, dano e ataques normais.",
+    "Não houve partida humana completa nem reteste em aparelho físico.",
+    "Sem autenticação e chat/sincronização entre as duas contas reais; protocolo/regras exercitados no emulador.",
+    "Causa do save da sessão relatada no piloto .1 permanece indeterminada sem inspecionar aquele save."
+  ],
+  "publication": {
+    "site_project_id": "appgprj_6ad0212da2388191920d282fd2dd7f32",
+    "saved_version_number": 7,
+    "saved_version_id": "appgprj_6ad0212da2388191920d282fd2dd7f32~appgver_0890d7677ce88191ba33a2384d87c2de",
+    "deployment_id": "appgdep_6ad50cc99eec8191a4d8ab6bd27399c3",
+    "deployment_status": "succeeded",
+    "site_source_commit": "d69bc90d821110acf7c34e3e10e2212d41dba8e5",
+    "owner_private": true,
+    "verified": true,
+    "url": "https://tece-island-sync-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+    "version": "0.9.0-solo-pilot.2",
+    "game_commit": "5287330eb43d58019ea67b839a00bf600a9abaa7",
+    "pck_sha256": "7179d2ec4a2eef558b62869cf01a2c0e0f4d85bf10158d14e96fcab8d7de96ec",
+    "engine_sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+    "engine_parts": 5,
+    "official": {
+      "version": "0.8.3",
+      "commit": "7c17e63f634d4abbaca87c6f5ad1b5198601e99d"
+    },
+    "no_firebase_authentication_performed": true,
+    "main_remote_commit": "7eae4f3c6b922232dc5c1910f3fdfd26ba1a9c9d"
+  },
+  "commits": [
+    "e059fda",
+    "73bce71",
+    "5287330"
+  ],
+  "rollback": {
+    "official_v083_rejects_v6_without_change": true,
+    "official_v083_rejects_v7_without_change": true,
+    "pilot1_rejects_v7_without_change": true,
+    "pilot1_saved_site_version": 6
+  },
+  "local_package": "build/tece-island-0.9.0-solo-pilot.2.zip"
+}

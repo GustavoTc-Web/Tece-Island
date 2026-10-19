@@ -6,7 +6,9 @@ var pages: VBoxContainer
 var text: Label
 var selected := ""
 var objectives: IslandObjectives
-var goals_mode := false
+var goals_mode := true
+var campaign: SoloCampaign
+var campaign_text: Label
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var shade := ColorRect.new()
@@ -26,7 +28,7 @@ func _ready() -> void:
 	rows.add_child(title)
 	var tabs := HBoxContainer.new()
 	rows.add_child(tabs)
-	for mode in [false, true]:
+	for mode in [true, false]:
 		var tab := Button.new()
 		tab.text = "Objetivos" if mode else "Registros"
 		tab.custom_minimum_size = Vector2(280, 52)
@@ -40,6 +42,11 @@ func _ready() -> void:
 	var content := VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(content)
+	campaign_text = Label.new()
+	campaign_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	campaign_text.custom_minimum_size.x = 550
+	campaign_text.add_theme_font_size_override("font_size", 20)
+	content.add_child(campaign_text)
 	pages = VBoxContainer.new()
 	content.add_child(pages)
 	text = Label.new()
@@ -56,9 +63,28 @@ func _ready() -> void:
 	journal.changed.connect(refresh)
 	refresh()
 func refresh() -> void:
+	if campaign_text != null:
+		campaign_text.text = objectives.campaign_tasks.journal_text() if goals_mode and objectives != null else ("Pistas do resgate · consulte Objetivos para o roteiro por etapa.\nComponentes protegidos: %d/3." % campaign.components.size() if campaign != null else "")
 	for child in pages.get_children():
 		pages.remove_child(child)
 		child.queue_free()
+	if campaign != null:
+		for id in SoloCampaign.LOCATIONS:
+			if not campaign.blocked_by_base(id) or not campaign.points[id].can_interact(): continue
+			var recover := Button.new()
+			recover.text = "Acessar sinalizador pela base" if id == "beacon" else ("Acessar mapa pela base" if id == "map" else ("Reaver pistas pela base" if id == "clue" else "Acessar " + CampaignEncounters.NAMES[id]))
+			recover.custom_minimum_size.y = 56
+			recover.pressed.connect(func():
+				if not campaign.blocked_by_base(id): return
+				hud.set_panel("")
+				hud.show_message(campaign.interact(id)))
+			pages.add_child(recover)
+		if campaign.encounter == "won":
+			var summary := Button.new()
+			summary.text = "Ver resumo da jornada"
+			summary.custom_minimum_size.y = 56
+			summary.pressed.connect(hud.show_victory)
+			pages.add_child(summary)
 	if goals_mode and objectives != null:
 		var toggle := CheckButton.new()
 		toggle.text = "Mostrar objetivo na HUD"
@@ -66,18 +92,7 @@ func refresh() -> void:
 		toggle.button_pressed = objectives.enabled
 		toggle.toggled.connect(func(value): objectives.enabled = value; objectives.changed.emit())
 		pages.add_child(toggle)
-		for id in IslandObjectives.ORDER:
-			var goal: Dictionary = IslandObjectives.GOALS[id]
-			var button := Button.new()
-			var done: bool = id in objectives.presented
-			button.text = "%s · %d/%d · %s" % [goal.title, objectives.values[id], goal.target, "Concluído" if done else ("Ativo" if objectives.tracked == id else "Próximo")]
-			if id == "tools": button.text += "\n" + objectives.tools_description()
-			button.add_theme_font_size_override("font_size", 18)
-			button.custom_minimum_size.y = 64
-			button.disabled = true
-			button.add_theme_color_override("font_disabled_color", Color("e4dec5"))
-			pages.add_child(button)
-		text.text = "Objetivos iniciais concluídos" if objectives.tracked.is_empty() else "Ações antecipadas ficam registradas. A próxima etapa é liberada automaticamente."
+		text.text = "As preparações são recomendações. Atrasos não fecham etapas; mapa, templos e resgate mantêm suas condições.\nAranhas fornecem linha a partir da noite 2. Cozinhe perto de uma fogueira acesa; encha o cantil em um poço. Guarde as ferramentas de madeira ao melhorar; monte a fogueira e vista a armadura para liberar espaço."
 		return
 	for i in range(journal.discovered.size()):
 		var id := journal.discovered[i]

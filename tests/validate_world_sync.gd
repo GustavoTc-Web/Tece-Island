@@ -74,10 +74,25 @@ func run() -> void:
 	check(prepared.ok and prepared.data.inventory == JSON.parse_string(JSON.stringify(state.inventory)) and prepared.data.player.health == 67 and prepared.data.journal.discovered == ["arrival"], "PC continua inventário/personagem/diário do celular")
 	var changed: Dictionary = prepared.data.duplicate(true)
 	changed.player.health = 88
+	changed.version = SaveStore.VERSION
+	var campaign := SoloCampaign.new()
+	campaign.discovered = true
+	campaign.map_found = true
+	campaign.temples.lens.started = true
+	campaign.temples.lens.cleared = CampaignEncounters.enemy_ids("lens")
+	campaign.collect("lens")
+	changed.campaign = campaign.capture()
+	campaign.free()
+	var task_history := IslandObjectives.new()
+	task_history.crafted("fogueira")
+	changed.objectives = task_history.capture()
+	task_history.free()
 	await b.write(changed, self)
 	check((await sync.sync(b, pc, changed)).ok and b.sync_state.revision == 2, "PC envia revisão seguinte sem usar relógio do aparelho")
 	prepared = await sync.prepare(a, phone)
-	check(prepared.ok and prepared.data.player.health == 88, "Celular recebe progresso do PC no caminho inverso")
+	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v8 do PC sem falso conflito na migração v5")
+	check(prepared.ok and prepared.data.campaign.map_found, "Coleta do mapa acompanha o snapshot sincronizado para o celular")
+	check(prepared.ok and "fogueira" in prepared.data.objectives.campaign_tasks.crafted, "Sincronização PC para celular transporta histórico das tarefas")
 	var original := FileAccess.get_file_as_string(a.store.path)
 	service.reads_fail = true
 	var before: int = service.publishes
@@ -135,6 +150,11 @@ func run() -> void:
 	real_inv.add_item({"item": "armadura_pedra", "quantity": 1})
 	real_inv.equip_armor(0)
 	real_inv.add_item({"item": "arco", "quantity": 1, "uid": 333})
+	real_inv.add_resource("madeira", 4)
+	real_inv.add_resource("pedra", 5)
+	check(real_inv.craft("fogueira"), "Fabricação real registra tarefa antes da transferência")
+	for index in range(real_inv.capacity):
+		if real_inv.slot_data(index).get("item") == "fogueira": real_inv.consume_slot(index, "fogueira"); break
 	for index in range(100):
 		var chest: PlacedStructure = load("res://scenes/placed_structure.tscn").instantiate()
 		chest.kind = "bau"
@@ -162,12 +182,37 @@ func run() -> void:
 	for node in resumed.get_node("WorldObjects").get_children():
 		if node is PlacedStructure and node.kind == "bau": chests.append(node)
 	check(resumed.progress_store.writable and resumed.get_node("Inventory").armor.item == "armadura_pedra" and chests.size() == 100 and chests[0].storage.count_item("madeira") == 64, "Partida restaura equipamento e baús após carregar o save transferido")
+	check(resumed.objectives.campaign_tasks.ever("fogueira") and resumed.get_node("Inventory").count_item("fogueira") == 0, "Transferência conserva fabricação mesmo depois de usar o item")
 	resumed.queue_free()
 	print("REAL SAVE: JSON=%d bytes, deflate/base64=%d bytes, chunks=%d" % [measured.raw_bytes, measured.encoded_bytes, measured.chunks.size()])
 	var report := FileAccess.open(folder + "/measurements.json", FileAccess.WRITE)
 	report.store_string(JSON.stringify({"raw_bytes": measured.raw_bytes, "encoded_bytes": measured.encoded_bytes, "chunks": measured.chunks.size()}))
 	report.close()
 	world.queue_free()
+	# A clean confirmed pilot .1 snapshot must remain clean until gameplay
+	# converts it; the next revision carries v7 plus explicit legacy credits.
+	var migration_id := await phone.create_world("Piloto v6", self)
+	var pilot: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/solo_v06.json"))
+	pilot.owner_uid = phone.uid
+	pilot.world_id = migration_id
+	pilot.world_name = "Piloto v6"
+	var old_phone := phone.account(migration_id)
+	await old_phone.write(pilot, self)
+	check((await sync.sync(old_phone, phone, pilot)).ok, "Fixture v6 confirma base real do protocolo")
+	await sync.refresh_library(pc)
+	var new_pc := pc.account(migration_id)
+	var old_prepared: Dictionary = await sync.prepare(new_pc, pc)
+	check(old_prepared.ok and old_prepared.data.version == 6 and CloudCodec.hash_state(old_prepared.data) == new_pc.sync_state.hash, "Download v6 conserva hash sem conversão durante leitura")
+	var converted: Dictionary = old_prepared.data.duplicate(true)
+	var converter := SoloCampaign.new()
+	converter.restore(converted.campaign)
+	converted.campaign = converter.capture()
+	converted.version = SaveStore.VERSION
+	converter.free()
+	await new_pc.write(converted, self)
+	check((await sync.sync(new_pc, pc, converted)).ok and new_pc.sync_state.revision == 2, "Conversão v6 para v8 publica revisão sem falso conflito")
+	var on_phone: Dictionary = await sync.prepare(old_phone, phone)
+	check(on_phone.ok and on_phone.data.version == SaveStore.VERSION and on_phone.data.campaign.legacy_migrated and on_phone.data.campaign.components == pilot.campaign.components, "Retorno PC para celular conserva créditos e componentes")
 	sync.client = actual
 	sync.config.enabled = false
 	service.queue_free()
