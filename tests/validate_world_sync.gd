@@ -91,6 +91,7 @@ func run() -> void:
 	check((await sync.sync(b, pc, changed)).ok and b.sync_state.revision == 2, "PC envia revisão seguinte sem usar relógio do aparelho")
 	prepared = await sync.prepare(a, phone)
 	check(prepared.ok and prepared.data.player.health == 88 and prepared.data.version == SaveStore.VERSION and prepared.data.campaign.components == ["lens"], "Celular recebe progresso e campanha v8 do PC sem falso conflito na migração v5")
+	check(prepared.ok and prepared.data.campaign.map_found, "Coleta do mapa acompanha o snapshot sincronizado para o celular")
 	check(prepared.ok and "fogueira" in prepared.data.objectives.campaign_tasks.crafted, "Sincronização PC para celular transporta histórico das tarefas")
 	var original := FileAccess.get_file_as_string(a.store.path)
 	service.reads_fail = true

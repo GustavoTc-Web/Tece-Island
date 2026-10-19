@@ -20,6 +20,13 @@ func command(args: Array) -> void:
 	var inv: ResourceInventory = world.get_node("Inventory")
 	var player: CharacterBody2D = world.get_node("WorldObjects/Player")
 	match request.action:
+		"tower_route":
+			# Freeze simulation hazards/clock for an input/navigation test. Never
+			# teleport or set campaign progress; movement and collection use controls.
+			world.get_node("EnemySpawner").set_physics_process(false)
+			world.get_node("Animals").set_physics_process(false)
+			world.get_node("DayNight").set_physics_process(false)
+			for enemy in get_tree().get_nodes_in_group("enemies"): enemy.set_physics_process(false)
 		"tasks_craft": inv.craft(str(request.id))
 		"tasks_equip_armor": inv.equip_armor(int(request.index))
 		"tasks_use": player.get_node("Needs").use_slot(inv, int(request.index))
@@ -259,6 +266,11 @@ func _process(_delta: float) -> void:
 		data.swimming = player.swimming
 		data.dark = world.get_node("DayNight").local_darkness
 		data.minimap = rect(world.minimap)
+		data.tower_navigation = world.minimap.tower_navigation()
+		data.tower_caption = world.minimap.destination.text
+		data.tower_caption_rect = rect(world.minimap.destination)
+		data.pickup_kind = interaction.pickup.kind if interaction.pickup is CampaignLandmark else ""
+		data.pickup_prompt = interaction.pickup.prompt() if interaction.pickup is CampaignLandmark else ""
 		data.explored = world.minimap.explored.size()
 		data.region = WorldTerrain.region_at(player.global_position).get("id", "")
 		data.wells = []
@@ -272,6 +284,7 @@ func _process(_delta: float) -> void:
 		data.objectives = world.objectives.capture()
 		data.tasks = {"state":world.objectives.campaign_tasks.capture(), "stage":world.objectives.campaign_tasks.automatic_stage(), "rows":world.objectives.campaign_tasks.rows(world.objectives.campaign_tasks.automatic_stage()), "panel_rect":rect(hud.task_panel), "collapsed":world.objectives.campaign_tasks.collapsed, "next":hud.task_panel.next_task}
 		data.tasks.conditions = {"food3":world.objectives.campaign_tasks.task("food3"), "water3":world.objectives.campaign_tasks.task("water3"), "wear":world.objectives.campaign_tasks.task("wear")}
+		data.tasks.conditions.map = world.objectives.campaign_tasks.task("map")
 		data.campaign = world.campaign.capture()
 		data.campaign_text = hud.journal_view.campaign_text.text
 		data.campaign_objective_rect = rect(hud.objective_button)

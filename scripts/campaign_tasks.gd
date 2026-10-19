@@ -148,7 +148,7 @@ func task(id: String) -> Dictionary:
 	elif id == "map":
 		result.value = int(c.map_found or c.encounter == "won")
 		result.requirement = c.night_requirement(3)
-		result.hint = "Torre da Serra (1152, -2048)."
+		result.hint = "Siga o ícone e a seta da torre: ao norte, pelo Pântano até a Serra (1152, -2048). Contorne as construções. Mapa no chão · E ou Interagir · qualquer noite 3+. Não precisa subir."
 	elif id in SoloCampaign.COMPONENTS:
 		result.value = int(CampaignEncounters.complete(id, c.temples[id]))
 		result.requirement = c.temple_requirement(id)
@@ -205,6 +205,7 @@ func journal_text() -> String:
 		for row in entries:
 			section.append("%s %s · %d/%d (%s)" % ["[x]" if row.done else "[ ]", row.title, mini(row.value, row.target), row.target, row.mode])
 			if not row.done: section.append(row.requirement if not row.requirement.is_empty() else row.hint)
+			if row.id == "map" and not row.done and not row.requirement.is_empty(): section.append(row.hint)
 			elif row.hint.begins_with("Reconhecido no save anterior"): section.append("Reconhecido no save anterior.")
 			elif row.hint.begins_with("Crédito legado"): section.append(row.hint)
 		lines.append("\n".join(section))

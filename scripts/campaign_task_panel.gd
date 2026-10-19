@@ -87,6 +87,9 @@ func layout() -> void:
 	var left := 224 * scale_factor if view.x > view.y else 12.0
 	position = Vector2(left, 8 if view.x > view.y else 190 * scale_factor)
 	var width := minf(440 if mobile else 370, view.x - left - (180 if mobile else 150))
+	if mobile:
+		var minimap: Control = tasks.world.minimap
+		width = minf(width, view.x + minimap.offset_left - left - 40)
 	custom_minimum_size = Vector2(maxf(220, width), 0)
 	size.x = custom_minimum_size.x
 	var font_size := int(maxf(16, ceilf(11 / MobileInput.css_scale()))) if mobile else 16

@@ -5,7 +5,7 @@ const source='.tools/solo-pilot-project';
 const stamp=JSON.parse(await readFile(path.join(source,'config/build-public.json'),'utf8'));
 const chat=JSON.parse(await readFile(path.join(source,'config/global-chat.json'),'utf8'));
 const sync=JSON.parse(await readFile(path.join(source,'config/world-sync.json'),'utf8'));
-if(stamp.version!=='0.9.0-solo-pilot.3'||stamp.emulated!==false||chat.allowed_uids.length!==2||JSON.stringify(chat.allowed_uids)!==JSON.stringify(sync.allowed_uids))throw Error('Configuração inválida do piloto privado.');
+if(stamp.version!=='0.9.0-solo-pilot.4'||stamp.emulated!==false||chat.allowed_uids.length!==2||JSON.stringify(chat.allowed_uids)!==JSON.stringify(sync.allowed_uids))throw Error('Configuração inválida do piloto privado.');
 const target=path.resolve('build/tece-island-'+stamp.version);
 await mkdir(target,{recursive:true});
 await cp('build/solo-pilot',path.join(target,'Tece-Island'),{recursive:true});

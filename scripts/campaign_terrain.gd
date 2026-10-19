@@ -54,7 +54,7 @@ func _draw() -> void:
 				draw_rect(Rect2(center + offset, Vector2(32, 22)), Color("3e4040"))
 			draw_arc(center, 54, 0, TAU, 24, Color("a17657"), 3)
 			draw_line(center + Vector2(-28, -28), center + Vector2(28, 28), Color("a17657"), 3)
-		draw_string(IslandTheme.BODY, center + Vector2(-100, 100), "Torre de vigia" if region.id == "mist_ridge" else "Ruínas do chamado", HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color("efe3be"))
+		draw_string(IslandTheme.BODY, center + Vector2(-100, 100), "Torre da Serra" if region.id == "mist_ridge" else "Ruínas do chamado", HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color("efe3be"))
 	# Open ruined courtyards use the existing trails and obstacles. No walls are
 	# inserted over old player buildings, resources or routes.
 	for id in ["lens", "coil"]:

@@ -364,6 +364,7 @@ func local_darkness(point: Vector2) -> bool:
 
 func journal_text() -> String:
 	var lines: Array[String] = ["RESGATE · " + objective(), "Componentes protegidos: %d/3 · sinalizador %s. Nada ocupa a bolsa." % [components.size(), "reparado" if repaired else "quebrado"], "Sinalizador: (1152, 570). Mapa: torre da Serra (1152, -2048), a partir da terceira noite."]
+	if not map_found and encounter != "won": lines.append("Como chegar ao mapa: siga o ícone da torre no minimapa. Fora do alcance, a seta na borda e o rumo indicam a direção. Partindo do sinalizador, vá ao norte pela trilha central do Pântano até a Serra Nebulosa. O mapa está no chão, na base aberta da torre; não precisa subir. Aproxime-se do pergaminho e aperte E ou toque em Interagir durante qualquer noite a partir da terceira. De dia, aguarde anoitecer; o objetivo não expira. Se uma construção antiga bloquear o acesso, aproxime-se e use Acessar mapa pela base neste Diário.")
 	if legacy_migrated: lines.append("Conversão do piloto .1: componentes e reparo anteriores preservados. Cada componente registrado credita seu desafio, sem inventar conquista de combate nem outro item. Vitórias antigas continuam concluídas. Recupere o novo mapa se a campanha ainda estiver aberta.")
 	if legacy_migrated:
 		var credits: Array[String] = []
