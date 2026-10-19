@@ -78,3 +78,31 @@ os tempos registrados não representam exploração ou sobrevivência humanas.
 PC e toque são emulados no navegador, sem partida em celular físico.
 Continuam pendentes o reteste no save real, conforto em aparelho físico e a troca
 entre duas sessões autenticadas reais. Nenhuma conclusão automática foi adicionada.
+
+## Publicação confirmada
+
+**0.9.0-solo-pilot.4**, versão salva Sites **11**, publicação **succeeded**.
+Jogo: `b3680077a01b5afdfb77a483e385dbb67aa9e1c0`.
+Fonte Sites: `a6090334702478228b7e1f7d9770e1956b1d0e56`.
+Deployment: `appgdep_6ad56571407081918d202739078606e0`.
+Audiência privada preservada. Manifesto e PCK conferidos por HTTPS;
+SHA-256 do PCK: `3cc1609fe3a938138190c52d7e890520bde7b12993d7b4e0559d6b62d61d2d4f`.
+
+Passaram **326 verificações Godot em oito suítes**, **69 verificações Web**
+(30 de navegação, 39 de tarefas), carregamento da build final em PC/toque e
+o percurso no PCK final isolado. Caminhadas nas sementes 5, 7, 77 e 117;
+fixtures v5/v6/v7/v8, noites 3, 4 e 11. O percurso guiado de acesso mediu
+13,72–13,75 s do jogo, com relógio/surgimentos controlados; não é medição humana.
+Reabertura IndexedDB, migração e sincronização com transporte de memória passaram.
+Os três controladores de templo e ausência de surgimentos comuns no interior
+foram conferidos no pacote final.
+
+Capturas com toque emulado 640×360:
+[rumo à torre](images/tower4-direction-640.png),
+[restrição diurna](images/tower4-day-640.png),
+[interação noturna](images/tower4-night-640.png).
+
+Oficial conferido por HTTPS em **0.8.3**, commit
+`7c17e63f634d4abbaca87c6f5ad1b5198601e99d`.
+Main remota preservada em `7eae4f3c6b922232dc5c1910f3fdfd26ba1a9c9d`.
+Pacote local: `build/tece-island-0.9.0-solo-pilot.4.zip`.
