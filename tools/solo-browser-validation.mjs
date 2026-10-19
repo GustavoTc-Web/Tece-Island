@@ -13,7 +13,7 @@ try{
   const state=()=>page.evaluate(()=>window.tcState);
   const wait=()=>page.waitForTimeout(250);
   const check=(ok,label)=>{results.push({dimensions,pass:!!ok,label});console.log(`${ok?'PASS':'FAIL'}: ${width} ${label}`);assert.ok(ok,label);};
-  async function tap(name){const s=await state(),key=Object.keys(s.buttons).find(k=>k===name)||Object.keys(s.buttons).find(k=>k.startsWith(name));assert.ok(key,'Missing '+name);const r=s.buttons[key];const x=(r[0]+r[2]/2)*width/s.viewport[0],y=(r[1]+r[3]/2)*height/s.viewport[1];if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);await wait();}
+  async function tap(name){await page.waitForFunction(name=>Object.keys(window.tcState?.buttons||{}).some(k=>k===name||k.startsWith(name)),name,{timeout:15000});const s=await state(),key=Object.keys(s.buttons).find(k=>k===name)||Object.keys(s.buttons).find(k=>k.startsWith(name));assert.ok(key,'Missing '+name);const r=s.buttons[key];const x=(r[0]+r[2]/2)*width/s.viewport[0],y=(r[1]+r[3]/2)*height/s.viewport[1];if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);await wait();}
   async function fixture(action,data={}){await page.evaluate(r=>tcFixture(JSON.stringify(r)),{action,...data});await wait();}
   async function interact(){if(touch)await tap('Interagir');else{await page.keyboard.press('e');await wait();}}
   try{
