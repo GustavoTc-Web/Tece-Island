@@ -1,8 +1,9 @@
 # Publicação 0.9.0 — campanha solo aprovada
 
 [Endereço oficial](https://gustavotc-web.github.io/Tece-Island/).
-Integração de `feat/solo-seventh-night` na main; tag prevista `v0.9.0`.
-O resultado do deploy e os hashes servidos serão registrados após a publicação.
+**Publicado como 0.9.0**, tag **v0.9.0**, commit `15ba9685c120ce867588668a35f3c3f53077981d`.
+Integração de `feat/solo-seventh-night` na main.
+[Workflow oficial](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39299335063): validação, exportação e deploy **success**.
 
 ## Versão promovida e escopo
 
@@ -62,3 +63,16 @@ um cliente compatível com v8 no mesmo endereço. **Voltar só ao aplicativo 0.8
 impede abrir os saves v8**, embora ele preserve o arquivo ao recusá-lo.
 Não se faz downgrade do formato, limpeza de armazenamento, reset/force-push,
 regravação de dados remotos ou restauração automática de backup antigo.
+
+
+## Resultado conferido
+
+Passaram **621 verificações Godot em 22 suítes**, **22 testes de regras** sem skips, 12 checks do transporte REST dos saves (incluídos em um desses testes) e 11 de chat nativo. No navegador: **218 checks**, incluindo PC e toque emulado, campanha, tarefas, coleta/reabertura do mapa, persistência, chat e build oficial. O novo teste de checkpoints teve 57 checks. Nenhuma dessas automações é partida humana.
+
+O PCK efetivamente servido foi baixado, conferido pelo SHA-256 do manifesto e executado isoladamente: abriu o save v5 sem conceder mapa e o checkpoint v8 de vitória no dia 7 sem repetir a tela final; ambos os originais permaneceram intactos. Configurações compiladas mantêm autenticação, as mesmas duas contas, chat/sync e intervalo de 120 s. Fixtures e configuração de desenvolvimento estão excluídas.
+
+SHA-256 do PCK publicado: `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`. Os hashes de `index.js`, `index.wasm` e dos 24 fontes declarados também foram conferidos com o commit publicado. As variáveis GitHub conservaram o mesmo digest antes/depois. Não foi executado deploy, escrita administrativa ou alteração de faturamento no Firebase.
+
+Pacote de recuperação baixado do endereço oficial: `build/tece-island-0.9.0-web-recovery.zip`, 15 arquivos, SHA-256 `3898be1934656ab88783d961851833d5fd273cbff3a5af86fa7a9bf8b87bcc65`. Não contém dados de jogadores. O procedimento de rollback em produção não foi acionado.
+
+Não há bloqueio conhecido de publicação. O relato manual aprova uma campanha completa até o dia 7; aparelho, rotação, teclado virtual, suspensão, troca entre duas sessões autenticadas reais e consumo/faturamento não receberam nova aprovação física. A evidência manual não foi ampliada para esses casos.

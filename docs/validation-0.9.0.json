@@ -1,0 +1,400 @@
+{
+  "version": "0.9.0",
+  "candidate_commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+  "integrated_feature": "d539869a4c25e37488c84195fc5d86d17d23e60e",
+  "tested_pilot": {
+    "version": "0.9.0-solo-pilot.4",
+    "site_version": 11,
+    "game_commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+    "pck_sha256": "3cc1609fe3a938138190c52d7e890520bde7b12993d7b4e0559d6b62d61d2d4f",
+    "later_changes": "documentation/evidence only"
+  },
+  "manual": {
+    "kind": "manual_user_report",
+    "campaigns": 1,
+    "victory_day": 7,
+    "bugs_reported_during_run": false,
+    "quote": "Concluí uma partida no piloto, alcancei a vitória no sétimo dia e não encontrei bugs durante esse percurso.",
+    "independent_observation": false,
+    "device": "not specified",
+    "other_physical_tests_approved": false
+  },
+  "scope": {
+    "runtime_paths": [
+      "scripts",
+      "scenes",
+      "assets",
+      "web",
+      "project.godot",
+      "export_presets.cfg",
+      "config",
+      "firestore.rules",
+      "firestore.indexes.json"
+    ],
+    "identical_to_tested_pilot": true,
+    "added_game_features": false,
+    "save_schema": 8,
+    "campaign_schema": 2,
+    "tasks_schema": 1,
+    "ide_changes_preserved": true
+  },
+  "native": {
+    "checks": 621,
+    "suites": [
+      {
+        "suite": "world_library",
+        "checks": 19,
+        "failures": 0
+      },
+      {
+        "suite": "account_progress",
+        "checks": 21,
+        "failures": 0
+      },
+      {
+        "suite": "session_progress",
+        "checks": 10,
+        "failures": 0
+      },
+      {
+        "suite": "save_reliability",
+        "checks": 20,
+        "failures": 0
+      },
+      {
+        "suite": "world_sync",
+        "checks": 30,
+        "failures": 0
+      },
+      {
+        "suite": "chest_bow_save",
+        "checks": 26,
+        "failures": 0
+      },
+      {
+        "suite": "auth_release",
+        "checks": 10,
+        "failures": 0
+      },
+      {
+        "suite": "sync_pilot",
+        "checks": 13,
+        "failures": 0
+      },
+      {
+        "suite": "sync_handoff",
+        "checks": 14,
+        "failures": 0
+      },
+      {
+        "suite": "solo_campaign",
+        "checks": 60,
+        "failures": 0
+      },
+      {
+        "suite": "solo_combat",
+        "checks": 33,
+        "failures": 0
+      },
+      {
+        "suite": "solo_migration",
+        "checks": 26,
+        "failures": 0
+      },
+      {
+        "suite": "campaign_tasks",
+        "checks": 46,
+        "failures": 0
+      },
+      {
+        "suite": "tower_navigation",
+        "checks": 125,
+        "failures": 0
+      },
+      {
+        "suite": "pilot_reopen",
+        "checks": 57,
+        "failures": 0
+      },
+      {
+        "suite": "controls",
+        "checks": 7,
+        "failures": 0
+      },
+      {
+        "suite": "journal",
+        "checks": 18,
+        "failures": 0
+      },
+      {
+        "suite": "objectives",
+        "checks": 14,
+        "failures": 0
+      },
+      {
+        "suite": "monsters",
+        "checks": 18,
+        "failures": 0
+      },
+      {
+        "suite": "expansion",
+        "checks": 15,
+        "failures": 0
+      },
+      {
+        "suite": "wells",
+        "checks": 12,
+        "failures": 0
+      },
+      {
+        "suite": "ruins",
+        "checks": 27,
+        "failures": 0
+      }
+    ]
+  },
+  "backend": {
+    "rules_tests": 22,
+    "passed": 22,
+    "skipped": 0,
+    "failures": 0,
+    "embedded_firestore_native_checks": 12,
+    "separate_chat_native_checks": 11,
+    "project": "demo-tece-island",
+    "production_firebase_touched": false
+  },
+  "web": {
+    "checks": 218,
+    "suites": [
+      {
+        "suite": "daily_tasks",
+        "checks": 39,
+        "failures": 0,
+        "physical": false
+      },
+      {
+        "suite": "tower",
+        "checks": 33,
+        "failures": 0,
+        "physical": false
+      },
+      {
+        "suite": "campaign",
+        "checks": 63,
+        "failures": 0,
+        "physical": false
+      },
+      {
+        "suite": "save_browser",
+        "checks": 12,
+        "failures": 0,
+        "physical": false
+      },
+      {
+        "suite": "chat",
+        "checks": 45,
+        "failures": 0,
+        "physical": false
+      },
+      {
+        "suite": "local_release",
+        "checks": 13,
+        "failures": 0,
+        "physical": false
+      },
+      {
+        "suite": "official_release",
+        "checks": 13,
+        "failures": 0,
+        "physical": false
+      }
+    ]
+  },
+  "local_pack": {
+    "auth_config_preserved": true,
+    "build": {
+      "campaign_schema": 2,
+      "commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+      "save_schema": 8,
+      "tasks_schema": 1,
+      "tested_pilot": "0.9.0-solo-pilot.4",
+      "tested_pilot_commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+      "version": "0.9.0"
+    },
+    "chat_enabled": true,
+    "checkpoints": [
+      {
+        "encounter": "idle",
+        "file_unchanged": true,
+        "id": "legacy-v5",
+        "pass": true,
+        "victory_day": 0
+      },
+      {
+        "encounter": "won",
+        "file_unchanged": true,
+        "id": "pilot-v8-won",
+        "pass": true,
+        "victory_day": 7
+      }
+    ],
+    "dev_config_excluded": true,
+    "fixtures_excluded": true,
+    "interval_seconds": 120,
+    "no_production_authentication": true,
+    "pass": true,
+    "same_two_accounts": true,
+    "sync_enabled": true
+  },
+  "rollout": {
+    "same_two_authorized_accounts": true,
+    "auth_configuration_matches_pilot": true,
+    "variable_names": [
+      "FIREBASE_API_KEY",
+      "FIREBASE_AUTH_DOMAIN",
+      "FIREBASE_AUTH_ENABLED",
+      "FIREBASE_PROJECT_ID",
+      "TECE_PILOT_ALLOWED_UIDS"
+    ],
+    "variables_digest": "4ad90aec7bc4d5feadaf2d66de6dd1e87055f2418b24a0bf72973e62d84f2625",
+    "variables_preserved_after_publication": true,
+    "firebase_production_mutations": false,
+    "billing_enabled_by_this_release": false
+  },
+  "pending_physical": [
+    "Device/browser not specified in the manual report.",
+    "Rotation, virtual keyboard and suspend/resume are not newly approved by that report.",
+    "Two real authenticated devices/accounts and billing consumption were not newly measured."
+  ],
+  "recovery": {
+    "document": "docs/RECUPERACAO_0_9_0.md",
+    "compatible_ref": "v0.9.0",
+    "same_origin_required_for_local_saves": true,
+    "application_083_cannot_read_v8": true,
+    "production_rollback_executed": false,
+    "bundle": {
+      "path": "build/tece-island-0.9.0-web-recovery.zip",
+      "bytes": 10813589,
+      "sha256": "3898be1934656ab88783d961851833d5fd273cbff3a5af86fa7a9bf8b87bcc65",
+      "downloaded_from_official": true,
+      "files": 15,
+      "commit": "15ba9685c120ce867588668a35f3c3f53077981d"
+    }
+  },
+  "publication": {
+    "url": "https://gustavotc-web.github.io/Tece-Island/",
+    "version": "0.9.0",
+    "commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+    "tag": "v0.9.0",
+    "tag_object": "3308f1f299a5d97ddf73ac828b7fa17b63f30490",
+    "workflow_id": 39299335063,
+    "workflow_url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39299335063",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "validate / firestore",
+        "conclusion": "success"
+      },
+      {
+        "name": "export",
+        "conclusion": "success"
+      },
+      {
+        "name": "deploy",
+        "conclusion": "success"
+      }
+    ],
+    "updated_at": "2026-10-19T18:06:24Z",
+    "manifest": {
+      "version": "0.9.0",
+      "commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+      "save_schema": 8,
+      "campaign_schema": 2,
+      "tasks_schema": 1,
+      "tested_pilot": "0.9.0-solo-pilot.4",
+      "tested_pilot_commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+      "chat_enabled": true,
+      "world_sync_enabled": true,
+      "allowed_account_count": 2,
+      "chat_transport": "rest_incremental_with_window_count",
+      "chat_poll_seconds": 5,
+      "chat_idle_poll_seconds": 15,
+      "chat_idle_after_seconds": 60,
+      "chat_reconcile_seconds": 120,
+      "world_sync_interval_seconds": 120,
+      "sha256": {
+        "index.pck": "2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae",
+        "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "source_sha256": {
+        "firestore.rules": "e55790951105d5bf628fe90a4dbe3f0e80a5418c1d2de689b65cbe59e11b89cf",
+        "scripts/world_sync.gd": "23057c2cc1d1da1b095e60c12ad30c57b3279d58dd51f4411f04a42dd54ef47e",
+        "scripts/firestore_client.gd": "44b7d4da955b0e90218bca34027071b210ba4322b800c4ec2022ce3f499d36a0",
+        "scripts/account_progress.gd": "0f6de4b64c55e73eccb6a621cd9cf4ebe4501b99b4adf18b464a82b0c6736810",
+        "scripts/world_library.gd": "549869700377ac39a0fbd7fa19b853c8b6a16bd1c373ba21bc846a22758244aa",
+        "scripts/save_store.gd": "466fdd877b91200f9b7b3917b160b5b80e6f172529e75c51b6c38d78e0bc8f92",
+        "scripts/save_validation.gd": "8c2fa625e7fd107f808f4d585bef2572349e9c6abf7f433d6a85cbec57ffe277",
+        "scripts/progress_controller.gd": "229ab297e0bc10a898c23e9f3abf5d843b958808558dc0ae3ae168eec58e302a",
+        "scripts/chat/global_chat.gd": "1d82e3b68ba9c48eb3398c54040d95a18484b9422e12343c6132efaf38d6ea00",
+        "scripts/chat/chat_client.gd": "82923f1895fa8ab285474249b8c23e4ef25c880bd71a9fada5fadd465578ee1f",
+        "scripts/solo_campaign.gd": "64608a3e151cb429e2d6bfcf6ef45087f3f3035d613cb91a9e24b44e6c742166",
+        "scripts/campaign_tasks.gd": "2ecb7cb5163e8e5ad671fcb51f2fc9ae194be5a8a6d3ce897b72f8f59b003138",
+        "scripts/campaign_landmark.gd": "63ea07422713ced5d690f8efc4650e3e02fdba43fcb7faf8cccf2a906a8cde8b",
+        "scripts/campaign_terrain.gd": "5135665ebe91092db8fa78c5ffd4414d000f4f8b43dd1b9fe050d833aaa1e941",
+        "scripts/campaign_temple.gd": "4403d66bf4a4d6f3eb7d5924f79a4cec3a5c20c13521bd641f2a7ff1eabee741",
+        "scripts/campaign_encounters.gd": "adf3437816668b8b97793f79749105f233c76f1ecf25b2736fcd10a8aac0a3f6",
+        "scripts/campaign_task_panel.gd": "8e3fb8ba53cdd43843d48606aeb5b6ff697af17cb32baba15843dd438df40587",
+        "scripts/minimap.gd": "a3fcac2a00419bfd313a2bb661034758c6ae5b41d0e59e5ae8860261c76befe0",
+        "scripts/day_night.gd": "f381f80889f7b3a21129ad719dcbae54212b44d1b3527129fc5c1f47f26568dd",
+        "scripts/enemy_spawner.gd": "5bb510dfc5cc6adb37217b0abf77255938486511e21b197fad9adea118746ae3",
+        "scripts/forest_creature.gd": "955cd4b356411330988c323866687422f7f7c185f16c9c88a90d9e0b41d0c3c2",
+        "scripts/world.gd": "fbed476eb5c893b0c04cd25c6af77201948d8d7121d1876081992a62e79892ad",
+        "scripts/world_progress.gd": "058f13bc27bb5686e732576e19be2a53e587dc980ed1e366a2b30effb2a10516",
+        "web/shell.html": "8deb22873146a0d4b75780c1420aa73229405134069fad1f2a3ca327ecee44c8"
+      }
+    }
+  },
+  "candidate_ci": {
+    "id": 39186294066,
+    "commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+    "conclusion": "success",
+    "url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39186294066"
+  },
+  "public_pack": {
+    "auth_config_preserved": true,
+    "build": {
+      "campaign_schema": 2,
+      "commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+      "save_schema": 8,
+      "tasks_schema": 1,
+      "tested_pilot": "0.9.0-solo-pilot.4",
+      "tested_pilot_commit": "b3680077a01b5afdfb77a483e385dbb67aa9e1c0",
+      "version": "0.9.0"
+    },
+    "chat_enabled": true,
+    "checkpoints": [
+      {
+        "encounter": "idle",
+        "file_unchanged": true,
+        "id": "legacy-v5",
+        "pass": true,
+        "victory_day": 0
+      },
+      {
+        "encounter": "won",
+        "file_unchanged": true,
+        "id": "pilot-v8-won",
+        "pass": true,
+        "victory_day": 7
+      }
+    ],
+    "dev_config_excluded": true,
+    "fixtures_excluded": true,
+    "interval_seconds": 120,
+    "no_production_authentication": true,
+    "pass": true,
+    "same_two_accounts": true,
+    "sync_enabled": true
+  }
+}
