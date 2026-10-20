@@ -1,0 +1,325 @@
+{
+  "version": "0.9.0-multiplayer-pilot.2",
+  "built_commit": "223fd26b107faeba16d87c3e7171bebeffde3174",
+  "site_source_commit": "8a314fce701d33597b27bc42c33f126a49d4f9b8",
+  "deployment": {
+    "id": "appgdep_6ad7c0a00de081919c00727d32828247",
+    "status": "succeeded",
+    "site_version": 2,
+    "url": "https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/"
+  },
+  "emulated_web": {
+    "checks": [
+      {
+        "label": "Actual Multiplayer — teste menu entry opens first Godot Web client",
+        "pass": true
+      },
+      {
+        "label": "PC keyboard moves to actual tree and shows harvest interaction",
+        "pass": true
+      },
+      {
+        "label": "Late mobile client receives tree progress and current PC position",
+        "pass": true
+      },
+      {
+        "label": "Both actual clients render the other account nickname",
+        "pass": true
+      },
+      {
+        "label": "PC 1920 HUD stays compact in CSS pixels rather than scaling with the canvas",
+        "pass": true
+      },
+      {
+        "label": "PC: camera shows both nearby actors below HUD",
+        "pass": true
+      },
+      {
+        "label": "Mobile: camera shows both nearby actors below HUD",
+        "pass": true
+      },
+      {
+        "label": "PC keyboard and mobile joystick move both independent players simultaneously",
+        "pass": true
+      },
+      {
+        "label": "Mobile joystick moves only own actor and releasing touch stops input",
+        "pass": true
+      },
+      {
+        "label": "Mobile movement leaves PC actor at PC position",
+        "pass": true
+      },
+      {
+        "label": "Second finger harvests while first finger still holds the moving joystick",
+        "pass": true
+      },
+      {
+        "label": "Simultaneous PC key/mobile touch deplete shared tree and grant one reward",
+        "pass": true
+      },
+      {
+        "label": "Disconnected mobile shows explicit server state",
+        "pass": true
+      },
+      {
+        "label": "Reconnect restores same character, room and inventory",
+        "pass": true
+      },
+      {
+        "label": "Reconnect retains exhausted tree without duplicate reward",
+        "pass": true
+      },
+      {
+        "label": "Compact HUD fits landscape mobile viewport",
+        "pass": true
+      },
+      {
+        "label": "Mobile Coletar touch target >=44 CSS pixels",
+        "pass": true
+      },
+      {
+        "label": "Mobile Machado touch target >=44 CSS pixels",
+        "pass": true
+      },
+      {
+        "label": "Mobile Menu touch target >=44 CSS pixels",
+        "pass": true
+      },
+      {
+        "label": "Mobile Mãos touch target >=44 CSS pixels",
+        "pass": true
+      },
+      {
+        "label": "Mobile Picareta touch target >=44 CSS pixels",
+        "pass": true
+      },
+      {
+        "label": "Mobile equipment button requests server-owned tool",
+        "pass": true
+      },
+      {
+        "label": "Opening existing chat prevents gameplay controls",
+        "pass": true
+      },
+      {
+        "label": "A stalled open socket pauses controls and hides joystick/collect after five seconds without state",
+        "pass": true
+      },
+      {
+        "label": "Automatic reconnect after a silent connection preserves identity and inventory",
+        "pass": true
+      },
+      {
+        "label": "Room-full presentation is explicit (injected UI status)",
+        "pass": true
+      },
+      {
+        "label": "Multiplayer Menu returns through existing session to solo world library",
+        "pass": true
+      },
+      {
+        "label": "Initial outage shows timed retry with gameplay controls hidden",
+        "pass": true
+      },
+      {
+        "label": "No Godot script errors in either Web client",
+        "pass": true
+      }
+    ],
+    "errors": []
+  },
+  "published_anonymous_browser_qa": {
+    "version": "0.9.0-multiplayer-pilot.2",
+    "commit": "223fd26b107faeba16d87c3e7171bebeffde3174",
+    "endpoint": "wss://unto-websites-proceeds-parts.trycloudflare.com/room",
+    "checks": [
+      {
+        "pass": true,
+        "label": "Owner-private endpoint serves manifest with scoped authorization"
+      },
+      {
+        "pass": true,
+        "label": "Published manifest identifies exact non-emulated multiplayer build"
+      },
+      {
+        "pass": true,
+        "label": "Published client references current secure game endpoint"
+      },
+      {
+        "pass": true,
+        "label": "Published hash manifest matches prepared artifact"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/AtkinsonHyperlegible-OFL.txt"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/AtkinsonHyperlegible-Regular.ttf"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/BreeSerif-OFL.txt"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/BreeSerif-Regular.ttf"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-0.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-1.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-2.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-3.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-4.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.apple-touch-icon.png"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.audio.position.worklet.js"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.audio.worklet.js"
+      },
+      {
+        "pass": true,
+        "label": "Published HTML contains current game bootstrap and pilot label"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.icon.png"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.js"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.pck"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.png"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match pilot-engine.json"
+      },
+      {
+        "pass": true,
+        "label": "PC: published Godot Web presents mandatory Firebase login"
+      },
+      {
+        "pass": true,
+        "label": "PC: test credential bridge is absent"
+      },
+      {
+        "pass": true,
+        "label": "PC: real browser on private pilot origin reaches WSS and anonymous action is refused"
+      },
+      {
+        "pass": true,
+        "label": "Mobile emulated: published Godot Web presents mandatory Firebase login"
+      },
+      {
+        "pass": true,
+        "label": "Mobile: test credential bridge is absent"
+      },
+      {
+        "pass": true,
+        "label": "Mobile: real browser on private pilot origin reaches WSS and anonymous action is refused"
+      },
+      {
+        "pass": true,
+        "label": "Published mobile login remains accessible in portrait"
+      },
+      {
+        "pass": true,
+        "label": "Published Godot Web has no GDScript/JavaScript errors"
+      }
+    ],
+    "errors": [],
+    "physical": false,
+    "positiveRealAccountLoginTested": false,
+    "audioWorkletDelivery": "Hash-verified published bytes supplied as Blobs in service-auth harness; human cookie delivery and physical audio not tested"
+  },
+  "compiled_pack": {
+    "checks": [
+      {
+        "label": "exact committed pilot build",
+        "pass": true
+      },
+      {
+        "label": "pilot feature and local server endpoint",
+        "pass": true
+      },
+      {
+        "label": "same two authorized accounts and preserved chat/sync",
+        "pass": true
+      },
+      {
+        "label": "server files and test bridge excluded",
+        "pass": true
+      },
+      {
+        "label": "compiled multiplayer opens with login guidance, no solo save method",
+        "pass": true
+      },
+      {
+        "label": "actual pilot pack loads legacy-v5 without altering original",
+        "pass": true
+      },
+      {
+        "label": "actual pilot pack loads pilot-v8-won without altering original",
+        "pass": true
+      }
+    ],
+    "commit": "223fd26b107faeba16d87c3e7171bebeffde3174",
+    "pass": true,
+    "version": "0.9.0-multiplayer-pilot.2"
+  },
+  "compiled_forged_token_probe": {
+    "compiled_client_correct_endpoint": true,
+    "compiled_client_real_wss_rejects_forged_token": true,
+    "endpoint": "wss://unto-websites-proceeds-parts.trycloudflare.com/room",
+    "pass": true,
+    "positive_real_login": false
+  },
+  "manual_login_assistance": {
+    "recorded_at": "2026-10-20T19:31:10.345Z",
+    "version": "0.9.0-multiplayer-pilot.2",
+    "connected_authenticated_accounts": 2,
+    "source": "Production authoritative server health; one player per verified UID, exactly two allowed accounts",
+    "user_report": "Manual login with a different account in each isolated Edge profile",
+    "movement_and_harvest_manual_status": "Awaiting user observations",
+    "physical_mobile_playthrough_approved": false
+  },
+  "published_html": {
+    "unchanged_source_except_provider_insertion": true,
+    "provider_insertion_bytes": 938
+  },
+  "test_counts": {
+    "protocol": 19,
+    "firebase_rules": 22,
+    "native_chat": 11,
+    "native_solo_and_isolation": 282
+  },
+  "physical_mobile_gameplay_approved": false
+}

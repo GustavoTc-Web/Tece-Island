@@ -109,7 +109,49 @@ manuais. Login manual informado pelo usuário não equivale a partida validada.
   [servidor indisponível](images/multiplayer-2-mobile-offline-800.png).
 
 No login assistido, o usuário informou que entrou manualmente em duas contas
-reais diferentes, em perfis Edge isolados. A ferramenta de UI não disponibiliza
-essas janelas; a entrada efetiva na sala será confirmada pelo serviço e pelo
-reteste do usuário após a publicação. Não se registra partida física aprovada
-com base nesse login ou na emulação.
+reais diferentes, em perfis Edge isolados. Após publicar, o health do servidor
+oficial da sala confirmou **2 jogadores autenticados** na .2. Como há um jogador
+por UID verificado e apenas duas contas autorizadas, isso comprova a entrada
+das duas identidades reais no serviço. A ferramenta de UI não disponibiliza
+essas janelas; movimento/coleta/reconexão manuais continuam aguardando relato.
+Não se registra partida física aprovada com base apenas nesse login.
+
+### Pacote publicado e conferido
+
+- Código compilado: `223fd26b107faeba16d87c3e7171bebeffde3174`.
+- [CI do código aprovada](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39483234969).
+- Fonte do Site: `8a314fce701d33597b27bc42c33f126a49d4f9b8`.
+- Site privado, versão de publicação **2**, acesso preservado para o proprietário.
+- Deployment: `appgdep_6ad7c0a00de081919c00727d32828247`, **succeeded**.
+- Versão salva:
+  `appgprj_6ad6b7bc03c481918665130efcc41739~appgver_75fb67b0334881919b1634b1412b5958`.
+- WSS compilado e verificado:
+  `wss://unto-websites-proceeds-parts.trycloudflare.com/room`.
+- PCK SHA256:
+  `38bcdd75774f83f65cbee74858f415932b2d930f8968489ce86c1bc1898279ce`.
+- Auditoria do PCK final: **7 verificações**, incluindo abertura de cópias de save
+  legado v5 e v8 vencido no dia 7; nenhum original alterado. Cliente compilado
+  conectou ao WSS real e recebeu recusa correta para token sem assinatura.
+- Pós-deploy: **30 verificações** no cliente realmente servido. Os 17 arquivos
+  estáticos além do HTML correspondem por SHA256. HTML conserva toda a fonte
+  preparada, com a inserção de 938 caracteres do provedor Sites; seu hash integral
+  servido é diferente por esse motivo. Manifesto, rótulo .2, URL e PCK conferidos.
+- Evidências da tela de login do cliente **publicado**, sem partida autenticada
+  nesse harness: [PC](images/multiplayer-2-published-login-pc.png) e
+  [mobile emulado](images/multiplayer-2-published-login-mobile.png).
+  As imagens da sala acima são de dois clientes emulados do mesmo código .2.
+  No harness de acesso privado, os dois AudioWorklets são fornecidos por Blob
+  usando os mesmos bytes publicados e verificados por hash, pois esse tipo de
+  requisição não recebe o cabeçalho de serviço do Playwright. Isso é específico
+  do teste; o aplicativo publicado não foi alterado para contornar autenticação.
+- `Status`: servidor, túnel e endpoint publicado saudáveis; `needs_republish=False`.
+- Oficial reconferido em HTTP: **0.9.0**, commit `15ba9685`, PCK efetivamente
+  servido com SHA256 `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`.
+  `main` continua em `c790758`, tag `v0.9.0` preservada. Digest das configurações
+  e das duas contas: `4ad90aec7bc4d5feadaf2d66de6dd1e87055f2418b24a0bf72973e62d84f2625`.
+  Regras, configurações Firebase, faturamento, saves e alterações do IDE não foram
+  modificados por esta correção.
+
+**Pendências reais:** confirmar nos aparelhos físicos movimento, coleta, chat,
+reconexão e multitoque; os testes automatizados não aprovam essas etapas humanas.
+A disponibilidade continua dependente deste PC e do Quick Tunnel temporário.
