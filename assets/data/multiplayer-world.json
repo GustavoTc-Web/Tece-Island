@@ -1,0 +1,8636 @@
+{
+  "bounds": [
+    -3072.0,
+    -2560.0,
+    9984.0,
+    5632.0
+  ],
+  "buildings": [
+    {
+      "id": "building:550:1250",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 550.0,
+      "y": 1250.0
+    },
+    {
+      "id": "building:2800:460",
+      "kind": "castelo",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 2800.0,
+      "y": 460.0
+    },
+    {
+      "id": "building:3250:1120",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 3250.0,
+      "y": 1120.0
+    },
+    {
+      "id": "building:4230:460",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4230.0,
+      "y": 460.0
+    },
+    {
+      "id": "building:4780:1120",
+      "kind": "castelo",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4780.0,
+      "y": 1120.0
+    },
+    {
+      "id": "building:4930:430",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4930.0,
+      "y": 430.0
+    },
+    {
+      "id": "building:5680:440",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 5680.0,
+      "y": 440.0
+    },
+    {
+      "id": "building:6200:1120",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 6200.0,
+      "y": 1120.0
+    },
+    {
+      "id": "building:6580:400",
+      "kind": "posto",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 6580.0,
+      "y": 400.0
+    },
+    {
+      "id": "building:1502:-2258",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.541176497936249,
+        0.619607865810394,
+        0.592156887054443
+      ],
+      "x": 1502.0,
+      "y": -2258.0
+    },
+    {
+      "id": "building:3422:-2258",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.443137258291245,
+        0.39215686917305,
+        0.368627458810806
+      ],
+      "x": 3422.0,
+      "y": -2258.0
+    },
+    {
+      "id": "building:-2304:419",
+      "kind": "casa",
+      "temple": true,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -2304.0,
+      "y": 418.909088134766
+    },
+    {
+      "id": "building:-2304:1117",
+      "kind": "casa",
+      "temple": true,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -2304.0,
+      "y": 1117.09094238281
+    },
+    {
+      "id": "building:-768:1955",
+      "kind": "casa",
+      "temple": true,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -768.0,
+      "y": 1954.90905761719
+    },
+    {
+      "id": "building:-768:2653",
+      "kind": "casa",
+      "temple": true,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -768.0,
+      "y": 2653.0908203125
+    },
+    {
+      "id": "building:-1326:-1134",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -1326.0,
+      "y": -1134.0
+    },
+    {
+      "id": "building:-846:-1134",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -846.0,
+      "y": -1134.0
+    },
+    {
+      "id": "building:-366:-1134",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": -366.0,
+      "y": -1134.0
+    },
+    {
+      "id": "building:498:-1326",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.635294139385223,
+        0.733333349227905,
+        0.690196096897125
+      ],
+      "x": 498.0,
+      "y": -1326.0
+    },
+    {
+      "id": "building:1074:-1326",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.635294139385223,
+        0.733333349227905,
+        0.690196096897125
+      ],
+      "x": 1074.0,
+      "y": -1326.0
+    },
+    {
+      "id": "building:1650:-1326",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.635294139385223,
+        0.733333349227905,
+        0.690196096897125
+      ],
+      "x": 1650.0,
+      "y": -1326.0
+    },
+    {
+      "id": "building:2514:-1134",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 2514.0,
+      "y": -1134.0
+    },
+    {
+      "id": "building:2994:-1134",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 2994.0,
+      "y": -1134.0
+    },
+    {
+      "id": "building:3474:-1134",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 3474.0,
+      "y": -1134.0
+    },
+    {
+      "id": "building:4050:-1326",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4050.0,
+      "y": -1326.0
+    },
+    {
+      "id": "building:4530:-1326",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4530.0,
+      "y": -1326.0
+    },
+    {
+      "id": "building:5010:-1326",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 5010.0,
+      "y": -1326.0
+    },
+    {
+      "id": "building:498:1746",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 498.0,
+      "y": 1746.0
+    },
+    {
+      "id": "building:1074:1746",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 1074.0,
+      "y": 1746.0
+    },
+    {
+      "id": "building:1650:1746",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 1650.0,
+      "y": 1746.0
+    },
+    {
+      "id": "building:2514:1938",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.635294139385223,
+        0.733333349227905,
+        0.690196096897125
+      ],
+      "x": 2514.0,
+      "y": 1938.0
+    },
+    {
+      "id": "building:2994:1938",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.635294139385223,
+        0.733333349227905,
+        0.690196096897125
+      ],
+      "x": 2994.0,
+      "y": 1938.0
+    },
+    {
+      "id": "building:3474:1938",
+      "kind": "casa",
+      "temple": false,
+      "tint": [
+        0.635294139385223,
+        0.733333349227905,
+        0.690196096897125
+      ],
+      "x": 3474.0,
+      "y": 1938.0
+    },
+    {
+      "id": "building:4050:1938",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4050.0,
+      "y": 1938.0
+    },
+    {
+      "id": "building:4530:1938",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 4530.0,
+      "y": 1938.0
+    },
+    {
+      "id": "building:5010:1938",
+      "kind": "fazenda",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 5010.0,
+      "y": 1938.0
+    },
+    {
+      "id": "building:5586:1746",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 5586.0,
+      "y": 1746.0
+    },
+    {
+      "id": "building:6066:1746",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 6066.0,
+      "y": 1746.0
+    },
+    {
+      "id": "building:6546:1746",
+      "kind": "barro",
+      "temple": false,
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "x": 6546.0,
+      "y": 1746.0
+    }
+  ],
+  "colliders": [
+    {
+      "owner": "madeira:180:210",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 180.0,
+      "y": 210.0
+    },
+    {
+      "owner": "madeira:320:290",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 320.0,
+      "y": 290.0
+    },
+    {
+      "owner": "madeira:490:180",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 490.0,
+      "y": 180.0
+    },
+    {
+      "owner": "madeira:670:330",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 670.0,
+      "y": 330.0
+    },
+    {
+      "owner": "madeira:850:220",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 850.0,
+      "y": 220.0
+    },
+    {
+      "owner": "madeira:1000:390",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1000.0,
+      "y": 390.0
+    },
+    {
+      "owner": "madeira:1320:250",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1320.0,
+      "y": 250.0
+    },
+    {
+      "owner": "madeira:1490:370",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1490.0,
+      "y": 370.0
+    },
+    {
+      "owner": "madeira:1650:200",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1650.0,
+      "y": 200.0
+    },
+    {
+      "owner": "madeira:1850:310",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1850.0,
+      "y": 310.0
+    },
+    {
+      "owner": "madeira:2040:210",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2040.0,
+      "y": 210.0
+    },
+    {
+      "owner": "madeira:2180:420",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2180.0,
+      "y": 420.0
+    },
+    {
+      "owner": "madeira:210:520",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 210.0,
+      "y": 520.0
+    },
+    {
+      "owner": "madeira:400:610",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 400.0,
+      "y": 610.0
+    },
+    {
+      "owner": "madeira:570:480",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 570.0,
+      "y": 480.0
+    },
+    {
+      "owner": "madeira:760:600",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 760.0,
+      "y": 600.0
+    },
+    {
+      "owner": "madeira:910:530",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 910.0,
+      "y": 530.0
+    },
+    {
+      "owner": "madeira:1400:530",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1400.0,
+      "y": 530.0
+    },
+    {
+      "owner": "madeira:1590:590",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1590.0,
+      "y": 590.0
+    },
+    {
+      "owner": "madeira:1790:490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1790.0,
+      "y": 490.0
+    },
+    {
+      "owner": "madeira:2010:610",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2010.0,
+      "y": 610.0
+    },
+    {
+      "owner": "madeira:200:1000",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 200.0,
+      "y": 1000.0
+    },
+    {
+      "owner": "madeira:390:920",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 390.0,
+      "y": 920.0
+    },
+    {
+      "owner": "madeira:590:1100",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 590.0,
+      "y": 1100.0
+    },
+    {
+      "owner": "madeira:760:970",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 760.0,
+      "y": 970.0
+    },
+    {
+      "owner": "madeira:920:1090",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 920.0,
+      "y": 1090.0
+    },
+    {
+      "owner": "madeira:1390:1050",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1390.0,
+      "y": 1050.0
+    },
+    {
+      "owner": "madeira:1580:940",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1580.0,
+      "y": 940.0
+    },
+    {
+      "owner": "madeira:1790:1120",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1790.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "madeira:2000:980",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2000.0,
+      "y": 980.0
+    },
+    {
+      "owner": "madeira:2180:1110",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2180.0,
+      "y": 1110.0
+    },
+    {
+      "owner": "madeira:180:1330",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 180.0,
+      "y": 1330.0
+    },
+    {
+      "owner": "madeira:370:1220",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 370.0,
+      "y": 1220.0
+    },
+    {
+      "owner": "madeira:570:1390",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 570.0,
+      "y": 1390.0
+    },
+    {
+      "owner": "madeira:740:1290",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 740.0,
+      "y": 1290.0
+    },
+    {
+      "owner": "madeira:990:1380",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 990.0,
+      "y": 1380.0
+    },
+    {
+      "owner": "madeira:1320:1350",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1320.0,
+      "y": 1350.0
+    },
+    {
+      "owner": "madeira:1520:1230",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1520.0,
+      "y": 1230.0
+    },
+    {
+      "owner": "madeira:1700:1390",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1700.0,
+      "y": 1390.0
+    },
+    {
+      "owner": "madeira:1900:1300",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1900.0,
+      "y": 1300.0
+    },
+    {
+      "owner": "madeira:2110:1390",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2110.0,
+      "y": 1390.0
+    },
+    {
+      "owner": "madeira:80:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 80.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:80:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 80.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:230:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 230.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:230:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 230.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:380:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 380.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:380:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 380.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:530:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 530.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:530:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 530.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:680:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 680.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:680:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 680.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:830:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 830.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:830:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 830.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:980:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 980.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:980:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 980.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:1280:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1280.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:1280:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1280.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:1430:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1430.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:1430:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1430.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:1580:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1580.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:1580:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1580.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:1730:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1730.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:1730:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1730.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:1880:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1880.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:1880:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1880.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:2030:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2030.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:2030:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2030.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:2180:105",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2180.0,
+      "y": 105.0
+    },
+    {
+      "owner": "madeira:2180:1490",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2180.0,
+      "y": 1490.0
+    },
+    {
+      "owner": "madeira:65:260",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 260.0
+    },
+    {
+      "owner": "madeira:2240:260",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 260.0
+    },
+    {
+      "owner": "madeira:65:420",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 420.0
+    },
+    {
+      "owner": "madeira:2240:420",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 420.0
+    },
+    {
+      "owner": "madeira:65:580",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 580.0
+    },
+    {
+      "owner": "madeira:2240:580",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 580.0
+    },
+    {
+      "owner": "madeira:65:900",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 900.0
+    },
+    {
+      "owner": "madeira:2240:900",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 900.0
+    },
+    {
+      "owner": "madeira:65:1060",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 1060.0
+    },
+    {
+      "owner": "madeira:2240:1060",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 1060.0
+    },
+    {
+      "owner": "madeira:65:1220",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 1220.0
+    },
+    {
+      "owner": "madeira:2240:1220",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 1220.0
+    },
+    {
+      "owner": "madeira:65:1380",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 65.0,
+      "y": 1380.0
+    },
+    {
+      "owner": "madeira:2240:1380",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2240.0,
+      "y": 1380.0
+    },
+    {
+      "owner": "pedra:460:390",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 460.0,
+      "y": 380.0
+    },
+    {
+      "owner": "pedra:840:420",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 840.0,
+      "y": 410.0
+    },
+    {
+      "owner": "pedra:1460:180",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1460.0,
+      "y": 170.0
+    },
+    {
+      "owner": "pedra:1930:450",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1930.0,
+      "y": 440.0
+    },
+    {
+      "owner": "pedra:350:1100",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 350.0,
+      "y": 1090.0
+    },
+    {
+      "owner": "pedra:810:1200",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 810.0,
+      "y": 1190.0
+    },
+    {
+      "owner": "pedra:1450:1190",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1450.0,
+      "y": 1180.0
+    },
+    {
+      "owner": "pedra:1920:1190",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1920.0,
+      "y": 1180.0
+    },
+    {
+      "owner": "pedra:2090:890",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 2090.0,
+      "y": 880.0
+    },
+    {
+      "owner": "fibra:1050:640",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1050.0,
+      "y": 640.0
+    },
+    {
+      "owner": "fibra:1250:640",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1250.0,
+      "y": 640.0
+    },
+    {
+      "owner": "fibra:1050:890",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1050.0,
+      "y": 890.0
+    },
+    {
+      "owner": "fibra:1250:890",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1250.0,
+      "y": 890.0
+    },
+    {
+      "owner": "fibra:650:700",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 650.0,
+      "y": 700.0
+    },
+    {
+      "owner": "fibra:1660:850",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1660.0,
+      "y": 850.0
+    },
+    {
+      "owner": "fibra:1100:450",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1100.0,
+      "y": 450.0
+    },
+    {
+      "owner": "fibra:1200:1120",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1200.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "pedra:5840:210",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5840.0,
+      "y": 200.0
+    },
+    {
+      "owner": "pedra:5980:990",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5980.0,
+      "y": 980.0
+    },
+    {
+      "owner": "pedra:6550:1320",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 6550.0,
+      "y": 1310.0
+    },
+    {
+      "owner": "madeira:2470:230",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2470.0,
+      "y": 230.0
+    },
+    {
+      "owner": "madeira:2600:1050",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2600.0,
+      "y": 1050.0
+    },
+    {
+      "owner": "madeira:3150:260",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3150.0,
+      "y": 260.0
+    },
+    {
+      "owner": "madeira:3500:1220",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3500.0,
+      "y": 1220.0
+    },
+    {
+      "owner": "madeira:3700:330",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3700.0,
+      "y": 330.0
+    },
+    {
+      "owner": "madeira:3540:500",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3540.0,
+      "y": 500.0
+    },
+    {
+      "owner": "fibra:2510:700",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 2510.0,
+      "y": 700.0
+    },
+    {
+      "owner": "fibra:3380:840",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 3380.0,
+      "y": 840.0
+    },
+    {
+      "owner": "fibra:3960:700",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 3960.0,
+      "y": 700.0
+    },
+    {
+      "owner": "fibra:4420:880",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4420.0,
+      "y": 880.0
+    },
+    {
+      "owner": "fibra:5000:690",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 5000.0,
+      "y": 690.0
+    },
+    {
+      "owner": "pedra:3060:1400",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 3060.0,
+      "y": 1390.0
+    },
+    {
+      "owner": "pedra:3670:1100",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 3670.0,
+      "y": 1090.0
+    },
+    {
+      "owner": "pedra:4020:230",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4020.0,
+      "y": 220.0
+    },
+    {
+      "owner": "pedra:4500:1350",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4500.0,
+      "y": 1340.0
+    },
+    {
+      "owner": "pedra:5180:1020",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5180.0,
+      "y": 1010.0
+    },
+    {
+      "owner": "madeira:-1352:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -1351.67993164063,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:-983:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -983.039978027344,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:-614:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -614.400024414063,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:-246:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -245.760009765625,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:-1352:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -1351.67993164063,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:-983:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -983.039978027344,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:-614:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -614.400024414063,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:-246:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -245.760009765625,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:-1352:-399",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -1351.67993164063,
+      "y": -399.359985351563
+    },
+    {
+      "owner": "madeira:-983:-399",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -983.039978027344,
+      "y": -399.359985351563
+    },
+    {
+      "owner": "madeira:-614:-399",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -614.400024414063,
+      "y": -399.359985351563
+    },
+    {
+      "owner": "madeira:-246:-399",
+      "radius": 15.0,
+      "type": "circle",
+      "x": -245.760009765625,
+      "y": -399.359985351563
+    },
+    {
+      "owner": "pedra:-1260:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": -1259.52001953125,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:-1260:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": -1259.52001953125,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:-922:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": -921.599975585938,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:-922:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": -921.599975585938,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:-584:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": -583.679992675781,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:-584:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": -583.679992675781,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:-246:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": -245.760009765625,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:-246:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": -245.760009765625,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "madeira:276:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 276.480010986328,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:829:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 829.440002441406,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:1382:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1382.40002441406,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:1935:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:276:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 276.480010986328,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:829:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 829.440002441406,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:1382:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1382.40002441406,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "madeira:1935:-860",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": -860.159973144531
+    },
+    {
+      "owner": "pedra:415:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 414.720001220703,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:415:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 414.720001220703,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:922:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 921.599975585938,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:922:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 921.599975585938,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:1428:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1428.47998046875,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:1428:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1428.47998046875,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:1935:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:1935:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "madeira:2488:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2488.32006835938,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:2857:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2856.9599609375,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:3226:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3225.60009765625,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "madeira:3594:-1321",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": -1320.9599609375
+    },
+    {
+      "owner": "pedra:2580:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 2580.47998046875,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:2580:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 2580.47998046875,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:2918:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 2918.39990234375,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:2918:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 2918.39990234375,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:3256:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 3256.32006835938,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:3256:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 3256.32006835938,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:3594:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:3594:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:4116:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4116.47998046875,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:4116:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4116.47998046875,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:4454:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4454.39990234375,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:4454:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4454.39990234375,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:4792:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4792.31982421875,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:4792:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4792.31982421875,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "pedra:5130:-215",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5130.240234375,
+      "y": -225.0400390625
+    },
+    {
+      "owner": "fibra:5130:-553",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 5130.240234375,
+      "y": -552.960021972656
+    },
+    {
+      "owner": "madeira:276:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 276.480010986328,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:829:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 829.440002441406,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:1382:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1382.40002441406,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:1935:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:276:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 276.480010986328,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:829:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 829.440002441406,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:1382:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1382.40002441406,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:1935:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:276:2673",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 276.480010986328,
+      "y": 2672.64013671875
+    },
+    {
+      "owner": "madeira:829:2673",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 829.440002441406,
+      "y": 2672.64013671875
+    },
+    {
+      "owner": "madeira:1382:2673",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1382.40002441406,
+      "y": 2672.64013671875
+    },
+    {
+      "owner": "madeira:1935:2673",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": 2672.64013671875
+    },
+    {
+      "owner": "pedra:415:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 414.720001220703,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:415:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 414.720001220703,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:922:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 921.599975585938,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:922:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 921.599975585938,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:1428:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1428.47998046875,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:1428:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1428.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:1935:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:1935:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 1935.35998535156,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "madeira:2488:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2488.32006835938,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:2857:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2856.9599609375,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:3226:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3225.60009765625,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:3594:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:2488:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2488.32006835938,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:2857:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2856.9599609375,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:3226:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3225.60009765625,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "madeira:3594:2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": 2211.84008789063
+    },
+    {
+      "owner": "pedra:2580:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 2580.47998046875,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:2580:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 2580.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:2918:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 2918.39990234375,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:2918:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 2918.39990234375,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:3256:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 3256.32006835938,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:3256:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 3256.32006835938,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:3594:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:3594:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 3594.23999023438,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "madeira:4024:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 4024.32006835938,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:4393:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 4392.9599609375,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:4762:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 4761.60009765625,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "madeira:5130:1751",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 5130.240234375,
+      "y": 1751.0400390625
+    },
+    {
+      "owner": "pedra:4116:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4116.47998046875,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:4116:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4116.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:4454:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4454.39990234375,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:4454:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4454.39990234375,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:4792:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 4792.31982421875,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:4792:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 4792.31982421875,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:5130:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5130.240234375,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:5130:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 5130.240234375,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:5652:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5652.47998046875,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:5652:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 5652.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:5990:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 5990.39990234375,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:5990:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 5990.39990234375,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:6328:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 6328.31982421875,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:6328:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 6328.31982421875,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "pedra:6666:2857",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 6666.240234375,
+      "y": 2846.9599609375
+    },
+    {
+      "owner": "fibra:6666:2519",
+      "radius": 10.0,
+      "type": "circle",
+      "x": 6666.240234375,
+      "y": 2519.0400390625
+    },
+    {
+      "owner": "building:550:1250",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 550.0,
+      "y": 1160.0
+    },
+    {
+      "owner": "building:550:1250",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 430.0,
+      "y": 1250.0
+    },
+    {
+      "owner": "building:550:1250",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 670.0,
+      "y": 1250.0
+    },
+    {
+      "owner": "building:550:1250",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 467.5,
+      "y": 1340.0
+    },
+    {
+      "owner": "building:550:1250",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 632.5,
+      "y": 1340.0
+    },
+    {
+      "owner": "building:2800:460",
+      "size": [
+        320.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2800.0,
+      "y": 340.0
+    },
+    {
+      "owner": "building:2800:460",
+      "size": [
+        14.0,
+        240.0
+      ],
+      "type": "rect",
+      "x": 2640.0,
+      "y": 460.0
+    },
+    {
+      "owner": "building:2800:460",
+      "size": [
+        14.0,
+        240.0
+      ],
+      "type": "rect",
+      "x": 2960.0,
+      "y": 460.0
+    },
+    {
+      "owner": "building:2800:460",
+      "size": [
+        115.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2697.5,
+      "y": 580.0
+    },
+    {
+      "owner": "building:2800:460",
+      "size": [
+        115.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2902.5,
+      "y": 580.0
+    },
+    {
+      "owner": "building:3250:1120",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3250.0,
+      "y": 1020.0
+    },
+    {
+      "owner": "building:3250:1120",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 3110.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "building:3250:1120",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 3390.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "building:3250:1120",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3157.5,
+      "y": 1220.0
+    },
+    {
+      "owner": "building:3250:1120",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3342.5,
+      "y": 1220.0
+    },
+    {
+      "owner": "building:4230:460",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4230.0,
+      "y": 370.0
+    },
+    {
+      "owner": "building:4230:460",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 4110.0,
+      "y": 460.0
+    },
+    {
+      "owner": "building:4230:460",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 4350.0,
+      "y": 460.0
+    },
+    {
+      "owner": "building:4230:460",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4147.5,
+      "y": 550.0
+    },
+    {
+      "owner": "building:4230:460",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4312.5,
+      "y": 550.0
+    },
+    {
+      "owner": "building:4780:1120",
+      "size": [
+        320.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4780.0,
+      "y": 1000.0
+    },
+    {
+      "owner": "building:4780:1120",
+      "size": [
+        14.0,
+        240.0
+      ],
+      "type": "rect",
+      "x": 4620.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "building:4780:1120",
+      "size": [
+        14.0,
+        240.0
+      ],
+      "type": "rect",
+      "x": 4940.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "building:4780:1120",
+      "size": [
+        115.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4677.5,
+      "y": 1240.0
+    },
+    {
+      "owner": "building:4780:1120",
+      "size": [
+        115.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4882.5,
+      "y": 1240.0
+    },
+    {
+      "owner": "building:4930:430",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4930.0,
+      "y": 330.0
+    },
+    {
+      "owner": "building:4930:430",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 4790.0,
+      "y": 430.0
+    },
+    {
+      "owner": "building:4930:430",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 5070.0,
+      "y": 430.0
+    },
+    {
+      "owner": "building:4930:430",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4837.5,
+      "y": 530.0
+    },
+    {
+      "owner": "building:4930:430",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5022.5,
+      "y": 530.0
+    },
+    {
+      "owner": "building:5680:440",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5680.0,
+      "y": 350.0
+    },
+    {
+      "owner": "building:5680:440",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 5560.0,
+      "y": 440.0
+    },
+    {
+      "owner": "building:5680:440",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 5800.0,
+      "y": 440.0
+    },
+    {
+      "owner": "building:5680:440",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5597.5,
+      "y": 530.0
+    },
+    {
+      "owner": "building:5680:440",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5762.5,
+      "y": 530.0
+    },
+    {
+      "owner": "building:6200:1120",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6200.0,
+      "y": 1030.0
+    },
+    {
+      "owner": "building:6200:1120",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 6080.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "building:6200:1120",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 6320.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "building:6200:1120",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6117.5,
+      "y": 1210.0
+    },
+    {
+      "owner": "building:6200:1120",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6282.5,
+      "y": 1210.0
+    },
+    {
+      "owner": "building:6580:400",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6580.0,
+      "y": 300.0
+    },
+    {
+      "owner": "building:6580:400",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 6440.0,
+      "y": 400.0
+    },
+    {
+      "owner": "building:6580:400",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 6720.0,
+      "y": 400.0
+    },
+    {
+      "owner": "building:6580:400",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6487.5,
+      "y": 500.0
+    },
+    {
+      "owner": "building:6580:400",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6672.5,
+      "y": 500.0
+    },
+    {
+      "owner": "madeira:120:-2450",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 120.0,
+      "y": -2450.0
+    },
+    {
+      "owner": "madeira:457:-2259",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 457.0,
+      "y": -2259.0
+    },
+    {
+      "owner": "madeira:1468:-1686",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1468.0,
+      "y": -1686.0
+    },
+    {
+      "owner": "madeira:1805:-2295",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1805.0,
+      "y": -2295.0
+    },
+    {
+      "owner": "madeira:415:-1913",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 415.0,
+      "y": -1913.0
+    },
+    {
+      "owner": "madeira:752:-1722",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 752.0,
+      "y": -1722.0
+    },
+    {
+      "owner": "madeira:2100:-1758",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2100.0,
+      "y": -1758.0
+    },
+    {
+      "owner": "madeira:373:-2367",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 373.0,
+      "y": -2367.0
+    },
+    {
+      "owner": "madeira:710:-2176",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 710.0,
+      "y": -2176.0
+    },
+    {
+      "owner": "madeira:1384:-1794",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1384.0,
+      "y": -1794.0
+    },
+    {
+      "owner": "madeira:1721:-2403",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1721.0,
+      "y": -2403.0
+    },
+    {
+      "owner": "madeira:2058:-2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2058.0,
+      "y": -2212.0
+    },
+    {
+      "owner": "madeira:668:-1830",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 668.0,
+      "y": -1830.0
+    },
+    {
+      "owner": "madeira:1005:-2439",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1005.0,
+      "y": -2439.0
+    },
+    {
+      "owner": "madeira:1342:-2248",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 1342.0,
+      "y": -2248.0
+    },
+    {
+      "owner": "madeira:2016:-1866",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2016.0,
+      "y": -1866.0
+    },
+    {
+      "owner": "madeira:289:-1675",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 289.0,
+      "y": -1675.0
+    },
+    {
+      "owner": "madeira:626:-2284",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 626.0,
+      "y": -2284.0
+    },
+    {
+      "owner": "pedra:962:-2380",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 962.0,
+      "y": -2390.0
+    },
+    {
+      "owner": "pedra:962:-2250",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 962.0,
+      "y": -2260.0
+    },
+    {
+      "owner": "pedra:962:-1810",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 962.0,
+      "y": -1820.0
+    },
+    {
+      "owner": "pedra:962:-1680",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 962.0,
+      "y": -1690.0
+    },
+    {
+      "owner": "pedra:1342:-2380",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1342.0,
+      "y": -2390.0
+    },
+    {
+      "owner": "pedra:1342:-2250",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1342.0,
+      "y": -2260.0
+    },
+    {
+      "owner": "pedra:1342:-1810",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1342.0,
+      "y": -1820.0
+    },
+    {
+      "owner": "pedra:1342:-1680",
+      "radius": 23.0,
+      "type": "circle",
+      "x": 1342.0,
+      "y": -1690.0
+    },
+    {
+      "owner": "building:1502:-2258",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1502.0,
+      "y": -2348.0
+    },
+    {
+      "owner": "building:1502:-2258",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1382.0,
+      "y": -2258.0
+    },
+    {
+      "owner": "building:1502:-2258",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1622.0,
+      "y": -2258.0
+    },
+    {
+      "owner": "building:1502:-2258",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1419.5,
+      "y": -2168.0
+    },
+    {
+      "owner": "building:1502:-2258",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1584.5,
+      "y": -2168.0
+    },
+    {
+      "owner": "madeira:2424:-2450",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2424.0,
+      "y": -2450.0
+    },
+    {
+      "owner": "madeira:2761:-2259",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2761.0,
+      "y": -2259.0
+    },
+    {
+      "owner": "madeira:3435:-1877",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3435.0,
+      "y": -1877.0
+    },
+    {
+      "owner": "madeira:2476:-1686",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2476.0,
+      "y": -1686.0
+    },
+    {
+      "owner": "madeira:2813:-2295",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2813.0,
+      "y": -2295.0
+    },
+    {
+      "owner": "madeira:3487:-1913",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3487.0,
+      "y": -1913.0
+    },
+    {
+      "owner": "madeira:2528:-1722",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2528.0,
+      "y": -1722.0
+    },
+    {
+      "owner": "madeira:2865:-2331",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2865.0,
+      "y": -2331.0
+    },
+    {
+      "owner": "madeira:2580:-1758",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2580.0,
+      "y": -1758.0
+    },
+    {
+      "owner": "madeira:2917:-2367",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2917.0,
+      "y": -2367.0
+    },
+    {
+      "owner": "madeira:3254:-2176",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3254.0,
+      "y": -2176.0
+    },
+    {
+      "owner": "madeira:2632:-1794",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2632.0,
+      "y": -1794.0
+    },
+    {
+      "owner": "madeira:3306:-2212",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3306.0,
+      "y": -2212.0
+    },
+    {
+      "owner": "madeira:2684:-1830",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2684.0,
+      "y": -1830.0
+    },
+    {
+      "owner": "madeira:3358:-2248",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3358.0,
+      "y": -2248.0
+    },
+    {
+      "owner": "madeira:2736:-1866",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 2736.0,
+      "y": -1866.0
+    },
+    {
+      "owner": "madeira:3410:-2284",
+      "radius": 15.0,
+      "type": "circle",
+      "x": 3410.0,
+      "y": -2284.0
+    },
+    {
+      "owner": "building:3422:-2258",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3422.0,
+      "y": -2348.0
+    },
+    {
+      "owner": "building:3422:-2258",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 3302.0,
+      "y": -2258.0
+    },
+    {
+      "owner": "building:3422:-2258",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 3542.0,
+      "y": -2258.0
+    },
+    {
+      "owner": "building:3422:-2258",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3339.5,
+      "y": -2168.0
+    },
+    {
+      "owner": "building:3422:-2258",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3504.5,
+      "y": -2168.0
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        700.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 178.909088134766
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -2654.0,
+      "y": 418.909088134766
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -1954.0,
+      "y": 418.909088134766
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -2509.0,
+      "y": 658.909057617188
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -2099.0,
+      "y": 658.909057617188
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 268.909088134766
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -2509.0,
+      "y": 418.909088134766
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 568.909057617188
+    },
+    {
+      "owner": "building:-2304:419",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -2099.0,
+      "y": 418.909088134766
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        700.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 877.090942382813
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -2654.0,
+      "y": 1117.09094238281
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -1954.0,
+      "y": 1117.09094238281
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -2509.0,
+      "y": 1357.09094238281
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -2099.0,
+      "y": 1357.09094238281
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 967.090942382813
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -2509.0,
+      "y": 1117.09094238281
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 1267.09094238281
+    },
+    {
+      "owner": "building:-2304:1117",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -2099.0,
+      "y": 1117.09094238281
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        700.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 1714.90905761719
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -1118.0,
+      "y": 1954.90905761719
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -418.0,
+      "y": 1954.90905761719
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -973.0,
+      "y": 2194.9091796875
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -563.0,
+      "y": 2194.9091796875
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 1804.90905761719
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -973.0,
+      "y": 1954.90905761719
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 2104.9091796875
+    },
+    {
+      "owner": "building:-768:1955",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -563.0,
+      "y": 1954.90905761719
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        700.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 2413.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -1118.0,
+      "y": 2653.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        18.0,
+        480.0
+      ],
+      "type": "rect",
+      "x": -418.0,
+      "y": 2653.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -973.0,
+      "y": 2893.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        290.0,
+        18.0
+      ],
+      "type": "rect",
+      "x": -563.0,
+      "y": 2893.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 2503.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -973.0,
+      "y": 2653.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 2803.0908203125
+    },
+    {
+      "owner": "building:-768:2653",
+      "size": [
+        290.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -563.0,
+      "y": 2653.0908203125
+    },
+    {
+      "owner": "well:forest",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 1310.0,
+      "y": 768.0
+    },
+    {
+      "owner": "well:swamp",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 3000.0,
+      "y": 768.0
+    },
+    {
+      "owner": "well:fields",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 4520.0,
+      "y": 768.0
+    },
+    {
+      "owner": "well:desert",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 6030.0,
+      "y": 768.0
+    },
+    {
+      "owner": "well:aquatic_w",
+      "radius": 22.0,
+      "type": "circle",
+      "x": -608.0,
+      "y": 768.0
+    },
+    {
+      "owner": "well:aquatic_n",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 6304.0,
+      "y": -768.0
+    },
+    {
+      "owner": "well:ruins_w",
+      "radius": 22.0,
+      "type": "circle",
+      "x": -2144.0,
+      "y": 768.0
+    },
+    {
+      "owner": "well:ruins_s",
+      "radius": 22.0,
+      "type": "circle",
+      "x": -608.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "well:forest_n",
+      "radius": 22.0,
+      "type": "circle",
+      "x": -608.0,
+      "y": -768.0
+    },
+    {
+      "owner": "well:swamp_n",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 1312.0,
+      "y": -768.0
+    },
+    {
+      "owner": "well:fields_n",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 3232.0,
+      "y": -768.0
+    },
+    {
+      "owner": "well:desert_n",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 4768.0,
+      "y": -768.0
+    },
+    {
+      "owner": "well:forest_s",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 1312.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "well:swamp_s",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 3232.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "well:fields_s",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 4768.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "well:desert_s",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 6304.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "well:mist_ridge",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 1312.0,
+      "y": -2048.0
+    },
+    {
+      "owner": "well:burned_forest",
+      "radius": 22.0,
+      "type": "circle",
+      "x": 3232.0,
+      "y": -2048.0
+    },
+    {
+      "owner": "building:-1326:-1134",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -1326.0,
+      "y": -1224.0
+    },
+    {
+      "owner": "building:-1326:-1134",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -1446.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:-1326:-1134",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -1206.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:-1326:-1134",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -1408.5,
+      "y": -1044.0
+    },
+    {
+      "owner": "building:-1326:-1134",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -1243.5,
+      "y": -1044.0
+    },
+    {
+      "owner": "building:-846:-1134",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -846.0,
+      "y": -1224.0
+    },
+    {
+      "owner": "building:-846:-1134",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -966.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:-846:-1134",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -726.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:-846:-1134",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -928.5,
+      "y": -1044.0
+    },
+    {
+      "owner": "building:-846:-1134",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -763.5,
+      "y": -1044.0
+    },
+    {
+      "owner": "building:-366:-1134",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -366.0,
+      "y": -1224.0
+    },
+    {
+      "owner": "building:-366:-1134",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -486.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:-366:-1134",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": -246.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:-366:-1134",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -448.5,
+      "y": -1044.0
+    },
+    {
+      "owner": "building:-366:-1134",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": -283.5,
+      "y": -1044.0
+    },
+    {
+      "owner": "building:498:-1326",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 498.0,
+      "y": -1416.0
+    },
+    {
+      "owner": "building:498:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 378.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:498:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 618.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:498:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 415.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:498:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 580.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:1074:-1326",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1074.0,
+      "y": -1416.0
+    },
+    {
+      "owner": "building:1074:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 954.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:1074:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1194.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:1074:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 991.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:1074:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1156.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:1650:-1326",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1650.0,
+      "y": -1416.0
+    },
+    {
+      "owner": "building:1650:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1530.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:1650:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1770.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:1650:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1567.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:1650:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1732.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:2514:-1134",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2514.0,
+      "y": -1234.0
+    },
+    {
+      "owner": "building:2514:-1134",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 2374.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:2514:-1134",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 2654.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:2514:-1134",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2421.5,
+      "y": -1034.0
+    },
+    {
+      "owner": "building:2514:-1134",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2606.5,
+      "y": -1034.0
+    },
+    {
+      "owner": "building:2994:-1134",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2994.0,
+      "y": -1234.0
+    },
+    {
+      "owner": "building:2994:-1134",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 2854.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:2994:-1134",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 3134.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:2994:-1134",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2901.5,
+      "y": -1034.0
+    },
+    {
+      "owner": "building:2994:-1134",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3086.5,
+      "y": -1034.0
+    },
+    {
+      "owner": "building:3474:-1134",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3474.0,
+      "y": -1234.0
+    },
+    {
+      "owner": "building:3474:-1134",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 3334.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:3474:-1134",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 3614.0,
+      "y": -1134.0
+    },
+    {
+      "owner": "building:3474:-1134",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3381.5,
+      "y": -1034.0
+    },
+    {
+      "owner": "building:3474:-1134",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3566.5,
+      "y": -1034.0
+    },
+    {
+      "owner": "building:4050:-1326",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4050.0,
+      "y": -1416.0
+    },
+    {
+      "owner": "building:4050:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 3930.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:4050:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 4170.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:4050:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3967.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:4050:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4132.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:4530:-1326",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4530.0,
+      "y": -1416.0
+    },
+    {
+      "owner": "building:4530:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 4410.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:4530:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 4650.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:4530:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4447.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:4530:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4612.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:5010:-1326",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5010.0,
+      "y": -1416.0
+    },
+    {
+      "owner": "building:5010:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 4890.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:5010:-1326",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 5130.0,
+      "y": -1326.0
+    },
+    {
+      "owner": "building:5010:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4927.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:5010:-1326",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5092.5,
+      "y": -1236.0
+    },
+    {
+      "owner": "building:498:1746",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 498.0,
+      "y": 1656.0
+    },
+    {
+      "owner": "building:498:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 378.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:498:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 618.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:498:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 415.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:498:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 580.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:1074:1746",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1074.0,
+      "y": 1656.0
+    },
+    {
+      "owner": "building:1074:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 954.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:1074:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1194.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:1074:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 991.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:1074:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1156.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:1650:1746",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1650.0,
+      "y": 1656.0
+    },
+    {
+      "owner": "building:1650:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1530.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:1650:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 1770.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:1650:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1567.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:1650:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 1732.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:2514:1938",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2514.0,
+      "y": 1848.0
+    },
+    {
+      "owner": "building:2514:1938",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 2394.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:2514:1938",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 2634.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:2514:1938",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2431.5,
+      "y": 2028.0
+    },
+    {
+      "owner": "building:2514:1938",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2596.5,
+      "y": 2028.0
+    },
+    {
+      "owner": "building:2994:1938",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2994.0,
+      "y": 1848.0
+    },
+    {
+      "owner": "building:2994:1938",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 2874.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:2994:1938",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 3114.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:2994:1938",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 2911.5,
+      "y": 2028.0
+    },
+    {
+      "owner": "building:2994:1938",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3076.5,
+      "y": 2028.0
+    },
+    {
+      "owner": "building:3474:1938",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3474.0,
+      "y": 1848.0
+    },
+    {
+      "owner": "building:3474:1938",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 3354.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:3474:1938",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 3594.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:3474:1938",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3391.5,
+      "y": 2028.0
+    },
+    {
+      "owner": "building:3474:1938",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3556.5,
+      "y": 2028.0
+    },
+    {
+      "owner": "building:4050:1938",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4050.0,
+      "y": 1838.0
+    },
+    {
+      "owner": "building:4050:1938",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 3910.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:4050:1938",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 4190.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:4050:1938",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 3957.5,
+      "y": 2038.0
+    },
+    {
+      "owner": "building:4050:1938",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4142.5,
+      "y": 2038.0
+    },
+    {
+      "owner": "building:4530:1938",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4530.0,
+      "y": 1838.0
+    },
+    {
+      "owner": "building:4530:1938",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 4390.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:4530:1938",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 4670.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:4530:1938",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4437.5,
+      "y": 2038.0
+    },
+    {
+      "owner": "building:4530:1938",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4622.5,
+      "y": 2038.0
+    },
+    {
+      "owner": "building:5010:1938",
+      "size": [
+        280.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5010.0,
+      "y": 1838.0
+    },
+    {
+      "owner": "building:5010:1938",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 4870.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:5010:1938",
+      "size": [
+        14.0,
+        200.0
+      ],
+      "type": "rect",
+      "x": 5150.0,
+      "y": 1938.0
+    },
+    {
+      "owner": "building:5010:1938",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 4917.5,
+      "y": 2038.0
+    },
+    {
+      "owner": "building:5010:1938",
+      "size": [
+        95.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5102.5,
+      "y": 2038.0
+    },
+    {
+      "owner": "building:5586:1746",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5586.0,
+      "y": 1656.0
+    },
+    {
+      "owner": "building:5586:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 5466.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:5586:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 5706.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:5586:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5503.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:5586:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5668.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:6066:1746",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6066.0,
+      "y": 1656.0
+    },
+    {
+      "owner": "building:6066:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 5946.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:6066:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 6186.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:6066:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 5983.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:6066:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6148.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:6546:1746",
+      "size": [
+        240.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6546.0,
+      "y": 1656.0
+    },
+    {
+      "owner": "building:6546:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 6426.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:6546:1746",
+      "size": [
+        14.0,
+        180.0
+      ],
+      "type": "rect",
+      "x": 6666.0,
+      "y": 1746.0
+    },
+    {
+      "owner": "building:6546:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6463.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "building:6546:1746",
+      "size": [
+        75.0,
+        14.0
+      ],
+      "type": "rect",
+      "x": 6628.5,
+      "y": 1836.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        20.0
+      ],
+      "type": "rect",
+      "x": 5500.0,
+      "y": 260.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        20.0
+      ],
+      "type": "rect",
+      "x": 5900.0,
+      "y": 620.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        20.0
+      ],
+      "type": "rect",
+      "x": 6000.0,
+      "y": 1320.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        20.0
+      ],
+      "type": "rect",
+      "x": 6410.0,
+      "y": 920.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        20.0
+      ],
+      "type": "rect",
+      "x": 6730.0,
+      "y": 1250.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        20.0
+      ],
+      "type": "rect",
+      "x": 6770.0,
+      "y": 550.0
+    },
+    {
+      "owner": "",
+      "size": [
+        12.0,
+        160.0
+      ],
+      "type": "rect",
+      "x": 3976.0,
+      "y": 1120.0
+    },
+    {
+      "owner": "",
+      "size": [
+        180.0,
+        12.0
+      ],
+      "type": "rect",
+      "x": 4530.0,
+      "y": 246.0
+    },
+    {
+      "owner": "",
+      "size": [
+        150.0,
+        12.0
+      ],
+      "type": "rect",
+      "x": 5125.0,
+      "y": 1156.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1536.0
+      ],
+      "type": "rect",
+      "x": 6912.0,
+      "y": 768.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 6144.0,
+      "y": -1536.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1536.0
+      ],
+      "type": "rect",
+      "x": 6912.0,
+      "y": -768.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 0.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": -2304.0,
+      "y": 1536.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1536.0
+      ],
+      "type": "rect",
+      "x": -3072.0,
+      "y": 768.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": 3072.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1536.0
+      ],
+      "type": "rect",
+      "x": -1536.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": -768.0,
+      "y": -1536.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1536.0
+      ],
+      "type": "rect",
+      "x": -1536.0,
+      "y": -768.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 4608.0,
+      "y": -1536.0
+    },
+    {
+      "owner": "",
+      "size": [
+        2304.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 1152.0,
+      "y": 3072.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 3072.0,
+      "y": 3072.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 4608.0,
+      "y": 3072.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 6144.0,
+      "y": 3072.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1536.0
+      ],
+      "type": "rect",
+      "x": 6912.0,
+      "y": 2304.0
+    },
+    {
+      "owner": "",
+      "size": [
+        2304.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 1152.0,
+      "y": -2560.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1024.0
+      ],
+      "type": "rect",
+      "x": 0.0,
+      "y": -2048.0
+    },
+    {
+      "owner": "",
+      "size": [
+        1536.0,
+        24.0
+      ],
+      "type": "rect",
+      "x": 3072.0,
+      "y": -2560.0
+    },
+    {
+      "owner": "",
+      "size": [
+        24.0,
+        1024.0
+      ],
+      "type": "rect",
+      "x": 3840.0,
+      "y": -2048.0
+    }
+  ],
+  "extraction": {
+    "fibra": {
+      "hits": {
+        "maos": 2
+      },
+      "reward": 4
+    },
+    "madeira": {
+      "hits": {
+        "machado_madeira": 3,
+        "machado_pedra": 2,
+        "maos": 6
+      },
+      "reward": 5
+    },
+    "pedra": {
+      "hits": {
+        "picareta_madeira": 6,
+        "picareta_pedra": 3
+      },
+      "reward": 4
+    }
+  },
+  "interval": {
+    "machado_madeira": 0.54,
+    "maos": 1.2,
+    "picareta_madeira": 0.54
+  },
+  "player_radius": 10,
+  "ponds": [
+    [
+      2450.0,
+      400.0,
+      130.0,
+      85.0
+    ],
+    [
+      3390.0,
+      250.0,
+      180.0,
+      100.0
+    ],
+    [
+      2770.0,
+      1250.0,
+      170.0,
+      90.0
+    ],
+    [
+      3500.0,
+      940.0,
+      160.0,
+      70.0
+    ]
+  ],
+  "reach": 82,
+  "regions": [
+    {
+      "id": "forest",
+      "kind": "Floresta",
+      "rect": [
+        0.0,
+        0.0,
+        2304.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "swamp",
+      "kind": "Pântano",
+      "rect": [
+        2304.0,
+        0.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "fields",
+      "kind": "Campos",
+      "rect": [
+        3840.0,
+        0.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "desert",
+      "kind": "Deserto",
+      "rect": [
+        5376.0,
+        0.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "aquatic_w",
+      "kind": "Aquático",
+      "rect": [
+        -1536.0,
+        0.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "aquatic_n",
+      "kind": "Aquático",
+      "rect": [
+        5376.0,
+        -1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "ruins_w",
+      "kind": "Ruínas Escuras",
+      "rect": [
+        -3072.0,
+        0.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "ruins_s",
+      "kind": "Ruínas Escuras",
+      "rect": [
+        -1536.0,
+        1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "forest_n",
+      "kind": "Floresta",
+      "rect": [
+        -1536.0,
+        -1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "swamp_n",
+      "kind": "Pântano",
+      "rect": [
+        0.0,
+        -1536.0,
+        2304.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "fields_n",
+      "kind": "Campos",
+      "rect": [
+        2304.0,
+        -1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "desert_n",
+      "kind": "Deserto",
+      "rect": [
+        3840.0,
+        -1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "forest_s",
+      "kind": "Floresta",
+      "rect": [
+        0.0,
+        1536.0,
+        2304.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "swamp_s",
+      "kind": "Pântano",
+      "rect": [
+        2304.0,
+        1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "fields_s",
+      "kind": "Campos",
+      "rect": [
+        3840.0,
+        1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "desert_s",
+      "kind": "Deserto",
+      "rect": [
+        5376.0,
+        1536.0,
+        1536.0,
+        1536.0
+      ]
+    },
+    {
+      "id": "mist_ridge",
+      "kind": "Serra Nebulosa",
+      "rect": [
+        0.0,
+        -2560.0,
+        2304.0,
+        1024.0
+      ]
+    },
+    {
+      "id": "burned_forest",
+      "kind": "Floresta Queimada",
+      "rect": [
+        2304.0,
+        -2560.0,
+        1536.0,
+        1024.0
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "madeira:180:210",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 180.0,
+      "y": 210.0
+    },
+    {
+      "id": "madeira:320:290",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 320.0,
+      "y": 290.0
+    },
+    {
+      "id": "madeira:490:180",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 490.0,
+      "y": 180.0
+    },
+    {
+      "id": "madeira:670:330",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 670.0,
+      "y": 330.0
+    },
+    {
+      "id": "madeira:850:220",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 850.0,
+      "y": 220.0
+    },
+    {
+      "id": "madeira:1000:390",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1000.0,
+      "y": 390.0
+    },
+    {
+      "id": "madeira:1320:250",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1320.0,
+      "y": 250.0
+    },
+    {
+      "id": "madeira:1490:370",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1490.0,
+      "y": 370.0
+    },
+    {
+      "id": "madeira:1650:200",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1650.0,
+      "y": 200.0
+    },
+    {
+      "id": "madeira:1850:310",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1850.0,
+      "y": 310.0
+    },
+    {
+      "id": "madeira:2040:210",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2040.0,
+      "y": 210.0
+    },
+    {
+      "id": "madeira:2180:420",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2180.0,
+      "y": 420.0
+    },
+    {
+      "id": "madeira:210:520",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 210.0,
+      "y": 520.0
+    },
+    {
+      "id": "madeira:400:610",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 400.0,
+      "y": 610.0
+    },
+    {
+      "id": "madeira:570:480",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 570.0,
+      "y": 480.0
+    },
+    {
+      "id": "madeira:760:600",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 760.0,
+      "y": 600.0
+    },
+    {
+      "id": "madeira:910:530",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 910.0,
+      "y": 530.0
+    },
+    {
+      "id": "madeira:1400:530",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1400.0,
+      "y": 530.0
+    },
+    {
+      "id": "madeira:1590:590",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1590.0,
+      "y": 590.0
+    },
+    {
+      "id": "madeira:1790:490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1790.0,
+      "y": 490.0
+    },
+    {
+      "id": "madeira:2010:610",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2010.0,
+      "y": 610.0
+    },
+    {
+      "id": "madeira:200:1000",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 200.0,
+      "y": 1000.0
+    },
+    {
+      "id": "madeira:390:920",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 390.0,
+      "y": 920.0
+    },
+    {
+      "id": "madeira:590:1100",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 590.0,
+      "y": 1100.0
+    },
+    {
+      "id": "madeira:760:970",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 760.0,
+      "y": 970.0
+    },
+    {
+      "id": "madeira:920:1090",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 920.0,
+      "y": 1090.0
+    },
+    {
+      "id": "madeira:1390:1050",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1390.0,
+      "y": 1050.0
+    },
+    {
+      "id": "madeira:1580:940",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1580.0,
+      "y": 940.0
+    },
+    {
+      "id": "madeira:1790:1120",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1790.0,
+      "y": 1120.0
+    },
+    {
+      "id": "madeira:2000:980",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2000.0,
+      "y": 980.0
+    },
+    {
+      "id": "madeira:2180:1110",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2180.0,
+      "y": 1110.0
+    },
+    {
+      "id": "madeira:180:1330",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 180.0,
+      "y": 1330.0
+    },
+    {
+      "id": "madeira:370:1220",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 370.0,
+      "y": 1220.0
+    },
+    {
+      "id": "madeira:570:1390",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 570.0,
+      "y": 1390.0
+    },
+    {
+      "id": "madeira:740:1290",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 740.0,
+      "y": 1290.0
+    },
+    {
+      "id": "madeira:990:1380",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 990.0,
+      "y": 1380.0
+    },
+    {
+      "id": "madeira:1320:1350",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1320.0,
+      "y": 1350.0
+    },
+    {
+      "id": "madeira:1520:1230",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1520.0,
+      "y": 1230.0
+    },
+    {
+      "id": "madeira:1700:1390",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1700.0,
+      "y": 1390.0
+    },
+    {
+      "id": "madeira:1900:1300",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1900.0,
+      "y": 1300.0
+    },
+    {
+      "id": "madeira:2110:1390",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2110.0,
+      "y": 1390.0
+    },
+    {
+      "id": "madeira:80:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 80.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:80:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 80.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:230:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 230.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:230:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 230.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:380:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 380.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:380:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 380.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:530:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 530.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:530:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 530.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:680:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 680.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:680:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 680.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:830:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 830.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:830:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 830.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:980:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 980.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:980:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 980.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:1280:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1280.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:1280:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1280.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:1430:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1430.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:1430:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1430.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:1580:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1580.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:1580:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1580.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:1730:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1730.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:1730:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1730.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:1880:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1880.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:1880:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1880.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:2030:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2030.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:2030:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2030.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:2180:105",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2180.0,
+      "y": 105.0
+    },
+    {
+      "id": "madeira:2180:1490",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2180.0,
+      "y": 1490.0
+    },
+    {
+      "id": "madeira:65:260",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 260.0
+    },
+    {
+      "id": "madeira:2240:260",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 260.0
+    },
+    {
+      "id": "madeira:65:420",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 420.0
+    },
+    {
+      "id": "madeira:2240:420",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 420.0
+    },
+    {
+      "id": "madeira:65:580",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 580.0
+    },
+    {
+      "id": "madeira:2240:580",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 580.0
+    },
+    {
+      "id": "madeira:65:900",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 900.0
+    },
+    {
+      "id": "madeira:2240:900",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 900.0
+    },
+    {
+      "id": "madeira:65:1060",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 1060.0
+    },
+    {
+      "id": "madeira:2240:1060",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 1060.0
+    },
+    {
+      "id": "madeira:65:1220",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 1220.0
+    },
+    {
+      "id": "madeira:2240:1220",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 1220.0
+    },
+    {
+      "id": "madeira:65:1380",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 65.0,
+      "y": 1380.0
+    },
+    {
+      "id": "madeira:2240:1380",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2240.0,
+      "y": 1380.0
+    },
+    {
+      "id": "pedra:460:390",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 460.0,
+      "y": 390.0
+    },
+    {
+      "id": "pedra:840:420",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 840.0,
+      "y": 420.0
+    },
+    {
+      "id": "pedra:1460:180",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1460.0,
+      "y": 180.0
+    },
+    {
+      "id": "pedra:1930:450",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1930.0,
+      "y": 450.0
+    },
+    {
+      "id": "pedra:350:1100",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 350.0,
+      "y": 1100.0
+    },
+    {
+      "id": "pedra:810:1200",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 810.0,
+      "y": 1200.0
+    },
+    {
+      "id": "pedra:1450:1190",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1450.0,
+      "y": 1190.0
+    },
+    {
+      "id": "pedra:1920:1190",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1920.0,
+      "y": 1190.0
+    },
+    {
+      "id": "pedra:2090:890",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2090.0,
+      "y": 890.0
+    },
+    {
+      "id": "fibra:1050:640",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1050.0,
+      "y": 640.0
+    },
+    {
+      "id": "fibra:1250:640",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1250.0,
+      "y": 640.0
+    },
+    {
+      "id": "fibra:1050:890",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1050.0,
+      "y": 890.0
+    },
+    {
+      "id": "fibra:1250:890",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1250.0,
+      "y": 890.0
+    },
+    {
+      "id": "fibra:650:700",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 650.0,
+      "y": 700.0
+    },
+    {
+      "id": "fibra:1660:850",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1660.0,
+      "y": 850.0
+    },
+    {
+      "id": "fibra:1100:450",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1100.0,
+      "y": 450.0
+    },
+    {
+      "id": "fibra:1200:1120",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1200.0,
+      "y": 1120.0
+    },
+    {
+      "id": "pedra:5840:210",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5840.0,
+      "y": 210.0
+    },
+    {
+      "id": "pedra:5980:990",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5980.0,
+      "y": 990.0
+    },
+    {
+      "id": "pedra:6550:1320",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 6550.0,
+      "y": 1320.0
+    },
+    {
+      "id": "madeira:2470:230",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 2470.0,
+      "y": 230.0
+    },
+    {
+      "id": "madeira:2600:1050",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 2600.0,
+      "y": 1050.0
+    },
+    {
+      "id": "madeira:3150:260",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3150.0,
+      "y": 260.0
+    },
+    {
+      "id": "madeira:3500:1220",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3500.0,
+      "y": 1220.0
+    },
+    {
+      "id": "madeira:3700:330",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3700.0,
+      "y": 330.0
+    },
+    {
+      "id": "madeira:3540:500",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3540.0,
+      "y": 500.0
+    },
+    {
+      "id": "fibra:2510:700",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2510.0,
+      "y": 700.0
+    },
+    {
+      "id": "fibra:3380:840",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3380.0,
+      "y": 840.0
+    },
+    {
+      "id": "fibra:3960:700",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3960.0,
+      "y": 700.0
+    },
+    {
+      "id": "fibra:4420:880",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4420.0,
+      "y": 880.0
+    },
+    {
+      "id": "fibra:5000:690",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5000.0,
+      "y": 690.0
+    },
+    {
+      "id": "pedra:3060:1400",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3060.0,
+      "y": 1400.0
+    },
+    {
+      "id": "pedra:3670:1100",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3670.0,
+      "y": 1100.0
+    },
+    {
+      "id": "pedra:4020:230",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4020.0,
+      "y": 230.0
+    },
+    {
+      "id": "pedra:4500:1350",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4500.0,
+      "y": 1350.0
+    },
+    {
+      "id": "pedra:5180:1020",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5180.0,
+      "y": 1020.0
+    },
+    {
+      "id": "madeira:-1352:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -1351.67993164063,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:-983:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -983.039978027344,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:-614:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -614.400024414063,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:-246:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -245.760009765625,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:-1352:-860",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -1351.67993164063,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:-983:-860",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -983.039978027344,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:-614:-860",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -614.400024414063,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:-246:-860",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -245.760009765625,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:-1352:-399",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -1351.67993164063,
+      "y": -399.359985351563
+    },
+    {
+      "id": "madeira:-983:-399",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -983.039978027344,
+      "y": -399.359985351563
+    },
+    {
+      "id": "madeira:-614:-399",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -614.400024414063,
+      "y": -399.359985351563
+    },
+    {
+      "id": "madeira:-246:-399",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -245.760009765625,
+      "y": -399.359985351563
+    },
+    {
+      "id": "pedra:-1260:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -1259.52001953125,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:-1260:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -1259.52001953125,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:-922:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -921.599975585938,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:-922:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -921.599975585938,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:-584:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -583.679992675781,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:-584:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -583.679992675781,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:-246:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -245.760009765625,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:-246:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": -245.760009765625,
+      "y": -552.960021972656
+    },
+    {
+      "id": "madeira:276:-1321",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 276.480010986328,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:829:-1321",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 829.440002441406,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:1382:-1321",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 1382.40002441406,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:1935:-1321",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:276:-860",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 276.480010986328,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:829:-860",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 829.440002441406,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:1382:-860",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 1382.40002441406,
+      "y": -860.159973144531
+    },
+    {
+      "id": "madeira:1935:-860",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": -860.159973144531
+    },
+    {
+      "id": "pedra:415:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 414.720001220703,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:415:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 414.720001220703,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:922:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 921.599975585938,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:922:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 921.599975585938,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:1428:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1428.47998046875,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:1428:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1428.47998046875,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:1935:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:1935:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": -552.960021972656
+    },
+    {
+      "id": "madeira:2488:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2488.32006835938,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:2857:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2856.9599609375,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:3226:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3225.60009765625,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "madeira:3594:-1321",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": -1320.9599609375
+    },
+    {
+      "id": "pedra:2580:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2580.47998046875,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:2580:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2580.47998046875,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:2918:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2918.39990234375,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:2918:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2918.39990234375,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:3256:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3256.32006835938,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:3256:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3256.32006835938,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:3594:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:3594:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:4116:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4116.47998046875,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:4116:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4116.47998046875,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:4454:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4454.39990234375,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:4454:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4454.39990234375,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:4792:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4792.31982421875,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:4792:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4792.31982421875,
+      "y": -552.960021972656
+    },
+    {
+      "id": "pedra:5130:-215",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5130.240234375,
+      "y": -215.0400390625
+    },
+    {
+      "id": "fibra:5130:-553",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5130.240234375,
+      "y": -552.960021972656
+    },
+    {
+      "id": "madeira:276:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 276.480010986328,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:829:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 829.440002441406,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:1382:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1382.40002441406,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:1935:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:276:2212",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 276.480010986328,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:829:2212",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 829.440002441406,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:1382:2212",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1382.40002441406,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:1935:2212",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:276:2673",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 276.480010986328,
+      "y": 2672.64013671875
+    },
+    {
+      "id": "madeira:829:2673",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 829.440002441406,
+      "y": 2672.64013671875
+    },
+    {
+      "id": "madeira:1382:2673",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1382.40002441406,
+      "y": 2672.64013671875
+    },
+    {
+      "id": "madeira:1935:2673",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": 2672.64013671875
+    },
+    {
+      "id": "pedra:415:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 414.720001220703,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:415:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 414.720001220703,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:922:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 921.599975585938,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:922:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 921.599975585938,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:1428:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1428.47998046875,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:1428:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1428.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:1935:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:1935:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1935.35998535156,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "madeira:2488:1751",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 2488.32006835938,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:2857:1751",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 2856.9599609375,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:3226:1751",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3225.60009765625,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:3594:1751",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:2488:2212",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 2488.32006835938,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:2857:2212",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 2856.9599609375,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:3226:2212",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3225.60009765625,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "madeira:3594:2212",
+      "kind": "madeira",
+      "tint": [
+        0.699999988079071,
+        0.850000023841858,
+        0.800000011920929
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": 2211.84008789063
+    },
+    {
+      "id": "pedra:2580:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2580.47998046875,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:2580:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2580.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:2918:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2918.39990234375,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:2918:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 2918.39990234375,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:3256:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3256.32006835938,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:3256:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3256.32006835938,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:3594:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:3594:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 3594.23999023438,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "madeira:4024:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4024.32006835938,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:4393:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4392.9599609375,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:4762:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4761.60009765625,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "madeira:5130:1751",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5130.240234375,
+      "y": 1751.0400390625
+    },
+    {
+      "id": "pedra:4116:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4116.47998046875,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:4116:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4116.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:4454:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4454.39990234375,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:4454:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4454.39990234375,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:4792:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4792.31982421875,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:4792:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 4792.31982421875,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:5130:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5130.240234375,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:5130:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5130.240234375,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:5652:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5652.47998046875,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:5652:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5652.47998046875,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:5990:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5990.39990234375,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:5990:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 5990.39990234375,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:6328:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 6328.31982421875,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:6328:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 6328.31982421875,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "pedra:6666:2857",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 6666.240234375,
+      "y": 2856.9599609375
+    },
+    {
+      "id": "fibra:6666:2519",
+      "kind": "fibra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 6666.240234375,
+      "y": 2519.0400390625
+    },
+    {
+      "id": "madeira:120:-2450",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 120.0,
+      "y": -2450.0
+    },
+    {
+      "id": "madeira:457:-2259",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 457.0,
+      "y": -2259.0
+    },
+    {
+      "id": "madeira:1468:-1686",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 1468.0,
+      "y": -1686.0
+    },
+    {
+      "id": "madeira:1805:-2295",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 1805.0,
+      "y": -2295.0
+    },
+    {
+      "id": "madeira:415:-1913",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 415.0,
+      "y": -1913.0
+    },
+    {
+      "id": "madeira:752:-1722",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 752.0,
+      "y": -1722.0
+    },
+    {
+      "id": "madeira:2100:-1758",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 2100.0,
+      "y": -1758.0
+    },
+    {
+      "id": "madeira:373:-2367",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 373.0,
+      "y": -2367.0
+    },
+    {
+      "id": "madeira:710:-2176",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 710.0,
+      "y": -2176.0
+    },
+    {
+      "id": "madeira:1384:-1794",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 1384.0,
+      "y": -1794.0
+    },
+    {
+      "id": "madeira:1721:-2403",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 1721.0,
+      "y": -2403.0
+    },
+    {
+      "id": "madeira:2058:-2212",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 2058.0,
+      "y": -2212.0
+    },
+    {
+      "id": "madeira:668:-1830",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 668.0,
+      "y": -1830.0
+    },
+    {
+      "id": "madeira:1005:-2439",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 1005.0,
+      "y": -2439.0
+    },
+    {
+      "id": "madeira:1342:-2248",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 1342.0,
+      "y": -2248.0
+    },
+    {
+      "id": "madeira:2016:-1866",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 2016.0,
+      "y": -1866.0
+    },
+    {
+      "id": "madeira:289:-1675",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 289.0,
+      "y": -1675.0
+    },
+    {
+      "id": "madeira:626:-2284",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "pine",
+      "x": 626.0,
+      "y": -2284.0
+    },
+    {
+      "id": "pedra:962:-2380",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 962.0,
+      "y": -2380.0
+    },
+    {
+      "id": "pedra:962:-2250",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 962.0,
+      "y": -2250.0
+    },
+    {
+      "id": "pedra:962:-1810",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 962.0,
+      "y": -1810.0
+    },
+    {
+      "id": "pedra:962:-1680",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 962.0,
+      "y": -1680.0
+    },
+    {
+      "id": "pedra:1342:-2380",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1342.0,
+      "y": -2380.0
+    },
+    {
+      "id": "pedra:1342:-2250",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1342.0,
+      "y": -2250.0
+    },
+    {
+      "id": "pedra:1342:-1810",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1342.0,
+      "y": -1810.0
+    },
+    {
+      "id": "pedra:1342:-1680",
+      "kind": "pedra",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "standard",
+      "x": 1342.0,
+      "y": -1680.0
+    },
+    {
+      "id": "madeira:2424:-2450",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2424.0,
+      "y": -2450.0
+    },
+    {
+      "id": "madeira:2761:-2259",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2761.0,
+      "y": -2259.0
+    },
+    {
+      "id": "madeira:3435:-1877",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 3435.0,
+      "y": -1877.0
+    },
+    {
+      "id": "madeira:2476:-1686",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2476.0,
+      "y": -1686.0
+    },
+    {
+      "id": "madeira:2813:-2295",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2813.0,
+      "y": -2295.0
+    },
+    {
+      "id": "madeira:3487:-1913",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 3487.0,
+      "y": -1913.0
+    },
+    {
+      "id": "madeira:2528:-1722",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2528.0,
+      "y": -1722.0
+    },
+    {
+      "id": "madeira:2865:-2331",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2865.0,
+      "y": -2331.0
+    },
+    {
+      "id": "madeira:2580:-1758",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2580.0,
+      "y": -1758.0
+    },
+    {
+      "id": "madeira:2917:-2367",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2917.0,
+      "y": -2367.0
+    },
+    {
+      "id": "madeira:3254:-2176",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 3254.0,
+      "y": -2176.0
+    },
+    {
+      "id": "madeira:2632:-1794",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2632.0,
+      "y": -1794.0
+    },
+    {
+      "id": "madeira:3306:-2212",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 3306.0,
+      "y": -2212.0
+    },
+    {
+      "id": "madeira:2684:-1830",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2684.0,
+      "y": -1830.0
+    },
+    {
+      "id": "madeira:3358:-2248",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 3358.0,
+      "y": -2248.0
+    },
+    {
+      "id": "madeira:2736:-1866",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 2736.0,
+      "y": -1866.0
+    },
+    {
+      "id": "madeira:3410:-2284",
+      "kind": "madeira",
+      "tint": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "visual": "burned",
+      "x": 3410.0,
+      "y": -2284.0
+    }
+  ],
+  "seed": 20261020,
+  "spawns": [
+    [
+      1152,
+      768
+    ],
+    [
+      1212,
+      768
+    ]
+  ],
+  "speed": 210,
+  "swim_speed": 0.6,
+  "version": 1,
+  "water": {
+    "maximum": 100.0,
+    "per_minute": 8.0,
+    "restores": 40.0
+  },
+  "well_reach": 90,
+  "wells": [
+    {
+      "id": "well:forest",
+      "solo_position": [
+        1310.0,
+        768.0
+      ],
+      "x": 1310.0,
+      "y": 768.0
+    },
+    {
+      "id": "well:swamp",
+      "solo_position": [
+        3000.0,
+        768.0
+      ],
+      "x": 3000.0,
+      "y": 768.0
+    },
+    {
+      "id": "well:fields",
+      "solo_position": [
+        4520.0,
+        768.0
+      ],
+      "x": 4520.0,
+      "y": 768.0
+    },
+    {
+      "id": "well:desert",
+      "solo_position": [
+        6030.0,
+        768.0
+      ],
+      "x": 6030.0,
+      "y": 768.0
+    },
+    {
+      "id": "well:aquatic_w",
+      "solo_position": [
+        -608.0,
+        768.0
+      ],
+      "x": -608.0,
+      "y": 768.0
+    },
+    {
+      "id": "well:aquatic_n",
+      "solo_position": [
+        6304.0,
+        -768.0
+      ],
+      "x": 6304.0,
+      "y": -768.0
+    },
+    {
+      "id": "well:ruins_w",
+      "solo_position": [
+        -2144.0,
+        768.0
+      ],
+      "x": -2144.0,
+      "y": 768.0
+    },
+    {
+      "id": "well:ruins_s",
+      "solo_position": [
+        -608.0,
+        2304.0
+      ],
+      "x": -608.0,
+      "y": 2304.0
+    },
+    {
+      "id": "well:forest_n",
+      "solo_position": [
+        -608.0,
+        -768.0
+      ],
+      "x": -608.0,
+      "y": -768.0
+    },
+    {
+      "id": "well:swamp_n",
+      "solo_position": [
+        1312.0,
+        -768.0
+      ],
+      "x": 1312.0,
+      "y": -768.0
+    },
+    {
+      "id": "well:fields_n",
+      "solo_position": [
+        3232.0,
+        -768.0
+      ],
+      "x": 3232.0,
+      "y": -768.0
+    },
+    {
+      "id": "well:desert_n",
+      "solo_position": [
+        4768.0,
+        -768.0
+      ],
+      "x": 4768.0,
+      "y": -768.0
+    },
+    {
+      "id": "well:forest_s",
+      "solo_position": [
+        1312.0,
+        2304.0
+      ],
+      "x": 1312.0,
+      "y": 2304.0
+    },
+    {
+      "id": "well:swamp_s",
+      "solo_position": [
+        3232.0,
+        2304.0
+      ],
+      "x": 3232.0,
+      "y": 2304.0
+    },
+    {
+      "id": "well:fields_s",
+      "solo_position": [
+        4768.0,
+        2304.0
+      ],
+      "x": 4768.0,
+      "y": 2304.0
+    },
+    {
+      "id": "well:desert_s",
+      "solo_position": [
+        6304.0,
+        2304.0
+      ],
+      "x": 6304.0,
+      "y": 2304.0
+    },
+    {
+      "id": "well:mist_ridge",
+      "solo_position": [
+        1312.0,
+        -2048.0
+      ],
+      "x": 1312.0,
+      "y": -2048.0
+    },
+    {
+      "id": "well:burned_forest",
+      "solo_position": [
+        3232.0,
+        -2048.0
+      ],
+      "x": 3232.0,
+      "y": -2048.0
+    }
+  ]
+}

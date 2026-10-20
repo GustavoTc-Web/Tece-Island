@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {readFile, writeFile} from 'node:fs/promises';
 import {WebSocket} from '../server/node_modules/ws/wrapper.mjs';
-const runtime = JSON.parse(await readFile('.tools/mp-runtime.json','utf8'));
+const runtime = JSON.parse(await readFile(process.argv[2] || '.tools/mp-runtime.json','utf8'));
 const url = runtime.wss;
 assert.match(url, /^wss:\/\/[a-z0-9-]+\.trycloudflare\.com\/room$/);
 const origin = 'https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site';
@@ -23,7 +23,7 @@ function connect(message, expected) {
 }
 try {
   const health=await (await fetch(url.replace('wss://','https://').replace('/room','/health'),{signal:AbortSignal.timeout(10000)})).json();
-  check(health.ok&&health.protocol===1&&health.version==='0.9.0-multiplayer-pilot.2','External HTTPS reaches only game service with exact version/protocol');
+  check(health.ok&&health.protocol===2&&health.version==='0.9.0-multiplayer-pilot.3','External HTTPS reaches only game service with exact version/protocol');
   const root=await fetch(url.replace('wss://','https://').replace('/room','/'),{signal:AbortSignal.timeout(10000)});
   check(root.status===404,'External tunnel serves no filesystem or other application at root');
   check(await connect({type:'input',seq:1,x:1,y:0},'auth_required'),'External WSS rejects actions without authentication');
@@ -33,9 +33,10 @@ try {
   const now=Math.floor(Date.now()/1000), encode=value=>Buffer.from(JSON.stringify(value)).toString('base64url');
   const fakeToken=uid=>`${encode({alg:'none',typ:'JWT'})}.${encode({sub:uid,user_id:uid,aud:configuration.projectId,iss:`https://securetoken.google.com/${configuration.projectId}`,iat:now,exp:now+3600,auth_time:now,email_verified:true,firebase:{sign_in_provider:'password'}})}.`;
   const allowedToken=fakeToken(allowed[0]), outsiderToken=fakeToken('mp-unauthorized-production-probe');
-  check(await connect({type:'hello',protocol:1,uid:allowed[0],token:allowedToken},'auth_failed'),'External WSS rejects unsigned token even with allowlisted UID');
-  check(await connect({type:'hello',protocol:1,uid:allowed[0],token:outsiderToken},'auth_failed'),'External WSS rejects forged outsider token and claimed allowed UID');
-  for(const log of ['.tools/mp-production.log','.tools/mp-production-error.log','.tools/mp-tunnel.log','.tools/mp-tunnel-error.log']) {
+  check(await connect({type:'hello',protocol:2,uid:allowed[0],token:allowedToken},'auth_failed'),'External WSS rejects unsigned token even with allowlisted UID');
+  check(await connect({type:'hello',protocol:2,uid:allowed[0],token:outsiderToken},'auth_failed'),'External WSS rejects forged outsider token and claimed allowed UID');
+  for(const name of ['production','production-error','tunnel','tunnel-error']) {
+    const log=`.tools/${runtime.log_prefix || 'mp'}-${name}.log`;
     const text=await readFile(log,'utf8');
     check(!text.includes(allowedToken)&&!text.includes(outsiderToken)&&!text.includes(allowed[0])&&!text.includes(allowed[1]),`No identity token or UID in ${log}`);
   }

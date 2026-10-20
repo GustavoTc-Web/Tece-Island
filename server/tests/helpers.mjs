@@ -37,7 +37,7 @@ export class Client {
   }
   async open() {while (this.ws.readyState === WebSocket.CONNECTING) await pause(10); if (this.ws.readyState !== WebSocket.OPEN) throw Error('Socket refused');}
   async hello(identity, extra = {}) {
-    await this.open(); this.send({type: 'hello', protocol: 1, ...identity, ...extra});
+    await this.open(); this.send({type: 'hello', protocol: 2, ...identity, ...extra});
     const response = await this.wait(m => ['welcome', 'error'].includes(m.type));
     if (response.type === 'welcome') {this.self = response.self; this.seq = response.nextAction - 1;}
     return response;

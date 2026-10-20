@@ -4,12 +4,13 @@ import {firebaseVerifier} from '../auth.mjs';
 import {startServer} from '../service.mjs';
 import {Room, WORLD} from '../room.mjs';
 import {Client, identities, pause} from './helpers.mjs';
+import {ARENA} from './arena-fixture.mjs';
 
 test('real WebSocket protocol with Firebase emulator identities and two independent clients', async t => {
   const users = await identities();
   const verifier = firebaseVerifier({projectId: 'demo-tece-island', apiKey: 'local-test', localTest: true});
   const server = await startServer({verify: token => verifier.verify(token), nickname: async (_, uid) => uid === 'mp-a' ? 'Ana' : 'Beto',
-    allowedUids: ['mp-a', 'mp-b'], origins: ['http://localhost:8060'], port: 0});
+    allowedUids: ['mp-a', 'mp-b'], origins: ['http://localhost:8060'], port: 0, layout: ARENA});
   const url = `ws://127.0.0.1:${server.port}/room`, clients = [];
   const make = () => {const client = new Client(url); clients.push(client); return client;};
   t.after(async () => {for (const c of clients) c.ws.terminate(); await server.close(); await verifier.close();});
@@ -28,7 +29,7 @@ test('real WebSocket protocol with Firebase emulator identities and two independ
     a = make(); const welcome = await a.hello(users['mp-a'], {uid: 'mp-b', nickname: 'Forged', inventory: {madeira: 9999}});
     assert.equal(welcome.type, 'welcome');
     assert.equal(welcome.players[0].nickname, 'Ana');
-    assert.deepEqual(welcome.inventory, {machado_madeira: 1, picareta_madeira: 1, madeira: 0, pedra: 0});
+    assert.deepEqual(welcome.inventory, {machado_madeira: 1, picareta_madeira: 1, cantil: 1, madeira: 0, pedra: 0, fibra: 0});
     assert.equal(welcome.players.length, 1);
   });
   await t.test('movement is server simulated and diagonal speed is capped', async () => {
@@ -141,7 +142,7 @@ test('real WebSocket protocol with Firebase emulator identities and two independ
 });
 
 test('room capacity and integral extraction with tool switching', () => {
-  const room = new Room(), socket = {close() {}};
+  const room = new Room(ARENA), socket = {close() {}};
   const a = room.join({uid: 'one'}, 'One', socket), b = room.join({uid: 'two'}, 'Two', socket);
   assert.equal(room.join({uid: 'three'}, 'Three', socket), null);
   a.x = b.x = 560; a.y = b.y = 400;
@@ -149,7 +150,7 @@ test('room capacity and integral extraction with tool switching', () => {
   assert.equal(room.action(b, {type: 'equip', seq: 1, tool: 'maos'}, 0), null);
   for (let i = 0; i < 4; i++) assert.equal(room.action(b, {type: 'harvest', seq: i + 2, resource: 'tree-1'}, i * 1200), null);
   assert.equal(room.resources[0].depleted, true);
-  assert.equal(a.inventory.madeira + b.inventory.madeira, 5);
+  assert.equal(a.items.count('madeira') + b.items.count('madeira'), 5);
 });
 
 test('production startup refuses emulator authentication even when accidentally inherited', () => {

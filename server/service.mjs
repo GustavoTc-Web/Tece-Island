@@ -3,13 +3,13 @@ import {WebSocketServer, WebSocket} from 'ws';
 import {Room} from './room.mjs';
 
 const safeNickname = (value, fallback) => typeof value === 'string' && /^[\p{L}\p{N}_ .-]{3,20}$/u.test(value) ? value : fallback;
-export async function startServer({verify, nickname, allowedUids, origins, host = '127.0.0.1', port = 8787}) {
+export async function startServer({verify, nickname, allowedUids, origins, host = '127.0.0.1', port = 8787, layout}) {
   if (allowedUids.length !== 2 || new Set(allowedUids).size !== 2 || !allowedUids.every(uid => typeof uid === 'string' && uid.length > 0)) throw new Error('Exactly two authorized accounts are required');
   if (!origins.length || origins.some(origin => new URL(origin).origin !== origin)) throw new Error('Explicit browser origins are required');
-  const room = new Room();
+  const room = new Room(layout);
   const http = createServer((req, res) => {
     res.writeHead(req.url === '/health' ? 200 : 404, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'});
-    res.end(JSON.stringify(req.url === '/health' ? {ok: true, protocol: 1, version: '0.9.0-multiplayer-pilot.2', connected_players: [...room.players.values()].filter(p => p.socket?.readyState === WebSocket.OPEN).length} : {error: 'not_found'}));
+    res.end(JSON.stringify(req.url === '/health' ? {ok: true, protocol: 2, version: '0.9.0-multiplayer-pilot.3', connected_players: [...room.players.values()].filter(p => p.socket?.readyState === WebSocket.OPEN).length} : {error: 'not_found'}));
   });
   const wss = new WebSocketServer({noServer: true, maxPayload: 16384, perMessageDeflate: false});
   http.on('upgrade', (req, socket, head) => {
@@ -44,7 +44,8 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
       try {message = JSON.parse(bytes.toString());} catch {return refuse(4002, 'invalid_message');}
       if (binary || !message || typeof message !== 'object' || Array.isArray(message)) return refuse(4002, 'invalid_message');
       if (!player) {
-        if (authenticating || message.type !== 'hello' || message.protocol !== 1 || typeof message.token !== 'string' || message.token.length > 12000) return refuse(4001, 'auth_required');
+        if (message.type === 'hello' && message.protocol !== 2) return refuse(4002, 'client_outdated');
+        if (authenticating || message.type !== 'hello' || typeof message.token !== 'string' || message.token.length > 12000) return refuse(4001, 'auth_required');
         authenticating = true;
         try {
           const identity = await verify(message.token);
@@ -55,7 +56,7 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
           player = room.join(identity, safeNickname(alias, `Jogador ${allowedUids.indexOf(identity.uid) + 1}`), ws);
           if (!player) return refuse(4004, 'room_full');
           clearTimeout(handshake);
-          send(ws, {...room.snapshot(player), type: 'welcome', protocol: 1, self: player.id, nextAction: player.action + 1});
+          send(ws, {...room.snapshot(player), type: 'welcome', protocol: 2, self: player.id, nextAction: player.action + 1});
         } catch {return refuse(4001, 'auth_failed');}
         finally {message.token = ''; authenticating = false;}
         return;
@@ -75,7 +76,7 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
       }
       if (player.expires <= Date.now() / 1000) return refuse(4001, 'auth_expired');
       const error = message.type === 'input' ? room.move(player, message, now) : room.action(player, message, now);
-      send(ws, {type: 'ack', seq: message.seq, action: message.type, ok: !error, code: error || ''});
+      send(ws, {type: 'ack', seq: message.seq, action: message.type, ok: !error, code: error || '', effect: !error && message.type === 'well' ? (message.action === 'fill' ? 'filled' : 'drank') : ''});
     });
   });
   let last = performance.now(), snapshots = 0;

@@ -327,19 +327,4 @@ func _spawn_drop(resource: String, amount: int) -> void:
 
 
 func _draw() -> void:
-	draw_rect(WorldTerrain.BOUNDS.grow(1000), Color("182b29"))
-	draw_rect(Rect2(Vector2.ZERO, MAP_SIZE), Color("567c46"))
-	# Semente local fixa: detalhes visuais não mudam entre execuções.
-	var random := RandomNumberGenerator.new()
-	random.seed = 71
-	for i in range(1800):
-		var point := Vector2(random.randf_range(32, 2272), random.randf_range(32, 1504))
-		var shade := Color("628750") if i % 2 == 0 else Color("4b713f")
-		draw_line(point, point + Vector2(-2, -5), shade, 1.0)
-		draw_line(point + Vector2(2, 0), point + Vector2(4, -4), shade, 1.0)
-	# Caminhos largos em cruz conectam os quatro setores e a clareira inicial.
-	var trail := Color("7e8b55")
-	draw_line(Vector2(32, 768), Vector2(2272, 768), trail, 104.0)
-	draw_line(Vector2(1152, 32), Vector2(1152, 1504), trail, 104.0)
-	draw_circle(Vector2(1152, 768), 155.0, trail)
-	draw_arc(Vector2(1152, 768), 140.0, 0.0, TAU, 64, Color("89955d"), 2.0)
+	WorldScenery.draw_ground(self)

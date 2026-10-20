@@ -321,5 +321,21 @@
     "native_chat": 11,
     "native_solo_and_isolation": 282
   },
-  "physical_mobile_gameplay_approved": false
+  "physical_mobile_gameplay_approved": false,
+  "physical_follow_up": {
+    "date": "2026-10-20",
+    "source": "User report",
+    "devices": [
+      "PC",
+      "celular"
+    ],
+    "one_account_per_device": true,
+    "both_joined": true,
+    "remote_movement_observed": true,
+    "tree_cut_actions_observed": true,
+    "exact_five_wood_total": "pending",
+    "reconnect_inventory_and_single_character": "pending",
+    "physical_chat": "not reported",
+    "physical_multitouch": "not reported"
+  }
 }

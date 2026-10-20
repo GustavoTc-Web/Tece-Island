@@ -46,13 +46,32 @@ func _process(_delta: float) -> void:
 	var buttons := {}
 	for control in pilot.find_children("*", "Button", true, false):
 		if control.is_visible_in_tree(): buttons[control.text] = box(control)
+	for index in pilot.hud.quick_buttons.size():
+		if pilot.hud.quick_buttons[index].is_visible_in_tree(): buttons["Slot " + str(index + 1)] = box(pilot.hud.quick_buttons[index])
+	for index in pilot.hud.slot_buttons.size():
+		if pilot.hud.slot_buttons[index].is_visible_in_tree(): buttons["Inventory slot " + str(index + 1)] = box(pilot.hud.slot_buttons[index])
 	var players := []
 	for id in pilot.actors:
 		var body: CharacterBody2D = pilot.actors[id].body
 		var screen := body.get_global_transform_with_canvas().origin
-		players.append({"id":id,"x":body.position.x,"y":body.position.y,"nickname":body.identity_label,"screen":[screen.x,screen.y]})
+		var label_size := IslandTheme.BODY.get_string_size(body.identity_label, HORIZONTAL_ALIGNMENT_LEFT, -1, body.identity_label_size)
+		var label_position: Vector2 = screen + Vector2(-27, -53 - body.identity_label_size) + body.identity_label_offset
+		players.append({"id":id,"x":body.position.x,"y":body.position.y,"nickname":body.identity_label,"screen":[screen.x,screen.y],"name_box":[label_position.x,label_position.y,label_size.x,body.identity_label_size + 4]})
 	var value := {"ready":true,"online":pilot.online,"fatal":pilot.fatal,"self":pilot.self_id,"room":pilot.room_id,"inventory":pilot.inventory,"players":players,"snapshot":pilot.snapshot,"status":pilot.status.text,"notice":pilot.notice.text,"prompt":pilot.prompt.text,"panel":box(pilot.panel),"buttons":buttons,"touch":MobileInput.enabled,"move":[pilot.touch_vector.x,pilot.touch_vector.y],"stick":[pilot.overlay.center.x,pilot.overlay.center.y,pilot.overlay.radius],"viewport":[get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]}
 	value["fingers"] = pilot.overlay.fingers.duplicate()
 	value["gui"] = MobileInput.gui_touches.keys()
 	value["focused"] = pilot.focused
+	value["panel"] = box(pilot.hud.get_node("Controls")) if pilot.online else box(pilot.panel)
+	value["selected"] = pilot.projected_inventory.selected_index
+	value["slots"] = pilot.projected_inventory.network_state()
+	value["thirst"] = pilot.snapshot.get("thirst", 100)
+	value["active_panel"] = pilot.hud.current_panel
+	value["overlay_visible"] = pilot.overlay.visible
+	value["target"] = pilot.target
+	value["well_target"] = pilot.well_target
+	value["regions"] = pilot.world_view.data.regions.size()
+	value["total_resources"] = pilot.nodes.size()
+	value["wells"] = pilot.world_view.wells.size()
+	value["swings"] = pilot.actors.values().map(func(actor): return actor.swing)
+	value["fps"] = Engine.get_frames_per_second()
 	JavaScriptBridge.eval("window.tcMpState=" + JSON.stringify(value))

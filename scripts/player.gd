@@ -42,6 +42,8 @@ var swing_kind := "swing"
 var network_controlled: bool = false
 var simulation_authority: bool = true
 var identity_label: String = ""
+var identity_label_offset := Vector2.ZERO
+var identity_label_size := 14
 var identity_color := Color("d9a441")
 var poison_remaining := 0.0
 var poison_tick := 0.0
@@ -184,7 +186,7 @@ func _draw() -> void:
 	draw_line(Vector2(13, -21), Vector2(13, -11) + arm_motion, Color("e6bb8d"), 5.0)
 	draw_tool()
 	if identity_label != "":
-		draw_string(IslandTheme.BODY, Vector2(-27, -53), identity_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, identity_color)
+		draw_string(IslandTheme.BODY, Vector2(-27, -53) + identity_label_offset, identity_label, HORIZONTAL_ALIGNMENT_LEFT, -1, identity_label_size, identity_color)
 
 
 func draw_tool() -> void:

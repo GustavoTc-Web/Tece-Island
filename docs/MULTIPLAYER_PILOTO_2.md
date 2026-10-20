@@ -152,6 +152,12 @@ Não se registra partida física aprovada com base apenas nesse login.
   Regras, configurações Firebase, faturamento, saves e alterações do IDE não foram
   modificados por esta correção.
 
-**Pendências reais:** confirmar nos aparelhos físicos movimento, coleta, chat,
-reconexão e multitoque; os testes automatizados não aprovam essas etapas humanas.
+**Retorno físico do usuário em 20/10/2026:** PC + celular, uma conta em cada:
+entrada dos dois jogadores, visualização dos movimentos e das ações de cortar
+árvore confirmadas. O comentário sobre diferença em relação ao solo se referia
+à arena reduzida, e não à falha dessas ações na .2.
+
+**Pendências reais:** soma exata de 5 madeiras, saída/retorno preservando inventário
+e personagem sem duplicação, chat e multitoque nos aparelhos. Não foram aprovadas
+por inferência a partir dos testes automatizados.
 A disponibilidade continua dependente deste PC e do Quick Tunnel temporário.

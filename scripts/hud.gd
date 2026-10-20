@@ -732,6 +732,10 @@ func _well_action(action: String) -> void:
 	if action == "Fechar":
 		set_panel("")
 		return
+	if network_mode:
+		if is_instance_valid(active_well):
+			network_action_requested.emit("well", {"well": str(active_well.get_meta("network_id", "")), "action": "drink" if action == "Beber" else "fill"})
+		return
 	if not is_instance_valid(active_well) or not active_well.can_interact():
 		show_message("Aproxime-se do poço")
 		set_panel("")

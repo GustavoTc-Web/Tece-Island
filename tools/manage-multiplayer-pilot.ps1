@@ -1,11 +1,12 @@
 param(
     [ValidateSet('Start','Stop','Status','RestartServer','RepairTunnel')][string]$Action = 'Status',
     [string]$AllowedUidsFile,
-    [int]$Port = 8787
+    [int]$Port = 8787,
+    [ValidatePattern('^[a-z0-9-]+$')][string]$Instance = 'mp'
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
-$taskRuntime = Join-Path $taskRoot '.tools/mp-runtime.json'
+$taskRuntime = Join-Path $taskRoot ('.tools/'+$Instance+'-runtime.json')
 $taskNode = [IO.Path]::GetFullPath((Get-Command node -ErrorAction Stop).Source)
 $taskConnector = Join-Path $taskRoot '.tools/cloudflared.exe'
 $taskOrigin = 'https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site'
@@ -14,6 +15,9 @@ if (Test-Path -LiteralPath $taskRuntime) {
     $taskSaved = Get-Content -LiteralPath $taskRuntime -Raw | ConvertFrom-Json
     foreach ($taskProperty in $taskSaved.PSObject.Properties) { $taskState[$taskProperty.Name] = $taskProperty.Value }
 }
+$taskLogPrefix = if ($taskState.log_prefix) { [string]$taskState.log_prefix } else { $Instance }
+if ($taskLogPrefix -notmatch '^[a-z0-9-]+$') { throw 'Prefixo de log invalido.' }
+function Task-Log([string]$Name) { return Join-Path $taskRoot ('.tools/'+$taskLogPrefix+'-'+$Name+'.log') }
 function Save-State {
     New-Item -ItemType Directory -Force (Split-Path $taskRuntime -Parent) | Out-Null
     [IO.File]::WriteAllText(($taskRuntime+'.tmp'), ($taskState | ConvertTo-Json -Depth 5))
@@ -58,7 +62,7 @@ function Test-Health([string]$Address) {
     if (-not $Address) { return $false }
     try {
         $taskResult = Invoke-RestMethod -Uri $Address -TimeoutSec 5
-        return [bool]($taskResult.ok -and $taskResult.protocol -eq 1 -and $taskResult.version -like '0.9.0-multiplayer-pilot.*')
+        return [bool]($taskResult.ok -and $taskResult.protocol -eq 2 -and $taskResult.version -like '0.9.0-multiplayer-pilot.*')
     } catch { return $false }
 }
 if ($Action -eq 'Status') { Show-State; exit 0 }
@@ -87,18 +91,19 @@ if (-not (Owned-Process 'server' $taskNode)) {
     $env:TECE_FIREBASE_PROJECT = $taskFirebase.projectId
     $env:TECE_FIREBASE_API_KEY = $taskFirebase.apiKey
     Remove-Item Env:GOOGLE_APPLICATION_CREDENTIALS -ErrorAction SilentlyContinue
-    $taskProcess = Start-Process -FilePath $taskNode -ArgumentList 'index.mjs' -WorkingDirectory (Join-Path $taskRoot 'server') -WindowStyle Hidden -RedirectStandardOutput (Join-Path $taskRoot '.tools/mp-production.log') -RedirectStandardError (Join-Path $taskRoot '.tools/mp-production-error.log') -PassThru
+    $taskProcess = Start-Process -FilePath $taskNode -ArgumentList 'index.mjs' -WorkingDirectory (Join-Path $taskRoot 'server') -WindowStyle Hidden -RedirectStandardOutput (Task-Log 'production') -RedirectStandardError (Task-Log 'production-error') -PassThru
     $taskState.server_pid = $taskProcess.Id
     $taskState.server_started_at = $taskProcess.StartTime.ToUniversalTime().ToString('o')
     $taskState.port = $Port
     $taskState.allowed_uids_file = $taskAccountsPath
+    $taskState.log_prefix = $taskLogPrefix
     Save-State
     $taskHealthy = $false
     for ($taskAttempt=0; $taskAttempt -lt 40; $taskAttempt++) {
-        if ($taskProcess.HasExited) { throw 'Servidor encerrou; consulte .tools/mp-production-error.log.' }
+        if ($taskProcess.HasExited) { throw 'Servidor encerrou; consulte o log production-error da instancia.' }
         try {
             $taskHealth = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health" -TimeoutSec 1
-            if ($taskHealth.ok -and $taskHealth.protocol -eq 1 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.2') { $taskHealthy = $true; break }
+            if ($taskHealth.ok -and $taskHealth.protocol -eq 2 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.3') { $taskHealthy = $true; break }
         } catch { Start-Sleep -Milliseconds 100 }
     }
     if (-not $taskHealthy) { throw 'Servidor ainda nao confirmou health; o tunel nao foi aberto.' }
@@ -112,14 +117,14 @@ if ($Action -eq 'RepairTunnel' -or -not (Test-Health (Health-Url $taskState.wss)
 if (-not (Owned-Process 'tunnel' $taskConnector)) {
     if ($Action -eq 'RestartServer') { Show-State; exit 0 }
     if ((Get-FileHash -LiteralPath $taskConnector -Algorithm SHA256).Hash.ToLowerInvariant() -ne '4d2490e74082c5d48dbfedaf92576fa5bd1702379ab88eb7faa0cfbe8dc891b6') { throw 'Conector diferente do binario oficial verificado; revise a instalacao antes de abrir o tunel.' }
-    $taskProcess = Start-Process -FilePath $taskConnector -ArgumentList @('tunnel','--url',"http://127.0.0.1:$Port",'--no-autoupdate','--protocol','http2') -WindowStyle Hidden -RedirectStandardOutput (Join-Path $taskRoot '.tools/mp-tunnel.log') -RedirectStandardError (Join-Path $taskRoot '.tools/mp-tunnel-error.log') -PassThru
+    $taskProcess = Start-Process -FilePath $taskConnector -ArgumentList @('tunnel','--url',"http://127.0.0.1:$Port",'--no-autoupdate','--protocol','http2') -WindowStyle Hidden -RedirectStandardOutput (Task-Log 'tunnel') -RedirectStandardError (Task-Log 'tunnel-error') -PassThru
     $taskState.tunnel_pid = $taskProcess.Id
     $taskState.tunnel_started_at = $taskProcess.StartTime.ToUniversalTime().ToString('o')
     $taskState.wss = ''
     Save-State
     for ($taskAttempt=0; $taskAttempt -lt 180; $taskAttempt++) {
-        if ($taskProcess.HasExited) { throw 'Tunel encerrou; consulte .tools/mp-tunnel-error.log.' }
-        $taskText = (Get-Content -LiteralPath (Join-Path $taskRoot '.tools/mp-tunnel-error.log') -Raw -ErrorAction SilentlyContinue)
+        if ($taskProcess.HasExited) { throw 'Tunel encerrou; consulte o log tunnel-error da instancia.' }
+        $taskText = (Get-Content -LiteralPath (Task-Log 'tunnel-error') -Raw -ErrorAction SilentlyContinue)
         if ($taskText -match 'https://[a-z0-9-]+\.trycloudflare\.com') {
             $taskState.wss = $Matches[0].Replace('https://','wss://') + '/room'
             Save-State
@@ -132,7 +137,7 @@ if (-not (Owned-Process 'tunnel' $taskConnector)) {
     $taskRegistered = $false
     for ($taskAttempt=0; $taskAttempt -lt 240; $taskAttempt++) {
         if ($taskProcess.HasExited) { throw 'Tunel encerrou durante o registro.' }
-        if (Select-String -LiteralPath (Join-Path $taskRoot '.tools/mp-tunnel-error.log') -SimpleMatch 'Registered tunnel connection' -Quiet) { $taskRegistered = $true; break }
+        if (Select-String -LiteralPath (Task-Log 'tunnel-error') -SimpleMatch 'Registered tunnel connection' -Quiet) { $taskRegistered = $true; break }
         Start-Sleep -Milliseconds 250
     }
     if (-not $taskRegistered) { throw 'Processo ativo, mas nenhum relay registrado; nao publique este endereco.' }

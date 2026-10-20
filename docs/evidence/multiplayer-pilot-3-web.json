@@ -1,0 +1,153 @@
+{
+  "checks": [
+    {
+      "pass": true,
+      "label": "Actual menu entry loads full solo-derived world, resources and wells"
+    },
+    {
+      "pass": true,
+      "label": "Existing HUD has seven inventory slots and five quick slots"
+    },
+    {
+      "pass": true,
+      "label": "PC HUD remains compact after reusing solo components"
+    },
+    {
+      "pass": true,
+      "label": "Two authenticated clients render each other with nicknames"
+    },
+    {
+      "pass": true,
+      "label": "Simultaneous PC keyboard and mobile joystick move only their own players"
+    },
+    {
+      "pass": true,
+      "label": "Both players reach same canonical solo tree through actual controls"
+    },
+    {
+      "pass": true,
+      "label": "PC nearby player nicknames do not overlap"
+    },
+    {
+      "pass": true,
+      "label": "Mobile nearby player nicknames do not overlap"
+    },
+    {
+      "pass": true,
+      "label": "Accepted harvest progress and cut animation reach the other player"
+    },
+    {
+      "pass": true,
+      "label": "Mobile second finger harvests while joystick finger remains held"
+    },
+    {
+      "pass": true,
+      "label": "Concurrent final cuts remove one shared tree and award exactly five wood total"
+    },
+    {
+      "pass": true,
+      "label": "Both players reach the same original forest well"
+    },
+    {
+      "pass": true,
+      "label": "Existing well panel opens and hides mobile gameplay controls"
+    },
+    {
+      "pass": true,
+      "label": "Server fills a separate three-dose canteen for each player at shared well"
+    },
+    {
+      "pass": true,
+      "label": "Well drink restores water through authoritative server state"
+    },
+    {
+      "pass": true,
+      "label": "Using canteen affects only its owner inventory"
+    },
+    {
+      "pass": true,
+      "label": "Actual reused inventory panel renders all seven server slots on mobile"
+    },
+    {
+      "pass": true,
+      "label": "Inventory slot swap is validated and returned by server"
+    },
+    {
+      "pass": true,
+      "label": "Existing quickbar equips server-owned tool after slot movement"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Interagir"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Inventário"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Menu"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Slot 1"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Slot 2"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Slot 3"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Slot 4"
+    },
+    {
+      "pass": true,
+      "label": "Mobile touch target >=44 CSS px: Slot 5"
+    },
+    {
+      "pass": true,
+      "label": "Disconnected client suspends joystick and inventory gameplay"
+    },
+    {
+      "pass": true,
+      "label": "Reconnect preserves character, inventory slots and canteen water"
+    },
+    {
+      "pass": true,
+      "label": "Reconnect retains depleted resources across full world"
+    },
+    {
+      "pass": true,
+      "label": "Chat blocks gameplay inputs without pausing the other player"
+    },
+    {
+      "pass": true,
+      "label": "Five seconds without snapshots pauses controls"
+    },
+    {
+      "pass": true,
+      "label": "Automatic recovery preserves the same player"
+    },
+    {
+      "pass": true,
+      "label": "Real keyboard traverses original forest-to-swamp connection across former arena limits"
+    },
+    {
+      "pass": true,
+      "label": "Return to solo world library uses existing session flow"
+    },
+    {
+      "pass": true,
+      "label": "No Godot/JavaScript errors in either actual Web client"
+    }
+  ],
+  "errors": [],
+  "physical": false,
+  "version": "0.9.0-multiplayer-pilot.3",
+  "devices": "Two independent headless Edge processes; PC 1920x950 and mobile touch 640x360 emulated",
+  "physical_approval": false
+}

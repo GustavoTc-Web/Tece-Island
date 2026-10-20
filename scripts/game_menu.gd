@@ -69,6 +69,10 @@ func open(value: String = "menu") -> void:
 	retry_button.visible = value == "data" and hud.save_button != null
 	rows.get_node("Back").visible = value != "menu"
 	if value == "help":
+		if hud.network_mode:
+			text.text = ("Arraste o círculo para andar. Toque Coletar/Interagir perto do alvo, selecione os cinco slots e abra Inventário para usar ou mover itens." if MobileInput.enabled else "WASD/setas: andar. F/mouse: coletar ou usar o cantil selecionado. E: interagir. 1–5/scroll: selecionar. I: inventário.") + "\n\nExplore os biomas e colete madeira, pedra e fibra. Poços permitem beber e encher o cantil com três doses. Cada jogador tem seu inventário. Ao abrir um painel, seu personagem para; o outro jogador continua na sala."
+			layout()
+			return
 		var controls := "Use os joysticks para andar e mirar/atacar. Toque Interagir para coletar ou abrir o alvo próximo. Toque nos cinco slots para selecionar; Inventário permite usar, equipar e jogar itens." if MobileInput.enabled else "WASD/setas: andar. Mouse/F: atacar. E: coletar/interagir. 1–5/scroll: selecionar. I: inventário; C: fabricação; J: diário; R: recarregar."
 		text.text = controls + "\n\nFabricação e Base ficam no inventário. Para construir, selecione cama, fogueira ou peça e use Colocar selecionado; escolha terreno próximo e livre. " + ("Toque no mapa para ajustar e use Confirmar/Cancelar." if MobileInput.enabled else "Clique confirma, Esc cancela, R gira peças.") + "\n\nComida e cantil: Usar no inventário ou botão contextual. Poços permitem beber e encher o cantil. Cozinhe perto de uma fogueira.\n\nO solo salva automaticamente neste aparelho. Confira Dados e salvamento se houver uma falha. Para relatar um problema, copie as informações abaixo e envie manualmente com sua descrição; não inclua senha."
 	elif value == "data":
@@ -76,6 +80,7 @@ func open(value: String = "menu") -> void:
 	layout()
 
 func save_details() -> String:
+	if hud.network_mode: return "A sala multiplayer permanece na memória do servidor até ele reiniciar. Seus mundos solo e backups são separados."
 	var world := hud.get_parent()
 	if world.account_store == null: return "A arena multiplayer não usa o save do mundo solo."
 	var account: AccountProgress = world.account_store
@@ -93,6 +98,10 @@ func save_details() -> String:
 
 func refresh_save_details() -> void:
 	if area != "data": return
+	if hud.network_mode:
+		text.text = save_details()
+		retry_button.hide()
+		return
 	text.text = "O progresso é salvo periodicamente neste aparelho. Aguarde Sincronizado antes de trocar de aparelho. Tentativas automáticas têm intervalo de pelo menos 2 minutos; o botão permite tentar antes, respeitando 10 segundos entre pedidos.\n\n" + (hud.save_button.text if hud.save_button != null else "Save indisponível.") + "\n\n" + save_details()
 
 func invoke(caption: String) -> void:
