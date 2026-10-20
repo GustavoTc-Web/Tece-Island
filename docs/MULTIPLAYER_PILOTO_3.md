@@ -128,3 +128,48 @@ atual e verifica HTTPS/WSS, não apenas os PIDs. Se o domínio do túnel mudar,
 reexportar e republicar o cliente com o novo endereço. `RepairTunnel` recria
 somente o relay; `RestartServer` reinicia e zera apenas a sala multiplayer.
 O relatório de publicação abaixo identifica os artefatos efetivamente servidos.
+
+## Publicação conferida em 20/10/2026
+
+- Código compilado e enviado: `491753d4b37ff92f27e79448a534df8f23aff03a`.
+- [CI aprovada](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39491841433).
+- Fonte do Site: `cb52f0b116b72a5b4e6256cc9efe0f8aa4a91f69`.
+- Publicação privada versão **3**, deployment
+  `appgdep_6ad7cf322af0819195a98b2197a2b970`: **succeeded**.
+- Versão salva:
+  `appgprj_6ad6b7bc03c481918665130efcc41739~appgver_c1d36a7698848191bc7ec4a5d207187f`.
+- WSS efetivamente compilado e servido:
+  `wss://advertise-bean-marie-duplicate.trycloudflare.com/room`.
+- PCK SHA256: `a98145e8ed07709d984dee6347b4d95325a4a9db5f61fbc2d84803c367722845`.
+- Mundo compartilhado SHA256:
+  `bfafff5233793bf02fc6e4192f2dc6a86355c334b18cdd6ce0bd9ed88ea71031`.
+- **8 verificações do PCK final**: versão/commit, endpoint, configurações/contas,
+  exclusão de servidor/testes, abertura, cópias de save legado v5 e v8 vencido,
+  identidade do mundo compilado com o servidor. Originais preservados.
+- **30 verificações pós-deploy**: manifesto, rótulo .3, PCK, engine, fontes e
+  scripts por hash; login obrigatório e WSS anônimo recusado em PC e mobile
+  emulado. Os 17 arquivos além do HTML coincidem por SHA256; HTML conserva toda
+  a fonte mais a inserção de 938 caracteres do provedor Sites.
+- As capturas do cliente **publicado** mostram o login: [PC](images/multiplayer-3-published-login-pc.png)
+  e [mobile emulado](images/multiplayer-3-published-login-mobile.png).
+  A partida com duas contas nas imagens anteriores usa o mesmo código .3 e
+  autenticação emulada. Login positivo das contas reais e partida física na
+  **.3** ainda não foram confirmados; os resultados físicos da .2 foram mantidos
+  separadamente. No harness de acesso privado, os AudioWorklets usam Blobs dos
+  bytes publicados já verificados por hash, pois requisições desse tipo não
+  recebem o cabeçalho de serviço do Playwright; o jogo publicado não foi alterado
+  para esse contorno de teste.
+- A instância .2 foi mantida até verificar o deploy .3 e então encerrada, já sem
+  jogadores conectados. A .3 começa uma nova sala de teste, com kit inicial e
+  cantil vazio. Instância ativa: loopback **8790**; somente o serviço do jogo é
+  exposto pelo túnel. `Status` confirma saúde local e externa e
+  `needs_republish=False`. Os comandos padrão agora operam essa instância.
+- Oficial reconferido: **0.9.0**, commit `15ba9685`, PCK servido
+  `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`.
+  `main` continua `c790758`, tag `v0.9.0` preservada; digest de configurações
+  `4ad90aec7bc4d5feadaf2d66de6dd1e87055f2418b24a0bf72973e62d84f2625`.
+  Os saves solo, alterações locais do IDE, duas contas, dados/configurações
+  Firebase e ausência de faturamento foram preservados.
+
+Relatórios: [Web emulado](evidence/multiplayer-pilot-3-web.json) e
+[pacote/publicação/serviço](evidence/multiplayer-pilot-3-deployment.json).

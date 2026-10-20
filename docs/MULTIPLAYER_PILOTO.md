@@ -1,6 +1,7 @@
 # Multiplayer — primeiro piloto
 
-Correção atual: [piloto .2 e diagnóstico do reteste](MULTIPLAYER_PILOTO_2.md).
+Piloto atual: [mundo compartilhado .3](MULTIPLAYER_PILOTO_3.md).
+Histórico da correção de conexão: [piloto .2](MULTIPLAYER_PILOTO_2.md).
 Os registros da .1 abaixo são históricos.
 
 Versão: **0.9.0-multiplayer-pilot.1**, protocolo 1. Branch
