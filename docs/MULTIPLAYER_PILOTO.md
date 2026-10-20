@@ -100,35 +100,74 @@ não altera configs do checkout nem os saves. A configuração fonte continua
 são excluídos do PCK de distribuição. Não use `-Fixture` numa publicação: essa
 opção cria somente a instrumentação de testes local com contas fictícias.
 
-## Hospedagem avaliada e passo pendente
+## Hospedagem privada temporária e operação
 
-O cliente tem um novo projeto Sites privado reservado, sem substituir o piloto
-solo nem o oficial: `appgprj_6ad6b7bc03c481918665130efcc41739`.
-Ainda **não está publicado**: falta um backend WSS aprovado e alcançável.
+O cliente usa um novo projeto Sites privado, sem substituir o piloto solo nem
+o oficial: `appgprj_6ad6b7bc03c481918665130efcc41739`.
+Endereço do cliente: https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/
 
 Uma opção gratuita temporária é Cloudflare Quick Tunnel, encaminhando só o
 servidor Node local. Não exige comprar serviço nem habilitar Firebase Billing;
 o PC precisa ficar ligado. O domínio é aleatório, muda ao iniciar outro túnel,
 não há SLA e o limite é 200 requisições simultâneas. Não é hospedagem permanente.
-ID tokens Firebase e pacotes da partida passariam pela terminação TLS da
-Cloudflare. A revisão automática de aprovação recusou essa transmissão externa
-sem autorização específica; **nenhum túnel foi iniciado**.
+O usuário autorizou expressamente o trânsito de ID tokens Firebase e pacotes da
+partida pela terminação TLS da Cloudflare em 19/10/2026. Somente o serviço do
+jogo em `127.0.0.1:8787` é encaminhado; não são servidos arquivos locais.
+Servidor, túnel, lista de contas, porta e horários dos processos ficam registrados
+em `.tools/mp-runtime.json`, sem tokens ou credenciais administrativas.
 [Condições e limites](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).
 
-Próximo passo para publicar, após essa autorização explícita:
+Comandos na raiz deste checkout, usando um terminal com Node no PATH:
 
-1. Iniciar `tools/start-multiplayer.ps1` com o arquivo das duas contas e
-   `-Origins 'https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site'`.
-2. Abrir um terminal com o conector oficial e executar
-   `.tools/cloudflared.exe tunnel --url http://127.0.0.1:8787 --no-autoupdate --protocol http2`.
-   Foi baixado o conector 2026.10.1, SHA256
+```powershell
+# Conferir se servidor/túnel estão ativos e qual WSS está em uso.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/manage-multiplayer-pilot.ps1 -Action Status
+
+# Reiniciar somente o servidor; preserva o domínio se o túnel continuar ativo.
+# Isso reinicia a sala de teste e seus inventários.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/manage-multiplayer-pilot.ps1 -Action RestartServer
+
+# Encerrar ambos: o link do jogo ficará sem servidor.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/manage-multiplayer-pilot.ps1 -Action Stop
+
+# Iniciar ambos novamente (ou reutilizar os que ainda estiverem ativos).
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/manage-multiplayer-pilot.ps1 -Action Start
+```
+
+O gerenciador verifica executável e horário de criação do PID antes de encerrar
+um processo, evitando encerrar processos de terceiros após reutilização de PID.
+`Start` é idempotente enquanto os dois processos continuam ativos. O arquivo
+das mesmas duas contas é retomado do registro local; também pode ser passado em
+`-AllowedUidsFile`. O conector é iniciado oculto e apenas sua porta de métricas
+local fica adicionalmente em loopback.
+
+**Encerrar e iniciar o túnel gera outro domínio.** Se `Status` mostrar
+`needs_republish: True`, o cliente publicado ainda aponta para o domínio anterior.
+Não basta iniciar os processos: reexportar e republicar o endpoint novo no mesmo
+Sites privado. Para interromper uma partida sem trocar o domínio, mantenha o
+túnel ligado e use `RestartServer`, ciente da perda do progresso desta sala.
+
+Procedimento para atualizar a publicação após trocar de túnel:
+
+1. Executar `manage-multiplayer-pilot.ps1 -Action Start` e copiar o campo `wss`
+   confirmado em `Status`. Não alterar a lista das duas contas autorizadas.
+2. O gerenciador usa o conector oficial 2026.10.1, SHA256
    `4d2490e74082c5d48dbfedaf92576fa5bd1702379ab88eb7faa0cfbe8dc891b6`.
-3. Copiar o HTTPS devolvido, trocar por `wss://` e acrescentar `/room`. Exportar
-   novamente com esse `-ServerUrl`, as mesmas duas contas e sem `-Fixture`.
+   Para instalação nova, baixar esse binário oficial para `.tools/cloudflared.exe`.
+   O conector só encaminha `http://127.0.0.1:8787`; o acesso externo é HTTPS/WSS.
+3. Exportar novamente com o novo `-ServerUrl`, as mesmas duas contas e sem
+   `-Fixture`, usando `tools/export-multiplayer-pilot.ps1`.
 4. Empacotar com `tools/package-sync-pilot.mjs`, publicar no novo Sites como
    privado e verificar o WebSocket, a recusa de anônimos e a entrada real das
-   duas contas. Parar túnel e servidor encerra a disponibilidade; para reabrir
-   com outro domínio é preciso reexportar/republicar o endpoint.
+   duas contas. A republicação exige acesso ao projeto Sites já reservado; se
+   necessário, pedir a atualização ao agente com o novo endereço WSS.
+
+Verificação automatizada do WSS de produção, sem usar logins reais:
+`node tools/validate-multiplayer-wss.mjs`. Os resultados não contêm tokens.
+O teste confirma health/versão, raiz 404, recusa de ações anônimas e de tokens
+forjados com UID permitido ou externo, lista de exatamente duas contas e ausência
+dos tokens/UIDs nos logs. A recusa de uma identidade válida fora da lista foi
+exercitada nos testes do emulador; não foi criada uma terceira conta de produção.
 
 Alternativa hospedada avaliada, **não provisionada**: Render Web Service Free,
 repo nesta branch, build `npm ci --prefix server`, start `node server/index.mjs`,
@@ -202,8 +241,8 @@ e `-ServerUrl ws://127.0.0.1:8787/room`, defina
 na pasta local `.tools/browser-test` e Edge (ou `BROWSER_EXE`). Ele abre/encerra
 dois navegadores e os servidores locais; relatórios/imagens ficam em `.tools`.
 
-**Ainda pendentes:** publicar/verificar WSS remoto, entrada positiva das duas
-contas reais no servidor e partida física PC + celular. Mobile emulado não foi
+**Ainda pendentes:** entrada positiva das duas contas reais no servidor e partida
+física PC + celular. Mobile emulado não foi
 registrado como teste físico. A campanha humana completa relatada para a 0.9.0
 continua sendo evidência do solo anterior; não valida o multiplayer.
 
