@@ -106,6 +106,24 @@ O cliente usa um novo projeto Sites privado, sem substituir o piloto solo nem
 o oficial: `appgprj_6ad6b7bc03c481918665130efcc41739`.
 Endereço do cliente: https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/
 
+Publicação privada confirmada em 19/10/2026, versão Sites **1**:
+
+- Jogo: **0.9.0-multiplayer-pilot.1**, commit
+  `1be3b14c6316889919135513db14a6e086ddb10f`.
+- Fonte do pacote Sites: `dd82caa8f32a37cd8c4858293f0a74bb8808b483`.
+- Deploy: `appgdep_6ad6c9f7783081919b743acfaf8d3854`, resultado `succeeded`.
+- Versão salva: `appgprj_6ad6b7bc03c481918665130efcc41739~appgver_89dc6b7942a081919515049c1c952aba`.
+- WSS publicado: `wss://intake-patrick-jenny-caring.trycloudflare.com/room`.
+- PCK servido SHA256: `149c8185ecdc55995df3c8d06bfe53c87bee5476ecf9e6ec168f466e3f693c40`.
+- Motor WASM SHA256: `fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0`,
+  dividido em cinco partes verificadas.
+- [CI aprovada para o código publicado](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39355640833).
+
+O acesso Sites continua privado, somente para o proprietário. Abra o link nos
+dois aparelhos com acesso ao mesmo Sites privado e entre com contas **Firebase
+diferentes** das duas já autorizadas. O login Sites e o login Firebase são etapas
+distintas; nenhuma conta nova ou permissão adicional foi criada.
+
 Uma opção gratuita temporária é Cloudflare Quick Tunnel, encaminhando só o
 servidor Node local. Não exige comprar serviço nem habilitar Firebase Billing;
 o PC precisa ficar ligado. O domínio é aleatório, muda ao iniciar outro túnel,
@@ -168,6 +186,25 @@ O teste confirma health/versão, raiz 404, recusa de ações anônimas e de toke
 forjados com UID permitido ou externo, lista de exatamente duas contas e ausência
 dos tokens/UIDs nos logs. A recusa de uma identidade válida fora da lista foi
 exercitada nos testes do emulador; não foi criada uma terceira conta de produção.
+
+Verificações da publicação: dez verificações externas HTTPS/WSS aprovadas,
+incluindo ausência dos tokens/UIDs de teste nos quatro logs. O PCK compilado
+também conectou ao endpoint real e exibiu a recusa esperada de um token sem
+assinatura. Foram conferidos por hash os 17 assets estáticos servidos, incluindo
+PCK, JavaScript, módulos de áudio, cinco partes do motor, fontes e ícones.
+O HTML mantém o prefixo/sufixo do cliente e recebe um script adicional do Sites;
+seu hash servido varia por essa inserção, enquanto o manifesto registra o hash
+do HTML do pacote de origem. Isso não altera o PCK ou o endpoint.
+
+As telas de login PC e mobile emulado e a recusa WSS a partir do próprio domínio
+privado foram verificadas sem autenticar as contas reais. O verificador usa
+autorização de serviço enviada exclusivamente ao domínio Sites. AudioWorklet
+não herda esse cabeçalho no navegador headless. Na verificação final, os dois
+módulos de áudio foram fornecidos como Blobs com os mesmos bytes servidos e
+conferidos por hash, sem alterar o jogo publicado ou inserir tokens no jogo.
+As **30 verificações finais da publicação passaram**; a entrega normal com cookies
+de uma sessão Sites e a reprodução de áudio em aparelho real ficam no reteste
+físico. Não confundir esse teste com uma partida humana.
 
 Alternativa hospedada avaliada, **não provisionada**: Render Web Service Free,
 repo nesta branch, build `npm ci --prefix server`, start `node server/index.mjs`,
