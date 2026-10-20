@@ -9,7 +9,7 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
   const room = new Room();
   const http = createServer((req, res) => {
     res.writeHead(req.url === '/health' ? 200 : 404, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'});
-    res.end(JSON.stringify(req.url === '/health' ? {ok: true, protocol: 1, version: '0.9.0-multiplayer-pilot.1'} : {error: 'not_found'}));
+    res.end(JSON.stringify(req.url === '/health' ? {ok: true, protocol: 1, version: '0.9.0-multiplayer-pilot.2', connected_players: [...room.players.values()].filter(p => p.socket?.readyState === WebSocket.OPEN).length} : {error: 'not_found'}));
   });
   const wss = new WebSocketServer({noServer: true, maxPayload: 16384, perMessageDeflate: false});
   http.on('upgrade', (req, socket, head) => {

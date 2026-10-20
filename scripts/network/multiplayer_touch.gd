@@ -22,7 +22,7 @@ func _ready() -> void:
 	layout()
 
 func layout() -> void:
-	visible = MobileInput.enabled
+	visible = MobileInput.enabled and arena.online
 	var unit := MobileInput.touch_minimum()
 	radius = maxf(62, unit * 0.85)
 	center = Vector2(radius + 24, get_viewport_rect().size.y - radius - 24)
@@ -38,6 +38,9 @@ func reset() -> void:
 	queue_redraw()
 
 func touch(event: InputEvent) -> void:
+	if not visible or arena.blocked():
+		reset()
+		return
 	if event is InputEventScreenTouch:
 		if event.pressed and event.position.distance_to(center) < radius * 1.4 and fingers.move == -1:
 			fingers.move = event.index
@@ -48,6 +51,7 @@ func touch(event: InputEvent) -> void:
 		queue_redraw()
 
 func mouse_touch(event: InputEventMouseButton) -> bool:
+	if not visible or arena.blocked(): return false
 	if event.pressed and event.position.distance_to(center) >= radius * 1.4: return false
 	if not event.pressed and fingers.move != -100: return false
 	var translated := InputEventScreenTouch.new()

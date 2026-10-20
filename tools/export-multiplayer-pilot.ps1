@@ -27,8 +27,8 @@ foreach ($taskName in @('world-sync','global-chat')) {
     if ($taskName -eq 'world-sync') { $taskConfig.interval_seconds = 120 }
     [IO.File]::WriteAllText((Join-Path $taskCopy "config/$taskName.json"),($taskConfig | ConvertTo-Json))
 }
-[IO.File]::WriteAllText((Join-Path $taskCopy 'config/multiplayer.json'),(@{enabled=$true;url=$ServerUrl;version='0.9.0-multiplayer-pilot.1'} | ConvertTo-Json))
-$taskStamp = @{ version='0.9.0-multiplayer-pilot.1'; commit=(git -C $taskRoot rev-parse HEAD).Trim(); emulated=[bool]$Fixture; save_schema=8; base_release='0.9.0'; multiplayer_protocol=1; server_url=$ServerUrl }
+[IO.File]::WriteAllText((Join-Path $taskCopy 'config/multiplayer.json'),(@{enabled=$true;url=$ServerUrl;version='0.9.0-multiplayer-pilot.2'} | ConvertTo-Json))
+$taskStamp = @{ version='0.9.0-multiplayer-pilot.2'; commit=(git -C $taskRoot rev-parse HEAD).Trim(); emulated=[bool]$Fixture; save_schema=8; base_release='0.9.0'; multiplayer_protocol=1; server_url=$ServerUrl }
 [IO.File]::WriteAllText((Join-Path $taskCopy 'config/build-public.json'),($taskStamp | ConvertTo-Json))
 $taskPreset = Join-Path $taskCopy 'export_presets.cfg'
 $taskText = [IO.File]::ReadAllText($taskPreset).Replace('res://.tools/godot-templates/',($Templates.Replace('\','/')+'/'))
@@ -43,9 +43,13 @@ if ($Fixture) {
 foreach ($taskStage in @('import','export')) {
     $taskLog = Join-Path $taskRoot ".tools/multiplayer-$taskStage.log"
     $ErrorActionPreference = 'Continue'
+    $taskPreviousAppData = $env:APPDATA
+    $env:APPDATA = Join-Path $taskRoot '.tools/multiplayer-build-user'
+    New-Item -ItemType Directory -Force $env:APPDATA | Out-Null
     if ($taskStage -eq 'import') { & $Godot --headless --path $taskCopy --editor --import --quit *> $taskLog }
     else { & $Godot --headless --path $taskCopy --export-release Web (Join-Path $taskOutput 'index.html') *> $taskLog }
     $taskExit = $LASTEXITCODE
+    $env:APPDATA = $taskPreviousAppData
     $ErrorActionPreference = 'Stop'
     if ($taskExit -ne 0 -or (Select-String -LiteralPath $taskLog -Pattern 'SCRIPT ERROR|Parse Error|Export failed' -Quiet)) { Get-Content $taskLog -Tail 55; throw "Falha no piloto: $taskStage" }
 }

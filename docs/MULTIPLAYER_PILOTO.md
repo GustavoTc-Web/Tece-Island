@@ -1,5 +1,8 @@
 # Multiplayer — primeiro piloto
 
+Correção atual: [piloto .2 e diagnóstico do reteste](MULTIPLAYER_PILOTO_2.md).
+Os registros da .1 abaixo são históricos.
+
 Versão: **0.9.0-multiplayer-pilot.1**, protocolo 1. Branch
 `feat/multiplayer-pilot`, criada de `main` `c790758` (solo oficial 0.9.0).
 O checkout do IDE foi preservado; o trabalho fica em `.tools/multiplayer-pilot`.
@@ -272,7 +275,7 @@ npm run test:multiplayer
 ```
 
 Para reproduzir Web: inicie Auth emulator na porta 9099, exporte com `-Fixture`
-e `-ServerUrl ws://127.0.0.1:8787/room`, defina
+e `-ServerUrl ws://127.0.0.1:8789/room`, defina
 `FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099` apenas no terminal de teste e execute
 `node tools/multiplayer-browser-validation.mjs`. Esse script requer Playwright
 na pasta local `.tools/browser-test` e Edge (ou `BROWSER_EXE`). Ele abre/encerra

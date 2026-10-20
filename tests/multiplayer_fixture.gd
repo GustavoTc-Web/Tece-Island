@@ -26,6 +26,9 @@ func invoke(args: Array) -> void:
 			else:
 				pilot = load("res://scenes/network/multiplayer_pilot.tscn").instantiate()
 				add_child(pilot)
+				if data.has("endpoint"):
+					pilot.endpoint = str(data.endpoint)
+					pilot.connect_room()
 		"disconnect": pilot.socket.close(1000, "test_disconnect")
 		"offline": pilot.disconnected("server_unavailable"); pilot.retry_in = 999
 		"retry": pilot.connect_room()
@@ -46,6 +49,10 @@ func _process(_delta: float) -> void:
 	var players := []
 	for id in pilot.actors:
 		var body: CharacterBody2D = pilot.actors[id].body
-		players.append({"id":id,"x":body.position.x,"y":body.position.y,"nickname":body.identity_label})
+		var screen := body.get_global_transform_with_canvas().origin
+		players.append({"id":id,"x":body.position.x,"y":body.position.y,"nickname":body.identity_label,"screen":[screen.x,screen.y]})
 	var value := {"ready":true,"online":pilot.online,"fatal":pilot.fatal,"self":pilot.self_id,"room":pilot.room_id,"inventory":pilot.inventory,"players":players,"snapshot":pilot.snapshot,"status":pilot.status.text,"notice":pilot.notice.text,"prompt":pilot.prompt.text,"panel":box(pilot.panel),"buttons":buttons,"touch":MobileInput.enabled,"move":[pilot.touch_vector.x,pilot.touch_vector.y],"stick":[pilot.overlay.center.x,pilot.overlay.center.y,pilot.overlay.radius],"viewport":[get_viewport().get_visible_rect().size.x,get_viewport().get_visible_rect().size.y]}
+	value["fingers"] = pilot.overlay.fingers.duplicate()
+	value["gui"] = MobileInput.gui_touches.keys()
+	value["focused"] = pilot.focused
 	JavaScriptBridge.eval("window.tcMpState=" + JSON.stringify(value))

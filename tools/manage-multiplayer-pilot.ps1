@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('Start','Stop','Status','RestartServer')][string]$Action = 'Status',
+    [ValidateSet('Start','Stop','Status','RestartServer','RepairTunnel')][string]$Action = 'Status',
     [string]$AllowedUidsFile,
     [int]$Port = 8787
 )
@@ -38,13 +38,28 @@ function Stop-Owned([string]$Kind, [string]$Executable) {
 function Show-State {
     $taskServer = Owned-Process 'server' $taskNode
     $taskTunnel = Owned-Process 'tunnel' $taskConnector
+    $taskLocal = Test-Health "http://127.0.0.1:$($taskState.port)/health"
+    $taskRemote = Test-Health (Health-Url $taskState.wss)
     [PSCustomObject]@{
         server_running = [bool]$taskServer; server_pid = $taskState.server_pid
         tunnel_running = [bool]$taskTunnel; tunnel_pid = $taskState.tunnel_pid
+        server_healthy = $taskLocal; tunnel_healthy = $taskRemote
         port = $taskState.port; wss = $taskState.wss
         published_wss = $taskState.published_wss
         needs_republish = ($taskState.wss -ne $taskState.published_wss)
+        published_endpoint_healthy = if ($taskState.published_wss -eq $taskState.wss) { $taskRemote } else { Test-Health (Health-Url $taskState.published_wss) }
     } | Format-List
+}
+function Health-Url([string]$Address) {
+    if ($Address -notmatch '^wss://[a-z0-9-]+\.trycloudflare\.com/room$') { return '' }
+    return $Address.Replace('wss://','https://').Replace('/room','/health')
+}
+function Test-Health([string]$Address) {
+    if (-not $Address) { return $false }
+    try {
+        $taskResult = Invoke-RestMethod -Uri $Address -TimeoutSec 5
+        return [bool]($taskResult.ok -and $taskResult.protocol -eq 1 -and $taskResult.version -like '0.9.0-multiplayer-pilot.*')
+    } catch { return $false }
 }
 if ($Action -eq 'Status') { Show-State; exit 0 }
 if ($Action -eq 'Stop') {
@@ -83,10 +98,16 @@ if (-not (Owned-Process 'server' $taskNode)) {
         if ($taskProcess.HasExited) { throw 'Servidor encerrou; consulte .tools/mp-production-error.log.' }
         try {
             $taskHealth = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health" -TimeoutSec 1
-            if ($taskHealth.ok -and $taskHealth.protocol -eq 1 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.1') { $taskHealthy = $true; break }
+            if ($taskHealth.ok -and $taskHealth.protocol -eq 1 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.2') { $taskHealthy = $true; break }
         } catch { Start-Sleep -Milliseconds 100 }
     }
     if (-not $taskHealthy) { throw 'Servidor ainda nao confirmou health; o tunel nao foi aberto.' }
+}
+if (-not (Test-Health "http://127.0.0.1:$Port/health")) { throw 'Servidor local sem resposta; o tunel nao foi aberto. Use RestartServer e depois Start.' }
+# A live cloudflared process can retain a deleted Quick Tunnel indefinitely.
+# Repair the relay without restarting the authoritative room.
+if ($Action -eq 'RepairTunnel' -or -not (Test-Health (Health-Url $taskState.wss))) {
+    Stop-Owned 'tunnel' $taskConnector
 }
 if (-not (Owned-Process 'tunnel' $taskConnector)) {
     if ($Action -eq 'RestartServer') { Show-State; exit 0 }
@@ -107,5 +128,19 @@ if (-not (Owned-Process 'tunnel' $taskConnector)) {
         Start-Sleep -Milliseconds 250
     }
     if (-not $taskState.wss) { throw 'Endereco ainda nao confirmado. Consulte Status/log antes de repetir Start.' }
+    # Avoid caching NXDOMAIN while Quick Tunnel is still registering its route.
+    $taskRegistered = $false
+    for ($taskAttempt=0; $taskAttempt -lt 240; $taskAttempt++) {
+        if ($taskProcess.HasExited) { throw 'Tunel encerrou durante o registro.' }
+        if (Select-String -LiteralPath (Join-Path $taskRoot '.tools/mp-tunnel-error.log') -SimpleMatch 'Registered tunnel connection' -Quiet) { $taskRegistered = $true; break }
+        Start-Sleep -Milliseconds 250
+    }
+    if (-not $taskRegistered) { throw 'Processo ativo, mas nenhum relay registrado; nao publique este endereco.' }
+    $taskRelayHealthy = $false
+    for ($taskAttempt=0; $taskAttempt -lt 12; $taskAttempt++) {
+        if (Test-Health (Health-Url $taskState.wss)) { $taskRelayHealthy = $true; break }
+        Start-Sleep -Milliseconds 2500
+    }
+    if (-not $taskRelayHealthy) { throw 'Tunel criado, mas HTTPS ainda nao responde; Status deve confirmar tunnel_healthy antes da publicacao.' }
 }
 Show-State

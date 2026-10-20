@@ -26,12 +26,16 @@ var input_clock := 0.0
 var input_seq := 0
 var action_seq := 0
 var last_token := ""
+var last_state_at := 0
+var notice_until := 0
+var connection_text := ""
+var tool_buttons: Array[Button] = []
 var status: Label
 var counts: Label
 var prompt: Label
 var notice: Label
 var retry: Button
-var toolbar: HBoxContainer
+var toolbar: HFlowContainer
 var panel: PanelContainer
 var overlay: Control
 var camera: Camera2D
@@ -53,11 +57,11 @@ func _ready() -> void:
 	counts = label(rows, "Seu inventário · aguardando servidor")
 	prompt = label(rows, "WASD / setas · 1 machado · 2 picareta · 3 mãos · F/E coletar")
 	notice = label(rows, "Mundo de teste · reiniciar o servidor reinicia esta sala")
-	toolbar = HBoxContainer.new()
+	toolbar = HFlowContainer.new()
 	rows.add_child(toolbar)
-	button(toolbar, "1 Machado", equip.bind("machado_madeira"))
-	button(toolbar, "2 Picareta", equip.bind("picareta_madeira"))
-	button(toolbar, "3 Mãos", equip.bind("maos"))
+	tool_buttons.append(button(toolbar, "1 Machado", equip.bind("machado_madeira")))
+	tool_buttons.append(button(toolbar, "2 Picareta", equip.bind("picareta_madeira")))
+	tool_buttons.append(button(toolbar, "3 Mãos", equip.bind("maos")))
 	button(toolbar, "Menu", func(): menu_requested.emit())
 	retry = button(toolbar, "Reconectar", connect_room)
 	camera = Camera2D.new()
@@ -70,6 +74,8 @@ func _ready() -> void:
 	overlay = TOUCH.new()
 	overlay.arena = self
 	layer.add_child(overlay)
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("document.body.classList.add('tc-multiplayer'); if (!document.getElementById('tc-mp-style')) {const s=document.createElement('style');s.id='tc-mp-style';s.textContent='body.tc-multiplayer #chat-launch{top:auto;bottom:max(12px,env(safe-area-inset-bottom));}body.tc-multiplayer #pilot-badge{display:none;}';document.head.appendChild(s);}")
 	get_viewport().size_changed.connect(layout)
 	MobileInput.mode_changed.connect(layout)
 	layout()
@@ -95,15 +101,43 @@ func button(parent: Node, text: String, callback: Callable) -> Button:
 
 func layout() -> void:
 	var view := get_viewport_rect().size
-	var unit := MobileInput.touch_minimum()
-	var font := int(maxf(17, ceilf(13 / MobileInput.css_scale()))) if MobileInput.enabled else 18
-	panel.position = Vector2(12, 12)
-	panel.size = Vector2(view.x - 24, 0)
+	var scale := MobileInput.css_scale()
+	var unit := (44.0 if MobileInput.enabled else 36.0) / scale
+	var font := int(ceilf(15 / scale))
+	var margin := 8.0 / scale
+	var width := minf(view.x - margin * 2, (620.0 if online else 520.0) / scale)
+	panel.position = Vector2(margin if online else (view.x - width) / 2, margin)
+	panel.size = Vector2(width, 0)
+	var style := IslandTheme.panel(Color(0.05, 0.13, 0.10, 0.96))
+	style.content_margin_left = margin
+	style.content_margin_right = margin
+	style.content_margin_top = 6 / scale
+	style.content_margin_bottom = 6 / scale
+	panel.add_theme_stylebox_override("panel", style)
 	for item in [status, counts, prompt, notice]: item.add_theme_font_size_override("font_size", font)
 	for item in toolbar.get_children():
-		item.custom_minimum_size = Vector2(unit * 1.7, unit)
+		item.custom_minimum_size = Vector2(unit * 1.65, unit)
 		item.add_theme_font_size_override("font_size", font)
+	for i in tool_buttons.size():
+		tool_buttons[i].text = (["Machado", "Picareta", "Mãos"] if MobileInput.enabled else ["1 Machado", "2 Picareta", "3 Mãos"])[i]
 	if is_instance_valid(overlay): overlay.layout()
+	refresh_controls()
+
+func refresh_controls() -> void:
+	for item in tool_buttons:
+		item.visible = online
+		item.disabled = blocked()
+	counts.visible = online
+	notice.visible = Time.get_ticks_msec() < notice_until
+	if not online:
+		prompt.text = "A sala só carrega após validar a conexão. O mundo solo permanece no menu."
+	if is_instance_valid(overlay):
+		overlay.visible = MobileInput.enabled and online
+		overlay.collect.disabled = blocked() or target == ""
+
+func show_notice(text: String) -> void:
+	notice.text = text
+	notice_until = Time.get_ticks_msec() + 4500
 
 func connect_room() -> void:
 	if socket != null: socket.close()
@@ -114,7 +148,9 @@ func connect_room() -> void:
 	retry_in = 0
 	input_seq = 0
 	last_token = ""
+	last_state_at = 0
 	MobileInput.reset()
+	layout()
 	if account_owner == "" or FirebaseAuth.account_uid() != account_owner:
 		fatal = true
 		status.text = "Entre novamente na conta para acessar o multiplayer."
@@ -141,13 +177,16 @@ func _process(delta: float) -> void:
 	# Autowrapped labels settle their minimum height after the first layout pass.
 	# Shrink again instead of retaining the temporary full-screen panel height.
 	panel.size.y = panel.get_combined_minimum_size().y
-	camera.offset.y = -panel.size.y * 0.4
-	if socket == null or fatal: return
+	camera.offset.y = -panel.size.y * 0.5 if online and panel.size.x > get_viewport_rect().size.x * 0.6 else 0.0
+	refresh_controls()
+	if socket == null: return
+	socket.poll()
+	if fatal: return
 	if retry_in > 0:
 		retry_in -= delta
+		status.text = connection_text + " · nova tentativa em %ds" % maxi(1, ceili(retry_in))
 		if retry_in <= 0: connect_room()
 		return
-	socket.poll()
 	var state := socket.get_ready_state()
 	if state == WebSocketPeer.STATE_OPEN:
 		if not greeted:
@@ -159,6 +198,9 @@ func _process(delta: float) -> void:
 			var data: Variant = JSON.parse_string(socket.get_packet().get_string_from_utf8())
 			if data is Dictionary: receive(data)
 		if online:
+			if Time.get_ticks_msec() - last_state_at > 5000:
+				disconnected("state_timeout")
+				return
 			var token := FirebaseAuth.access_token(account_owner)
 			if token != "" and token != last_token:
 				last_token = token
@@ -173,7 +215,7 @@ func _process(delta: float) -> void:
 		disconnected(socket.get_close_reason())
 	if not online:
 		elapsed += delta
-		if elapsed > 12: disconnected("server_unavailable")
+		if elapsed > 24: disconnected("server_unavailable")
 	for id in actors:
 		var actor: Dictionary = actors[id]
 		actor.body.position = actor.body.position.lerp(actor.target, 1 - exp(-delta * 24))
@@ -184,23 +226,25 @@ func _process(delta: float) -> void:
 func receive(data: Dictionary) -> void:
 	match str(data.get("type", "")):
 		"welcome":
-			if room_id != "" and room_id != str(data.room): notice.text = "Servidor reiniciado · uma nova sala de teste começou"
+			if room_id != "" and room_id != str(data.room): show_notice("Servidor reiniciado · uma nova sala de teste começou")
 			room_id = str(data.room)
 			self_id = str(data.self)
 			action_seq = int(data.nextAction) - 1
 			online = true
 			attempts = 0
 			apply_state(data, true)
+			layout()
 		"state":
 			if online: apply_state(data)
 		"ack":
 			if not data.get("ok", false) and str(data.get("action", "")) != "input":
-				notice.text = error_text(str(data.get("code", "")))
+				show_notice(error_text(str(data.get("code", ""))))
 		"error":
 			var code := str(data.get("code", ""))
 			if code in ["not_authorized", "auth_failed", "auth_required", "room_full"]: disconnected(code, true)
 
 func apply_state(data: Dictionary, initial: bool = false) -> void:
+	last_state_at = Time.get_ticks_msec()
 	snapshot = data
 	inventory = data.inventory.duplicate()
 	var present := []
@@ -244,7 +288,7 @@ func apply_state(data: Dictionary, initial: bool = false) -> void:
 		node.exhausted = bool(r.depleted)
 		node.progress = float(r.progress)
 		node.queue_redraw()
-	status.text = "Multiplayer — teste · sala %d/2 · conectado" % connected
+	status.text = "Multiplayer · sala %d/2 · conectado · piloto .2" % connected
 	counts.text = "Seu inventário · Madeira %d · Pedra %d · %s" % [int(inventory.get("madeira", 0)), int(inventory.get("pedra", 0)), tool_name(str(data.tool))]
 	retry.visible = false
 
@@ -289,13 +333,16 @@ func disconnected(reason: String, terminal: bool = false) -> void:
 	if socket != null: socket.close()
 	fatal = terminal or reason in ["not_authorized", "auth_failed", "auth_required", "room_full", "session_replaced"]
 	status.text = error_text(reason)
+	connection_text = status.text
 	retry.visible = true
+	layout()
 	if not fatal:
 		attempts += 1
 		retry_in = minf(8, pow(2, mini(attempts - 1, 3)))
 		status.text += " · reconectando…"
 
 func error_text(code: String) -> String:
+	if code == "state_timeout": return "Sem resposta da sala · controles pausados"
 	return {"not_authorized": "Esta conta não está autorizada para o piloto.", "room_full": "Sala cheia · limite de dois jogadores.", "auth_failed": "Não foi possível validar a conta. Volte ao menu e entre novamente.", "auth_required": "Entre na conta para acessar esta sala.", "session_replaced": "Conta conectada em outro aparelho. Esta conexão foi encerrada.", "too_far": "Aproxime-se do recurso para coletar.", "wrong_tool": "Equipe a ferramenta indicada para este recurso.", "cooldown": "Aguarde o intervalo entre golpes.", "resource_unavailable": "Este recurso já foi coletado.", "invalid_tool": "Ferramenta não disponível no seu inventário.", "replayed_action": "Ação repetida recusada pelo servidor."}.get(code, "Conexão perdida ou servidor indisponível")
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -312,6 +359,7 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_WM_WINDOW_FOCUS_IN: focused = true
 
 func _exit_tree() -> void:
+	if OS.has_feature("web"): JavaScriptBridge.eval("document.body.classList.remove('tc-multiplayer')")
 	if socket != null: socket.close(1000, "leave")
 	last_token = ""
 	if MobileInput.overlay == overlay: MobileInput.overlay = null
