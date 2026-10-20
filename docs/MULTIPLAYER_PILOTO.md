@@ -169,6 +169,24 @@ contas, regras, configuração ou dados de produção:
   permitido e ausência de tokens/UIDs nos logs. Não usa login real nem demonstra
   sucesso com conta real. `npm audit --omit=dev`: nenhuma vulnerabilidade informada.
 
+Registro do pacote local concluído:
+
+- Código: `5ec809a37c817bcead0509da8d506ffc9167c2d6`.
+- [CI de protocolo aprovada](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39349657771).
+- Web: **21 verificações aprovadas**, incluindo entrada pelo botão real do lobby
+  e retorno à biblioteca solo. [PC](images/multiplayer-pc-1280.png) e
+  [mobile emulado](images/multiplayer-mobile-640.png).
+- PCK compilado: **7 verificações aprovadas**, sem fallback para os arquivos do
+  projeto fonte: versão/commit, endpoint, contas/configurações, exclusões,
+  abertura multiplayer, save legado v5 e save v8 com vitória no dia 7.
+- PCK SHA256: `5cc17eb0093d083646a1925b623eb568db9ce0f1db648d45504e67fa92b9b851`.
+- ZIP local: `build/tece-island-0.9.0-multiplayer-pilot.1-local.zip`, SHA256
+  `a6f103e4f468b2e26386b8e3116a42f6ea77a3137665b625a98bc01e42469eaa`.
+- Manifesto servido no endereço oficial reconferido: 0.9.0,
+  `15ba9685c120ce867588668a35f3c3f53077981d`, PCK
+  `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`.
+  `main`, `v0.9.0` e configurações das duas contas não foram modificadas.
+
 Reproduzir protocolo (com Java 21+ e dependências raiz instaladas):
 
 ```powershell
