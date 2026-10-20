@@ -1,5 +1,6 @@
 extends Control
 signal solo_requested
+signal multiplayer_requested
 signal host_requested(port: int, friendly_fire: bool)
 signal join_requested(address: String, port: int)
 @export var default_port := 7000
@@ -58,6 +59,8 @@ func _ready() -> void:
 	main_rows.add_child(continue_caption)
 	for entry in [["Meus mundos", "worlds"], ["Servidores", "servers"]]:
 		button(main_rows, entry[0], open_page.bind(entry[1]))
+	if preload("res://scripts/network/multiplayer_config.gd").enabled():
+		button(main_rows, "Multiplayer — teste", func(): multiplayer_requested.emit())
 	button(main_rows, "Configurações", func(): overlay.open_settings())
 	var menu_button := button(main, "Menu", open_page.bind("options"))
 	menu_button.name = "MenuButton"

@@ -1,7 +1,8 @@
 # Tece Island — solo Web e controles de toque
 
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
-O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no desktop.
+O navegador oferece o mapa solo completo. O [piloto multiplayer Web](docs/MULTIPLAYER_PILOTO.md)
+tem servidor autoritativo separado e permanece restrito à branch de teste.
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
 campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).

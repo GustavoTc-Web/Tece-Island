@@ -1,0 +1,33 @@
+name: Validar protocolo multiplayer piloto
+on:
+  push:
+    branches: [feat/multiplayer-pilot]
+  pull_request:
+    paths:
+      - 'server/**'
+      - 'scripts/network/multiplayer*'
+      - 'config/multiplayer.json'
+      - '.github/workflows/multiplayer-pilot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --no-audit --no-fund
+      - run: npm ci --prefix server --no-audit --no-fund
+      - run: npm run test:multiplayer

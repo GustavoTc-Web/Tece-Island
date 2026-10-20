@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/network/multiplayer_pilot.gd" id="1"]
+
+[node name="MultiplayerPilot" type="Node2D"]
+script = ExtResource("1")

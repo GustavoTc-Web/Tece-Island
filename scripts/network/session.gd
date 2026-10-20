@@ -64,6 +64,7 @@ func show_menu(message: String) -> void:
 	add_child(menu)
 	OrientationGuard.set_authenticated(true)
 	menu.solo_requested.connect(start_solo)
+	menu.multiplayer_requested.connect(start_multiplayer_pilot)
 	menu.host_requested.connect(host_game)
 	menu.join_requested.connect(join_game)
 	menu.show_status(message)
@@ -269,6 +270,19 @@ func clear_scene(save_current: bool = true) -> void:
 	get_tree().paused = false
 	transitioning = false
 	transition_panel = ""
+
+func start_multiplayer_pilot() -> void:
+	if OrientationGuard.blocked or transitioning or is_instance_valid(game): return
+	if not preload("res://scripts/network/multiplayer_config.gd").enabled(): return
+	if not FirebaseAuth.has_session():
+		show_auth("Entre com uma conta confirmada para jogar.")
+		return
+	var scene := prepare_game("res://scenes/network/multiplayer_pilot.tscn")
+	if scene == null: return
+	await clear_scene(false)
+	game = scene
+	game.menu_requested.connect(func(): return_to_menu("Você saiu da sala de teste. Seus mundos solo estão preservados."))
+	add_child(game)
 
 func start_solo() -> void:
 	if OrientationGuard.blocked: return
