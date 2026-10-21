@@ -113,3 +113,36 @@ uma conta por aparelho; verificar os dois personagens e movimento simultâneo;
 sair/voltar em um aparelho. Se bloquear, informar a etapa e o código exibidos,
 sem enviar token ou senha. Depois disso retomar o reteste físico de desempenho,
 itens no chão e vida/fome/água.
+
+## Publicação conferida
+
+- Código do jogo: `9596431c4fc60ca167ed6a3f7e8ffa78f83f2024`.
+- Sites versão **5**, fonte `07e0934d40c3fedcc83bb04a5403b20267e25595`;
+  deploy `appgdep_6ad94f2150ec8191a4701431429901cf`, **succeeded**.
+- Endpoint embutido e ativo:
+  `wss://become-tri-billion-window.trycloudflare.com/room`.
+- PCK servido: `14961bb908431ee2d907e678e769ae75980fc0c3b72f27a68219b4957c4fce5a`.
+  Manifesto identifica .5, protocolo 3 e save v8. Dezessete assets além do HTML
+  conferidos por SHA256; HTML conserva toda a fonte e acrescenta a inserção de
+  938 caracteres do Sites. O bridge de testes não está no cliente publicado.
+- **8** verificações do pacote, incluindo cópias de save v5 e v8 com vitória
+  preservada; **30** do cliente publicado; **10** HTTPS/WSS externos; **56** Web
+  emuladas até recuperação e movimento simultâneo dos personagens na mesma sala.
+- Saúde local/externa e versão conferidas: servidor `30780`, túnel `14148`,
+  host sob demanda ativo, `version_matches=True`, `needs_republish=False`.
+  A tarefa e os processos permaneceram ativos depois da shell de início encerrar.
+- [Login publicado PC](images/multiplayer-5-published-login-pc.png) e
+  [mobile emulado](images/multiplayer-5-published-login-mobile.png).
+  O harness privado fornece AudioWorklets como Blobs dos bytes publicados já
+  verificados, pois o carregamento não recebe cabeçalho de serviço. Isso é só
+  um contorno da automação; não muda o cliente nem comprova áudio físico.
+
+Oficial reconferido como 0.9.0, commit `15ba9685`, `main` `c790758`, tag `v0.9.0`;
+PCK `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`.
+Configurações/lista das duas contas mantiveram o digest
+`4ad90aec7bc4d5feadaf2d66de6dd1e87055f2418b24a0bf72973e62d84f2625`.
+Alterações locais do IDE e arquivos preexistentes preservados.
+
+Evidências: [diagnóstico anterior à recuperação](evidence/multiplayer-pilot-5-diagnosis.json),
+[Web emulado](evidence/multiplayer-pilot-5-web.json),
+[pacote e publicação](evidence/multiplayer-pilot-5-deployment.json).
