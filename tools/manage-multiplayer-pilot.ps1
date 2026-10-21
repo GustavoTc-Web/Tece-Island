@@ -2,7 +2,8 @@ param(
     [ValidateSet('Start','Stop','Status','RestartServer','RepairTunnel')][string]$Action = 'Status',
     [string]$AllowedUidsFile,
     [int]$Port = 8787,
-    [ValidatePattern('^[a-z0-9-]+$')][string]$Instance = 'mp'
+    [ValidatePattern('^[a-z0-9-]+$')][string]$Instance = 'mp',
+    [switch]$ManagedChild
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
@@ -10,6 +11,17 @@ $taskRuntime = Join-Path $taskRoot ('.tools/'+$Instance+'-runtime.json')
 $taskNode = [IO.Path]::GetFullPath((Get-Command node -ErrorAction Stop).Source)
 $taskConnector = Join-Path $taskRoot '.tools/cloudflared.exe'
 $taskOrigin = 'https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site'
+$taskHostName='TeceIsland-Multiplayer-'+$Instance
+$taskHostScript=Join-Path $PSScriptRoot 'multiplayer-host.ps1'
+$taskShell=Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell.exe'
+$taskHostArguments='-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "'+$taskHostScript+'" -Instance '+$Instance
+function Owned-Host {
+    $taskHost=Get-ScheduledTask -TaskName $taskHostName -ErrorAction SilentlyContinue
+    if($taskHost -and ($taskHost.Actions.Count -ne 1 -or $taskHost.Actions[0].Execute -ine $taskShell -or $taskHost.Actions[0].Arguments -ne $taskHostArguments)){
+        throw 'A tarefa existente nao corresponde ao host deste checkout; nada foi alterado.'
+    }
+    return $taskHost
+}
 $taskState = @{}
 if (Test-Path -LiteralPath $taskRuntime) {
     $taskSaved = Get-Content -LiteralPath $taskRuntime -Raw | ConvertFrom-Json
@@ -44,7 +56,13 @@ function Show-State {
     $taskTunnel = Owned-Process 'tunnel' $taskConnector
     $taskLocal = Test-Health "http://127.0.0.1:$($taskState.port)/health"
     $taskRemote = Test-Health (Health-Url $taskState.wss)
+    $taskInfo=$null
+    try{$taskInfo=Invoke-RestMethod -Uri "http://127.0.0.1:$($taskState.port)/health" -TimeoutSec 3}catch{}
     [PSCustomObject]@{
+        host_task = $taskHostName; host_running = [bool]((Owned-Host).State -eq 'Running')
+        server_version = $taskInfo.version; server_protocol = $taskInfo.protocol
+        expected_version = '0.9.0-multiplayer-pilot.5'
+        version_matches = [bool]($taskInfo.version -eq '0.9.0-multiplayer-pilot.5' -and $taskInfo.protocol -eq 3)
         server_running = [bool]$taskServer; server_pid = $taskState.server_pid
         tunnel_running = [bool]$taskTunnel; tunnel_pid = $taskState.tunnel_pid
         server_healthy = $taskLocal; tunnel_healthy = $taskRemote
@@ -67,8 +85,34 @@ function Test-Health([string]$Address) {
 }
 if ($Action -eq 'Status') { Show-State; exit 0 }
 if ($Action -eq 'Stop') {
+    if(-not $ManagedChild -and (Owned-Host)){Stop-ScheduledTask -TaskName $taskHostName}
     Stop-Owned 'tunnel' $taskConnector
     Stop-Owned 'server' $taskNode
+    Show-State
+    exit 0
+}
+if(-not $ManagedChild){
+    if(-not (Owned-Host)){
+        $taskIdentity=[Security.Principal.WindowsIdentity]::GetCurrent().Name
+        $taskHostAction=New-ScheduledTaskAction -Execute $taskShell -Argument $taskHostArguments -WorkingDirectory $taskRoot
+        $taskPrincipal=New-ScheduledTaskPrincipal -UserId $taskIdentity -LogonType Interactive -RunLevel Limited
+        $taskSettings=New-ScheduledTaskSettingsSet -Hidden -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
+        Register-ScheduledTask -TaskName $taskHostName -Action $taskHostAction -Principal $taskPrincipal -Settings $taskSettings -Description 'Host local sob demanda do piloto privado Tece-Island. Sem inicio automatico e sem credenciais salvas.' | Out-Null
+    }
+    $taskQueue=Join-Path $taskRoot ('.tools/'+$Instance+'-host')
+    New-Item -ItemType Directory -Force $taskQueue | Out-Null
+    $taskRequestId=[Guid]::NewGuid().ToString('N')
+    $taskRequest=@{action=$Action;allowed_file=$AllowedUidsFile;port=$Port}
+    [IO.File]::WriteAllText((Join-Path $taskQueue ($taskRequestId+'.request.json')),($taskRequest|ConvertTo-Json -Compress))
+    if((Owned-Host).State -ne 'Running'){Start-ScheduledTask -TaskName $taskHostName}
+    $taskReplyFile=Join-Path $taskQueue ($taskRequestId+'.reply.json')
+    $taskDeadline=[DateTime]::UtcNow.AddSeconds(150)
+    while(-not (Test-Path -LiteralPath $taskReplyFile) -and [DateTime]::UtcNow -lt $taskDeadline){Start-Sleep -Milliseconds 250}
+    if(-not (Test-Path -LiteralPath $taskReplyFile)){throw 'Host ainda nao confirmou a operacao; consulte Status e .tools/*-host/events.jsonl antes de repetir.'}
+    $taskReply=Get-Content -LiteralPath $taskReplyFile -Raw | ConvertFrom-Json
+    if(-not $taskReply.ok){throw 'Host nao concluiu a operacao; consulte Status e os logs locais antes de repetir.'}
+    $taskSaved=Get-Content -LiteralPath $taskRuntime -Raw | ConvertFrom-Json
+    foreach($taskProperty in $taskSaved.PSObject.Properties){$taskState[$taskProperty.Name]=$taskProperty.Value}
     Show-State
     exit 0
 }
@@ -103,7 +147,7 @@ if (-not (Owned-Process 'server' $taskNode)) {
         if ($taskProcess.HasExited) { throw 'Servidor encerrou; consulte o log production-error da instancia.' }
         try {
             $taskHealth = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health" -TimeoutSec 1
-            if ($taskHealth.ok -and $taskHealth.protocol -eq 3 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.4') { $taskHealthy = $true; break }
+            if ($taskHealth.ok -and $taskHealth.protocol -eq 3 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.5') { $taskHealthy = $true; break }
         } catch { Start-Sleep -Milliseconds 100 }
     }
     if (-not $taskHealthy) { throw 'Servidor ainda nao confirmou health; o tunel nao foi aberto.' }

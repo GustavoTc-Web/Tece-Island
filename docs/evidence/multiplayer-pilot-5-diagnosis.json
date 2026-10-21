@@ -1,0 +1,69 @@
+{
+  "before_restart": {
+    "server_running": false,
+    "tunnel_running": false,
+    "local_listener": false,
+    "published_version": "0.9.0-multiplayer-pilot.4",
+    "published_commit": "4791f31c6d91bb33e186111be6f914e111c98b78",
+    "published_protocol": 3,
+    "published_endpoint": "wss://donors-gave-pmid-rental.trycloudflare.com/room",
+    "recorded_endpoint_matches_published": true,
+    "served_pck_sha256": "3fd595cab897582154e650132d366820e16ecfa48132c02ceba33dea596fa1db",
+    "http_probes": [
+      {
+        "url": "http://127.0.0.1:8791/health",
+        "error": "ECONNREFUSED"
+      },
+      {
+        "url": "https://donors-gave-pmid-rental.trycloudflare.com/health",
+        "error": "ENOTFOUND"
+      }
+    ],
+    "external_wss": {
+      "connected": false,
+      "error": "ENOTFOUND"
+    },
+    "cloudflared_shutdown_utc": "2026-10-21T01:36:01Z",
+    "shutdown_signal": "terminated",
+    "windows_sleep": {
+      "at_utc": "2026-10-21T01:36:05.1553473Z",
+      "id": 42,
+      "provider": "Microsoft-Windows-Kernel-Power"
+    },
+    "initiator_of_termination": "not established",
+    "failure_stage": "connection, before authentication or initial state",
+    "ram_state": "server already terminated; prior room unavailable before recovery"
+  },
+  "recovery": {
+    "version": "0.9.0-multiplayer-pilot.5",
+    "protocol": 3,
+    "endpoint": "wss://become-tri-billion-window.trycloudflare.com/room",
+    "host_task": "TeceIsland-Multiplayer-mp",
+    "task_execution_limit": "PT0S",
+    "startup_triggers": 0,
+    "credentials_saved": false,
+    "automatic_room_restart": false,
+    "server_pid": 30780,
+    "tunnel_pid": 14148,
+    "host_parent": {
+      "server": "node.exe",
+      "server_pid": 30780,
+      "parent": "powershell.exe",
+      "parent_pid": 18216,
+      "host_task": 4
+    },
+    "repeated_start_preserves_processes": true
+  },
+  "validation": {
+    "server_tests": 32,
+    "native_unique_checks": 355,
+    "rule_checks": 22,
+    "native_chat_checks": 11,
+    "physical_tests": false,
+    "positive_production_login": false
+  },
+  "human_report": {
+    "pilot_4_entry": "failed on PC and phone",
+    "pilot_4_performance_drops_needs": "still pending; no gameplay was possible"
+  }
+}

@@ -1,5 +1,9 @@
 # Piloto .4 — desempenho, drops e HUD
 
+Reteste físico posterior: usuário não conseguiu entrar na sala em PC/celular.
+Desempenho, drops e HUD físicos da .4 continuam pendentes. Investigação e
+recuperação estão no [piloto .5](MULTIPLAYER_PILOTO_5.md).
+
 **0.9.0-multiplayer-pilot.4**, protocolo **3**, branch `feat/multiplayer-pilot`.
 [Piloto privado](https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/).
 Solo oficial **0.9.0**, saves v8 e campanha de sete dias preservados.

@@ -1,6 +1,7 @@
 # Multiplayer — primeiro piloto
 
-Piloto atual: [desempenho, drops e HUD .4](MULTIPLAYER_PILOTO_4.md).
+Piloto atual: [recuperação de entrada e diagnóstico .5](MULTIPLAYER_PILOTO_5.md).
+Histórico de desempenho, drops e HUD: [piloto .4](MULTIPLAYER_PILOTO_4.md).
 Histórico do mundo compartilhado: [piloto .3](MULTIPLAYER_PILOTO_3.md).
 Histórico da correção de conexão: [piloto .2](MULTIPLAYER_PILOTO_2.md).
 Os registros da .1 abaixo são históricos.

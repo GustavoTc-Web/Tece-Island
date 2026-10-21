@@ -36,6 +36,7 @@ func invoke(args: Array) -> void:
 		"disconnect": pilot.socket.close(1000, "test_disconnect")
 		"offline": pilot.disconnected("server_unavailable"); pilot.retry_in = 999
 		"retry": pilot.connect_room()
+		"endpoint": pilot.endpoint = str(data.value); pilot.connect_room()
 		"touch": MobileInput.set_enabled(bool(data.enabled))
 		"chat": GlobalChat.opened = bool(data.opened)
 		"full": pilot.disconnected("room_full", true)
@@ -90,6 +91,10 @@ func _process(_delta: float) -> void:
 	value["regions"] = pilot.world_view.data.regions.size()
 	value["total_resources"] = pilot.nodes.size()
 	value["wells"] = pilot.world_view.wells.size()
+	value["phase"] = pilot.connection_phase
+	value["failed_phase"] = pilot.failed_phase
+	value["diagnostic"] = pilot.diagnostic.text
+	value["diagnostic_box"] = box(pilot.diagnostic)
 	value["drop_count"] = pilot.drops.size()
 	value["needs"] = {"health": pilot.hud.get_node("Controls/Rows/Health").value, "hunger":pilot.hud.needs_bars.Fome.value,"water":pilot.hud.needs_bars.Sede.value,"visible":pilot.hud.get_node("Controls/Rows/Health").visible and pilot.hud.needs_bars.Fome.visible and pilot.hud.needs_bars.Sede.visible}
 	value["swings"] = pilot.actors.values().map(func(actor): return actor.swing)

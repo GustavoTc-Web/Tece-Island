@@ -60,6 +60,13 @@ var previous_drop := ""
 var server_offset := 0.0
 var name_clock := 0.0
 var controls_clock := 0.0
+var diagnostic: Label
+var connection_phase := "connection"
+var failed_phase := ""
+var phase_started := 0
+var last_close_code := 0
+var web_online := -1
+const CLIENT_VERSION := "0.9.0-multiplayer-pilot.5"
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -91,6 +98,7 @@ func _ready() -> void:
 	var rows := VBoxContainer.new()
 	panel.add_child(rows)
 	status = label(rows, "Conectando à sala de teste…")
+	diagnostic = label(rows, "")
 	counts = label(rows, "Seu inventário · aguardando servidor")
 	prompt = label(rows, "WASD / setas · F cortar/minerar · E pegar / poço · I inventário")
 	notice = label(rows, "Mundo de teste · reiniciar o servidor reinicia esta sala")
@@ -109,7 +117,7 @@ func _ready() -> void:
 	overlay.arena = self
 	layer.add_child(overlay)
 	if OS.has_feature("web"):
-		JavaScriptBridge.eval("document.body.classList.add('tc-multiplayer'); if (!document.getElementById('tc-mp-style')) {const s=document.createElement('style');s.id='tc-mp-style';s.textContent='body.tc-multiplayer #chat-launch{top:max(10px,env(safe-area-inset-top));bottom:auto;}body.tc-multiplayer #pilot-badge{display:none;}';document.head.appendChild(s);}")
+		JavaScriptBridge.eval("document.body.classList.add('tc-multiplayer'); if (!document.getElementById('tc-mp-style')) {const s=document.createElement('style');s.id='tc-mp-style';s.textContent='body.tc-multiplayer #chat-launch{top:max(8px,env(safe-area-inset-top));bottom:auto;}body.tc-mp-connecting #chat-launch{left:auto;right:max(8px,env(safe-area-inset-right));width:80px;}body.tc-multiplayer #pilot-badge{display:none;}';document.head.appendChild(s);}")
 	get_viewport().size_changed.connect(layout)
 	MobileInput.mode_changed.connect(layout)
 	layout()
@@ -142,7 +150,8 @@ func layout() -> void:
 	var font := int(ceilf(15 / scale))
 	var margin := 8.0 / scale
 	var width := minf(view.x - margin * 2, (620.0 if online else 520.0) / scale)
-	panel.position = Vector2(margin if online else (view.x - width) / 2, margin)
+	# The offline card reserves a full touch row above it for the HTML Chat button.
+	panel.position = Vector2(margin if online else (view.x - width) / 2, margin if online else 64.0 / scale)
 	panel.size = Vector2(width, 0)
 	var style := IslandTheme.panel(Color(0.05, 0.13, 0.10, 0.96))
 	style.content_margin_left = margin
@@ -151,6 +160,7 @@ func layout() -> void:
 	style.content_margin_bottom = 6 / scale
 	panel.add_theme_stylebox_override("panel", style)
 	for item in [status, counts, prompt, notice]: item.add_theme_font_size_override("font_size", font)
+	diagnostic.add_theme_font_size_override("font_size", ceili(12 / scale))
 	for item in toolbar.get_children():
 		item.custom_minimum_size = Vector2(unit * 1.65, unit)
 		item.add_theme_font_size_override("font_size", font)
@@ -161,6 +171,10 @@ func layout() -> void:
 
 func refresh_controls() -> void:
 	panel.visible = not online
+	world_view.visible = online
+	if OS.has_feature("web") and web_online != int(online):
+		web_online = int(online)
+		JavaScriptBridge.eval("document.body.classList.toggle('tc-mp-connecting', " + ("false" if online else "true") + ");")
 	hud.visible = online
 	hud.set_process_input(online)
 	var hud_panel: Control = hud.get_node("Controls")
@@ -172,6 +186,7 @@ func refresh_controls() -> void:
 	notice.visible = Time.get_ticks_msec() < notice_until
 	if not online:
 		prompt.text = "A sala só carrega após validar a conexão. O mundo solo permanece no menu."
+		diagnostic.text = "Etapa: %s · cliente .5 / protocolo 3\n%s · tentativa %d%s" % [phase_name(failed_phase if failed_phase != "" else connection_phase), endpoint.trim_prefix("wss://").trim_prefix("ws://").get_slice("/", 0), maxi(1, attempts), " · código %d" % last_close_code if last_close_code > 0 else ""]
 	if is_instance_valid(overlay):
 		overlay.visible = MobileInput.enabled and online and hud.current_panel == ""
 		overlay.collect.disabled = blocked() or drop_target == "" and well_target == ""
@@ -192,6 +207,8 @@ func connect_room() -> void:
 	input_seq = 0
 	last_token = ""
 	last_state_at = 0
+	failed_phase = ""
+	set_connection_phase("connection")
 	MobileInput.reset()
 	layout()
 	if account_owner == "" or FirebaseAuth.account_uid() != account_owner:
@@ -216,6 +233,13 @@ func send(data: Dictionary) -> void:
 func blocked() -> bool:
 	return not online or not focused or GlobalChat.opened or OrientationGuard.blocked or hud.current_panel != "" or FirebaseAuth.account_uid() != account_owner
 
+func set_connection_phase(value: String) -> void:
+	connection_phase = value
+	phase_started = Time.get_ticks_msec()
+
+func phase_name(value: String) -> String:
+	return {"connection":"conexão WSS", "authentication":"autenticação", "initial_state":"estado inicial da sala", "playing":"partida"}.get(value, "conexão")
+
 func _process(delta: float) -> void:
 	# Autowrapped labels settle their minimum height after the first layout pass.
 	# Shrink again instead of retaining the temporary full-screen panel height.
@@ -237,8 +261,9 @@ func _process(delta: float) -> void:
 	if state == WebSocketPeer.STATE_OPEN:
 		if not greeted:
 			last_token = FirebaseAuth.access_token(account_owner)
-			send({"type": "hello", "protocol": 3, "token": last_token})
+			send({"type": "hello", "protocol": 3, "client_version": CLIENT_VERSION, "token": last_token})
 			greeted = true
+			set_connection_phase("authentication")
 			status.text = "Validando conta no servidor…"
 		while socket.get_available_packet_count() > 0:
 			var data: Variant = JSON.parse_string(socket.get_packet().get_string_from_utf8())
@@ -258,10 +283,11 @@ func _process(delta: float) -> void:
 				input_seq += 1
 				send({"type": "input", "seq": input_seq, "x": movement.x, "y": movement.y})
 	elif state == WebSocketPeer.STATE_CLOSED:
+		last_close_code = socket.get_close_code()
 		disconnected(socket.get_close_reason())
 	if not online:
 		elapsed += delta
-		if elapsed > 24: disconnected("server_unavailable")
+		if Time.get_ticks_msec() - phase_started > 15000: disconnected("server_unavailable")
 	for id in actors:
 		var actor: Dictionary = actors[id]
 		var frames: Array = actor.frames
@@ -291,6 +317,9 @@ func _process(delta: float) -> void:
 
 func receive(data: Dictionary) -> void:
 	match str(data.get("type", "")):
+		"authenticated":
+			set_connection_phase("initial_state")
+			status.text = "Conta validada · recebendo a sala…"
 		"welcome":
 			if int(data.get("protocol", 0)) != 3 or str(data.world.get("hash", "")) != FileAccess.get_sha256(world_view.FILE):
 				disconnected("client_outdated", true)
@@ -300,6 +329,7 @@ func receive(data: Dictionary) -> void:
 			self_id = str(data.self)
 			action_seq = int(data.nextAction) - 1
 			online = true
+			set_connection_phase("playing")
 			attempts = 0
 			apply_state(data, true)
 			if minimap == null:
@@ -400,9 +430,9 @@ func apply_state(data: Dictionary, initial: bool = false) -> void:
 		if id not in remaining:
 			drops[id].queue_free()
 			drops.erase(id)
-	status.text = "Multiplayer · sala %d/2 · conectado · piloto .4" % connected
+	status.text = "Multiplayer · sala %d/2 · conectado · piloto .5" % connected
 	var region := WorldTerrain.region_at(actors[self_id].target)
-	hud.get_node("Controls/Rows/Time").text = "MP .4 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
+	hud.get_node("Controls/Rows/Time").text = "MP .5 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
 	counts.text = "Seu inventário · Madeira %d · Pedra %d · %s" % [int(inventory.get("madeira", 0)), int(inventory.get("pedra", 0)), tool_name(str(data.tool))]
 	retry.visible = false
 
@@ -505,6 +535,7 @@ func harvest() -> void:
 	send({"type": "harvest", "seq": action_seq, "resource": target})
 
 func disconnected(reason: String, terminal: bool = false) -> void:
+	failed_phase = connection_phase
 	online = false
 	held = false
 	hud.set_panel("")
@@ -513,6 +544,8 @@ func disconnected(reason: String, terminal: bool = false) -> void:
 	if socket != null: socket.close()
 	fatal = terminal or reason in ["not_authorized", "auth_failed", "auth_required", "room_full", "session_replaced"]
 	status.text = error_text(reason)
+	if not fatal and reason != "state_timeout":
+		status.text = {"connection":"Servidor inacessível · falha na conexão WSS", "authentication":"Conexão aberta · autenticação não concluída", "initial_state":"Conta validada · sala não recebida", "playing":"Conexão com a sala interrompida"}.get(failed_phase, status.text)
 	connection_text = status.text
 	retry.visible = true
 	layout()
@@ -522,7 +555,7 @@ func disconnected(reason: String, terminal: bool = false) -> void:
 		status.text += " · reconectando…"
 
 func error_text(code: String) -> String:
-	if code == "client_outdated": return "Atualize a página para carregar o piloto .4 e o mesmo mundo do servidor."
+	if code == "client_outdated": return "Atualize a página para carregar o piloto .5 e o mesmo mundo do servidor."
 	if code == "blocked_path": return "Há um obstáculo no caminho. Aproxime-se pelo acesso livre."
 	if code == "inventory_full": return "Inventário cheio · libere espaço antes de coletar."
 	if code == "drop_unavailable": return "Este item já foi pego."
@@ -559,7 +592,7 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_WM_WINDOW_FOCUS_IN: focused = true
 
 func _exit_tree() -> void:
-	if OS.has_feature("web"): JavaScriptBridge.eval("document.body.classList.remove('tc-multiplayer')")
+	if OS.has_feature("web"): JavaScriptBridge.eval("document.body.classList.remove('tc-multiplayer', 'tc-mp-connecting')")
 	if socket != null: socket.close(1000, "leave")
 	last_token = ""
 	if MobileInput.overlay == overlay: MobileInput.overlay = null

@@ -13,7 +13,9 @@ import {reachable,route as pathTo} from '../server/tests/paths.mjs';
 const checks=[],errors=[],clients=[],geometry=new WorldGeometry({...WORLD_DATA,player_radius:24});
 const check=(ok,label)=>{checks.push({pass:!!ok,label});console.log(`${ok?'PASS':'FAIL'}: ${label}`);if(!ok)throw Error(label);};
 const users=await identities(),verifier=firebaseVerifier({projectId:'demo-tece-island',apiKey:'local-test',localTest:true});
-const server=await startServer({verify:token=>verifier.verify(token),nickname:async(_,uid)=>uid==='mp-a'?'Ana':'Beto',allowedUids:['mp-a','mp-b'],origins:['http://localhost:8060'],port:8789});
+// Artificial latency makes the distinct handshake phases observable by the
+// test-only bridge. Production verification is unchanged.
+const server=await startServer({verify:async token=>{await pause(250);return verifier.verify(token);},nickname:async(_,uid)=>{await pause(250);return uid==='mp-a'?'Ana':'Beto';},allowedUids:['mp-a','mp-b'],origins:['http://localhost:8060'],port:8789});
 const directory=resolve('build/multiplayer-fixture');
 const http=createServer(async(req,res)=>{
  const path=resolve(directory,'.'+(new URL(req.url,'http://localhost').pathname==='/'?'/index.html':new URL(req.url,'http://localhost').pathname));
@@ -56,7 +58,12 @@ async function drive(client,to,direct=false){
 }
 try{
  const pc=await launch({width:1920,height:950},false),a=pc.page;
- await invoke(a,{action:'connect',entry:true,...users['mp-a']});await a.waitForFunction(()=>window.tcMpState.online,null,{timeout:30000});
+ await invoke(a,{action:'connect',entry:true,...users['mp-a']});
+ await a.waitForFunction(()=>window.tcMpState.phase==='authentication');
+ check(!(await state(a)).online,'Open WSS remains blocked while authentication is pending');
+ await a.waitForFunction(()=>window.tcMpState.phase==='initial_state');
+ check(!(await state(a)).online,'Verified account remains blocked until the initial room state');
+ await a.waitForFunction(()=>window.tcMpState.online,null,{timeout:30000});
  check((await state(a)).regions===18&&(await state(a)).total_resources===274&&(await state(a)).wells===18,'Actual menu entry loads full solo-derived world, resources and wells');
  check((await state(a)).slots.slots.length===7&&Object.hasOwn((await state(a)).buttons,'Slot 5'),'Existing HUD has seven inventory slots and five quick slots');
  const initialHUD=await state(a);check(initialHUD.panel[3]*950/initialHUD.viewport[1]<180,'PC HUD remains compact after reusing solo components');
@@ -102,7 +109,7 @@ try{
  await a.waitForFunction(()=>window.tcMpState.snapshot.drops.length===1);
  const drop=(await state(a)).snapshot.drops[0];check(drop.quantity===5,'One visible shared ground stack contains exactly five wood');
  check((await state(a)).drop_count===1&&(await state(b)).drop_count===1,'Both clients instantiate existing solo ground-item visuals');
- await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-ground.png'});
+ await b.screenshot({path:'.tools/screenshots/multiplayer-5-mobile-ground.png'});
  const oldSelf=(await state(b)).self;await invoke(b,{action:'offline'});await pause(200);await invoke(b,{action:'retry'});await b.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.drop_count===1);
  check((await state(b)).self===oldSelf,'Reconnect before pickup preserves the character and remaining ground stack');
  await drive(pc,[drop.x-12,drop.y+6],true);await drive(mobile,[drop.x+12,drop.y+6],true);await pause(300);
@@ -114,7 +121,7 @@ try{
  await a.keyboard.press('e');await click(b,'Interagir',true);
  await a.waitForFunction(()=>window.tcMpState.active_panel==='well');await b.waitForFunction(()=>window.tcMpState.active_panel==='well');
  check(!(await state(b)).overlay_visible,'Existing well panel opens and hides mobile gameplay controls');
- await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-well-panel.png'});
+ await b.screenshot({path:'.tools/screenshots/multiplayer-5-mobile-well-panel.png'});
  await Promise.all([click(a,'Encher cantil'),click(b,'Encher cantil',true)]);
  await a.waitForFunction(()=>window.tcMpState.slots.slots[2].water===3);await b.waitForFunction(()=>window.tcMpState.slots.slots[2].water===3);
  check(true,'Server fills a separate three-dose canteen for each player at shared well');
@@ -126,7 +133,7 @@ try{
  check((await state(b)).slots.slots[2].water===3,'Using canteen affects only its owner inventory');
  await click(b,'Inventário',true);await b.waitForFunction(()=>window.tcMpState.active_panel==='inventory');
  check((await state(b)).buttons['Inventory slot 7']!==undefined,'Actual reused inventory panel renders all seven server slots on mobile');
- await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-inventory.png'});
+ await b.screenshot({path:'.tools/screenshots/multiplayer-5-mobile-inventory.png'});
  await click(b,'Inventory slot 2',true);await click(b,'Mover / trocar',true);await click(b,'Inventory slot 5',true);
  await b.waitForFunction(()=>window.tcMpState.slots.slots[4].item==='picareta_madeira');
  check(true,'Inventory slot swap is validated and returned by server');
@@ -144,10 +151,28 @@ try{
  await b.waitForFunction(()=>!window.tcMpState.online&&window.tcMpState.status.includes('Sem resposta'),null,{timeout:10000});
  check(!(await state(b)).overlay_visible,'Five seconds without snapshots pauses controls');old.send=send;
  await b.waitForFunction(()=>window.tcMpState.online,null,{timeout:10000});check((await state(b)).self===previous.self,'Automatic recovery preserves the same player');
- await a.screenshot({path:'.tools/screenshots/multiplayer-4-pc-forest.png'});await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-well.png'});
+ await a.screenshot({path:'.tools/screenshots/multiplayer-5-pc-forest.png'});await b.screenshot({path:'.tools/screenshots/multiplayer-5-mobile-well.png'});
  await drive(pc,[2420,768]);check(geometry.region(own(await state(a)).x,own(await state(a)).y).id==='swamp','Real keyboard traverses original forest-to-swamp connection across former arena limits');
- await a.screenshot({path:'.tools/screenshots/multiplayer-4-pc-swamp.png'});
+ await a.screenshot({path:'.tools/screenshots/multiplayer-5-pc-swamp.png'});
+ for(const [client,label]of [[pc,'pc'],[mobile,'mobile']]){
+  await invoke(client.page,{action:'endpoint',value:'ws://127.0.0.1:8799/room'});
+  await client.page.waitForFunction(()=>!window.tcMpState.online&&window.tcMpState.failed_phase==='connection');
+  // Reveal the actual chat launcher for layout QA without a production chat
+  // session or any Firestore calls in the emulated fixture.
+  const rect=await client.page.evaluate(()=>{document.querySelector('#tc-chat').hidden=false;document.querySelector('#chat-launch').hidden=false;const r=document.querySelector('#chat-launch').getBoundingClientRect();return [r.x,r.y,r.width,r.height];});
+  const s=await state(client.page),v=client.page.viewportSize(),r=s.panel.map((n,i)=>n*(i%2===0?v.width/s.viewport[0]:v.height/s.viewport[1]));
+  check(!(rect[0]<r[0]+r[2]&&rect[0]+rect[2]>r[0]&&rect[1]<r[1]+r[3]&&rect[1]+rect[3]>r[1]),label+': Chat launcher never overlaps offline connection card');
+  check(r[1]>=54&&r[1]+r[3]<=v.height,label+': offline diagnostic card fits viewport below Chat');
+  check(s.diagnostic.includes('protocolo 3')&&s.diagnostic.includes('127.0.0.1:8799')&&!s.diagnostic.includes(users['mp-a'].token),label+': useful endpoint, phase and protocol diagnosis excludes credentials');
+  await client.page.screenshot({path:'.tools/screenshots/multiplayer-5-'+label+'-connection.png'});
+ }
+ await Promise.all([invoke(a,{action:'endpoint',value:'ws://127.0.0.1:8789/room'}),invoke(b,{action:'endpoint',value:'ws://127.0.0.1:8789/room'})]);
+ await a.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.players.length===2);await b.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.players.length===2);
+ check((await state(a)).phase==='playing'&&(await state(b)).phase==='playing','Both independent clients recover from unavailable transport through auth and initial state into the same room');
+ const recoveredA=own(await state(a)),recoveredB=own(await state(b));
+ await Promise.all([a.keyboard.down('a'),b.keyboard.down('a')]);await pause(300);await Promise.all([a.keyboard.up('a'),b.keyboard.up('a')]);await pause(180);
+ check((await state(a)).room===(await state(b)).room&&own(await state(a)).x<recoveredA.x-15&&own(await state(b)).x<recoveredB.x-15,'Recovered characters move simultaneously in the same authoritative room');
  await click(a,'Menu');await click(a,'Voltar ao menu principal');await a.waitForFunction(()=>window.tcMpState.menu);
  check(true,'Return to solo world library uses existing session flow');check(errors.length===0,'No Godot/JavaScript errors in either actual Web client');
-}catch(e){for(const [i,browser]of clients.entries())for(const c of browser.contexts())for(const p of c.pages()){await p.screenshot({path:`.tools/screenshots/multiplayer-4-failure-${i}.png`}).catch(()=>{});await writeFile(`.tools/world4-failure-${i}.json`,JSON.stringify(await state(p),null,2));}throw e;
+}catch(e){for(const [i,browser]of clients.entries())for(const c of browser.contexts())for(const p of c.pages()){await p.screenshot({path:`.tools/screenshots/multiplayer-5-failure-${i}.png`}).catch(()=>{});await writeFile(`.tools/mp5-failure-${i}.json`,JSON.stringify(await state(p),null,2));}throw e;
 }finally{for(const b of clients)await b.close();await server.close();await verifier.close();await new Promise(r=>http.close(r));await writeFile('.tools/multiplayer-world-browser-results.json',JSON.stringify({checks,errors,physical:false},null,2));}
