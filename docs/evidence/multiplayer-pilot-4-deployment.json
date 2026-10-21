@@ -1,0 +1,295 @@
+{
+  "version": "0.9.0-multiplayer-pilot.4",
+  "game_commit": "4791f31c6d91bb33e186111be6f914e111c98b78",
+  "site_version": 4,
+  "site_source_commit": "15736340884a5518b73d643e90b4db864ab1cde0",
+  "deployment_id": "appgdep_6ad80da908e08191a9e5ee2b45cf3a8c",
+  "deployment_version_id": "appgprj_6ad6b7bc03c481918665130efcc41739~appgver_92f800e757b481918629e4c626b3d245",
+  "deployment_status": "succeeded",
+  "url": "https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+  "access": {
+    "mode": "custom",
+    "site_owner_count": 1,
+    "game_authorized_accounts": 2,
+    "unchanged": true
+  },
+  "package": {
+    "commit": "4791f31c6d91bb33e186111be6f914e111c98b78",
+    "version": "0.9.0-multiplayer-pilot.4",
+    "emulated": false,
+    "multiplayer_protocol": 3,
+    "server_url": "wss://donors-gave-pmid-rental.trycloudflare.com/room",
+    "save_schema": 8,
+    "base_release": "0.9.0",
+    "sha256": {
+      "assets/fonts/AtkinsonHyperlegible-OFL.txt": "64b9cae8727cb41ea9e8843103e69647c82383f3a902e2bb39b2c5d92083b6e1",
+      "assets/fonts/AtkinsonHyperlegible-Regular.ttf": "7fb917c89019896d0b52ee84b7cbb3304c18cb90b19a62f5e32712bd23e97669",
+      "assets/fonts/BreeSerif-OFL.txt": "e69c15e0276bc82a5d7b1d5b6d88776a20920414b498c376ff43ec88e72afaa9",
+      "assets/fonts/BreeSerif-Regular.ttf": "fd080582d70112ef479ba4ddd72407f9a4fcbcec4caa7d29de259b13eeb5f431",
+      "engine-fc74679e3b97f768-0.bin": "8a56546b5f9b9137e80adde4400b797a5189062dee30d2505871ebd8e83987d3",
+      "engine-fc74679e3b97f768-1.bin": "62901720225c5663e708a233614396a6943357de7c98cead67f11669773dccae",
+      "engine-fc74679e3b97f768-2.bin": "c14dee0b88ada7bc7b4b48f3b8ae20e16922818417292b06082484fe183ae397",
+      "engine-fc74679e3b97f768-3.bin": "ca498a54fdb112b659cf23bc79a932e58d350a0f4cc8fabb639f230233ad6c72",
+      "engine-fc74679e3b97f768-4.bin": "219249da87c3cfda9a89fba24e253e60d6efd5191d0b108120ad93e51e54d707",
+      "index.apple-touch-icon.png": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221",
+      "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "index.html": "5c51671ef8bb3293652ba9a10fee20983a9722cbd974134bc13f23398451e83f",
+      "index.icon.png": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7",
+      "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "index.pck": "3fd595cab897582154e650132d366820e16ecfa48132c02ceba33dea596fa1db",
+      "index.png": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+      "pilot-engine.json": "9d78b4bc981bdc114d44843bbe9780b98fba37537c5d330ec55ce1ea2f5db83a"
+    }
+  },
+  "compiled_package": {
+    "checks": [
+      {
+        "label": "exact committed pilot build",
+        "pass": true
+      },
+      {
+        "label": "pilot feature and local server endpoint",
+        "pass": true
+      },
+      {
+        "label": "same two authorized accounts and preserved chat/sync",
+        "pass": true
+      },
+      {
+        "label": "server files and test bridge excluded",
+        "pass": true
+      },
+      {
+        "label": "compiled multiplayer opens with login guidance, no solo save method",
+        "pass": true
+      },
+      {
+        "label": "actual pilot pack loads legacy-v5 without altering original",
+        "pass": true
+      },
+      {
+        "label": "actual pilot pack loads pilot-v8-won without altering original",
+        "pass": true
+      },
+      {
+        "label": "shared world matches authoritative server manifest",
+        "pass": true
+      }
+    ],
+    "commit": "4791f31c6d91bb33e186111be6f914e111c98b78",
+    "pass": true,
+    "version": "0.9.0-multiplayer-pilot.4"
+  },
+  "compiled_wss": {
+    "compiled_client_correct_endpoint": true,
+    "compiled_client_real_wss_rejects_forged_token": true,
+    "endpoint": "wss://donors-gave-pmid-rental.trycloudflare.com/room",
+    "pass": true,
+    "positive_real_login": false
+  },
+  "published_client": {
+    "version": "0.9.0-multiplayer-pilot.4",
+    "commit": "4791f31c6d91bb33e186111be6f914e111c98b78",
+    "endpoint": "wss://donors-gave-pmid-rental.trycloudflare.com/room",
+    "checks": [
+      {
+        "pass": true,
+        "label": "Owner-private endpoint serves manifest with scoped authorization"
+      },
+      {
+        "pass": true,
+        "label": "Published manifest identifies exact non-emulated multiplayer build"
+      },
+      {
+        "pass": true,
+        "label": "Published client references current secure game endpoint"
+      },
+      {
+        "pass": true,
+        "label": "Published hash manifest matches prepared artifact"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/AtkinsonHyperlegible-OFL.txt"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/AtkinsonHyperlegible-Regular.ttf"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/BreeSerif-OFL.txt"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match assets/fonts/BreeSerif-Regular.ttf"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-0.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-1.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-2.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-3.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match engine-fc74679e3b97f768-4.bin"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.apple-touch-icon.png"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.audio.position.worklet.js"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.audio.worklet.js"
+      },
+      {
+        "pass": true,
+        "label": "Published HTML contains current game bootstrap and pilot label"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.icon.png"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.js"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.pck"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match index.png"
+      },
+      {
+        "pass": true,
+        "label": "Published bytes match pilot-engine.json"
+      },
+      {
+        "pass": true,
+        "label": "PC: published Godot Web presents mandatory Firebase login"
+      },
+      {
+        "pass": true,
+        "label": "PC: test credential bridge is absent"
+      },
+      {
+        "pass": true,
+        "label": "PC: real browser on private pilot origin reaches WSS and anonymous action is refused"
+      },
+      {
+        "pass": true,
+        "label": "Mobile emulated: published Godot Web presents mandatory Firebase login"
+      },
+      {
+        "pass": true,
+        "label": "Mobile: test credential bridge is absent"
+      },
+      {
+        "pass": true,
+        "label": "Mobile: real browser on private pilot origin reaches WSS and anonymous action is refused"
+      },
+      {
+        "pass": true,
+        "label": "Published mobile login remains accessible in portrait"
+      },
+      {
+        "pass": true,
+        "label": "Published Godot Web has no GDScript/JavaScript errors"
+      }
+    ],
+    "errors": [],
+    "physical": false,
+    "positiveRealAccountLoginTested": false,
+    "audioWorkletDelivery": "Hash-verified published bytes supplied as Blobs in service-auth harness; human cookie delivery and physical audio not tested"
+  },
+  "external_wss": {
+    "endpoint": "wss://donors-gave-pmid-rental.trycloudflare.com/room",
+    "checks": [
+      {
+        "pass": true,
+        "label": "External HTTPS reaches only game service with exact version/protocol"
+      },
+      {
+        "pass": true,
+        "label": "External tunnel serves no filesystem or other application at root"
+      },
+      {
+        "pass": true,
+        "label": "External WSS rejects actions without authentication"
+      },
+      {
+        "pass": true,
+        "label": "Production configuration still has exactly the existing two allowed accounts"
+      },
+      {
+        "pass": true,
+        "label": "External WSS rejects unsigned token even with allowlisted UID"
+      },
+      {
+        "pass": true,
+        "label": "External WSS rejects forged outsider token and claimed allowed UID"
+      },
+      {
+        "pass": true,
+        "label": "No identity token or UID in .tools/mp-world4-production.log"
+      },
+      {
+        "pass": true,
+        "label": "No identity token or UID in .tools/mp-world4-production-error.log"
+      },
+      {
+        "pass": true,
+        "label": "No identity token or UID in .tools/mp-world4-tunnel.log"
+      },
+      {
+        "pass": true,
+        "label": "No identity token or UID in .tools/mp-world4-tunnel-error.log"
+      }
+    ],
+    "positiveRealAccountLoginTested": false
+  },
+  "served_html": {
+    "source_characters": 33739,
+    "served_characters": 34677,
+    "insertion_characters": 938,
+    "source_fully_preserved": true
+  },
+  "physical_pilot4_tests": "pending",
+  "runtime": {
+    "port": 8791,
+    "bind": "127.0.0.1",
+    "server_pid": 25248,
+    "tunnel_pid": 33464,
+    "health_local": true,
+    "health_public": true,
+    "needs_republish": false,
+    "room_resets_on_server_restart": true
+  },
+  "official": {
+    "version": "0.9.0",
+    "application_commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+    "main": "c7907580c0410f7bb8a40e03d2fdc126f4e6e1d4",
+    "tag": "v0.9.0",
+    "pck_sha256": "2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae",
+    "configuration_digest": "4ad90aec7bc4d5feadaf2d66de6dd1e87055f2418b24a0bf72973e62d84f2625",
+    "same_two_accounts": true,
+    "billing_enabled_by_this_work": false
+  }
+}

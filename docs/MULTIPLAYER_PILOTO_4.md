@@ -155,3 +155,31 @@ PCK `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`.
 Digest de configurações/lista das duas contas:
 `4ad90aec7bc4d5feadaf2d66de6dd1e87055f2418b24a0bf72973e62d84f2625`.
 Alterações locais do IDE preservadas no checkout original.
+
+## Publicação confirmada
+
+- Código exportado: `4791f31c6d91bb33e186111be6f914e111c98b78`.
+- Sites versão **4**, fonte `15736340884a5518b73d643e90b4db864ab1cde0`;
+  deploy `appgdep_6ad80da908e08191a9e5ee2b45cf3a8c`, **succeeded**.
+- PCK servido: `3fd595cab897582154e650132d366820e16ecfa48132c02ceba33dea596fa1db`.
+  Manifesto identifica versão .4, commit, protocolo 3, save v8 e o novo WSS.
+  Os 17 assets além do HTML coincidem por SHA256; o HTML mantém toda a fonte
+  com a inserção de 938 caracteres do provedor Sites.
+- **8** verificações do PCK, incluindo abertura de cópias v5 e v8 com vitória
+  preservada; **30** do cliente publicado em PC/mobile emulado; **10** HTTPS/WSS
+  negativos externos. O cliente compilado também recusou token sem assinatura.
+  Isso não registra login positivo das duas contas reais em produção.
+- [Login publicado PC](images/multiplayer-4-published-login-pc.png) e
+  [mobile emulado](images/multiplayer-4-published-login-mobile.png).
+  No harness de acesso privado, AudioWorklets usam Blobs dos bytes publicados
+  verificados por hash, pois esse carregamento não recebe o cabeçalho de serviço
+  do navegador automatizado. O cliente publicado não recebe esse contorno.
+- Instância ativa em loopback **8791**, servidor `25248`, túnel `33464`;
+  comandos padrão operam a .4. Saúde local/externa confirmada e
+  `needs_republish=False`. Túnel/servidor anteriores foram encerrados. A .4
+  inicia uma nova sala de teste em RAM; inventários da .3 não são importados.
+
+Evidências: [validação](evidence/multiplayer-pilot-4-validation.json),
+[Web emulado](evidence/multiplayer-pilot-4-web.json),
+[desempenho](evidence/multiplayer-pilot-4-performance.json) e
+[pacote/publicação](evidence/multiplayer-pilot-4-deployment.json).
