@@ -26,6 +26,12 @@ export class Inventory {
     if(remaining)return false;
     this.slots=next;return true;
   }
+  collect(item,amount) {
+    const space=this.slots.reduce((n,s)=>n+(!s.item?15:s.item===item?15-s.quantity:0),0);
+    const accepted=Math.min(space,amount);
+    if(accepted>0)this.add(item,accepted);
+    return accepted;
+  }
   fill() {
     const chosen=this.slots[this.selected];
     const s=chosen?.item==='cantil'&&chosen.water<3?chosen:this.slots.find(s=>s.item==='cantil'&&s.water<3);

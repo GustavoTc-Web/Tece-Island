@@ -1,0 +1,54 @@
+{
+  "version": "0.9.0-multiplayer-pilot.4",
+  "server": {
+    "passed": 31,
+    "failed": 0,
+    "authentication": "Firebase Auth emulator; actual WS; distinct identities"
+  },
+  "native": {
+    "existing_unique_checks": 327,
+    "new_unique_checks": 28,
+    "failures": 0,
+    "baseline_report": ".tools/world4-regression/results.json",
+    "final_needs_report": ".tools/world4-native-final.log"
+  },
+  "rules": {
+    "passed": 22,
+    "failed": 0,
+    "emulator": true
+  },
+  "native_chat": {
+    "passed": 11,
+    "failed": 0,
+    "emulator": true
+  },
+  "web": {
+    "passed": 46,
+    "failed": 0,
+    "independent_browser_processes": 2,
+    "physical": false,
+    "positive_production_login": false
+  },
+  "human_report": {
+    "version": "0.9.0-multiplayer-pilot.3",
+    "devices": [
+      "PC",
+      "mobile"
+    ],
+    "reported": [
+      "expanded world closer to solo",
+      "stutters",
+      "automatic inventory rewards",
+      "missing health and hunger"
+    ],
+    "pilot_4_physical_tests": "pending"
+  },
+  "official": {
+    "version": "0.9.0",
+    "main": "c7907580c0410f7bb8a40e03d2fdc126f4e6e1d4",
+    "application_commit": "15ba9685c120ce867588668a35f3c3f53077981d",
+    "pck_sha256": "2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae",
+    "authorized_accounts_preserved": 2,
+    "billing_enabled": false
+  }
+}

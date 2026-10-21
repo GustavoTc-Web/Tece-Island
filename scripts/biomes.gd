@@ -35,41 +35,45 @@ func obstacle(rect: Rect2) -> void:
 	add_child(body)
 
 func _draw() -> void:
-	draw_rect(Rect2(2304, 0, 1536, 1536), Color("40574b"))
-	draw_rect(Rect2(3840, 0, 1536, 1536), Color("ad9b5c"))
-	draw_rect(Rect2(5376, 0, 1536, 1536), Color("dec487"))
+	draw_scenery(self)
+
+# Shared drawing commands; multiplayer records them into clipped spatial chunks.
+static func draw_scenery(canvas) -> void:
+	canvas.draw_rect(Rect2(2304, 0, 1536, 1536), Color("40574b"))
+	canvas.draw_rect(Rect2(3840, 0, 1536, 1536), Color("ad9b5c"))
+	canvas.draw_rect(Rect2(5376, 0, 1536, 1536), Color("dec487"))
 	for point in CACTI:
-		draw_line(point, point - Vector2(0, 50), Color("698353"), 12)
-		draw_polyline(PackedVector2Array([point - Vector2(0, 25), point - Vector2(22, 25), point - Vector2(22, 40)]), Color("698353"), 8)
-		draw_polyline(PackedVector2Array([point - Vector2(0, 15), point + Vector2(20, -15), point + Vector2(20, -30)]), Color("698353"), 8)
+		canvas.draw_line(point, point - Vector2(0, 50), Color("698353"), 12)
+		canvas.draw_polyline(PackedVector2Array([point - Vector2(0, 25), point - Vector2(22, 25), point - Vector2(22, 40)]), Color("698353"), 8)
+		canvas.draw_polyline(PackedVector2Array([point - Vector2(0, 15), point + Vector2(20, -15), point + Vector2(20, -30)]), Color("698353"), 8)
 	for i in range(200):
 		var point := Vector2(5400 + posmod(i * 179, 1470), 40 + posmod(i * 137, 1440))
-		draw_line(point, point + Vector2(8, -3), Color("c5a66f"), 2)
-	draw_line(Vector2(5376, 768), Vector2(6880, 768), Color("cbb27f"), 104)
+		canvas.draw_line(point, point + Vector2(8, -3), Color("c5a66f"), 2)
+	canvas.draw_line(Vector2(5376, 768), Vector2(6880, 768), Color("cbb27f"), 104)
 	for point in [Vector2(5680, 440), Vector2(6200, 1120), Vector2(6580, 400)]:
 		var entrance: Vector2 = point + Vector2(0, 110)
 		var corner: Vector2 = entrance + Vector2(180, 0)
-		draw_polyline(PackedVector2Array([entrance, corner, Vector2(corner.x, 768)]), Color("cbb27f"), 64)
-	draw_string(IslandTheme.BODY, Vector2(5450, 80), "Deserto", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("785733"))
+		canvas.draw_polyline(PackedVector2Array([entrance, corner, Vector2(corner.x, 768)]), Color("cbb27f"), 64)
+	canvas.draw_string(IslandTheme.BODY, Vector2(5450, 80), "Deserto", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("785733"))
 	var random := RandomNumberGenerator.new()
 	random.seed = 203
 	for i in range(1200):
 		var point := Vector2(random.randf_range(2340, 5340), random.randf_range(40, 1490))
-		draw_line(point, point + Vector2(3, -6), Color("597663") if point.x < 3840 else Color("c5b777"), 2)
+		canvas.draw_line(point, point + Vector2(3, -6), Color("597663") if point.x < 3840 else Color("c5b777"), 2)
 	for rect in [Rect2(2450, 400, 130, 85), Rect2(3390, 250, 180, 100), Rect2(2770, 1250, 170, 90), Rect2(3500, 940, 160, 70)]:
-		draw_rect(rect, Color("2d4548"))
-		draw_line(rect.position + Vector2(12, 15), rect.position + Vector2(rect.size.x - 12, 15), Color("62817a"), 3)
+		canvas.draw_rect(rect, Color("2d4548"))
+		canvas.draw_line(rect.position + Vector2(12, 15), rect.position + Vector2(rect.size.x - 12, 15), Color("62817a"), 3)
 	for rect in [Rect2(3970, 1040, 12, 160), Rect2(4440, 240, 180, 12), Rect2(5050, 1150, 150, 12)]:
-		draw_rect(rect, Color("6d593c"))
-	draw_line(Vector2(2304, 768), Vector2(5344, 768), Color("8b9366"), 104)
+		canvas.draw_rect(rect, Color("6d593c"))
+	canvas.draw_line(Vector2(2304, 768), Vector2(5344, 768), Color("8b9366"), 104)
 	# Cada construção tem um acesso até o caminho principal.
 	for point in [Vector2(2800, 460), Vector2(3250, 1120), Vector2(4230, 460), Vector2(4780, 1120), Vector2(4930, 430)]:
 		if point.y < 768:
-			draw_line(point + Vector2(0, 100), Vector2(point.x, 768), Color("8b9366"), 72)
+			canvas.draw_line(point + Vector2(0, 100), Vector2(point.x, 768), Color("8b9366"), 72)
 		else:
 			var side := -220.0 if point.x == 3250 else 220.0
 			var entrance: Vector2 = point + Vector2(0, 140)
 			var corner: Vector2 = entrance + Vector2(side, 0)
-			draw_polyline(PackedVector2Array([entrance, corner, Vector2(corner.x, 768)]), Color("8b9366"), 64)
-	draw_string(IslandTheme.BODY, Vector2(2380, 80), "Pântano", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("e5e3ba"))
-	draw_string(IslandTheme.BODY, Vector2(3920, 80), "Campos secos", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("fff0b3"))
+			canvas.draw_polyline(PackedVector2Array([entrance, corner, Vector2(corner.x, 768)]), Color("8b9366"), 64)
+	canvas.draw_string(IslandTheme.BODY, Vector2(2380, 80), "Pântano", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("e5e3ba"))
+	canvas.draw_string(IslandTheme.BODY, Vector2(3920, 80), "Campos secos", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color("fff0b3"))

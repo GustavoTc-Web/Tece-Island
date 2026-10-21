@@ -51,6 +51,15 @@ var progress_store: WorldProgress = null
 var held := false
 var hit_clock := 0.0
 var name_font := 14
+var drops := {}
+var drop_target := ""
+var target_clock := 0.0
+var previous_target := ""
+var previous_well := ""
+var previous_drop := ""
+var server_offset := 0.0
+var name_clock := 0.0
+var controls_clock := 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -67,9 +76,10 @@ func _ready() -> void:
 	hud.initialize(projected_inventory)
 	hud.network_action_requested.connect(request_action)
 	hud.menu_view.leave_action = func(): menu_requested.emit()
-	hud.panel_toggled.connect(func(_open): touch_vector = Vector2.ZERO; held = false; MobileInput.reset())
-	for name in ["Health", "HealthLabel", "EquipmentKeys"]: hud.get_node("Controls/Rows/" + name).hide()
-	for name in ["Fome", "Proteção"]: hud.needs_bars[name].hide()
+	hud.panel_toggled.connect(func(_open): touch_vector = Vector2.ZERO; held = false; MobileInput.reset(); refresh_controls())
+	for name in ["HealthLabel", "EquipmentKeys"]: hud.get_node("Controls/Rows/" + name).hide()
+	hud.needs_bars["Proteção"].hide()
+	hud.needs_bars.Fome.tooltip_text = "Fome estável neste piloto: alimentos ainda não disponíveis."
 	for item in hud.inventory_actions.get_children(): item.visible = item.text in ["Mover / trocar", "Usar"]
 	hud.get_node("InventoryPanel/Panel/Scroll/Rows/BackpackSlot").hide()
 	hud.get_node("InventoryPanel/Panel/Scroll/Rows/ArmorSlot").hide()
@@ -82,7 +92,7 @@ func _ready() -> void:
 	panel.add_child(rows)
 	status = label(rows, "Conectando à sala de teste…")
 	counts = label(rows, "Seu inventário · aguardando servidor")
-	prompt = label(rows, "WASD / setas · 1 machado · 2 picareta · 3 mãos · F/E coletar")
+	prompt = label(rows, "WASD / setas · F cortar/minerar · E pegar / poço · I inventário")
 	notice = label(rows, "Mundo de teste · reiniciar o servidor reinicia esta sala")
 	toolbar = HFlowContainer.new()
 	rows.add_child(toolbar)
@@ -164,7 +174,8 @@ func refresh_controls() -> void:
 		prompt.text = "A sala só carrega após validar a conexão. O mundo solo permanece no menu."
 	if is_instance_valid(overlay):
 		overlay.visible = MobileInput.enabled and online and hud.current_panel == ""
-		overlay.collect.disabled = blocked() or target == "" and well_target == ""
+		overlay.collect.disabled = blocked() or drop_target == "" and well_target == ""
+		overlay.harvest_button.disabled = blocked() or target == ""
 
 func show_notice(text: String) -> void:
 	notice.text = text
@@ -208,9 +219,12 @@ func blocked() -> bool:
 func _process(delta: float) -> void:
 	# Autowrapped labels settle their minimum height after the first layout pass.
 	# Shrink again instead of retaining the temporary full-screen panel height.
-	panel.size.y = panel.get_combined_minimum_size().y
 	camera.offset.y = -40.0 if MobileInput.enabled else 0.0
-	refresh_controls()
+	controls_clock -= delta
+	if controls_clock <= 0:
+		controls_clock = 0.1
+		panel.size.y = panel.get_combined_minimum_size().y
+		refresh_controls()
 	if socket == null: return
 	socket.poll()
 	if fatal: return
@@ -223,7 +237,7 @@ func _process(delta: float) -> void:
 	if state == WebSocketPeer.STATE_OPEN:
 		if not greeted:
 			last_token = FirebaseAuth.access_token(account_owner)
-			send({"type": "hello", "protocol": 2, "token": last_token})
+			send({"type": "hello", "protocol": 3, "token": last_token})
 			greeted = true
 			status.text = "Validando conta no servidor…"
 		while socket.get_available_packet_count() > 0:
@@ -250,11 +264,26 @@ func _process(delta: float) -> void:
 		if elapsed > 24: disconnected("server_unavailable")
 	for id in actors:
 		var actor: Dictionary = actors[id]
-		actor.body.position = actor.body.position.lerp(actor.target, 1 - exp(-delta * 24))
-	separate_names()
+		var frames: Array = actor.frames
+		# Render a continuous server timeline rather than chasing a new target
+		# every 100 ms. Never extrapolate through authoritative collisions.
+		var at := Time.get_ticks_msec() / 1000.0 - server_offset - 0.12
+		while frames.size() > 2 and frames[1].time <= at: frames.pop_front()
+		if frames.size() >= 2:
+			var ratio: float = clampf((at - frames[0].time) / maxf(0.001, frames[1].time - frames[0].time), 0, 1)
+			actor.body.position = frames[0].position.lerp(frames[1].position, ratio)
+		else: actor.body.position = actor.target
+	name_clock -= delta
+	if name_clock <= 0:
+		name_clock = 0.1
+		separate_names()
 	if actors.has(self_id):
 		camera.position = actors[self_id].body.position
-		update_target()
+		world_view.show_area(Rect2(camera.position + camera.offset - get_viewport_rect().size / 2, get_viewport_rect().size).grow(64))
+		target_clock -= delta
+		if target_clock <= 0:
+			target_clock = 0.05
+			update_target()
 		hit_clock -= delta
 		if held and not blocked() and hit_clock <= 0:
 			hit_clock = ResourceRules.hit_interval(str(snapshot.get("tool", "maos")))
@@ -263,7 +292,7 @@ func _process(delta: float) -> void:
 func receive(data: Dictionary) -> void:
 	match str(data.get("type", "")):
 		"welcome":
-			if int(data.get("protocol", 0)) != 2 or str(data.world.get("hash", "")) != FileAccess.get_sha256(world_view.FILE):
+			if int(data.get("protocol", 0)) != 3 or str(data.world.get("hash", "")) != FileAccess.get_sha256(world_view.FILE):
 				disconnected("client_outdated", true)
 				return
 			if room_id != "" and room_id != str(data.room): show_notice("Servidor reiniciado · uma nova sala de teste começou")
@@ -292,10 +321,16 @@ func receive(data: Dictionary) -> void:
 
 func apply_state(data: Dictionary, initial: bool = false) -> void:
 	last_state_at = Time.get_ticks_msec()
+	# Omitted world arrays mean unchanged, while [] explicitly removes all drops.
+	if not data.has("resources"): data.resources = snapshot.get("resources", [])
+	if not data.has("drops"): data.drops = snapshot.get("drops", [])
 	snapshot = data
 	inventory = data.inventory.duplicate()
 	projected_inventory.apply_network_state(data.slots)
-	hud.update_needs(100, float(data.thirst))
+	hud.update_health(float(data.health), float(data.max_health))
+	hud.update_needs(float(data.hunger), float(data.thirst))
+	var stamp: float = float(data.time) / 1000.0
+	if initial: server_offset = Time.get_ticks_msec() / 1000.0 - stamp
 	if initial:
 		for node in nodes.values():
 			node.visible = true
@@ -316,12 +351,15 @@ func apply_state(data: Dictionary, initial: bool = false) -> void:
 			body.collision_mask = 0
 			world_view.objects.add_child(body)
 			body.position = Vector2(p.x, p.y)
-			actors[id] = {"body": body, "target": body.position, "swing": int(p.get("swing", 0))}
+			actors[id] = {"body": body, "target": body.position, "swing": int(p.get("swing", 0)), "frames": []}
 		var actor: Dictionary = actors[id]
 		actor.target = Vector2(p.x, p.y)
 		if initial:
 			actor.body.position = actor.target
 			actor.swing = int(p.get("swing", 0))
+			actor.frames.clear()
+		actor.frames.append({"time": stamp, "position": actor.target})
+		while actor.frames.size() > 8: actor.frames.pop_front()
 		actor.body.identity_label = str(p.nickname) + (" · você" if id == self_id else "") + (" · offline" if not p.online else "")
 		actor.body.identity_color = Color("d9a441") if id == self_id else Color("71b5d1")
 		actor.body.identity_label_size = name_font
@@ -339,13 +377,32 @@ func apply_state(data: Dictionary, initial: bool = false) -> void:
 		var id := str(r.id)
 		if not nodes.has(id): continue
 		var node: HarvestResource = nodes[id]
-		node.visible = not r.depleted
-		node.exhausted = bool(r.depleted)
-		node.progress = float(r.progress)
-		node.queue_redraw()
-	status.text = "Multiplayer · sala %d/2 · conectado · piloto .3" % connected
+		if node.exhausted != bool(r.depleted) or node.progress != float(r.progress):
+			node.visible = not r.depleted
+			node.exhausted = bool(r.depleted)
+			node.progress = float(r.progress)
+			node.queue_redraw()
+	var remaining := []
+	for item in data.drops:
+		var id := str(item.id)
+		remaining.append(id)
+		if not drops.has(id):
+			var drop := ResourceDrop.new()
+			drop.resource = str(item.kind)
+			drop.quantity = int(item.quantity)
+			drop.position = Vector2(item.x, item.y)
+			world_view.objects.add_child(drop)
+			drops[id] = drop
+		elif drops[id].quantity != int(item.quantity):
+			drops[id].quantity = int(item.quantity)
+			drops[id].queue_redraw()
+	for id in drops.keys():
+		if id not in remaining:
+			drops[id].queue_free()
+			drops.erase(id)
+	status.text = "Multiplayer · sala %d/2 · conectado · piloto .4" % connected
 	var region := WorldTerrain.region_at(actors[self_id].target)
-	hud.get_node("Controls/Rows/Time").text = "Multiplayer .3 · %d/2\n%s" % [connected, str(region.get("kind", "Ilha"))]
+	hud.get_node("Controls/Rows/Time").text = "MP .4 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
 	counts.text = "Seu inventário · Madeira %d · Pedra %d · %s" % [int(inventory.get("madeira", 0)), int(inventory.get("pedra", 0)), tool_name(str(data.tool))]
 	retry.visible = false
 
@@ -355,6 +412,7 @@ func tool_name(tool: String) -> String:
 func update_target() -> void:
 	target = ""
 	well_target = ""
+	drop_target = ""
 	var closest := 82.01
 	var position_now: Vector2 = actors[self_id].target
 	for id in nodes:
@@ -371,28 +429,45 @@ func update_target() -> void:
 		if distance < well_distance:
 			well_target = id
 			well_distance = distance
-	for id in world_view.wells: world_view.wells[id].set_highlighted(id == well_target and online)
-	for id in nodes: nodes[id].set_highlighted(id == target and online)
-	if well_target != "" and well_distance < closest:
-		prompt.text = "Interagir · poço: beber / encher cantil" if MobileInput.enabled else "E · poço: beber / encher cantil"
+	var drop_distance := 58.01
+	for id in drops:
+		var distance := position_now.distance_to(drops[id].position)
+		if distance < drop_distance:
+			drop_target = id
+			drop_distance = distance
+	if previous_target != target and nodes.has(previous_target): nodes[previous_target].set_highlighted(false)
+	if previous_well != well_target and world_view.wells.has(previous_well): world_view.wells[previous_well].set_highlighted(false)
+	if previous_drop != drop_target and drops.has(previous_drop): drops[previous_drop].set_highlighted(false)
+	if nodes.has(target): nodes[target].set_highlighted(online)
+	if world_view.wells.has(well_target): world_view.wells[well_target].set_highlighted(online)
+	if drops.has(drop_target): drops[drop_target].set_highlighted(online)
+	previous_target = target
+	previous_well = well_target
+	previous_drop = drop_target
+	if drop_target != "":
+		var drop: ResourceDrop = drops[drop_target]
+		prompt.text = ("Pegar" if MobileInput.enabled else "E · Pegar") + " %d %s" % [drop.quantity, ItemCatalog.title(drop.resource)]
+	elif well_target != "" and well_distance < closest:
+		prompt.text = "Interagir · poço" if MobileInput.enabled else "E · Usar poço"
 	elif target != "":
 		var kind: String = nodes[target].resource
 		var valid: bool = str(snapshot.tool) in ResourceRules.EXTRACTION[kind].hits
-		prompt.text = ("Toque em Coletar" if MobileInput.enabled else "F / E · Coletar") + (" árvore" if kind == "madeira" else " pedra") if valid else ResourceRules.guidance(kind)
+		prompt.text = ("Toque em Extrair" if MobileInput.enabled else "F · Extrair") + " " + {"madeira": "árvore", "pedra": "pedra", "fibra": "arbusto"}[kind] if valid else ResourceRules.guidance(kind)
 	else: prompt.text = ""
 	hud.show_target(prompt.text)
 	if is_instance_valid(overlay):
-		overlay.collect.text = "Interagir" if well_target != "" and well_distance < closest else "Coletar"
-		overlay.collect.disabled = blocked() or target == "" and well_target == ""
+		overlay.collect.text = "Pegar" if drop_target != "" else "Interagir"
+		overlay.collect.disabled = blocked() or drop_target == "" and well_target == ""
 
 func interact() -> void:
 	if blocked(): return
+	# E never harvests: resource rewards require an explicit server pickup.
+	if drop_target != "":
+		request_action("pickup", drop_target)
+		return
 	if well_target != "":
 		var well: WaterWell = world_view.wells[well_target]
-		if target == "" or actors[self_id].target.distance_to(well.position) < actors[self_id].target.distance_to(nodes[target].position):
-			hud.open_well(well)
-			return
-	harvest()
+		hud.open_well(well)
 
 func separate_names() -> void:
 	var labels := []
@@ -416,6 +491,7 @@ func request_action(action: String, argument: Variant = null) -> void:
 		"equip": message.tool = str(argument)
 		"swap": message.from = argument.x; message.to = argument.y
 		"well": message.well = str(argument.well); message.action = str(argument.action)
+		"pickup": message.drop = str(argument)
 		_: return
 	send(message)
 
@@ -446,9 +522,10 @@ func disconnected(reason: String, terminal: bool = false) -> void:
 		status.text += " · reconectando…"
 
 func error_text(code: String) -> String:
-	if code == "client_outdated": return "Atualize a página para carregar o piloto .3 e o mesmo mundo do servidor."
+	if code == "client_outdated": return "Atualize a página para carregar o piloto .4 e o mesmo mundo do servidor."
 	if code == "blocked_path": return "Há um obstáculo no caminho. Aproxime-se pelo acesso livre."
 	if code == "inventory_full": return "Inventário cheio · libere espaço antes de coletar."
+	if code == "drop_unavailable": return "Este item já foi pego."
 	if code == "canteen_unavailable": return "Tenha um cantil com espaço para água."
 	if code == "canteen_empty": return "Cantil vazio · encha em um poço."
 	if code in ["invalid_slot", "invalid_item"]: return "Selecione um item disponível no inventário."

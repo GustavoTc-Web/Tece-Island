@@ -62,7 +62,7 @@ function Test-Health([string]$Address) {
     if (-not $Address) { return $false }
     try {
         $taskResult = Invoke-RestMethod -Uri $Address -TimeoutSec 5
-        return [bool]($taskResult.ok -and $taskResult.protocol -eq 2 -and $taskResult.version -like '0.9.0-multiplayer-pilot.*')
+        return [bool]($taskResult.ok -and $taskResult.protocol -in @(2,3) -and $taskResult.version -like '0.9.0-multiplayer-pilot.*')
     } catch { return $false }
 }
 if ($Action -eq 'Status') { Show-State; exit 0 }
@@ -103,7 +103,7 @@ if (-not (Owned-Process 'server' $taskNode)) {
         if ($taskProcess.HasExited) { throw 'Servidor encerrou; consulte o log production-error da instancia.' }
         try {
             $taskHealth = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health" -TimeoutSec 1
-            if ($taskHealth.ok -and $taskHealth.protocol -eq 2 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.3') { $taskHealthy = $true; break }
+            if ($taskHealth.ok -and $taskHealth.protocol -eq 3 -and $taskHealth.version -eq '0.9.0-multiplayer-pilot.4') { $taskHealthy = $true; break }
         } catch { Start-Sleep -Milliseconds 100 }
     }
     if (-not $taskHealthy) { throw 'Servidor ainda nao confirmou health; o tunel nao foi aberto.' }

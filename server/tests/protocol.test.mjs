@@ -61,13 +61,17 @@ test('real WebSocket protocol with Firebase emulator identities and two independ
     assert.ok(welcome.players.some(p => p.nickname === 'Ana'));
     await b.walk(-1, -0.6, 260); // 100,100 offset to within the same tree's reach.
   });
-  await t.test('simultaneous final hits award exactly one resource reward', async () => {
+  await t.test('simultaneous final hits create one ground stack; concurrent pickup awards once', async () => {
     await pause(550);
     const results = await Promise.all([a.action('harvest', {resource: 'tree-1'}), b.action('harvest', {resource: 'tree-1'})]);
     assert.ok(results.every(r => r.ok), JSON.stringify(results));
     await pause(150);
     assert.equal(a.state.resources.find(r => r.id === 'tree-1').depleted, true);
-    assert.equal(a.state.inventory.madeira + b.state.inventory.madeira, 5);
+    assert.equal(a.state.inventory.madeira + b.state.inventory.madeira, 0);
+    const [drop]=a.state.drops;assert.equal(drop.quantity,5);
+    const pickups=await Promise.all([a.action('pickup',{drop:drop.id}),b.action('pickup',{drop:drop.id})]);
+    assert.equal(pickups.filter(r=>r.ok).length,1);assert.equal(pickups.find(r=>!r.ok).code,'drop_unavailable');
+    await pause(150);assert.equal(a.state.inventory.madeira + b.state.inventory.madeira,5);assert.deepEqual(a.state.drops,[]);
     assert.equal((await a.action('harvest', {resource: 'tree-1'})).code, 'resource_unavailable');
     assert.equal((await b.action('harvest', {resource: 'tree-1'})).code, 'resource_unavailable');
   });
@@ -86,7 +90,10 @@ test('real WebSocket protocol with Firebase emulator identities and two independ
       assert.equal((await b.action('harvest', {resource:'rock-1', player:a.self, inventory:{pedra:999}})).ok, true);
     }
     await pause(150);
-    assert.equal(b.state.inventory.pedra, 4);
+    assert.equal(b.state.inventory.pedra,0);
+    const drop=b.state.drops.find(d=>d.kind==='pedra');assert.equal(drop.quantity,4);
+    assert.equal((await b.action('pickup',{drop:drop.id,inventory:{pedra:999}})).ok,true);
+    await pause(150);assert.equal(b.state.inventory.pedra, 4);
     assert.equal(a.state.inventory.pedra, 0);
     assert.equal(a.state.resources.find(r=>r.id==='rock-1').depleted, true);
   });
@@ -150,7 +157,8 @@ test('room capacity and integral extraction with tool switching', () => {
   assert.equal(room.action(b, {type: 'equip', seq: 1, tool: 'maos'}, 0), null);
   for (let i = 0; i < 4; i++) assert.equal(room.action(b, {type: 'harvest', seq: i + 2, resource: 'tree-1'}, i * 1200), null);
   assert.equal(room.resources[0].depleted, true);
-  assert.equal(a.items.count('madeira') + b.items.count('madeira'), 5);
+  assert.equal(a.items.count('madeira') + b.items.count('madeira'), 0);
+  assert.equal([...room.drops.values()].reduce((n,d)=>n+d.quantity,0),5);
 });
 
 test('production startup refuses emulator authentication even when accidentally inherited', () => {

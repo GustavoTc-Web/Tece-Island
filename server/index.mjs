@@ -18,7 +18,7 @@ const verifier = firebaseVerifier({projectId, apiKey, localTest});
 const server = await startServer({verify: token => verifier.verify(token),
   nickname: (token, uid) => readNickname({projectId, token, uid, localTest}),
   allowedUids, origins, host, port: Number(process.env.PORT || 8787)});
-console.log(`Multiplayer protocol 2 listening on ${host}:${server.port}; ${localTest ? 'LOCAL EMULATOR ONLY' : 'Firebase verification enabled'}; room resets on restart`);
+console.log(`Multiplayer protocol 3 listening on ${host}:${server.port}; ${localTest ? 'LOCAL EMULATOR ONLY' : 'Firebase verification enabled'}; room resets on restart`);
 let stopping = false;
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, async () => {
   if (stopping) return; stopping = true;

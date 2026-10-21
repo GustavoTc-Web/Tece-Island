@@ -70,7 +70,7 @@ func open(value: String = "menu") -> void:
 	rows.get_node("Back").visible = value != "menu"
 	if value == "help":
 		if hud.network_mode:
-			text.text = ("Arraste o círculo para andar. Toque Coletar/Interagir perto do alvo, selecione os cinco slots e abra Inventário para usar ou mover itens." if MobileInput.enabled else "WASD/setas: andar. F/mouse: coletar ou usar o cantil selecionado. E: interagir. 1–5/scroll: selecionar. I: inventário.") + "\n\nExplore os biomas e colete madeira, pedra e fibra. Poços permitem beber e encher o cantil com três doses. Cada jogador tem seu inventário. Ao abrir um painel, seu personagem para; o outro jogador continua na sala."
+			text.text = ("Arraste o círculo para andar. Toque Extrair para cortar/minerar e Pegar para recolher itens no chão; Interagir abre poços. Selecione os cinco slots e abra Inventário para usar ou mover itens." if MobileInput.enabled else "WASD/setas: andar. F/mouse: extrair ou usar o cantil selecionado. E: pegar itens no chão ou abrir poços. 1–5/scroll: selecionar. I: inventário.") + "\n\nExplore os biomas e colete madeira, pedra e fibra. Poços permitem beber e encher o cantil com três doses. Fome permanece estável até alimentos estarem disponíveis. Vida, fome e água são individuais. Cada jogador tem seu inventário. Ao abrir um painel, seu personagem para; o outro jogador continua na sala."
 			layout()
 			return
 		var controls := "Use os joysticks para andar e mirar/atacar. Toque Interagir para coletar ou abrir o alvo próximo. Toque nos cinco slots para selecionar; Inventário permite usar, equipar e jogar itens." if MobileInput.enabled else "WASD/setas: andar. Mouse/F: atacar. E: coletar/interagir. 1–5/scroll: selecionar. I: inventário; C: fabricação; J: diário; R: recarregar."

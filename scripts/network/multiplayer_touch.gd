@@ -8,6 +8,7 @@ var radius := 65.0
 var collect: Button
 var inventory_button: Button
 var use_button: Button
+var harvest_button: Button
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -19,6 +20,12 @@ func _ready() -> void:
 	IslandTheme.decorate(collect)
 	collect.pressed.connect(arena.interact)
 	add_child(collect)
+	harvest_button = Button.new()
+	harvest_button.text = "Extrair"
+	harvest_button.focus_mode = Control.FOCUS_NONE
+	IslandTheme.decorate(harvest_button)
+	harvest_button.pressed.connect(arena.harvest)
+	add_child(harvest_button)
 	inventory_button = Button.new()
 	inventory_button.text = "Inventário"
 	inventory_button.icon = preload("res://assets/ui/inventory.svg")
@@ -45,16 +52,18 @@ func layout() -> void:
 	collect.size = Vector2(unit * 2.4, unit * 1.2)
 	collect.position = Vector2(get_viewport_rect().size.x - collect.size.x - 24, center.y - collect.size.y / 2)
 	collect.add_theme_font_size_override("font_size", int(maxf(20, ceilf(15 / MobileInput.css_scale()))))
-	for item in [inventory_button, use_button]:
+	for item in [inventory_button, use_button, harvest_button]:
 		item.size = collect.size
 		item.add_theme_font_size_override("font_size", int(ceilf(15 / MobileInput.css_scale())))
 		item.add_theme_constant_override("icon_max_width", int(ceilf(20 / MobileInput.css_scale())))
 	inventory_button.position = collect.position - Vector2(0, collect.size.y + 12)
-	use_button.position = inventory_button.position - Vector2(0, collect.size.y + 12)
+	harvest_button.position = inventory_button.position - Vector2(0, collect.size.y + 12)
+	use_button.position = harvest_button.position
 	reset()
 
 func _process(_delta: float) -> void:
 	use_button.visible = arena.projected_inventory.selected_data().get("item", "") == "cantil"
+	harvest_button.visible = not use_button.visible
 
 func reset() -> void:
 	fingers.move = -1

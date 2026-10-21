@@ -9,7 +9,7 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
   const room = new Room(layout);
   const http = createServer((req, res) => {
     res.writeHead(req.url === '/health' ? 200 : 404, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'});
-    res.end(JSON.stringify(req.url === '/health' ? {ok: true, protocol: 2, version: '0.9.0-multiplayer-pilot.3', connected_players: [...room.players.values()].filter(p => p.socket?.readyState === WebSocket.OPEN).length} : {error: 'not_found'}));
+    res.end(JSON.stringify(req.url === '/health' ? {ok: true, protocol: 3, version: '0.9.0-multiplayer-pilot.4', connected_players: [...room.players.values()].filter(p => p.socket?.readyState === WebSocket.OPEN).length} : {error: 'not_found'}));
   });
   const wss = new WebSocketServer({noServer: true, maxPayload: 16384, perMessageDeflate: false});
   http.on('upgrade', (req, socket, head) => {
@@ -44,7 +44,7 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
       try {message = JSON.parse(bytes.toString());} catch {return refuse(4002, 'invalid_message');}
       if (binary || !message || typeof message !== 'object' || Array.isArray(message)) return refuse(4002, 'invalid_message');
       if (!player) {
-        if (message.type === 'hello' && message.protocol !== 2) return refuse(4002, 'client_outdated');
+        if (message.type === 'hello' && message.protocol !== 3) return refuse(4002, 'client_outdated');
         if (authenticating || message.type !== 'hello' || typeof message.token !== 'string' || message.token.length > 12000) return refuse(4001, 'auth_required');
         authenticating = true;
         try {
@@ -56,7 +56,8 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
           player = room.join(identity, safeNickname(alias, `Jogador ${allowedUids.indexOf(identity.uid) + 1}`), ws);
           if (!player) return refuse(4004, 'room_full');
           clearTimeout(handshake);
-          send(ws, {...room.snapshot(player), type: 'welcome', protocol: 2, self: player.id, nextAction: player.action + 1});
+          send(ws, {...room.snapshot(player), type: 'welcome', protocol: 3, self: player.id, nextAction: player.action + 1});
+          ws.worldRevision=room.worldRevision;
         } catch {return refuse(4001, 'auth_failed');}
         finally {message.token = ''; authenticating = false;}
         return;
@@ -84,7 +85,10 @@ export async function startServer({verify, nickname, allowedUids, origins, host 
     const now = performance.now();
     room.step(Math.min(0.1, (now - last) / 1000), now); last = now;
     if (++snapshots % 2) return; // Simulation 20 Hz; snapshots 10 Hz.
-    for (const player of room.players.values()) if (player.socket) send(player.socket, room.snapshot(player));
+    for (const player of room.players.values()) if (player.socket) {
+      send(player.socket, room.snapshot(player,player.socket.worldRevision));
+      player.socket.worldRevision=room.worldRevision;
+    }
   }, 50);
   await new Promise((resolve, reject) => {http.once('error', reject); http.listen(port, host, resolve);});
   return {room, port: http.address().port, async close() {

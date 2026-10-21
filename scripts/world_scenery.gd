@@ -2,7 +2,7 @@ class_name WorldScenery
 extends RefCounted
 
 # Shared draw-only ground. Simulation and campaign remain in world.gd.
-static func draw_ground(canvas: Node2D) -> void:
+static func draw_ground(canvas) -> void:
 	canvas.draw_rect(WorldTerrain.BOUNDS.grow(1000), Color("182b29"))
 	canvas.draw_rect(Rect2(Vector2.ZERO, Vector2(6912, 1536)), Color("567c46"))
 	var random := RandomNumberGenerator.new()

@@ -3,6 +3,10 @@ extends Node
 var pilot: Node2D
 var session: Node
 var callback: JavaScriptObject
+var sample_clock := 0.0
+var reference: Node2D
+class ReferenceGround extends Node2D:
+	func _draw() -> void: WorldScenery.draw_ground(self)
 func _ready() -> void:
 	callback = JavaScriptBridge.create_callback(invoke)
 	JavaScriptBridge.get_interface("window").tcMpFixture = callback
@@ -35,10 +39,24 @@ func invoke(args: Array) -> void:
 		"touch": MobileInput.set_enabled(bool(data.enabled))
 		"chat": GlobalChat.opened = bool(data.opened)
 		"full": pilot.disconnected("room_full", true)
+		"render": pilot.world_view.visible = bool(data.visible)
+		"reference":
+			if not is_instance_valid(reference):
+				reference = ReferenceGround.new()
+				pilot.world_view.add_child(reference)
+				pilot.world_view.move_child(reference, 0)
+				reference.add_child(WorldTerrain.new())
+				reference.add_child(load("res://scripts/biomes.gd").new())
+				reference.add_child(CampaignTerrain.new())
+			reference.visible = bool(data.enabled)
+			pilot.world_view.scenery.visible = not bool(data.enabled)
 func box(control: Control) -> Array:
 	var rect := control.get_global_rect()
 	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 func _process(_delta: float) -> void:
+	sample_clock += _delta
+	if sample_clock < 0.1: return
+	sample_clock = 0.0
 	if is_instance_valid(session) and is_instance_valid(session.menu) and not is_instance_valid(pilot):
 		JavaScriptBridge.eval("window.tcMpState=" + JSON.stringify({"ready":true,"menu":true,"busy":session.menu.worlds_busy,"transitioning":session.transitioning,"status":session.menu.status.text}))
 		return
@@ -72,6 +90,11 @@ func _process(_delta: float) -> void:
 	value["regions"] = pilot.world_view.data.regions.size()
 	value["total_resources"] = pilot.nodes.size()
 	value["wells"] = pilot.world_view.wells.size()
+	value["drop_count"] = pilot.drops.size()
+	value["needs"] = {"health": pilot.hud.get_node("Controls/Rows/Health").value, "hunger":pilot.hud.needs_bars.Fome.value,"water":pilot.hud.needs_bars.Sede.value,"visible":pilot.hud.get_node("Controls/Rows/Health").visible and pilot.hud.needs_bars.Fome.visible and pilot.hud.needs_bars.Sede.visible}
 	value["swings"] = pilot.actors.values().map(func(actor): return actor.swing)
 	value["fps"] = Engine.get_frames_per_second()
+	value["process_ms"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000
+	value["draw_calls"] = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
+	value["primitives"] = Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 	JavaScriptBridge.eval("window.tcMpState=" + JSON.stringify(value))

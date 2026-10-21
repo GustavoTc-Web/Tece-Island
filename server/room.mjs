@@ -13,13 +13,14 @@ export class Room {
     this.resourceIndex=new Map(this.resources.map(r=>[r.id,r]));
     this.wells=new Map(layout.wells.map(w=>[w.id,w]));
     this.depleted=new Set();
+    this.drops=new Map();this.dropSequence=0;this.worldRevision=0;
   }
   join(identity,nickname,socket) {
     let player=this.players.get(identity.uid);
     if(!player&&this.players.size>=2)return null;
     if(!player) {
       const slot=this.players.size,[x,y]=this.layout.spawns[slot];
-      player={id:`player-${slot+1}`,x,y,dx:0,dy:0,items:new Inventory(),tool:'machado_madeira',action:0,lastHit:-Infinity,lastWell:-Infinity,thirst:this.layout.water.maximum,swing:0};
+      player={id:`player-${slot+1}`,x,y,dx:0,dy:0,items:new Inventory(),tool:'machado_madeira',action:0,lastHit:-Infinity,lastWell:-Infinity,health:100,hunger:100,thirst:this.layout.water.maximum,swing:0};
       this.players.set(identity.uid,player);
     }
     const previous=player.socket;
@@ -57,6 +58,18 @@ export class Room {
       if(message.action==='drink')player.thirst=Math.min(this.layout.water.maximum,player.thirst+this.layout.water.restores);
       else error=player.items.fill();
       if(!error)player.lastWell=now;
+    } else if(message.type==='pickup') {
+      const drop=this.drops.get(message.drop);
+      if(!drop)return 'drop_unavailable';
+      if(Math.hypot(player.x-drop.x,player.y-drop.y)>58)return 'too_far';
+      if(!this.geometry.sight(player,drop,this.depleted))return 'blocked_path';
+      // No awaits between inventory mutation and drop update: sockets cannot
+      // both claim the same units. Any quantity that does not fit stays visible.
+      const accepted=player.items.collect(drop.kind,drop.quantity);
+      if(!accepted)return 'inventory_full';
+      drop.quantity-=accepted;
+      if(!drop.quantity)this.drops.delete(drop.id);
+      this.worldRevision++;
     } else if(message.type==='harvest') {
       const resource=this.resourceIndex.get(message.resource);
       if(!resource||resource.depleted)return 'resource_unavailable';
@@ -66,10 +79,15 @@ export class Room {
       if(!Object.hasOwn(rule.hits,player.tool))return 'wrong_tool';
       if(now-player.lastHit<this.layout.interval[player.tool]*1000-1)return 'cooldown';
       const work=6/rule.hits[player.tool];
-      if(resource.hits+work>=6&&!player.items.add(resource.kind,rule.reward))return 'inventory_full';
       player.lastHit=now;resource.hits+=work;
-      if(resource.hits>=6){resource.depleted=true;this.depleted.add(resource.id);}
+      if(resource.hits>=6){
+        resource.depleted=true;this.depleted.add(resource.id);
+        // The collector's validated standing position is reachable and clear.
+        const id=`drop-${++this.dropSequence}`;
+        this.drops.set(id,{id,kind:resource.kind,quantity:rule.reward,x:player.x,y:player.y});
+      }
       player.swing=message.seq;player.sx=resource.x;player.sy=resource.y;
+      this.worldRevision++;
     } else return 'invalid_action';
     if(error)return error;
     player.tool=player.items.tool();this.revision++;return null;
@@ -90,12 +108,19 @@ export class Room {
     }
     this.revision++;
   }
-  snapshot(forPlayer) {
-    return {type:'state',room:this.id,revision:this.revision,
+  snapshot(forPlayer,knownWorldRevision=-1) {
+    return {type:'state',room:this.id,revision:this.revision,world_revision:this.worldRevision,time:performance.now(),
       world:{...WORLD,hash:WORLD_HASH,version:this.layout.version},
       players:[...this.players.values()].map(p=>({id:p.id,nickname:p.nickname,x:p.x,y:p.y,dx:p.dx,dy:p.dy,online:!!p.socket,tool:p.tool,swimming:this.geometry.water(p.x,p.y),swing:p.swing,sx:p.sx||p.x,sy:p.sy||p.y})),
-      // Send changes only; late join receives every change since room reset.
+      // Only resend world state when a harvest or pickup changes it. A fresh
+      // socket always receives the full accumulated state, including empty drops.
+      ...(knownWorldRevision===this.worldRevision?{}:{
       resources:this.resources.filter(r=>r.hits>0||this.layout.fixture).map(r=>({id:r.id,hits:r.hits,depleted:r.depleted,progress:r.hits/6})),
-      inventory:forPlayer.items.counts(),slots:forPlayer.items.snapshot(),tool:forPlayer.tool,thirst:forPlayer.thirst};
+      drops:[...this.drops.values()]}),
+      inventory:forPlayer.items.counts(),slots:forPlayer.items.snapshot(),tool:forPlayer.tool,
+      health:forPlayer.health,max_health:100,hunger:forPlayer.hunger,thirst:forPlayer.thirst,
+      // Food acquisition/consumption is absent. Hunger and health do not decay
+      // in this interaction pilot; never simulate undisclosed client-only needs.
+      hunger_decay:false};
   }
 }

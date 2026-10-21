@@ -31,7 +31,7 @@ async function launch(viewport,hasTouch){
  const cdp=hasTouch?await context.newCDPSession(page):null;return {page,context,cdp};
 }
 function cssPoint(s,page,x,y,id=1){const v=page.viewportSize();return {id,x:x*v.width/s.viewport[0],y:y*v.height/s.viewport[1]};}
-async function click(page,caption,touch=false){const s=await state(page),b=s.buttons[caption];if(!b)throw Error('Missing UI '+caption);const p=cssPoint(s,page,b[0]+b[2]/2,b[1]+b[3]/2);if(touch)await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);}
+async function click(page,caption,touch=false){await page.waitForFunction(c=>window.tcMpState.buttons[c]!==undefined,caption,{timeout:5000});const s=await state(page),b=s.buttons[caption];const p=cssPoint(s,page,b[0]+b[2]/2,b[1]+b[3]/2);if(touch)await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);}
 async function drive(client,to,direct=false){
  const {page,cdp}=client,s=await state(page),p=own(s),path=direct?[[p.x,p.y],to]:pathTo(reachable(geometry,[p.x,p.y]),to);
  console.log('DRIVE',JSON.stringify({from:[p.x,p.y],to,path,fps:s.fps}));
@@ -64,6 +64,16 @@ try{
  await invoke(b,{action:'connect',...users['mp-b']});await b.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.players.length===2);
  await a.waitForFunction(()=>window.tcMpState.players.length===2);
  check((await state(a)).players.some(p=>p.nickname.includes('Beto'))&&(await state(b)).players.some(p=>p.nickname.includes('Ana')),'Two authenticated clients render each other with nicknames');
+ server.room.players.get('mp-a').health=83;server.room.players.get('mp-a').hunger=72;
+ await a.waitForFunction(()=>window.tcMpState.needs.health===83&&window.tcMpState.needs.hunger===72);
+ check((await state(b)).needs.health===100&&(await state(b)).needs.hunger===100,'Health and hunger HUD show individual server values');
+ check((await state(a)).needs.visible&&(await state(b)).needs.visible,'Health, hunger and water bars are visible in PC and mobile HUD');
+ const controls=(await state(b)).buttons;
+ for(const caption of ['Extrair','Interagir','Inventário']){
+  const box=controls[caption];if(!box)continue;
+  check(Object.entries(controls).filter(([k])=>k.startsWith('Slot ')).every(([,r])=>!(box[0]<r[0]+r[2]&&box[0]+box[2]>r[0]&&box[1]<r[1]+r[3]&&box[1]+box[3]>r[1])),'Mobile '+caption+' does not overlap quick slots');
+ }
+ server.room.players.get('mp-a').health=100;server.room.players.get('mp-a').hunger=100;
  const startA=own(await state(a)),startB=own(await state(b)),bs=await state(b),[cx,cy,r]=bs.stick;
  await a.keyboard.down('a');await mobile.cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[cssPoint(bs,b,cx,cy)]});
  await mobile.cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[cssPoint(bs,b,cx+r*.8,cy)]});await pause(300);
@@ -77,7 +87,7 @@ try{
  await a.keyboard.press('f');await a.waitForFunction(id=>window.tcMpState.snapshot.resources.some(r=>r.id===id&&r.progress>0),tree.id);
  await b.waitForFunction(()=>window.tcMpState.swings.some(n=>n>0));
  check(true,'Accepted harvest progress and cut animation reach the other player');
- const s=await state(b),[sx,sy,sr]=s.stick,button=s.buttons.Coletar;
+ const s=await state(b),[sx,sy,sr]=s.stick,button=s.buttons.Extrair;
  const finger=cssPoint(s,b,sx-sr*.25,sy),second=cssPoint(s,b,button[0]+button[2]/2,button[1]+button[3]/2,2);
  await mobile.cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});
  await mobile.cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger,second]});
@@ -85,16 +95,26 @@ try{
  await b.waitForFunction(id=>window.tcMpState.snapshot.resources.some(r=>r.id===id&&r.progress>.6),tree.id);
  check((await state(b)).move[0]<-.15,'Mobile second finger harvests while joystick finger remains held');
  await mobile.cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await pause(650);
- await Promise.all([a.keyboard.press('f'),click(b,'Coletar',true)]);
+ await Promise.all([a.keyboard.press('f'),click(b,'Extrair',true)]);
  await a.waitForFunction(id=>window.tcMpState.snapshot.resources.some(r=>r.id===id&&r.depleted),tree.id);
  await b.waitForFunction(id=>window.tcMpState.snapshot.resources.some(r=>r.id===id&&r.depleted),tree.id);
- check((await state(a)).inventory.madeira+(await state(b)).inventory.madeira===5,'Concurrent final cuts remove one shared tree and award exactly five wood total');
+ check((await state(a)).inventory.madeira+(await state(b)).inventory.madeira===0,'Harvest never credits inventory automatically');
+ await a.waitForFunction(()=>window.tcMpState.snapshot.drops.length===1);
+ const drop=(await state(a)).snapshot.drops[0];check(drop.quantity===5,'One visible shared ground stack contains exactly five wood');
+ check((await state(a)).drop_count===1&&(await state(b)).drop_count===1,'Both clients instantiate existing solo ground-item visuals');
+ await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-ground.png'});
+ const oldSelf=(await state(b)).self;await invoke(b,{action:'offline'});await pause(200);await invoke(b,{action:'retry'});await b.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.drop_count===1);
+ check((await state(b)).self===oldSelf,'Reconnect before pickup preserves the character and remaining ground stack');
+ await drive(pc,[drop.x-12,drop.y+6],true);await drive(mobile,[drop.x+12,drop.y+6],true);await pause(300);
+ await Promise.all([a.keyboard.press('e'),click(b,'Pegar',true)]);
+ await a.waitForFunction(()=>window.tcMpState.snapshot.drops.length===0);await b.waitForFunction(()=>window.tcMpState.snapshot.drops.length===0);
+ check((await state(a)).inventory.madeira+(await state(b)).inventory.madeira===5,'Concurrent E/mobile pickup awards exactly five wood once');
  await drive(pc,[1270,768]);await drive(mobile,[1280,800]);
  check((await state(a)).well_target==='well:forest'&&(await state(b)).well_target==='well:forest','Both players reach the same original forest well');
  await a.keyboard.press('e');await click(b,'Interagir',true);
  await a.waitForFunction(()=>window.tcMpState.active_panel==='well');await b.waitForFunction(()=>window.tcMpState.active_panel==='well');
  check(!(await state(b)).overlay_visible,'Existing well panel opens and hides mobile gameplay controls');
- await b.screenshot({path:'.tools/screenshots/multiplayer-3-mobile-well-panel.png'});
+ await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-well-panel.png'});
  await Promise.all([click(a,'Encher cantil'),click(b,'Encher cantil',true)]);
  await a.waitForFunction(()=>window.tcMpState.slots.slots[2].water===3);await b.waitForFunction(()=>window.tcMpState.slots.slots[2].water===3);
  check(true,'Server fills a separate three-dose canteen for each player at shared well');
@@ -106,13 +126,13 @@ try{
  check((await state(b)).slots.slots[2].water===3,'Using canteen affects only its owner inventory');
  await click(b,'Inventário',true);await b.waitForFunction(()=>window.tcMpState.active_panel==='inventory');
  check((await state(b)).buttons['Inventory slot 7']!==undefined,'Actual reused inventory panel renders all seven server slots on mobile');
- await b.screenshot({path:'.tools/screenshots/multiplayer-3-mobile-inventory.png'});
+ await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-inventory.png'});
  await click(b,'Inventory slot 2',true);await click(b,'Mover / trocar',true);await click(b,'Inventory slot 5',true);
  await b.waitForFunction(()=>window.tcMpState.slots.slots[4].item==='picareta_madeira');
  check(true,'Inventory slot swap is validated and returned by server');
  await click(b,'Fechar',true);await click(b,'Slot 5',true);await b.waitForFunction(()=>window.tcMpState.snapshot.tool==='picareta_madeira');
  check(true,'Existing quickbar equips server-owned tool after slot movement');
- for(const [name,box]of Object.entries((await state(b)).buttons))if(name.startsWith('Slot ')||['Coletar','Interagir','Inventário','Menu'].includes(name))check(box[2]*640/(await state(b)).viewport[0]>=44&&box[3]*360/(await state(b)).viewport[1]>=44,'Mobile touch target >=44 CSS px: '+name);
+ for(const [name,box]of Object.entries((await state(b)).buttons))if(name.startsWith('Slot ')||['Extrair','Interagir','Inventário','Menu'].includes(name))check(box[2]*640/(await state(b)).viewport[0]>=44&&box[3]*360/(await state(b)).viewport[1]>=44,'Mobile touch target >=44 CSS px: '+name);
  const previous=await state(b);await invoke(b,{action:'offline'});await a.waitForFunction(()=>window.tcMpState.snapshot.players.some(p=>!p.online));
  check(!(await state(b)).overlay_visible,'Disconnected client suspends joystick and inventory gameplay');
  await invoke(b,{action:'retry'});await b.waitForFunction(()=>window.tcMpState.online);
@@ -124,10 +144,10 @@ try{
  await b.waitForFunction(()=>!window.tcMpState.online&&window.tcMpState.status.includes('Sem resposta'),null,{timeout:10000});
  check(!(await state(b)).overlay_visible,'Five seconds without snapshots pauses controls');old.send=send;
  await b.waitForFunction(()=>window.tcMpState.online,null,{timeout:10000});check((await state(b)).self===previous.self,'Automatic recovery preserves the same player');
- await a.screenshot({path:'.tools/screenshots/multiplayer-3-pc-forest.png'});await b.screenshot({path:'.tools/screenshots/multiplayer-3-mobile-well.png'});
+ await a.screenshot({path:'.tools/screenshots/multiplayer-4-pc-forest.png'});await b.screenshot({path:'.tools/screenshots/multiplayer-4-mobile-well.png'});
  await drive(pc,[2420,768]);check(geometry.region(own(await state(a)).x,own(await state(a)).y).id==='swamp','Real keyboard traverses original forest-to-swamp connection across former arena limits');
- await a.screenshot({path:'.tools/screenshots/multiplayer-3-pc-swamp.png'});
+ await a.screenshot({path:'.tools/screenshots/multiplayer-4-pc-swamp.png'});
  await click(a,'Menu');await click(a,'Voltar ao menu principal');await a.waitForFunction(()=>window.tcMpState.menu);
  check(true,'Return to solo world library uses existing session flow');check(errors.length===0,'No Godot/JavaScript errors in either actual Web client');
-}catch(e){for(const [i,browser]of clients.entries())for(const c of browser.contexts())for(const p of c.pages()){await p.screenshot({path:`.tools/screenshots/multiplayer-3-failure-${i}.png`}).catch(()=>{});await writeFile(`.tools/world3-failure-${i}.json`,JSON.stringify(await state(p),null,2));}throw e;
+}catch(e){for(const [i,browser]of clients.entries())for(const c of browser.contexts())for(const p of c.pages()){await p.screenshot({path:`.tools/screenshots/multiplayer-4-failure-${i}.png`}).catch(()=>{});await writeFile(`.tools/world4-failure-${i}.json`,JSON.stringify(await state(p),null,2));}throw e;
 }finally{for(const b of clients)await b.close();await server.close();await verifier.close();await new Promise(r=>http.close(r));await writeFile('.tools/multiplayer-world-browser-results.json',JSON.stringify({checks,errors,physical:false},null,2));}

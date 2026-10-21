@@ -6,13 +6,12 @@ var objects: Node2D
 var resources := {}
 var wells := {}
 var campaign: SoloCampaign = null
+var scenery: Node2D
 
 func _ready() -> void:
 	data = JSON.parse_string(FileAccess.get_file_as_string(FILE))
-	add_child(WorldTerrain.new())
-	add_child(preload("res://scripts/biomes.gd").new())
-	# Draw the existing northern scenery, without initializing any solo mission.
-	add_child(CampaignTerrain.new())
+	scenery = preload("res://scripts/network/multiplayer_scenery.gd").new()
+	add_child(scenery)
 	objects = Node2D.new()
 	objects.name = "WorldObjects"
 	objects.y_sort_enabled = true
@@ -29,6 +28,7 @@ func _ready() -> void:
 		node.collision_layer = 0
 		node.collision_mask = 0
 		node.remove_from_group("harvest_resources")
+		node.set_process(false)
 		resources[item.id] = node
 	for item in data.wells:
 		var well := WaterWell.new()
@@ -48,5 +48,5 @@ func _ready() -> void:
 		for child in building.get_children():
 			if child is StaticBody2D: child.collision_layer = 0; child.collision_mask = 0
 
-func _draw() -> void:
-	WorldScenery.draw_ground(self)
+func show_area(area: Rect2) -> void:
+	scenery.show_area(area)

@@ -105,28 +105,32 @@ func initialize_resources(world: Node2D) -> void:
 			world.add_obstacle(world.BUSH, rect.position + Vector2(rect.size.x * (0.18 + i * 0.22), rect.size.y * 0.64))
 
 func _draw() -> void:
+	draw_scenery(self)
+
+# Shared drawing commands; multiplayer records them into clipped spatial chunks.
+static func draw_scenery(canvas) -> void:
 	for region in regions():
 		if region in ORIGINAL: continue
 		var rect: Rect2 = region.rect
-		draw_rect(rect, COLORS[region.kind])
+		canvas.draw_rect(rect, COLORS[region.kind])
 		if region.kind == "Ruínas Escuras":
 			for i in range(110):
 				var point := rect.position + Vector2(40 + posmod(i * 163, int(rect.size.x) - 80), 40 + posmod(i * 227, int(rect.size.y) - 80))
-				draw_rect(Rect2(point, Vector2(10, 5)), Color("686271"))
+				canvas.draw_rect(Rect2(point, Vector2(10, 5)), Color("686271"))
 		if region in NEW_LAND:
 			var trail: Color = COLORS[region.kind].lightened(0.12)
-			draw_line(Vector2(rect.get_center().x, rect.position.y), Vector2(rect.get_center().x, rect.end.y), trail, 104)
-			draw_line(Vector2(rect.position.x, rect.get_center().y), Vector2(rect.end.x, rect.get_center().y), trail, 104)
+			canvas.draw_line(Vector2(rect.get_center().x, rect.position.y), Vector2(rect.get_center().x, rect.end.y), trail, 104)
+			canvas.draw_line(Vector2(rect.position.x, rect.get_center().y), Vector2(rect.end.x, rect.get_center().y), trail, 104)
 			for i in range(160):
 				var point := rect.position + Vector2(40 + posmod(i * 179, int(rect.size.x) - 80), 40 + posmod(i * 137, int(rect.size.y) - 80))
-				draw_line(point, point + Vector2(3, -6), COLORS[region.kind].lightened(0.06), 2)
+				canvas.draw_line(point, point + Vector2(3, -6), COLORS[region.kind].lightened(0.06), 2)
 		if region.kind == "Aquático":
 			var land := Color("819b62")
-			draw_rect(rect, land, false, 28)
-			draw_line(Vector2(rect.get_center().x, rect.position.y), Vector2(rect.get_center().x, rect.end.y), land, 92)
-			draw_line(Vector2(rect.position.x, rect.get_center().y), Vector2(rect.end.x, rect.get_center().y), land, 92)
-			for island in islands(rect): draw_circle(island, 112, land)
+			canvas.draw_rect(rect, land, false, 28)
+			canvas.draw_line(Vector2(rect.get_center().x, rect.position.y), Vector2(rect.get_center().x, rect.end.y), land, 92)
+			canvas.draw_line(Vector2(rect.position.x, rect.get_center().y), Vector2(rect.end.x, rect.get_center().y), land, 92)
+			for island in islands(rect): canvas.draw_circle(island, 112, land)
 			for i in range(100):
 				var point := rect.position + Vector2(40 + posmod(i * 137, int(rect.size.x) - 80), 40 + posmod(i * 233, int(rect.size.y) - 80))
-				if is_water(point): draw_line(point, point + Vector2(18, 0), Color("538b9d"), 2)
-		draw_string(IslandTheme.BODY, rect.position + Vector2(60, 80), region.kind, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("e6e0c0"))
+				if is_water(point): canvas.draw_line(point, point + Vector2(18, 0), Color("538b9d"), 2)
+		canvas.draw_string(IslandTheme.BODY, rect.position + Vector2(60, 80), region.kind, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color("e6e0c0"))

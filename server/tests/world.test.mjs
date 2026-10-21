@@ -98,12 +98,16 @@ test('server actions reject blocked sight and well cooldown without mutating ite
   assert.equal(room.action(p,{type:'well',seq:4,well:'well:test',action:'delete'},600),'invalid_action');
 });
 
-test('full inventory leaves resource available for the other collector',()=>{
+test('full inventory preserves ground reward; free collector picks it atomically',()=>{
   const room=new Room(ARENA),socket={close(){}},a=room.join({uid:'full'},'Full',socket),b=room.join({uid:'free'},'Free',socket);
   a.x=b.x=560;a.y=b.y=400;a.items.add('madeira',60);
   const resource=room.resourceIndex.get('tree-1');resource.hits=4;
-  assert.equal(room.action(a,{type:'harvest',seq:1,resource:'tree-1'},1000),'inventory_full');
-  assert.equal(resource.depleted,false);assert.equal(resource.hits,4);assert.equal(a.items.count('madeira'),60);
-  assert.equal(room.action(b,{type:'harvest',seq:1,resource:'tree-1'},1000),null);
-  assert.equal(resource.depleted,true);assert.equal(b.items.count('madeira'),5);
+  assert.equal(room.action(a,{type:'harvest',seq:1,resource:'tree-1'},1000),null);
+  assert.equal(resource.depleted,true);assert.equal(a.items.count('madeira'),60);
+  const [drop]=room.drops.values();assert.equal(drop.quantity,5);
+  assert.equal(room.action(a,{type:'pickup',seq:2,drop:drop.id},1001),'inventory_full');
+  assert.equal(room.drops.get(drop.id).quantity,5);assert.equal(a.items.count('madeira'),60);
+  assert.equal(room.action(b,{type:'pickup',seq:1,drop:drop.id},1002),null);
+  assert.equal(b.items.count('madeira'),5);assert.equal(room.drops.size,0);
+  assert.equal(room.action(a,{type:'pickup',seq:3,drop:drop.id},1003),'drop_unavailable');
 });

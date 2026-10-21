@@ -26,7 +26,7 @@ export class Client {
     this.ws = new WebSocket(url, {origin});
     this.messages = [];
     this.seq = 0; this.input = 0;
-    this.ws.on('message', bytes => {const message = JSON.parse(bytes); this.messages.push(message); if (message.type === 'state' || message.type === 'welcome') this.state = message;});
+    this.ws.on('message', bytes => {const message = JSON.parse(bytes); this.messages.push(message); if (message.type === 'state' || message.type === 'welcome') this.state = {...this.state,...message};});
     this.ws.on('close', (code, reason) => {this.closed = {code, reason: reason.toString()};});
     this.ws.on('error', () => {});
   }
@@ -37,7 +37,7 @@ export class Client {
   }
   async open() {while (this.ws.readyState === WebSocket.CONNECTING) await pause(10); if (this.ws.readyState !== WebSocket.OPEN) throw Error('Socket refused');}
   async hello(identity, extra = {}) {
-    await this.open(); this.send({type: 'hello', protocol: 2, ...identity, ...extra});
+    await this.open(); this.send({type: 'hello', protocol: 3, ...identity, ...extra});
     const response = await this.wait(m => ['welcome', 'error'].includes(m.type));
     if (response.type === 'welcome') {this.self = response.self; this.seq = response.nextAction - 1;}
     return response;

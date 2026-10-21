@@ -23,7 +23,7 @@ function connect(message, expected) {
 }
 try {
   const health=await (await fetch(url.replace('wss://','https://').replace('/room','/health'),{signal:AbortSignal.timeout(10000)})).json();
-  check(health.ok&&health.protocol===2&&health.version==='0.9.0-multiplayer-pilot.3','External HTTPS reaches only game service with exact version/protocol');
+  check(health.ok&&health.protocol===3&&health.version==='0.9.0-multiplayer-pilot.4','External HTTPS reaches only game service with exact version/protocol');
   const root=await fetch(url.replace('wss://','https://').replace('/room','/'),{signal:AbortSignal.timeout(10000)});
   check(root.status===404,'External tunnel serves no filesystem or other application at root');
   check(await connect({type:'input',seq:1,x:1,y:0},'auth_required'),'External WSS rejects actions without authentication');
@@ -33,8 +33,8 @@ try {
   const now=Math.floor(Date.now()/1000), encode=value=>Buffer.from(JSON.stringify(value)).toString('base64url');
   const fakeToken=uid=>`${encode({alg:'none',typ:'JWT'})}.${encode({sub:uid,user_id:uid,aud:configuration.projectId,iss:`https://securetoken.google.com/${configuration.projectId}`,iat:now,exp:now+3600,auth_time:now,email_verified:true,firebase:{sign_in_provider:'password'}})}.`;
   const allowedToken=fakeToken(allowed[0]), outsiderToken=fakeToken('mp-unauthorized-production-probe');
-  check(await connect({type:'hello',protocol:2,uid:allowed[0],token:allowedToken},'auth_failed'),'External WSS rejects unsigned token even with allowlisted UID');
-  check(await connect({type:'hello',protocol:2,uid:allowed[0],token:outsiderToken},'auth_failed'),'External WSS rejects forged outsider token and claimed allowed UID');
+  check(await connect({type:'hello',protocol:3,uid:allowed[0],token:allowedToken},'auth_failed'),'External WSS rejects unsigned token even with allowlisted UID');
+  check(await connect({type:'hello',protocol:3,uid:allowed[0],token:outsiderToken},'auth_failed'),'External WSS rejects forged outsider token and claimed allowed UID');
   for(const name of ['production','production-error','tunnel','tunnel-error']) {
     const log=`.tools/${runtime.log_prefix || 'mp'}-${name}.log`;
     const text=await readFile(log,'utf8');

@@ -1,5 +1,10 @@
 # Mundo compartilhado — piloto .3
 
+Reteste posterior informado pelo usuário em PC e celular: mundo mais próximo
+do solo, mas travadas, crédito automático de recursos e ausência de vida/fome.
+Esse é o relato físico da .3; não aprova a .4. Correções e nova publicação em
+[piloto .4](MULTIPLAYER_PILOTO_4.md). O endpoint temporário .3 abaixo expirou.
+
 Versão: **0.9.0-multiplayer-pilot.3**, protocolo 2.
 Branch: `feat/multiplayer-pilot`.
 Publicação exclusiva no [piloto privado](https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/).
