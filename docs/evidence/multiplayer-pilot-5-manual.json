@@ -1,0 +1,20 @@
+{
+  "version": "0.9.0-multiplayer-pilot.5",
+  "evidence_type": "user_report",
+  "report_date": "2026-10-21",
+  "devices": ["PC", "mobile"],
+  "report": "Os dois entraram e se movem",
+  "context": "Reply to the request to reload pilot .5 on PC and phone and enter with one account per device.",
+  "confirmed": [
+    "both players entered multiplayer on the published pilot",
+    "both players moved"
+  ],
+  "not_confirmed": [
+    "physical performance during exploration, simultaneous movement and gathering",
+    "ground drops, pickup totals, full inventory and concurrent pickup without duplication",
+    "individual health, hunger and water HUD",
+    "disconnect and reconnect preserving character and inventory",
+    "physical Chat and connection notice layout"
+  ],
+  "automated_evidence": false
+}

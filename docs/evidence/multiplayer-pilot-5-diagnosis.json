@@ -55,6 +55,7 @@
     "repeated_start_preserves_processes": true
   },
   "validation": {
+    "scope": "automated checks during recovery; user retest recorded separately in human_report",
     "server_tests": 32,
     "native_unique_checks": 355,
     "rule_checks": 22,
@@ -64,6 +65,12 @@
   },
   "human_report": {
     "pilot_4_entry": "failed on PC and phone",
-    "pilot_4_performance_drops_needs": "still pending; no gameplay was possible"
+    "pilot_4_performance_drops_needs": "still pending; no gameplay was possible",
+    "pilot_5": {
+      "evidence": "multiplayer-pilot-5-manual.json",
+      "report": "Os dois entraram e se movem",
+      "confirmed": "user-confirmed PC/mobile entry and movement on the published pilot",
+      "remaining_physical_tests": "performance, drops, HUD, reconnect and Chat/connection notice layout"
+    }
   }
 }

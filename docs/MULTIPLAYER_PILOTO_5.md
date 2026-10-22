@@ -76,10 +76,15 @@ Nenhum mundo solo foi importado, apagado ou sobrescrito.
 - WSS público recusa conexão anônima e token sem assinatura; isso valida
   transporte e restrição, não login positivo das contas reais.
 
-Pendências físicas: **entrada com as duas contas reais em produção**, movimento
-entre PC/celular e observação do aviso/Chat nesses aparelhos. Os testes físicos
-de **desempenho, drops e HUD da .4 continuam pendentes**, pois o usuário não
-conseguiu entrar. Nenhuma dessas etapas foi marcada como aprovada.
+**Reteste físico confirmado pelo usuário em 21/10/2026:** após a solicitação de
+entrada na .5 com uma conta no PC e outra no celular, respondeu: “Os dois
+entraram e se movem”. Registradas **entrada dos dois jogadores e movimentação**
+no piloto publicado, conforme o [relato manual](evidence/multiplayer-pilot-5-manual.json).
+
+Continuam pendentes de confirmação física: **desempenho, drops e HUD** (sem
+aprovação na .4, em que a entrada falhou), saída/reconexão com preservação de
+inventário e personagem, além do posicionamento do aviso/Chat. O relato atual
+não aprova essas etapas nem confirma totais de recursos ou ausência de duplicação.
 
 Capturas: [aviso PC](images/multiplayer-5-pc-connection.png),
 [aviso mobile emulado](images/multiplayer-5-mobile-connection.png),
@@ -145,4 +150,5 @@ Alterações locais do IDE e arquivos preexistentes preservados.
 
 Evidências: [diagnóstico anterior à recuperação](evidence/multiplayer-pilot-5-diagnosis.json),
 [Web emulado](evidence/multiplayer-pilot-5-web.json),
-[pacote e publicação](evidence/multiplayer-pilot-5-deployment.json).
+[pacote e publicação](evidence/multiplayer-pilot-5-deployment.json),
+[reteste físico relatado pelo usuário](evidence/multiplayer-pilot-5-manual.json).

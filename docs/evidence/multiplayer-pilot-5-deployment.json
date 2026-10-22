@@ -287,9 +287,16 @@
     "rules": 22,
     "native_chat": 11,
     "web_emulated": 56,
-    "physical_pilot5": "pending",
-    "positive_real_production_login": "pending",
+    "physical_pilot5": "partial: user-confirmed PC/mobile entry and movement; see manual_retest",
+    "positive_real_production_login": "user-confirmed entry with one account per device; not automated",
     "physical_pilot4_performance_drops_hud": "still pending; entry failed"
+  },
+  "manual_retest": {
+    "evidence": "multiplayer-pilot-5-manual.json",
+    "report": "Os dois entraram e se movem",
+    "confirmed": "both players entered and moved on PC/mobile",
+    "remaining_physical_tests": "performance, drops, HUD, reconnect and Chat/connection notice layout",
+    "automated_results_above_unchanged": true
   },
   "official": {
     "version": "0.9.0",
