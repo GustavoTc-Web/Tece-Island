@@ -1,0 +1,45 @@
+{
+  "before_restart": {
+    "server_running": false,
+    "tunnel_running": false,
+    "host_task_state": "Ready",
+    "task_last_result": 3221225786,
+    "task_last_result_hex": "0xC000013A",
+    "task_operational_log_enabled": false,
+    "local_listener": false,
+    "probes": [
+      {
+        "url": "http://127.0.0.1:8791/health",
+        "error": "ECONNREFUSED"
+      },
+      {
+        "url": "https://become-tri-billion-window.trycloudflare.com/health",
+        "error": "ENOTFOUND"
+      }
+    ],
+    "published_version": "0.9.0-multiplayer-pilot.5",
+    "published_commit": "9596431c4fc60ca167ed6a3f7e8ffa78f83f2024",
+    "published_endpoint": "wss://become-tri-billion-window.trycloudflare.com/room",
+    "served_pck_sha256": "14961bb908431ee2d907e678e769ae75980fc0c3b72f27a68219b4957c4fce5a",
+    "recorded_endpoint_matches_published": true,
+    "cloudflared_control_stream_lost_utc": "2026-10-22T00:58:40Z",
+    "cloudflared_shutdown_utc": "2026-10-22T01:34:18Z",
+    "shutdown_signal": "terminated",
+    "windows_sleep_utc": "2026-10-22T01:34:27.3459852Z",
+    "windows_resume_utc": "2026-10-22T18:42:00.6460548Z",
+    "last_boot_date": "2026-10-14",
+    "termination_initiator": "not established",
+    "failure_stage": "transport, before authentication or initial state",
+    "ram": "already lost before recovery"
+  },
+  "validation": {
+    "server_tests": 32,
+    "endpoint_native_checks": 13,
+    "solo_isolation_checks": 14,
+    "production_wss_checks": 10,
+    "web_checks": 9,
+    "physical_pilot6": "pending",
+    "physical_performance_drops_hud_reconnection": "pending",
+    "deliberate_sleep_reboot_full_tool_shutdown": "not performed; historical events and task settings inspected"
+  }
+}

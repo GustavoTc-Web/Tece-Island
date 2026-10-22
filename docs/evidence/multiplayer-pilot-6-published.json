@@ -1,0 +1,123 @@
+{
+  "version": "0.9.0-multiplayer-pilot.6",
+  "commit": "06b57e087cfe14127d8d7e6514ede95a8e1a3401",
+  "manifest": {
+    "version": "0.9.0-multiplayer-pilot.6",
+    "emulated": false,
+    "server_url": "wss://finance-powered-midwest-footage.trycloudflare.com/room",
+    "base_release": "0.9.0",
+    "multiplayer_protocol": 3,
+    "discovery_url": "https://raw.githubusercontent.com/GustavoTc-Web/Tece-Island/refs/heads/feat/multiplayer-pilot/runtime/multiplayer-endpoint.json",
+    "save_schema": 8,
+    "commit": "06b57e087cfe14127d8d7e6514ede95a8e1a3401",
+    "sha256": {
+      "assets/fonts/AtkinsonHyperlegible-OFL.txt": "64b9cae8727cb41ea9e8843103e69647c82383f3a902e2bb39b2c5d92083b6e1",
+      "assets/fonts/AtkinsonHyperlegible-Regular.ttf": "7fb917c89019896d0b52ee84b7cbb3304c18cb90b19a62f5e32712bd23e97669",
+      "assets/fonts/BreeSerif-OFL.txt": "e69c15e0276bc82a5d7b1d5b6d88776a20920414b498c376ff43ec88e72afaa9",
+      "assets/fonts/BreeSerif-Regular.ttf": "fd080582d70112ef479ba4ddd72407f9a4fcbcec4caa7d29de259b13eeb5f431",
+      "engine-fc74679e3b97f768-0.bin": "8a56546b5f9b9137e80adde4400b797a5189062dee30d2505871ebd8e83987d3",
+      "engine-fc74679e3b97f768-1.bin": "62901720225c5663e708a233614396a6943357de7c98cead67f11669773dccae",
+      "engine-fc74679e3b97f768-2.bin": "c14dee0b88ada7bc7b4b48f3b8ae20e16922818417292b06082484fe183ae397",
+      "engine-fc74679e3b97f768-3.bin": "ca498a54fdb112b659cf23bc79a932e58d350a0f4cc8fabb639f230233ad6c72",
+      "engine-fc74679e3b97f768-4.bin": "219249da87c3cfda9a89fba24e253e60d6efd5191d0b108120ad93e51e54d707",
+      "index.apple-touch-icon.png": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221",
+      "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "index.html": "a0c186d755cd8856277aa30e68bea4ede62fe40f21e9fa4a66bf135647b50d6e",
+      "index.icon.png": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7",
+      "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "index.pck": "7ee096811a53f73b8aba83c73baeedfafccca941f516028cddfddaa02b17b0b6",
+      "index.png": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+      "pilot-engine.json": "9d78b4bc981bdc114d44843bbe9780b98fba37537c5d330ec55ce1ea2f5db83a"
+    }
+  },
+  "endpoint": "wss://finance-powered-midwest-footage.trycloudflare.com/room",
+  "checks": [
+    {
+      "pass": true,
+      "label": "Published manifest matches the exact .6 committed artifact"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/AtkinsonHyperlegible-OFL.txt"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/AtkinsonHyperlegible-Regular.ttf"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/BreeSerif-OFL.txt"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/BreeSerif-Regular.ttf"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-0.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-1.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-2.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-3.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-4.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.apple-touch-icon.png"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.audio.position.worklet.js"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.audio.worklet.js"
+    },
+    {
+      "pass": true,
+      "label": "Served HTML preserves complete source with one provider insertion"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.icon.png"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.js"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.pck"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.png"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match pilot-engine.json"
+    },
+    {
+      "pass": true,
+      "label": "Discovery address matches the live tunnel"
+    },
+    {
+      "pass": true,
+      "label": "External game health matches the served client version and protocol"
+    }
+  ],
+  "positiveRealLogin": false,
+  "physical": false
+}

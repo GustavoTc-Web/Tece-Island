@@ -6,11 +6,11 @@
     },
     {
       "pass": true,
-      "label": "mp-a: initial authoritative room and rendered character received after discovery"
+      "label": "mp-a: initial authoritative room, .6 label and rendered character received after discovery"
     },
     {
       "pass": true,
-      "label": "mp-b: initial authoritative room and rendered character received after discovery"
+      "label": "mp-b: initial authoritative room, .6 label and rendered character received after discovery"
     },
     {
       "pass": true,

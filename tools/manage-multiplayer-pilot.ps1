@@ -68,7 +68,7 @@ function Show-State {
     try{$taskPublished=Invoke-RestMethod -Uri ($taskDiscoveryUrl+'?t='+[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()) -TimeoutSec 8}catch{}
     $taskRouteMatches=[bool]($taskPublished.schema -eq 1 -and $taskPublished.protocol -eq 3 -and $taskPublished.url -eq $taskState.wss)
     $taskClientCurrent=[bool]($taskState.published_client_version -eq $taskExpectedVersion)
-    $script:taskReady=[bool]($taskServer -and $taskTunnel -and $taskLocal -and $taskTransport.wss -and $taskRouteMatches -and $taskClientCurrent -and $taskInfo.version -eq $taskExpectedVersion -and $taskInfo.protocol -eq 3)
+    $script:taskReady=[bool]($taskServer -and $taskTunnel -and $taskLocal -and $taskTransport.wss -and $taskTransport.version -eq $taskExpectedVersion -and $taskTransport.protocol -eq 3 -and $taskRouteMatches -and $taskClientCurrent -and $taskInfo.version -eq $taskExpectedVersion -and $taskInfo.protocol -eq 3)
     [PSCustomObject]@{
         host_task = $taskHostName; host_running = [bool]((Owned-Host).State -eq 'Running')
         server_version = $taskInfo.version; server_protocol = $taskInfo.protocol
@@ -78,14 +78,15 @@ function Show-State {
         tunnel_running = [bool]$taskTunnel; tunnel_pid = $taskState.tunnel_pid
         server_healthy = $taskLocal; tunnel_healthy = $taskRemote
         port = $taskState.port; wss = $taskState.wss
-        published_wss = $taskState.published_wss
+        packaged_wss = $taskState.published_wss
+        published_wss = $taskPublished.url
         wss_healthy = [bool]$taskTransport.wss
         endpoint_config_matches = $taskRouteMatches
         published_client_version = $taskState.published_client_version
         needs_republish = -not $taskClientCurrent
         needs_endpoint_publish = -not $taskRouteMatches
         ready_to_play = $script:taskReady
-        published_endpoint_healthy = if ($taskState.published_wss -eq $taskState.wss) { $taskRemote } else { Test-Health (Health-Url $taskState.published_wss) }
+        published_endpoint_healthy = if ($taskRouteMatches) { $taskRemote } else { Test-Health (Health-Url $taskPublished.url) }
     } | Format-List
 }
 function Publish-Endpoint {

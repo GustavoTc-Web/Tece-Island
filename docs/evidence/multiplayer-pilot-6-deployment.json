@@ -1,0 +1,41 @@
+{
+  "version": "0.9.0-multiplayer-pilot.6",
+  "game_commit": "06b57e087cfe14127d8d7e6514ede95a8e1a3401",
+  "site_version": 6,
+  "source_commit": "4e0fa21161e5b6235d3c8cb0672d3a09085ab82d",
+  "deployment_id": "appgdep_6ada89321fc881918d0148ab4091899d",
+  "version_id": "appgprj_6ad6b7bc03c481918665130efcc41739~appgver_3dfcb788b8388191bed841f5b633902d",
+  "status": "succeeded",
+  "url": "https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+  "server_pid": 21580,
+  "tunnel_pid": 13600,
+  "endpoint": "wss://finance-powered-midwest-footage.trycloudflare.com/room",
+  "discovery_url": "https://raw.githubusercontent.com/GustavoTc-Web/Tece-Island/refs/heads/feat/multiplayer-pilot/runtime/multiplayer-endpoint.json",
+  "pck_sha256": "7ee096811a53f73b8aba83c73baeedfafccca941f516028cddfddaa02b17b0b6",
+  "html": {
+    "source_fully_preserved": true,
+    "provider_insertion_characters": 938
+  },
+  "access_unchanged": true,
+  "authorized_game_accounts": 2,
+  "billing_enabled": false,
+  "ram_recovery": "prior room already gone; new room created once; idempotent Start preserved current server and relay",
+  "readiness": {
+    "local": true,
+    "external_https": true,
+    "external_wss": true,
+    "endpoint_matches": true,
+    "version_matches": true,
+    "ready_to_play": true
+  },
+  "physical_pilot6": "pending manual login and user report",
+  "physical_performance_drops_hud_reconnection": "pending",
+  "production_observation": {
+    "at_utc": "2026-10-22T22:12:42.451Z",
+    "connected_players": 1,
+    "authenticated_connections": 1,
+    "welcomes": 1,
+    "states": 652,
+    "scope": "server aggregate observation; no device, visible character, movement or human test inferred"
+  }
+}

@@ -105,9 +105,44 @@ diagnóstico. `Status` retorna código 2 quando o piloto não está pronto.
 - 10 verificações externas do servidor de produção: HTTPS, protocolo/versão,
   raiz 404, WSS, recusa de anônimo e tokens forjados, mesmas duas contas,
   ausência de tokens/UIDs nos logs. Sem login positivo automatizado real.
+- 8 verificações do PCK real: identificação do commit, descoberta configurada,
+  contas e chat/sync preservados, ausência de bridge/servidor, isolamento e
+  abertura de cópias dos saves v5 e v8 com vitória preservada.
+- 21 verificações da publicação: manifesto .6, 17 assets por SHA256, HTML com
+  toda a fonte preservada mais inserção de 938 caracteres do provedor, rota
+  atual e health compatível. Mais 4 verificações em navegador, da origem real
+  publicada, de CORS da descoberta e WSS anônimo recusado nos dois formatos.
+  Essas quatro conferem transporte; não autenticam uma partida de produção.
 - Repetir Start preservou servidor `21580` e túnel `13600` depois de encerrada
   a shell solicitante. Não houve reinício adicional da sala nessa conferência.
 
 **Pendências físicas mantidas:** desempenho, drops, HUD e reconexão. Entrada
 com as duas contas reais na .6 também requer confirmação manual; o sucesso
 humano da .5 é histórico e não aprova automaticamente a .6.
+
+## Publicação conferida
+
+- Sites versão **6**, deploy `appgdep_6ada89321fc881918d0148ab4091899d`,
+  **succeeded**, mesma audiência privada.
+- Jogo `06b57e087cfe14127d8d7e6514ede95a8e1a3401`; fonte Sites
+  `4e0fa21161e5b6235d3c8cb0672d3a09085ab82d`.
+- PCK servido: `7ee096811a53f73b8aba83c73baeedfafccca941f516028cddfddaa02b17b0b6`.
+- Rota inicial .6: `wss://finance-powered-midwest-footage.trycloudflare.com/room`.
+  Rotas seguintes são lidas do manifesto público pelo mesmo cliente .6.
+- Status final: host ativo, HTTP local, HTTPS, WSS, protocolo/versão e rota
+  conferidos; `ready_to_play=True`, `needs_republish=False`,
+  `needs_endpoint_publish=False`. Isso não é teste humano de controles.
+- Oficial reconferido em 0.9.0, commit `15ba9685`, PCK
+  `2681e0b166b982a9642019770b11803dde28c76bfa1e7b20fcc1a8c31a8d40ae`.
+  `main`, tag v0.9.0 e alterações locais do IDE preservados.
+
+Evidências: [diagnóstico](evidence/multiplayer-pilot-6-diagnosis.json),
+[descoberta emulada](evidence/multiplayer-pilot-6-discovery.json),
+[WSS público](evidence/multiplayer-pilot-6-wss.json),
+[pacote real](evidence/multiplayer-pilot-6-pack.json),
+[bytes publicados](evidence/multiplayer-pilot-6-published.json),
+[transporte no navegador](evidence/multiplayer-pilot-6-browser-transport.json),
+[deploy](evidence/multiplayer-pilot-6-deployment.json),
+[oficial preservado](evidence/multiplayer-pilot-6-official.json).
+Capturas de partida [PC](images/multiplayer-6-pc.png) e
+[mobile](images/multiplayer-6-mobile.png) são emuladas.
