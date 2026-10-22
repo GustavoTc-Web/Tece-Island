@@ -463,9 +463,9 @@ func apply_state(data: Dictionary, initial: bool = false) -> void:
 		if id not in remaining:
 			drops[id].queue_free()
 			drops.erase(id)
-	status.text = "Multiplayer · sala %d/2 · conectado · piloto .5" % connected
+	status.text = "Multiplayer · sala %d/2 · conectado · piloto .6" % connected
 	var region := WorldTerrain.region_at(actors[self_id].target)
-	hud.get_node("Controls/Rows/Time").text = "MP .5 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
+	hud.get_node("Controls/Rows/Time").text = "MP .6 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
 	counts.text = "Seu inventário · Madeira %d · Pedra %d · %s" % [int(inventory.get("madeira", 0)), int(inventory.get("pedra", 0)), tool_name(str(data.tool))]
 	retry.visible = false
 
