@@ -2,7 +2,7 @@ import {createServer} from 'node:http';
 import {WebSocketServer, WebSocket} from 'ws';
 import {Room} from './room.mjs';
 import {randomBytes} from 'node:crypto';
-const VERSION='0.9.0-multiplayer-pilot.5';
+const VERSION='0.9.0-multiplayer-pilot.6';
 
 const safeNickname = (value, fallback) => typeof value === 'string' && /^[\p{L}\p{N}_ .-]{3,20}$/u.test(value) ? value : fallback;
 export async function startServer({verify, nickname, allowedUids, origins, host = '127.0.0.1', port = 8787, layout, log = ()=>{}}) {

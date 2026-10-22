@@ -11,6 +11,7 @@ function Host-Event([string]$Event,[string]$Code='') {
 # elevation, password, secret, billing, or automatic room resets.
 Host-Event 'host_started'
 $hostLastHealth=[DateTime]::MinValue
+$hostPreviousState=''
 while($true) {
     $hostRequests=@(Get-ChildItem -LiteralPath $hostQueue -Filter '*.request.json' -File | Sort-Object Name)
     foreach($hostRequest in $hostRequests) {
@@ -43,9 +44,12 @@ while($true) {
             try {
                 $hostState=Get-Content -LiteralPath $hostStatePath -Raw | ConvertFrom-Json
                 $hostAlive=Get-Process -Id $hostState.server_pid -ErrorAction SilentlyContinue
-                if(-not $hostAlive){Host-Event 'server_not_running'}
                 $hostRelay=Get-Process -Id $hostState.tunnel_pid -ErrorAction SilentlyContinue
-                if(-not $hostRelay){Host-Event 'tunnel_not_running'}
+                $hostCurrentState='server='+[bool]$hostAlive+';tunnel='+[bool]$hostRelay
+                if($hostCurrentState -ne $hostPreviousState){Host-Event 'process_state' $hostCurrentState;$hostPreviousState=$hostCurrentState}
+                # A small heartbeat makes host disappearance observable even if
+                # Windows terminates it without running a finally block.
+                [IO.File]::WriteAllText((Join-Path $hostQueue 'heartbeat.json'),(@{at=[DateTime]::UtcNow.ToString('o');server=[bool]$hostAlive;tunnel=[bool]$hostRelay}|ConvertTo-Json -Compress))
             } catch {Host-Event 'monitor_failed' 'state_unavailable'}
         }
     }

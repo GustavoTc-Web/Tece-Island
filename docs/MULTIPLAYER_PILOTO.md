@@ -1,6 +1,7 @@
 # Multiplayer — primeiro piloto
 
-Piloto atual: [recuperação de entrada e diagnóstico .5](MULTIPLAYER_PILOTO_5.md).
+Piloto atual: [recuperação do host e endereço atual .6](MULTIPLAYER_PILOTO_6.md).
+Histórico de recuperação de entrada: [piloto .5](MULTIPLAYER_PILOTO_5.md).
 Histórico de desempenho, drops e HUD: [piloto .4](MULTIPLAYER_PILOTO_4.md).
 Histórico do mundo compartilhado: [piloto .3](MULTIPLAYER_PILOTO_3.md).
 Histórico da correção de conexão: [piloto .2](MULTIPLAYER_PILOTO_2.md).
@@ -141,6 +142,12 @@ Servidor, túnel, lista de contas, porta e horários dos processos ficam registr
 em `.tools/mp-runtime.json`, sem tokens ou credenciais administrativas.
 [Condições e limites](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).
 
+**Operação atual na .6:** usar `tools/multiplayer-start.cmd` ou
+`Start -PublishEndpoint`; conferir `ready_to_play=True` em Status. A rota
+atual é publicada pelo gerenciador, sem reexportar o cliente a cada túnel.
+Ver [procedimento e limites da .6](MULTIPLAYER_PILOTO_6.md).
+
+Os comandos e a reexportação abaixo descrevem a operação histórica da .1–.5.
 Comandos na raiz deste checkout, usando um terminal com Node no PATH:
 
 ```powershell

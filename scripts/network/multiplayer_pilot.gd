@@ -66,7 +66,9 @@ var failed_phase := ""
 var phase_started := 0
 var last_close_code := 0
 var web_online := -1
-const CLIENT_VERSION := "0.9.0-multiplayer-pilot.5"
+var connection_generation := 0
+var endpoint_request: HTTPRequest
+const CLIENT_VERSION := "0.9.0-multiplayer-pilot.6"
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -186,7 +188,7 @@ func refresh_controls() -> void:
 	notice.visible = Time.get_ticks_msec() < notice_until
 	if not online:
 		prompt.text = "A sala só carrega após validar a conexão. O mundo solo permanece no menu."
-		diagnostic.text = "Etapa: %s · cliente .5 / protocolo 3\n%s · tentativa %d%s" % [phase_name(failed_phase if failed_phase != "" else connection_phase), endpoint.trim_prefix("wss://").trim_prefix("ws://").get_slice("/", 0), maxi(1, attempts), " · código %d" % last_close_code if last_close_code > 0 else ""]
+		diagnostic.text = "Etapa: %s · cliente .6 / protocolo 3\n%s · tentativa %d%s" % [phase_name(failed_phase if failed_phase != "" else connection_phase), endpoint.trim_prefix("wss://").trim_prefix("ws://").get_slice("/", 0), maxi(1, attempts), " · código %d" % last_close_code if last_close_code > 0 else ""]
 	if is_instance_valid(overlay):
 		overlay.visible = MobileInput.enabled and online and hud.current_panel == ""
 		overlay.collect.disabled = blocked() or drop_target == "" and well_target == ""
@@ -199,6 +201,12 @@ func show_notice(text: String) -> void:
 
 func connect_room() -> void:
 	if socket != null: socket.close()
+	socket = null
+	connection_generation += 1
+	var generation := connection_generation
+	if is_instance_valid(endpoint_request):
+		endpoint_request.cancel_request()
+		endpoint_request.queue_free()
 	online = false
 	greeted = false
 	fatal = false
@@ -215,6 +223,31 @@ func connect_room() -> void:
 		fatal = true
 		status.text = "Entre novamente na conta para acessar o multiplayer."
 		return
+	var discovery := str(CONFIG.read_config().get("discovery_url", ""))
+	if discovery != "":
+		endpoint = ""
+		last_close_code = 0
+		set_connection_phase("discovery")
+		status.text = "Conferindo endereço atual do servidor…"
+		endpoint_request = HTTPRequest.new()
+		endpoint_request.timeout = 8
+		endpoint_request.body_size_limit = 4096
+		add_child(endpoint_request)
+		var request := endpoint_request
+		var requested := request.request(discovery + "?t=" + str(int(Time.get_unix_time_from_system())) + "-" + str(Time.get_ticks_msec()))
+		if requested != OK:
+			request.queue_free()
+			disconnected("endpoint_unavailable")
+			return
+		var result: Array = await request.request_completed
+		request.queue_free()
+		if generation != connection_generation or not is_inside_tree(): return
+		if result[0] == HTTPRequest.RESULT_SUCCESS and result[1] == 200:
+			endpoint = CONFIG.endpoint_from_manifest(JSON.parse_string(result[3].get_string_from_utf8()))
+		if endpoint == "":
+			disconnected("endpoint_unavailable")
+			return
+	set_connection_phase("connection")
 	if not endpoint.begins_with("wss://") and not endpoint.begins_with("ws://127.0.0.1:") and not endpoint.begins_with("ws://localhost:"):
 		fatal = true
 		status.text = "Servidor indisponível · endereço WSS ainda não configurado."
@@ -238,7 +271,7 @@ func set_connection_phase(value: String) -> void:
 	phase_started = Time.get_ticks_msec()
 
 func phase_name(value: String) -> String:
-	return {"connection":"conexão WSS", "authentication":"autenticação", "initial_state":"estado inicial da sala", "playing":"partida"}.get(value, "conexão")
+	return {"discovery":"endereço atual", "connection":"conexão WSS", "authentication":"autenticação", "initial_state":"estado inicial da sala", "playing":"partida"}.get(value, "conexão")
 
 func _process(delta: float) -> void:
 	# Autowrapped labels settle their minimum height after the first layout pass.
@@ -249,14 +282,14 @@ func _process(delta: float) -> void:
 		controls_clock = 0.1
 		panel.size.y = panel.get_combined_minimum_size().y
 		refresh_controls()
-	if socket == null: return
-	socket.poll()
 	if fatal: return
 	if retry_in > 0:
 		retry_in -= delta
 		status.text = connection_text + " · nova tentativa em %ds" % maxi(1, ceili(retry_in))
 		if retry_in <= 0: connect_room()
 		return
+	if socket == null: return
+	socket.poll()
 	var state := socket.get_ready_state()
 	if state == WebSocketPeer.STATE_OPEN:
 		if not greeted:
@@ -555,7 +588,8 @@ func disconnected(reason: String, terminal: bool = false) -> void:
 		status.text += " · reconectando…"
 
 func error_text(code: String) -> String:
-	if code == "client_outdated": return "Atualize a página para carregar o piloto .5 e o mesmo mundo do servidor."
+	if code == "endpoint_unavailable": return "Não foi possível consultar o endereço atual · confira a rede e tente novamente."
+	if code == "client_outdated": return "Atualize a página para carregar o piloto .6 e o mesmo mundo do servidor."
 	if code == "blocked_path": return "Há um obstáculo no caminho. Aproxime-se pelo acesso livre."
 	if code == "inventory_full": return "Inventário cheio · libere espaço antes de coletar."
 	if code == "drop_unavailable": return "Este item já foi pego."

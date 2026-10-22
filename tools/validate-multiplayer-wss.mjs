@@ -23,7 +23,7 @@ function connect(message, expected) {
 }
 try {
   const health=await (await fetch(url.replace('wss://','https://').replace('/room','/health'),{signal:AbortSignal.timeout(10000)})).json();
-  check(health.ok&&health.protocol===3&&health.version==='0.9.0-multiplayer-pilot.5','External HTTPS reaches only game service with exact version/protocol');
+  check(health.ok&&health.protocol===3&&health.version==='0.9.0-multiplayer-pilot.6','External HTTPS reaches only game service with exact version/protocol');
   const root=await fetch(url.replace('wss://','https://').replace('/room','/'),{signal:AbortSignal.timeout(10000)});
   check(root.status===404,'External tunnel serves no filesystem or other application at root');
   check(await connect({type:'input',seq:1,x:1,y:0},'auth_required'),'External WSS rejects actions without authentication');

@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "pass": true,
+      "label": "Unavailable discovery does not use stale compiled endpoint or open a socket"
+    },
+    {
+      "pass": true,
+      "label": "mp-a: initial authoritative room and rendered character received after discovery"
+    },
+    {
+      "pass": true,
+      "label": "mp-b: initial authoritative room and rendered character received after discovery"
+    },
+    {
+      "pass": true,
+      "label": "Independent PC and mobile-emulated clients join the same room"
+    },
+    {
+      "pass": true,
+      "label": "Both clients move and receive updated server state"
+    },
+    {
+      "pass": true,
+      "label": "Both clients discover rotated endpoint without reloading or recompiling"
+    },
+    {
+      "pass": true,
+      "label": "Endpoint rotation preserves the running room and two characters"
+    },
+    {
+      "pass": true,
+      "label": "Room inventory preserved across route refresh"
+    },
+    {
+      "pass": true,
+      "label": "No GDScript or browser errors"
+    }
+  ],
+  "errors": [],
+  "lookups": 5,
+  "physical": false,
+  "publicTLS": false,
+  "transportAdapter": "test-only WSS hostname to real local WS; public TLS tested separately"
+}
