@@ -187,7 +187,9 @@ window.tcExportLocalSaves=async()=>{
  return {entries:result.value.length,bytes:blob.size};
 };
 // Render at display density, capped at 2 to bound fill-rate on mobile GPUs.
-function resize(){const r=document.querySelector('#stage').getBoundingClientRect(),density=Math.min(window.devicePixelRatio||1,2);const width=Math.max(1,Math.round(r.width*density)),height=Math.max(1,Math.round(r.height*density));if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;}
+window.tcMpDensity=1;
+function resize(){const r=document.querySelector('#stage').getBoundingClientRect(),cap=document.body.classList.contains('tc-multiplayer')?window.tcMpDensity:2,density=Math.min(window.devicePixelRatio||1,cap);const width=Math.max(1,Math.round(r.width*density)),height=Math.max(1,Math.round(r.height*density));if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;}
+window.tcMpSetDensity=value=>{window.tcMpDensity=value===2?2:1;resize();};
 window.addEventListener('resize',resize);new ResizeObserver(resize).observe(document.querySelector('#stage'));
 // Browser zoom or moving between monitors can change DPR without a resize.
 function watchDensity(){const query=matchMedia('(resolution: '+devicePixelRatio+'dppx)');query.addEventListener('change',()=>{resize();watchDensity();},{once:true});}

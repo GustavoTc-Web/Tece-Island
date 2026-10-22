@@ -27,7 +27,7 @@ const state=p=>p.evaluate(()=>window.tcMpState),invoke=(p,data)=>p.evaluate(valu
 const own=s=>s.snapshot.players.find(p=>p.id===s.self);
 async function launch(viewport,hasTouch){
  const browser=await chromium.launch({executablePath:process.env.BROWSER_EXE||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});clients.push(browser);
- const context=await browser.newContext({viewport,hasTouch}),page=await context.newPage();
+ const context=await browser.newContext({viewport,hasTouch,deviceScaleFactor:hasTouch?2:1}),page=await context.newPage();
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&/SCRIPT ERROR|Parse Error|Invalid call|Invalid access/.test(m.text()))errors.push(m.text());});
  await page.goto('http://localhost:8060/');await page.waitForFunction(()=>window.tcMpState?.ready,null,{timeout:60000});
  const cdp=hasTouch?await context.newCDPSession(page):null;return {page,context,cdp};
@@ -145,6 +145,29 @@ try{
  await invoke(b,{action:'retry'});await b.waitForFunction(()=>window.tcMpState.online);
  check((await state(b)).self===previous.self&&JSON.stringify((await state(b)).slots)===JSON.stringify(previous.slots)&&(await state(b)).players.length===2,'Reconnect preserves character, inventory slots and canteen water');
  check((await state(b)).snapshot.resources.some(r=>r.id===tree.id&&r.depleted),'Reconnect retains depleted resources across full world');
+ await a.keyboard.press('F3');await a.waitForFunction(()=>window.tcMpState.metrics_visible);
+ check((await state(a)).net.rtt>0&&(await state(a)).net.fps>0,'PC diagnostic displays measured frame rate and authenticated input-ACK RTT');
+ await a.screenshot({path:'.tools/screenshots/multiplayer-7-pc-diagnostic.png'});await a.keyboard.press('F3');
+ const metricsBox=(await state(b)).metrics_button,metricsPoint=cssPoint(await state(b),b,metricsBox[0]+metricsBox[2]/2,metricsBox[1]+metricsBox[3]/2);
+ await b.touchscreen.tap(metricsPoint.x,metricsPoint.y);await b.waitForFunction(()=>window.tcMpState.metrics_visible);
+ await b.waitForFunction(()=>{const s=window.tcMpState,m=s.metrics_panel,v=s.viewport;return m[0]>=0&&m[1]>=0&&m[0]+m[2]<=v[0]+1&&m[1]+m[3]<=v[1]+1;},null,{timeout:3000});
+ const m=(await state(b)).metrics_panel,v=(await state(b)).viewport;
+ check(m[0]>=0&&m[1]>=0&&m[0]+m[2]<=v[0]+1&&m[1]+m[3]<=v[1]+1,'Mobile diagnostic panel fits and opens by touch');
+ const density=await b.evaluate(()=>({dpr:devicePixelRatio,width:document.querySelector('#canvas').width,css:document.querySelector('#canvas').getBoundingClientRect().width}));
+ check(density.dpr===2&&Math.abs(density.width-density.css)<2,'High-DPI mobile uses measured economical pixel density in multiplayer');
+ await click(b,'Gráficos: econômicos (1×)',true);await pause(350);
+ check(Math.abs(await b.evaluate(()=>document.querySelector('#canvas').width)-density.css*2)<2,'Diagnostic can compare native density without changing the world');
+ check(JSON.stringify((await state(b)).viewport)===JSON.stringify(v),'Changing render density preserves logical camera area');
+ await click(b,'Gráficos: nativos (até 2×)',true);await pause(350);
+ await b.screenshot({path:'.tools/screenshots/multiplayer-7-mobile-diagnostic.png'});await click(b,'Fechar diagnóstico',true);
+ await a.keyboard.press('F3');await a.waitForFunction(()=>window.tcMpState.metrics_visible);
+ await click(a,'Previsão local: ligada');await a.waitForFunction(()=>!window.tcMpState.prediction.enabled);
+ await click(a,'Previsão local: desligada');await a.waitForFunction(()=>window.tcMpState.prediction.enabled);await a.keyboard.press('F3');
+ check((await state(a)).prediction.enabled,'Prediction can be toggled for A/B retest without replacing the room');
+ const coalescedBefore=[(await state(a)).net.coalesced,(await state(b)).net.coalesced];
+ await Promise.all([a,b].map(p=>p.evaluate(()=>{const until=performance.now()+350;while(performance.now()<until){}})));await pause(450);
+ check((await state(a)).net.coalesced>coalescedBefore[0]||(await state(b)).net.coalesced>coalescedBefore[1],'Frame stalls coalesce queued states instead of rebuilding HUD for each old update');
+ check((await state(a)).inventory.madeira+(await state(b)).inventory.madeira===5&&(await state(b)).snapshot.drops.length===0,'Backlog recovery preserves exact inventory totals and authoritative empty drops');
  await invoke(b,{action:'chat',opened:true});const before=own(await state(b));await b.keyboard.down('d');await pause(300);await b.keyboard.up('d');
  check(Math.hypot(own(await state(b)).x-before.x,own(await state(b)).y-before.y)<.01,'Chat blocks gameplay inputs without pausing the other player');await invoke(b,{action:'chat',opened:false});
  const old=server.room.players.get('mp-b').socket,send=old.send;old.send=function(data,...args){if(JSON.parse(data).type==='state')return;return send.call(this,data,...args);};

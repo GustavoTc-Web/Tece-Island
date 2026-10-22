@@ -351,7 +351,9 @@ func network_state() -> Dictionary:
 	return {"slots": slots, "category": selected_category, "weapon_uid": selected_weapon_uid, "selected": selected_index, "backpack": backpack.duplicate(true), "armor": armor.duplicate(true)}
 
 func apply_network_state(state: Dictionary) -> void:
-	if state == network_state(): return
+	# JSON numbers are floats. Compare the projected fields with a normalized
+	# index rather than comparing a JSON dictionary to native integer metadata.
+	if state.slots == _slots and int(state.get("selected", 0)) == selected_index and state.get("backpack", {}) == backpack and state.get("armor", {}) == armor: return
 	_slots.clear()
 	for slot in state.slots: _slots.append(slot.duplicate(true))
 	capacity = _slots.size()

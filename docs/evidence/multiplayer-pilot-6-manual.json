@@ -1,0 +1,10 @@
+{
+  "version": "0.9.0-multiplayer-pilot.6",
+  "type": "user_report",
+  "report_date": "2026-10-22",
+  "entry": "works, as reported by the user",
+  "performance": "failed physical retest: excessive delay and stalls; user considers it unplayable",
+  "quote": "Na .6, o multiplayer apresenta muito atraso e travadas. A entrada funciona, mas a experiência ainda não está jogável.",
+  "pending": ["drops and reward totals", "individual HUD values and physical legibility", "reconnection preserving character and inventory"],
+  "automated_measurement": false
+}

@@ -28,12 +28,13 @@ foreach ($taskName in @('world-sync','global-chat')) {
     if ($taskName -eq 'world-sync') { $taskConfig.interval_seconds = 120 }
     [IO.File]::WriteAllText((Join-Path $taskCopy "config/$taskName.json"),($taskConfig | ConvertTo-Json))
 }
-$taskNetworkConfig=@{enabled=$true;url=$ServerUrl;version='0.9.0-multiplayer-pilot.6'}
+$taskNetworkConfig=@{enabled=$true;url=$ServerUrl;version='0.9.0-multiplayer-pilot.7'}
 if(-not $Fixture){$taskNetworkConfig.discovery_url='https://raw.githubusercontent.com/GustavoTc-Web/Tece-Island/refs/heads/feat/multiplayer-pilot/runtime/multiplayer-endpoint.json'}
 if($Fixture -and $DiscoveryUrl){$taskNetworkConfig.discovery_url=$DiscoveryUrl}
 [IO.File]::WriteAllText((Join-Path $taskCopy 'config/multiplayer.json'),($taskNetworkConfig | ConvertTo-Json))
-$taskStamp = @{ version='0.9.0-multiplayer-pilot.6'; commit=(git -C $taskRoot rev-parse HEAD).Trim(); emulated=[bool]$Fixture; save_schema=8; base_release='0.9.0'; multiplayer_protocol=3; server_url=$ServerUrl }
+$taskStamp = @{ version='0.9.0-multiplayer-pilot.7'; commit=(git -C $taskRoot rev-parse HEAD).Trim(); emulated=[bool]$Fixture; save_schema=8; base_release='0.9.0'; multiplayer_protocol=3; server_url=$ServerUrl }
 $taskStamp.discovery_url=$taskNetworkConfig.discovery_url
+$taskStamp.compatible_server='0.9.0-multiplayer-pilot.6'
 [IO.File]::WriteAllText((Join-Path $taskCopy 'config/build-public.json'),($taskStamp | ConvertTo-Json))
 $taskPreset = Join-Path $taskCopy 'export_presets.cfg'
 $taskText = [IO.File]::ReadAllText($taskPreset).Replace('res://.tools/godot-templates/',($Templates.Replace('\','/')+'/'))

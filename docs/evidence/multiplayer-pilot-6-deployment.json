@@ -28,8 +28,12 @@
     "version_matches": true,
     "ready_to_play": true
   },
-  "physical_pilot6": "pending manual login and user report",
-  "physical_performance_drops_hud_reconnection": "pending",
+  "physical_pilot6": {
+    "evidence": "multiplayer-pilot-6-manual.json",
+    "entry": "user reports it works",
+    "performance": "failed; user reports excessive delay and stalls, not playable"
+  },
+  "physical_performance_drops_hud_reconnection": "performance failed in .6; drops, HUD and reconnection remain pending",
   "production_observation": {
     "at_utc": "2026-10-22T22:12:42.451Z",
     "connected_players": 1,

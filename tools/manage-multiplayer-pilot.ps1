@@ -18,6 +18,7 @@ $taskShell=Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell
 $taskHostArguments='-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "'+$taskHostScript+'" -Instance '+$Instance
 $taskDiscoveryUrl='https://raw.githubusercontent.com/GustavoTc-Web/Tece-Island/refs/heads/feat/multiplayer-pilot/runtime/multiplayer-endpoint.json'
 $taskExpectedVersion='0.9.0-multiplayer-pilot.6'
+$taskExpectedClientVersion='0.9.0-multiplayer-pilot.7'
 function Owned-Host {
     $taskHost=Get-ScheduledTask -TaskName $taskHostName -ErrorAction SilentlyContinue
     if($taskHost -and ($taskHost.Actions.Count -ne 1 -or $taskHost.Actions[0].Execute -ine $taskShell -or $taskHost.Actions[0].Arguments -ne $taskHostArguments)){
@@ -67,12 +68,13 @@ function Show-State {
     $taskPublished=$null
     try{$taskPublished=Invoke-RestMethod -Uri ($taskDiscoveryUrl+'?t='+[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()) -TimeoutSec 8}catch{}
     $taskRouteMatches=[bool]($taskPublished.schema -eq 1 -and $taskPublished.protocol -eq 3 -and $taskPublished.url -eq $taskState.wss)
-    $taskClientCurrent=[bool]($taskState.published_client_version -eq $taskExpectedVersion)
+    $taskClientCurrent=[bool]($taskState.published_client_version -eq $taskExpectedClientVersion)
     $script:taskReady=[bool]($taskServer -and $taskTunnel -and $taskLocal -and $taskTransport.wss -and $taskTransport.version -eq $taskExpectedVersion -and $taskTransport.protocol -eq 3 -and $taskRouteMatches -and $taskClientCurrent -and $taskInfo.version -eq $taskExpectedVersion -and $taskInfo.protocol -eq 3)
     [PSCustomObject]@{
         host_task = $taskHostName; host_running = [bool]((Owned-Host).State -eq 'Running')
         server_version = $taskInfo.version; server_protocol = $taskInfo.protocol
         expected_version = $taskExpectedVersion
+        expected_client_version = $taskExpectedClientVersion
         version_matches = [bool]($taskInfo.version -eq $taskExpectedVersion -and $taskInfo.protocol -eq 3)
         server_running = [bool]$taskServer; server_pid = $taskState.server_pid
         tunnel_running = [bool]$taskTunnel; tunnel_pid = $taskState.tunnel_pid

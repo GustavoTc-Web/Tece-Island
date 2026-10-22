@@ -5,6 +5,10 @@ var session: Node
 var callback: JavaScriptObject
 var sample_clock := 0.0
 var reference: Node2D
+var probe_started := 0
+var probe_position := Vector2.ZERO
+var probe_direction := Vector2.ZERO
+var probe_responses := []
 class ReferenceGround extends Node2D:
 	func _draw() -> void: WorldScenery.draw_ground(self)
 func _ready() -> void:
@@ -40,6 +44,9 @@ func invoke(args: Array) -> void:
 		"touch": MobileInput.set_enabled(bool(data.enabled))
 		"chat": GlobalChat.opened = bool(data.opened)
 		"full": pilot.disconnected("room_full", true)
+		"probe_reset": probe_started = 0; probe_direction = Vector2.ZERO; probe_responses.clear()
+		"prediction": pilot.prediction.enabled = bool(data.enabled); pilot.prediction.reset(pilot.actors[pilot.self_id].target)
+		"graphics": pilot.toggle_graphics()
 		"render": pilot.world_view.visible = bool(data.visible)
 		"reference":
 			if not is_instance_valid(reference):
@@ -55,6 +62,16 @@ func box(control: Control) -> Array:
 	var rect := control.get_global_rect()
 	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 func _process(_delta: float) -> void:
+	if is_instance_valid(pilot) and pilot.online and pilot.actors.has(pilot.self_id):
+		var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down") + pilot.touch_vector
+		var point: Vector2 = pilot.actors[pilot.self_id].body.position
+		if direction.length() > 0.1 and probe_direction.length() < 0.1:
+			probe_started = Time.get_ticks_usec()
+			probe_position = point
+		if probe_started > 0 and point.distance_to(probe_position) > 0.5:
+			probe_responses.append((Time.get_ticks_usec() - probe_started) / 1000.0)
+			probe_started = 0
+		probe_direction = direction
 	sample_clock += _delta
 	if sample_clock < 0.1: return
 	sample_clock = 0.0
@@ -100,6 +117,13 @@ func _process(_delta: float) -> void:
 	value["swings"] = pilot.actors.values().map(func(actor): return actor.swing)
 	value["fps"] = Engine.get_frames_per_second()
 	value["process_ms"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000
+	value["response_ms"] = probe_responses
+	value["apply_us"] = pilot.last_apply_us
+	value["net"] = pilot.metrics.summary()
+	value["prediction"] = {"enabled":pilot.prediction.enabled,"correction":pilot.prediction.correction_size,"count":pilot.prediction.corrections,"pending":pilot.prediction.pending.size(),"limited":pilot.prediction.limited}
+	value["metrics_visible"] = pilot.metrics_panel.visible
+	value["metrics_panel"] = box(pilot.metrics_panel)
+	value["metrics_button"] = box(pilot.metrics_button)
 	value["draw_calls"] = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	value["primitives"] = Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 	JavaScriptBridge.eval("window.tcMpState=" + JSON.stringify(value))

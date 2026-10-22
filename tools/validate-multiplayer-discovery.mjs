@@ -50,7 +50,7 @@ try{
       unavailable=false;
     }
     await page.waitForFunction(()=>window.tcMpState?.online,null,{timeout:30000});
-    check((await state(page)).players.length>=1&&(await state(page)).status.includes('piloto .6'),uid+': initial authoritative room, .6 label and rendered character received after discovery');
+    check((await state(page)).players.length>=1&&(await state(page)).status.includes('piloto .7'),uid+': initial authoritative room, .7 label and rendered character received after discovery');
   }
   const [pc,mobile]=pages;
   await pc.waitForFunction(()=>window.tcMpState.players.length===2);

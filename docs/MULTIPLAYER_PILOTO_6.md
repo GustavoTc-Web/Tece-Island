@@ -116,9 +116,11 @@ diagnóstico. `Status` retorna código 2 quando o piloto não está pronto.
 - Repetir Start preservou servidor `21580` e túnel `13600` depois de encerrada
   a shell solicitante. Não houve reinício adicional da sala nessa conferência.
 
-**Pendências físicas mantidas:** desempenho, drops, HUD e reconexão. Entrada
-com as duas contas reais na .6 também requer confirmação manual; o sucesso
-humano da .5 é histórico e não aprova automaticamente a .6.
+**Reteste humano da .6:** o usuário confirmou que a entrada funciona, mas
+relatou muito atraso e travadas, considerando a experiência **não jogável**.
+A entrada foi registrada separadamente da reprovação de desempenho no
+[relato físico](evidence/multiplayer-pilot-6-manual.json). Drops, HUD e reconexão
+continuam pendentes; esse relato não aprova essas verificações.
 
 ## Publicação conferida
 
