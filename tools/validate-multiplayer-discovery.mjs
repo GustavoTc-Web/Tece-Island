@@ -26,8 +26,8 @@ const http=createServer(async(req,res)=>{
 });
 await new Promise(r=>http.listen(8060,'127.0.0.1',r));
 const state=p=>p.evaluate(()=>window.tcMpState),invoke=(p,data)=>p.evaluate(value=>window.tcMpFixture(JSON.stringify(value)),data);
+const pages=[];
 try{
-  const pages=[];
   for(const [uid,viewport,hasTouch] of [['mp-a',{width:1920,height:950},false],['mp-b',{width:640,height:360},true]]){
     const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--enable-unsafe-swiftshader']});browsers.push(browser);
     const context=await browser.newContext({viewport,hasTouch}),page=await context.newPage();pages.push(page);
@@ -78,7 +78,7 @@ try{
   for(const [i,page]of pages.entries()){
     await page.waitForFunction(()=>window.tcMpState.failed_phase==='discovery'&&window.tcMpState.diagnostic.includes('HTTP 503'));
     check(!(await state(page)).online,(i?'Mobile':'PC')+': lookup failure remains distinct from room entry');
-    await page.waitForFunction(()=>{const s=window.tcMpState,r=s.panel;return r[0]>=0&&r[1]>=54&&r[0]+r[2]<=s.viewport[0]+1&&r[1]+r[3]<=s.viewport[1]+1;});
+    await page.waitForFunction(()=>{const s=window.tcMpState,r=s.panel,c=document.querySelector('#canvas').getBoundingClientRect(),scale=Math.min(c.width/s.viewport[0],c.height/s.viewport[1]);return r[0]>=0&&r[1]*scale>=54&&r[0]+r[2]<=s.viewport[0]+1&&r[1]+r[3]<=s.viewport[1]+1;});
     check(true,(i?'Mobile':'PC')+': expanded discovery diagnosis fits viewport');
     await page.screenshot({path:'.tools/screenshots/multiplayer-7-1-'+(i?'mobile':'pc')+'-discovery.png'});
   }
@@ -93,8 +93,12 @@ try{
   check((await state(pc)).room===room&&(await state(mobile)).room===room&&server.room.players.size===2,'Endpoint rotation preserves the running room and two characters');
   check(JSON.stringify((await state(pc)).inventory)===JSON.stringify(beforeA.inventory),'Room inventory preserved across route refresh');
   await mkdir('.tools/screenshots',{recursive:true});
-  await pc.screenshot({path:'.tools/screenshots/multiplayer-6-pc.png'});await mobile.screenshot({path:'.tools/screenshots/multiplayer-6-mobile.png'});
+  await pc.screenshot({path:'.tools/screenshots/multiplayer-7-1-pc.png'});await mobile.screenshot({path:'.tools/screenshots/multiplayer-7-1-mobile.png'});
   check(errors.length===0,'No GDScript or browser errors');
+} catch(error) {
+  await writeFile('.tools/discovery-failure-states.json',JSON.stringify(await Promise.all(pages.map(page=>state(page))),null,2));
+  for(const [i,page]of pages.entries())await page.screenshot({path:'.tools/screenshots/discovery-failure-'+i+'.png'});
+  throw error;
 } finally {
   for(const browser of browsers)await browser.close();await server.close();http.closeAllConnections();await new Promise(r=>http.close(r));
   await writeFile('.tools/multiplayer-discovery-results.json',JSON.stringify({checks,errors,lookups,physical:false,publicTLS:false,transportAdapter:'test-only WSS hostname to real local WS; public TLS tested separately'},null,2));

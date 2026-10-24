@@ -36,9 +36,17 @@ mas o aviso descrito sozinho não permite confundir essas duas etapas.
   O primeiro início aguardou o registro público e ainda não confirmou health;
   os processos foram mantidos. Após confirmar HTTPS/WSS, repetir Start preservou
   ambos e publicou a rota, sem outro reset da sala.
-- Rota recuperada:
-  `wss://monitored-sleeping-alternatively-organization.trycloudflare.com/room`.
-  A propagação do manifesto público também foi conferida antes da publicação.
+- A primeira rota recuperada, `monitored-sleeping-alternatively-organization`,
+  respondeu inicialmente, mas caiu durante esta validação: timeouts na conexão
+  ao edge/DNS, depois `Unauthorized: Tunnel not found` às 20:25:45 UTC e domínio
+  `ENOTFOUND`. O servidor continuou respondendo localmente com o mesmo PID 22332.
+  Não foi determinada a origem dos timeouts de rede.
+- Logs/runtime foram copiados para `.tools/mp71-tunnel-expired` antes de usar
+  `RepairTunnel -PublishEndpoint`. Apenas o túnel foi trocado (PID 11812);
+  servidor, horário de início e sala atual foram preservados. Nova rota:
+  `wss://volleyball-representations-representations-bachelor.trycloudflare.com/room`.
+  O endereço é temporário; sua verificação vale no horário registrado, sem
+  garantia de disponibilidade futura.
 - A .7.1 mantém visível o último resultado HTTP, código de resultado do Godot,
   duração e validade do manifesto durante as novas tentativas. O tempo decorrido
   e o limite de oito segundos aparecem enquanto a consulta está em curso.
@@ -54,7 +62,11 @@ Testes automatizados: 16 verificações nativas do endpoint/watchdog, 14 de
 isolamento solo, duas identidades emuladas em navegadores independentes,
 HTTP 503, resposta sem término, JSON inválido, retentativa com último erro
 visível, carregamento da sala, movimento, troca de rota e preservação da sala.
-O painel de diagnóstico foi conferido em PC e mobile emulado. WSS de produção
+São 18 verificações do fluxo Web de consulta/recuperação e nove do PCK real.
+O painel de diagnóstico foi conferido em PC e mobile emulado. A checagem inicial
+de encaixe confundia coordenadas lógicas com pixels CSS; corrigido o teste e
+confirmado nas capturas, sem necessidade de alterar a disposição da interface.
+WSS de produção
 recusa anônimos e tokens sem assinatura; as mesmas duas contas foram mantidas.
 
 Recarregar o [piloto privado](https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/)
