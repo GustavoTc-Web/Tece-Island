@@ -1,0 +1,52 @@
+{
+  "version": "0.9.0-multiplayer-pilot.7",
+  "game_commit": "a8caa555f8aca433deb2f46c85090e81faefb080",
+  "site_version": 7,
+  "source_commit": "2336d0259124272eccc80fa30cfba84ed8e607cf",
+  "deployment_id": "appgdep_6ada96bcf5e08191a9b888d54a7c07e0",
+  "version_id": "appgprj_6ad6b7bc03c481918665130efcc41739~appgver_92de9a33fb148191be9c83ef4facaceb",
+  "status": "succeeded",
+  "url": "https://tece-island-multiplayer-pilot.gustavotccandido.chatgpt.site/Tece-Island/",
+  "compatible_server": "0.9.0-multiplayer-pilot.6",
+  "protocol": 3,
+  "pck_sha256": "c2a4ba11e78157a2d387e248188466b1f7b739262c6492cba25e4bdc6ee68375",
+  "server_pid": 21580,
+  "tunnel_pid": 13600,
+  "server_started_at": "2026-10-22T21:55:38.6181923Z",
+  "tunnel_started_at": "2026-10-22T21:55:54.4765465Z",
+  "room_restarted_for_this_release": false,
+  "authoritative_service_unchanged": true,
+  "endpoint": "wss://finance-powered-midwest-footage.trycloudflare.com/room",
+  "access_unchanged": true,
+  "game_authorized_accounts": 2,
+  "billing_enabled_by_this_work": false,
+  "html": {
+    "source_fully_preserved": true,
+    "provider_insertion_characters": 938
+  },
+  "readiness": {
+    "server_version_matches": true,
+    "client_version_matches": true,
+    "local_http": true,
+    "external_https": true,
+    "external_wss": true,
+    "discovery_matches": true,
+    "ready_to_play": true
+  },
+  "automated": {
+    "server_tests": 33,
+    "prediction_checks": 1113,
+    "native_suites": 14,
+    "web_checks": 64,
+    "compiled_pack": 9,
+    "published_asset_checks": 21,
+    "published_browser_transport_checks": 4
+  },
+  "physical": {
+    "pilot6_entry": "works per user report",
+    "pilot6_performance": "failed, user considers unplayable",
+    "pilot7": "pending real PC/mobile retest",
+    "drops_hud_reconnect": "pending physical confirmation"
+  },
+  "measurements": "multiplayer-pilot-7-performance.json"
+}

@@ -1,6 +1,7 @@
 # Multiplayer — primeiro piloto
 
-Piloto atual: [recuperação do host e endereço atual .6](MULTIPLAYER_PILOTO_6.md).
+Piloto atual: [desempenho e resposta do movimento .7](MULTIPLAYER_PILOTO_7.md).
+Histórico de recuperação do host/endereço: [piloto .6](MULTIPLAYER_PILOTO_6.md).
 Histórico de recuperação de entrada: [piloto .5](MULTIPLAYER_PILOTO_5.md).
 Histórico de desempenho, drops e HUD: [piloto .4](MULTIPLAYER_PILOTO_4.md).
 Histórico do mundo compartilhado: [piloto .3](MULTIPLAYER_PILOTO_3.md).

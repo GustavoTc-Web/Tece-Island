@@ -1,0 +1,58 @@
+[
+    {
+        "pass":  true,
+        "test":  "multiplayer_isolation"
+    },
+    {
+        "pass":  true,
+        "test":  "solo_campaign"
+    },
+    {
+        "pass":  true,
+        "test":  "solo_migration"
+    },
+    {
+        "pass":  true,
+        "test":  "pilot_reopen"
+    },
+    {
+        "pass":  true,
+        "test":  "save_reliability"
+    },
+    {
+        "pass":  true,
+        "test":  "world_sync"
+    },
+    {
+        "pass":  true,
+        "test":  "sync_handoff"
+    },
+    {
+        "pass":  true,
+        "test":  "controls"
+    },
+    {
+        "pass":  true,
+        "test":  "mobile"
+    },
+    {
+        "pass":  true,
+        "test":  "menu"
+    },
+    {
+        "pass":  true,
+        "test":  "auth_release"
+    },
+    {
+        "pass":  true,
+        "test":  "wells"
+    },
+    {
+        "pass":  true,
+        "test":  "multiplayer_world"
+    },
+    {
+        "pass":  true,
+        "test":  "multiplayer_drops_needs"
+    }
+]
