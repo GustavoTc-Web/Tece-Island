@@ -1,0 +1,23 @@
+{
+  "checks": [
+    {
+      "pass": true,
+      "label": "PC: actual published origin can fetch current route with CORS"
+    },
+    {
+      "pass": true,
+      "label": "PC: browser WSS reaches production and rejects anonymous action"
+    },
+    {
+      "pass": true,
+      "label": "Mobile emulated: actual published origin can fetch current route with CORS"
+    },
+    {
+      "pass": true,
+      "label": "Mobile emulated: browser WSS reaches production and rejects anonymous action"
+    }
+  ],
+  "physical": false,
+  "roomLoginTested": false,
+  "scope": "Published-origin route discovery and anonymous WSS only; full room tested separately with emulated accounts"
+}

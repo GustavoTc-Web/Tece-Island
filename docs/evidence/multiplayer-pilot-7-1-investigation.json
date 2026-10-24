@@ -1,0 +1,63 @@
+{
+  "report_date": "2026-10-24",
+  "physical": false,
+  "old_runtime": {
+    "server_pid": 21580,
+    "tunnel_pid": 13600,
+    "alive_at_inspection": false,
+    "listener8791": false,
+    "local_health": "ECONNREFUSED",
+    "public_host": "finance-powered-midwest-footage.trycloudflare.com",
+    "dns": "ENOTFOUND",
+    "last_heartbeat_utc": "2026-10-23T01:32:00.343Z",
+    "tunnel_terminated_utc": "2026-10-23T01:32:03Z",
+    "windows_sleep_utc": "2026-10-23T01:32:13.1547864Z",
+    "termination_initiator": "unknown",
+    "ram": "already lost before recovery"
+  },
+  "discovery": {
+    "url": "https://raw.githubusercontent.com/GustavoTc-Web/Tece-Island/refs/heads/feat/multiplayer-pilot/runtime/multiplayer-endpoint.json",
+    "current_at_initial_inspection": {
+      "http": 200,
+      "cors": "*",
+      "valid_json": true,
+      "duration_ms_approx": 238,
+      "returned": "old dead route"
+    },
+    "unchanged_7_Godot_web": "HTTP 200 and entered local authenticated room in under one second through test-only adapter",
+    "unchanged_7_held_response": "eight-second timeout, error then retry",
+    "user_report": "error then returns to discovery",
+    "physical_http_error_cause": "not established"
+  },
+  "second_outage": {
+    "server_pid": 22332,
+    "server_local_health": 200,
+    "relay_pid": 30664,
+    "first_dns_error_utc": "2026-10-24T19:56:07Z",
+    "edge_lost_utc": "2026-10-24T20:06:15Z",
+    "not_found_utc": "2026-10-24T20:25:45Z",
+    "dns": "ENOTFOUND",
+    "root_network_cause": "unknown",
+    "action": "RepairTunnel only; server PID and start time preserved",
+    "new_relay_pid": 11812
+  },
+  "scope": "No physical performance approval; current transport checked separately from full emulated room flow",
+  "final": {
+    "checked_at": "2026-10-24T20:35:02.171Z",
+    "server_pid": 22332,
+    "server_started_at": "2026-10-24T19:50:53.3615665Z",
+    "tunnel_pid": 11812,
+    "url": "wss://volleyball-representations-representations-bachelor.trycloudflare.com/room",
+    "local_https_wss": true,
+    "route_matches": true,
+    "ready_to_play": true,
+    "discovery_cache_control": "max-age=300",
+    "route_propagation_confirmed_utc": "2026-10-24T20:33:20.574Z",
+    "private_deploy": "appgdep_6add1595923081919768476b887775cf",
+    "private_site_version": 8,
+    "client_version": "0.9.0-multiplayer-pilot.7.1",
+    "game_commit": "17f16d28e1c6310bfb0d6e0e67c4897910ddf834",
+    "source_commit": "659f1764e4adf6f7783459dda5e25bdf78062b0e",
+    "physical_login_confirmed": false
+  }
+}

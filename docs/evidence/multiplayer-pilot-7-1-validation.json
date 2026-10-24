@@ -1,0 +1,17 @@
+{
+  "version": "0.9.0-multiplayer-pilot.7.1",
+  "physical": false,
+  "entry_real_accounts": "awaiting manual retest",
+  "performance": "not tested physically; no approval",
+  "drops_HUD_reconnection": "physical retest still pending",
+  "automated": {
+    "endpoint": 16,
+    "isolation": 14,
+    "compiledPack": 9,
+    "discoveryTwoClients": 18,
+    "productionRejectsAndLogs": 10,
+    "publishedArtifact": 21,
+    "publishedOriginBrowserTransport": 4
+  },
+  "note": "Local Web room uses two distinct Auth-emulated identities and a test-only WSS-to-loopback adapter. Public CORS/WSS and artifacts verified separately without Firebase production login."
+}

@@ -1,0 +1,81 @@
+{
+  "checks": [
+    {
+      "pass": true,
+      "label": "Unavailable discovery does not use stale compiled endpoint or open a socket"
+    },
+    {
+      "pass": true,
+      "label": "Actual Godot HTTP error remains visible in diagnosis"
+    },
+    {
+      "pass": true,
+      "label": "Non-terminating discovery response reaches a bounded timeout before WebSocket"
+    },
+    {
+      "pass": true,
+      "label": "Retry keeps previous timeout diagnosis visible"
+    },
+    {
+      "pass": true,
+      "label": "Invalid manifest is refused without opening a stale route"
+    },
+    {
+      "pass": true,
+      "label": "mp-a: actual room and .7.1 label received after discovery"
+    },
+    {
+      "pass": true,
+      "label": "mp-b: actual room and .7.1 label received after discovery"
+    },
+    {
+      "pass": true,
+      "label": "Independent PC and mobile-emulated clients join the same room"
+    },
+    {
+      "pass": true,
+      "label": "Both clients move and receive updated server state"
+    },
+    {
+      "pass": true,
+      "label": "PC: lookup failure remains distinct from room entry"
+    },
+    {
+      "pass": true,
+      "label": "PC: expanded discovery diagnosis fits viewport"
+    },
+    {
+      "pass": true,
+      "label": "Mobile: lookup failure remains distinct from room entry"
+    },
+    {
+      "pass": true,
+      "label": "Mobile: expanded discovery diagnosis fits viewport"
+    },
+    {
+      "pass": true,
+      "label": "Recovery from lookup errors keeps the same authoritative room"
+    },
+    {
+      "pass": true,
+      "label": "Both clients discover rotated endpoint without reloading or recompiling"
+    },
+    {
+      "pass": true,
+      "label": "Endpoint rotation preserves the running room and two characters"
+    },
+    {
+      "pass": true,
+      "label": "Room inventory preserved across route refresh"
+    },
+    {
+      "pass": true,
+      "label": "No GDScript or browser errors"
+    }
+  ],
+  "errors": [],
+  "lookups": 11,
+  "physical": false,
+  "publicTLS": false,
+  "transportAdapter": "test-only WSS hostname to real local WS; public TLS tested separately"
+}

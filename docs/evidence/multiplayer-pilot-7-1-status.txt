@@ -1,0 +1,29 @@
+
+
+host_task                  : TeceIsland-Multiplayer-mp
+host_running               : True
+server_version             : 0.9.0-multiplayer-pilot.6
+server_protocol            : 3
+expected_version           : 0.9.0-multiplayer-pilot.6
+expected_client_version    : 0.9.0-multiplayer-pilot.7.1
+version_matches            : True
+server_running             : True
+server_pid                 : 22332
+tunnel_running             : True
+tunnel_pid                 : 11812
+server_healthy             : True
+tunnel_healthy             : True
+port                       : 8791
+wss                        : wss://volleyball-representations-representations-bachelor.trycloudflare.com/room
+packaged_wss               : wss://volleyball-representations-representations-bachelor.trycloudflare.com/room
+published_wss              : wss://volleyball-representations-representations-bachelor.trycloudflare.com/room
+wss_healthy                : True
+endpoint_config_matches    : True
+published_client_version   : 0.9.0-multiplayer-pilot.7.1
+needs_republish            : False
+needs_endpoint_publish     : False
+ready_to_play              : True
+published_endpoint_healthy : True
+
+
+

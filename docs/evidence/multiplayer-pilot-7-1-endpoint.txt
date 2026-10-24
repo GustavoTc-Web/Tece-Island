@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Godot_v4.7.2-stable_win64_console.exe : ERROR: Failed to read the root certificate store.
+No linha:5 caractere:1
++ & 'C:/Users/gusta/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7. ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: Failed t...tificate store.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+PASS: Current HTTPS manifest resolves the new WSS route
+PASS: Invalid manifest/protocol refused
+PASS: Invalid manifest/protocol refused
+PASS: Invalid manifest/protocol refused
+PASS: Invalid manifest/protocol refused
+PASS: Invalid manifest/protocol refused
+PASS: Untrusted route refused: ws://test.trycloudflare.com/room
+PASS: Untrusted route refused: wss://attacker.example/room
+PASS: Untrusted route refused: wss://test.trycloudflare.com.attacker.example/room
+PASS: Untrusted route refused: wss://user:pass@test.trycloudflare.com/room
+PASS: Untrusted route refused: wss://test.trycloudflare.com/room?token=x
+PASS: Untrusted route refused: wss://test.trycloudflare.com/room
+PASS: Discovery deadline runs before null-socket return
+PASS: Discovery watchdog exposes its bounded deadline
+PASS: Retry executes without a socket and still enforces account login
+PASS: Retry retains the last discovery failure for diagnosis
+MULTIPLAYER ENDPOINT: 16 checks, 0 failures

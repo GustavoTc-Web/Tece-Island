@@ -1,0 +1,46 @@
+{
+  "endpoint": "wss://volleyball-representations-representations-bachelor.trycloudflare.com/room",
+  "checks": [
+    {
+      "pass": true,
+      "label": "External HTTPS reaches only game service with exact version/protocol"
+    },
+    {
+      "pass": true,
+      "label": "External tunnel serves no filesystem or other application at root"
+    },
+    {
+      "pass": true,
+      "label": "External WSS rejects actions without authentication"
+    },
+    {
+      "pass": true,
+      "label": "Production configuration still has exactly the existing two allowed accounts"
+    },
+    {
+      "pass": true,
+      "label": "External WSS rejects unsigned token even with allowlisted UID"
+    },
+    {
+      "pass": true,
+      "label": "External WSS rejects forged outsider token and claimed allowed UID"
+    },
+    {
+      "pass": true,
+      "label": "No identity token or UID in .tools/mp-recovery7-production.log"
+    },
+    {
+      "pass": true,
+      "label": "No identity token or UID in .tools/mp-recovery7-production-error.log"
+    },
+    {
+      "pass": true,
+      "label": "No identity token or UID in .tools/mp-recovery7-tunnel.log"
+    },
+    {
+      "pass": true,
+      "label": "No identity token or UID in .tools/mp-recovery7-tunnel-error.log"
+    }
+  ],
+  "positiveRealAccountLoginTested": false
+}

@@ -7,5 +7,6 @@
   "protocol": 3,
   "physical_performance": "not tested; user could not enter the room",
   "performance_approved": false,
-  "scope": "Publication checks from October 22 do not establish October 24 availability"
+  "scope": "Publication checks from October 22 do not establish October 24 availability",
+  "follow_up": "User confirms error appears, then returns to discovery"
 }

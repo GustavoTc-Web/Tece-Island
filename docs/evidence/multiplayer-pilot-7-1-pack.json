@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "label": "exact committed pilot build",
+      "pass": true
+    },
+    {
+      "label": "pilot feature and local server endpoint",
+      "pass": true
+    },
+    {
+      "label": "same two authorized accounts and preserved chat/sync",
+      "pass": true
+    },
+    {
+      "label": "server files and test bridge excluded",
+      "pass": true
+    },
+    {
+      "label": "protocol-3 client preserves the running .6 server",
+      "pass": true
+    },
+    {
+      "label": "compiled multiplayer opens with login guidance, no solo save method",
+      "pass": true
+    },
+    {
+      "label": "actual pilot pack loads legacy-v5 without altering original",
+      "pass": true
+    },
+    {
+      "label": "actual pilot pack loads pilot-v8-won without altering original",
+      "pass": true
+    },
+    {
+      "label": "shared world matches authoritative server manifest",
+      "pass": true
+    }
+  ],
+  "commit": "17f16d28e1c6310bfb0d6e0e67c4897910ddf834",
+  "pass": true,
+  "version": "0.9.0-multiplayer-pilot.7.1"
+}
