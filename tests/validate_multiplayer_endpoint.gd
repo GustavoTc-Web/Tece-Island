@@ -18,9 +18,16 @@ func run() -> void:
 	root.add_child(scene)
 	await process_frame
 	scene.fatal = false
+	scene.connection_phase = "discovery"
+	scene.phase_started = Time.get_ticks_msec() - 10000
+	scene._process(0.01)
+	check(scene.failed_phase == "discovery" and scene.retry_in > 0, "Discovery deadline runs before null-socket return")
+	check(scene.discovery_result.contains("9 s"), "Discovery watchdog exposes its bounded deadline")
+	var previous_result: String = scene.discovery_result
 	scene.retry_in = 0.001
 	scene._process(0.01)
 	check(scene.fatal and scene.status.text.contains("Entre novamente"), "Retry executes without a socket and still enforces account login")
+	check(scene.discovery_result == previous_result, "Retry retains the last discovery failure for diagnosis")
 	scene.queue_free()
 	await process_frame
 	print("MULTIPLAYER ENDPOINT: %d checks, %d failures" % [checks, failures])

@@ -69,7 +69,10 @@ var web_online := -1
 var last_apply_us := 0
 var connection_generation := 0
 var endpoint_request: HTTPRequest
-const CLIENT_VERSION := "0.9.0-multiplayer-pilot.7"
+const CLIENT_VERSION := "0.9.0-multiplayer-pilot.7.1"
+var discovery_result := "Consulta ainda sem resposta"
+const DISCOVERY_TIMEOUT := 8.0
+const DISCOVERY_DEADLINE_MS := 9000
 var prediction := preload("res://scripts/network/multiplayer_prediction.gd").new()
 var metrics := preload("res://scripts/network/multiplayer_metrics.gd").new()
 var last_input_ack := 0
@@ -239,7 +242,7 @@ func toggle_graphics() -> void:
 func update_metrics() -> void:
 	var info := metrics.summary()
 	metrics_button.text = "%d FPS · RTT %d ms" % [roundi(info.fps), roundi(info.rtt)]
-	metrics_text.text = "Cliente .7 · servidor %s / protocolo 3\nFPS %d · quadro p95 %.1f ms\nRTT med/p95 %.0f/%.0f ms · var p95 %.0f ms\nEstado p95 %.0f ms · aplicar p95 %.2f ms\nRecebe %.1f KB/s · envia %.1f KB/s\nEstados %.1f/s · entradas %.1f/s\nFila máx %d · estados reunidos %d\nCorreção %.1f u · buffer remoto %.0f ms" % [server_version.trim_prefix("0.9.0-multiplayer-pilot"), roundi(info.fps), info.frame_p95, info.rtt, info.rtt_p95, info.jitter, info.gap_p95, info.apply_p95 / 1000, info.rates.down / 1024, info.rates.up / 1024, info.rates.states, info.rates.inputs, info.queue_peak, info.coalesced, prediction.correction_size, remote_delay * 1000]
+	metrics_text.text = "Cliente .7.1 · servidor %s / protocolo 3\nFPS %d · quadro p95 %.1f ms\nRTT med/p95 %.0f/%.0f ms · var p95 %.0f ms\nEstado p95 %.0f ms · aplicar p95 %.2f ms\nRecebe %.1f KB/s · envia %.1f KB/s\nEstados %.1f/s · entradas %.1f/s\nFila máx %d · estados reunidos %d\nCorreção %.1f u · buffer remoto %.0f ms" % [server_version.trim_prefix("0.9.0-multiplayer-pilot"), roundi(info.fps), info.frame_p95, info.rtt, info.rtt_p95, info.jitter, info.gap_p95, info.apply_p95 / 1000, info.rates.down / 1024, info.rates.up / 1024, info.rates.states, info.rates.inputs, info.queue_peak, info.coalesced, prediction.correction_size, remote_delay * 1000]
 
 func refresh_controls() -> void:
 	panel.visible = not online
@@ -258,7 +261,11 @@ func refresh_controls() -> void:
 	notice.visible = Time.get_ticks_msec() < notice_until
 	if not online:
 		prompt.text = "A sala só carrega após validar a conexão. O mundo solo permanece no menu."
-		diagnostic.text = "Etapa: %s · cliente .7 / protocolo 3\n%s · tentativa %d%s" % [phase_name(failed_phase if failed_phase != "" else connection_phase), endpoint.trim_prefix("wss://").trim_prefix("ws://").get_slice("/", 0), maxi(1, attempts), " · código %d" % last_close_code if last_close_code > 0 else ""]
+		var destination := endpoint.trim_prefix("wss://").trim_prefix("ws://").get_slice("/", 0)
+		if destination == "": destination = "raw.githubusercontent.com"
+		diagnostic.text = "Etapa: %s · cliente .7.1 / protocolo 3\n%s · tentativa %d%s\n%s" % [phase_name(failed_phase if failed_phase != "" else connection_phase), destination, maxi(1, attempts), " · código %d" % last_close_code if last_close_code > 0 else "", discovery_result]
+		if connection_phase == "discovery" and retry_in <= 0:
+			diagnostic.text += "\nConsulta em curso: %.1f s · limite %.0f s" % [(Time.get_ticks_msec() - phase_started) / 1000.0, DISCOVERY_TIMEOUT]
 	if is_instance_valid(overlay):
 		overlay.visible = MobileInput.enabled and online and hud.current_panel == ""
 		overlay.collect.disabled = blocked() or drop_target == "" and well_target == ""
@@ -304,20 +311,24 @@ func connect_room() -> void:
 		set_connection_phase("discovery")
 		status.text = "Conferindo endereço atual do servidor…"
 		endpoint_request = HTTPRequest.new()
-		endpoint_request.timeout = 8
+		endpoint_request.timeout = DISCOVERY_TIMEOUT
 		endpoint_request.body_size_limit = 4096
 		add_child(endpoint_request)
 		var request := endpoint_request
 		var requested := request.request(discovery + "?t=" + str(int(Time.get_unix_time_from_system())) + "-" + str(Time.get_ticks_msec()))
 		if requested != OK:
+			discovery_result = "Consulta não iniciada · erro %d" % requested
 			request.queue_free()
 			disconnected("endpoint_unavailable")
 			return
 		var result: Array = await request.request_completed
 		request.queue_free()
 		if generation != connection_generation or not is_inside_tree(): return
+		discovery_result = "Última consulta: HTTP %d · resultado %d · %.1f s" % [int(result[1]), int(result[0]), (Time.get_ticks_msec() - phase_started) / 1000.0]
+		if int(result[0]) == HTTPRequest.RESULT_TIMEOUT: discovery_result += " · tempo limite"
 		if result[0] == HTTPRequest.RESULT_SUCCESS and result[1] == 200:
 			endpoint = CONFIG.endpoint_from_manifest(JSON.parse_string(result[3].get_string_from_utf8()))
+			discovery_result += " · endereço válido" if endpoint != "" else " · resposta inválida"
 		if endpoint == "":
 			disconnected("endpoint_unavailable")
 			return
@@ -370,6 +381,16 @@ func _process(delta: float) -> void:
 		retry_in -= delta
 		status.text = connection_text + " · nova tentativa em %ds" % maxi(1, ceili(retry_in))
 		if retry_in <= 0: connect_room()
+		return
+	# This deadline is intentionally before the null-socket return: discovery
+	# happens before a WebSocket exists and must never wait indefinitely.
+	if connection_phase == "discovery" and Time.get_ticks_msec() - phase_started >= DISCOVERY_DEADLINE_MS:
+		connection_generation += 1
+		if is_instance_valid(endpoint_request):
+			endpoint_request.cancel_request()
+			endpoint_request.queue_free()
+		discovery_result = "Última consulta: prazo máximo de 9 s excedido"
+		disconnected("endpoint_unavailable")
 		return
 	if socket == null: return
 	socket.poll()
@@ -610,9 +631,9 @@ func apply_state(data: Dictionary, initial: bool = false) -> void:
 				drops[id].queue_free()
 				drops.erase(id)
 		snapshot["_applied_world"] = data.get("world_revision", -1)
-	status.text = "Multiplayer · sala %d/2 · conectado · piloto .7" % connected
+	status.text = "Multiplayer · sala %d/2 · conectado · piloto .7.1" % connected
 	var region := WorldTerrain.region_at(actors[self_id].target)
-	hud.get_node("Controls/Rows/Time").text = "MP .7 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
+	hud.get_node("Controls/Rows/Time").text = "MP .7.1 · %d/2 · %s" % [connected, str(region.get("kind", "Ilha"))]
 	counts.text = "Seu inventário · Madeira %d · Pedra %d · %s" % [int(inventory.get("madeira", 0)), int(inventory.get("pedra", 0)), tool_name(str(data.tool))]
 	retry.visible = false
 	last_apply_us = Time.get_ticks_usec() - apply_began
@@ -738,7 +759,7 @@ func disconnected(reason: String, terminal: bool = false) -> void:
 
 func error_text(code: String) -> String:
 	if code == "endpoint_unavailable": return "Não foi possível consultar o endereço atual · confira a rede e tente novamente."
-	if code == "client_outdated": return "Atualize a página para carregar o piloto .7 e o mesmo mundo do servidor."
+	if code == "client_outdated": return "Atualize a página para carregar o piloto .7.1 e o mesmo mundo do servidor."
 	if code == "blocked_path": return "Há um obstáculo no caminho. Aproxime-se pelo acesso livre."
 	if code == "inventory_full": return "Inventário cheio · libere espaço antes de coletar."
 	if code == "drop_unavailable": return "Este item já foi pego."

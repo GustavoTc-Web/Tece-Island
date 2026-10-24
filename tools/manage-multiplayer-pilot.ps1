@@ -18,7 +18,7 @@ $taskShell=Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell
 $taskHostArguments='-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "'+$taskHostScript+'" -Instance '+$Instance
 $taskDiscoveryUrl='https://raw.githubusercontent.com/GustavoTc-Web/Tece-Island/refs/heads/feat/multiplayer-pilot/runtime/multiplayer-endpoint.json'
 $taskExpectedVersion='0.9.0-multiplayer-pilot.6'
-$taskExpectedClientVersion='0.9.0-multiplayer-pilot.7'
+$taskExpectedClientVersion='0.9.0-multiplayer-pilot.7.1'
 function Owned-Host {
     $taskHost=Get-ScheduledTask -TaskName $taskHostName -ErrorAction SilentlyContinue
     if($taskHost -and ($taskHost.Actions.Count -ne 1 -or $taskHost.Actions[0].Execute -ine $taskShell -or $taskHost.Actions[0].Arguments -ne $taskHostArguments)){

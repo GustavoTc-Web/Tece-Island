@@ -11,10 +11,13 @@ const checks=[],browsers=[],errors=[],seen=[],directory=resolve('build/multiplay
 const check=(ok,label)=>{assert.ok(ok,label);checks.push({pass:true,label});console.log('PASS: '+label);};
 const users=await identities(),verifier=firebaseVerifier({projectId:'demo-tece-island',apiKey:'local-test',localTest:true});
 const server=await startServer({verify:token=>verifier.verify(token),nickname:async(_,uid)=>uid==='mp-a'?'Ana':'Beto',allowedUids:['mp-a','mp-b'],origins:['http://localhost:8060'],port:8789});
-let route='route-a',unavailable=true,lookups=0;
+let route='route-a',mode='unavailable',lookups=0;
 const http=createServer(async(req,res)=>{
   if(new URL(req.url,'http://localhost').pathname==='/endpoint.json'){
-    lookups++;res.writeHead(unavailable?503:200,{'Content-Type':'application/json','Cache-Control':'no-store'});
+    lookups++;
+    if(mode==='hang')return;
+    res.writeHead(mode==='unavailable'?503:200,{'Content-Type':'application/json','Cache-Control':'no-store'});
+    if(mode==='invalid'){res.end('{invalid-json');return;}
     res.end(JSON.stringify({schema:1,protocol:3,url:`wss://${route}.trycloudflare.com/room`}));return;
   }
   const path=resolve(directory,'.'+(new URL(req.url,'http://localhost').pathname==='/'?'/index.html':new URL(req.url,'http://localhost').pathname));
@@ -47,10 +50,19 @@ try{
     if(uid==='mp-a'){
       await page.waitForFunction(()=>window.tcMpState?.failed_phase==='discovery',null,{timeout:15000});
       check(!(await state(page)).online&&seen.length===0,'Unavailable discovery does not use stale compiled endpoint or open a socket');
-      unavailable=false;
+      check((await state(page)).diagnostic.includes('HTTP 503'),'Actual Godot HTTP error remains visible in diagnosis');
+      mode='hang';
+      await page.waitForFunction(()=>/tempo limite|prazo máximo/.test(window.tcMpState?.diagnostic||''),null,{timeout:15000});
+      check(!(await state(page)).online,'Non-terminating discovery response reaches a bounded timeout before WebSocket');
+      await pause(1200);
+      check(/tempo limite|prazo máximo/.test((await state(page)).diagnostic),'Retry keeps previous timeout diagnosis visible');
+      mode='invalid';
+      await page.waitForFunction(()=>window.tcMpState?.diagnostic.includes('resposta inválida'),null,{timeout:15000});
+      check(seen.length===0,'Invalid manifest is refused without opening a stale route');
+      mode='ok';
     }
     await page.waitForFunction(()=>window.tcMpState?.online,null,{timeout:30000});
-    check((await state(page)).players.length>=1&&(await state(page)).status.includes('piloto .7'),uid+': initial authoritative room, .7 label and rendered character received after discovery');
+    check((await state(page)).players.length>=1&&(await state(page)).status.includes('piloto .7.1'),uid+': actual room and .7.1 label received after discovery');
   }
   const [pc,mobile]=pages;
   await pc.waitForFunction(()=>window.tcMpState.players.length===2);
@@ -61,9 +73,22 @@ try{
   await pc.keyboard.down('a');await mobile.keyboard.down('d');await pause(350);
   await pc.keyboard.up('a');await mobile.keyboard.up('d');await pause(400);
   check(own(await state(pc)).x<own(beforeA).x-20&&own(await state(mobile)).x>own(beforeB).x+20,'Both clients move and receive updated server state');
+  mode='unavailable';
+  for(const page of pages)await invoke(page,{action:'retry'});
+  for(const [i,page]of pages.entries()){
+    await page.waitForFunction(()=>window.tcMpState.failed_phase==='discovery'&&window.tcMpState.diagnostic.includes('HTTP 503'));
+    check(!(await state(page)).online,(i?'Mobile':'PC')+': lookup failure remains distinct from room entry');
+    await page.waitForFunction(()=>{const s=window.tcMpState,r=s.panel;return r[0]>=0&&r[1]>=54&&r[0]+r[2]<=s.viewport[0]+1&&r[1]+r[3]<=s.viewport[1]+1;});
+    check(true,(i?'Mobile':'PC')+': expanded discovery diagnosis fits viewport');
+    await page.screenshot({path:'.tools/screenshots/multiplayer-7-1-'+(i?'mobile':'pc')+'-discovery.png'});
+  }
+  mode='ok';
+  for(const page of pages)await invoke(page,{action:'retry'});
+  for(const page of pages)await page.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.players.length===2);
+  check((await state(pc)).room===room&&(await state(mobile)).room===room,'Recovery from lookup errors keeps the same authoritative room');
   route='route-b';
   for(const page of pages)await invoke(page,{action:'retry'});
-  for(const page of pages)await page.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.players.length===2,null,{timeout:30000});
+  for(const page of pages)await page.waitForFunction(()=>window.tcMpState.online&&window.tcMpState.players.length===2&&window.tcMpState.endpoint.includes('route-b'),null,{timeout:30000});
   check(seen.filter(x=>x.includes('route-b')).length===2,'Both clients discover rotated endpoint without reloading or recompiling');
   check((await state(pc)).room===room&&(await state(mobile)).room===room&&server.room.players.size===2,'Endpoint rotation preserves the running room and two characters');
   check(JSON.stringify((await state(pc)).inventory)===JSON.stringify(beforeA.inventory),'Room inventory preserved across route refresh');
@@ -71,6 +96,6 @@ try{
   await pc.screenshot({path:'.tools/screenshots/multiplayer-6-pc.png'});await mobile.screenshot({path:'.tools/screenshots/multiplayer-6-mobile.png'});
   check(errors.length===0,'No GDScript or browser errors');
 } finally {
-  for(const browser of browsers)await browser.close();await server.close();await new Promise(r=>http.close(r));
+  for(const browser of browsers)await browser.close();await server.close();http.closeAllConnections();await new Promise(r=>http.close(r));
   await writeFile('.tools/multiplayer-discovery-results.json',JSON.stringify({checks,errors,lookups,physical:false,publicTLS:false,transportAdapter:'test-only WSS hostname to real local WS; public TLS tested separately'},null,2));
 }

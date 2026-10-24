@@ -109,6 +109,7 @@ func _process(_delta: float) -> void:
 	value["total_resources"] = pilot.nodes.size()
 	value["wells"] = pilot.world_view.wells.size()
 	value["phase"] = pilot.connection_phase
+	value["endpoint"] = pilot.endpoint
 	value["failed_phase"] = pilot.failed_phase
 	value["diagnostic"] = pilot.diagnostic.text
 	value["diagnostic_box"] = box(pilot.diagnostic)
