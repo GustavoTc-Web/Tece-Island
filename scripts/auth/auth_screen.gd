@@ -48,7 +48,7 @@ func _ready() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rows.add_child(title)
 	var subtitle := Label.new()
-	subtitle.text = "Floresta · exploração · sobrevivência"
+	subtitle.text = "Beta solo · salvamento neste aparelho"
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	subtitle.add_theme_font_size_override("font_size", 18)
 	rows.add_child(subtitle)

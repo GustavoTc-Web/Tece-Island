@@ -375,4 +375,7 @@ func _process(_delta: float) -> void:
 			for shortcut in MobileInput.overlay.actions.get_children():
 				data.action_shortcuts.append({"caption": shortcut.text, "icon": shortcut.icon.resource_path, "rect": rect(shortcut)})
 			data.sticks = {"move":[MobileInput.overlay.centers.move.x, MobileInput.overlay.centers.move.y], "aim":[MobileInput.overlay.centers.aim.x, MobileInput.overlay.centers.aim.y]}
+	data["fps"] = Engine.get_frames_per_second()
+	data["process_ms"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000
+	data["draw_calls"] = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	JavaScriptBridge.eval("window.tcState = " + JSON.stringify(data))

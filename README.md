@@ -1,7 +1,13 @@
 # Tece Island — solo Web e controles de toque
 
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
-O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no desktop.
+O navegador oferece o mapa e a campanha solo completos. Multiplayer indisponível
+nesta beta, sem data anunciada. O piloto foi preservado e seus serviços temporários
+encerrados; veja [registro](docs/MULTIPLAYER_ADIADO_BETA.md).
+
+Candidata de revisão: **0.9.1-beta-rc.1**, save **8**, campanha **2**, tarefas **1**.
+A oficial **0.9.0** continua disponível até o reteste final. Veja a
+[revisão, limites e roteiro](docs/BETA_SOLO_RC1.md).
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
 campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).
@@ -10,7 +16,10 @@ Saves v8 exigem [recuperação com cliente compatível](docs/RECUPERACAO_0_9_0.m
 Confiabilidade dos saves e piloto de sincronização Firestore:
 [investigação, configuração e testes](docs/SAVES_E_SINCRONIZACAO.md).
 Na build pública, chat e sincronização ficam restritos às mesmas duas contas
-autorizadas; os defaults de desenvolvimento continuam desligados. Para mundos desaparecidos, siga a
+autorizadas; os defaults de desenvolvimento continuam desligados. O solo aceita
+qualquer conta de e-mail confirmado, com progresso local por conta, endereço,
+navegador e aparelho. Para as demais contas, não há sincronização automática.
+Para mundos desaparecidos, siga a
 [exportação e recuperação sem apagar armazenamento](docs/RECUPERAR_MUNDO.md).
 
 ## Começar
@@ -32,7 +41,7 @@ importantes, ao perder foco e antes de retornar ao menu ou sair da conta.
 O indicador distingue gravação local, sincronizando, sincronizado e pendência/falha
 com nova tentativa. Sincronizado exige confirmação do serviço.
 Godot usa `user://accounts/<SHA-256 do UID>/worlds/<ID>/progress.json`, temporário,
-cópia anterior `.backup.json` e backup versionado antes da migração para v5.
+cópia anterior `.backup.json` e backups versionados antes das migrações até v8.
 O catálogo fica em `worlds.json` na pasta da conta. O save anterior dessa conta
 migra uma vez para **Meu primeiro mundo**, com verificação e backup, mantendo o
 arquivo original. Inventário, equipamento, baús, objetivos e mundo são independentes.
@@ -51,8 +60,9 @@ um item e use Guardar/Retirar pilha ou T; transferências parciais conservam o r
 Renomeie o baú em até 24 caracteres. O painel Base seleciona e confirma desmontagem:
 50% dos materiais, arredondados para baixo, com excedentes no chão; baú cheio bloqueado.
 Diário por J ou Menu → Diário e objetivos reúne O Último Sinal e a sequência inicial.
-Objetivos mostra uma etapa por vez: madeira, pedra, três equipamentos de pedra,
-fogueira e bolsa nível 3. Fabricações antecipadas ficam registradas.
+O HUD acompanha tarefas por dia, contador, requisitos e conclusões automáticas;
+o Diário mantém todas as etapas, inclusive atrasadas. Bolsa nível 1 é a meta do
+dia 2; níveis superiores são opcionais. Fabricações antecipadas ficam registradas.
 Menu → Configurações permite volume/silenciar e mostrar objetivos.
 Detalhes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md) e
 [usabilidade mobile, testes e capturas](docs/USABILIDADE_MOBILE.md).

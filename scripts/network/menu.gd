@@ -32,6 +32,7 @@ var dialog_mode := ""
 var name_callback: JavaScriptObject
 var play_selected: Button
 var rename_selected: Button
+var release_note: Label
 
 func _ready() -> void:
 	ThemeDB.get_default_theme().default_font = IslandTheme.BODY
@@ -48,6 +49,10 @@ func _ready() -> void:
 	brand.add_theme_color_override("font_outline_color", Color("10271f"))
 	brand.add_theme_constant_override("outline_size", 6)
 	main.add_child(brand)
+	release_note = Label.new()
+	release_note.text = "Beta solo · 0.9.1-beta-rc.1"
+	release_note.add_theme_color_override("font_color", IslandTheme.AMBER)
+	main.add_child(release_note)
 	main_rows = VBoxContainer.new()
 	main_rows.add_theme_constant_override("separation", 10)
 	main.add_child(main_rows)
@@ -56,7 +61,7 @@ func _ready() -> void:
 	continue_caption.clip_text = true
 	continue_caption.add_theme_color_override("font_color", Color("d2c9a8"))
 	main_rows.add_child(continue_caption)
-	for entry in [["Meus mundos", "worlds"], ["Servidores", "servers"]]:
+	for entry in [["Meus mundos", "worlds"], ["Multiplayer · indisponível", "servers"]]:
 		button(main_rows, entry[0], open_page.bind(entry[1]))
 	button(main_rows, "Configurações", func(): overlay.open_settings())
 	var menu_button := button(main, "Menu", open_page.bind("options"))
@@ -210,7 +215,7 @@ func open_page(id: String) -> void:
 	main.visible = id == "main"
 	page_panel.visible = id != "main"
 	for key in pages: pages[key].visible = key == id
-	page_title.text = {"main":"", "worlds":"Meus mundos", "servers":"Servidores", "advanced":"Conexão avançada", "options":"Menu", "development":"Desenvolvimento"}.get(id, "")
+	page_title.text = {"main":"", "worlds":"Meus mundos", "servers":"Multiplayer", "advanced":"Conexão avançada", "options":"Menu", "development":"Desenvolvimento"}.get(id, "")
 	resize()
 
 func resize() -> void:
@@ -224,6 +229,7 @@ func resize() -> void:
 		if control is Label and control not in [brand, page_title, dialog_title]: control.add_theme_font_size_override("font_size", font - 2)
 	brand.position = Vector2(32, 26)
 	brand.add_theme_font_size_override("font_size", int(clampf(view.y * 0.105, 36, 58)))
+	release_note.position = Vector2(32, 26 + brand.get_minimum_size().y)
 	main_rows.custom_minimum_size.x = clampf(view.x * 0.3, 280, 360)
 	main_rows.size = Vector2(main_rows.custom_minimum_size.x, main_rows.get_combined_minimum_size().y)
 	main_rows.position = Vector2(view.x - main_rows.size.x - 36, clampf((view.y - main_rows.size.y) / 2, 84, maxf(84, view.y - main_rows.size.y - 16)))
@@ -315,7 +321,7 @@ func refresh_library() -> void:
 		servers_list.add_child(empty)
 	if OS.has_feature("web"):
 		var info := Label.new()
-		info.text = "Conexões de servidores disponíveis no aplicativo para computador."
+		info.text = "Multiplayer indisponível nesta beta. Jogue a campanha solo em Meus mundos. Não há data anunciada para o multiplayer."
 		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		servers_list.add_child(info)
 	open_page(page)

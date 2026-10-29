@@ -71,20 +71,21 @@ func open(value: String = "menu") -> void:
 	if value == "help":
 		var controls := "Use os joysticks para andar e mirar/atacar. Toque Interagir para coletar ou abrir o alvo próximo. Toque nos cinco slots para selecionar; Inventário permite usar, equipar e jogar itens." if MobileInput.enabled else "WASD/setas: andar. Mouse/F: atacar. E: coletar/interagir. 1–5/scroll: selecionar. I: inventário; C: fabricação; J: diário; R: recarregar."
 		text.text = controls + "\n\nFabricação e Base ficam no inventário. Para construir, selecione cama, fogueira ou peça e use Colocar selecionado; escolha terreno próximo e livre. " + ("Toque no mapa para ajustar e use Confirmar/Cancelar." if MobileInput.enabled else "Clique confirma, Esc cancela, R gira peças.") + "\n\nComida e cantil: Usar no inventário ou botão contextual. Poços permitem beber e encher o cantil. Cozinhe perto de uma fogueira.\n\nO solo salva automaticamente neste aparelho. Confira Dados e salvamento se houver uma falha. Para relatar um problema, copie as informações abaixo e envie manualmente com sua descrição; não inclua senha."
+		text.text += "\n\nCampanha solo: acompanhe as tarefas no HUD e no Diário. Mapa na torre da Serra a partir da noite 3; templos nas noites 4 e 5 ou posteriores; ataque final na noite 6 ou posterior. Atrasos não encerram a campanha. Após o resgate, você pode continuar explorando.\n\nBeta solo · multiplayer indisponível, sem data anunciada. Chat e sincronização entre aparelhos continuam restritos às contas do teste fechado. As demais contas jogam com salvamento local.\n\nCréditos: feito com Godot Engine. Fontes Bree Serif e Atkinson Hyperlegible, sob SIL Open Font License 1.1; licenças incluídas no pacote. Arte e efeitos do jogo são desenhados/gerados pelo projeto."
 	elif value == "data":
 		refresh_save_details()
 	layout()
 
 func save_details() -> String:
 	var world := hud.get_parent()
-	if world.account_store == null: return "A arena multiplayer não usa o save do mundo solo."
-	var account: AccountProgress = world.account_store
+	var account: AccountProgress = world.get("account_store")
+	if account == null: return "Abra um mundo solo para consultar seu salvamento. Multiplayer indisponível nesta beta."
 	var sync := get_tree().root.get_node("WorldSync")
+	if not sync.enabled(account.uid): return "Mundo: " + account.world_id + "\nSalvo somente neste navegador e aparelho, separado por conta. Chat e sincronização entre aparelhos estão restritos às contas do teste fechado. Exporte uma cópia antes de limpar os dados do site."
 	var detail := "Mundo: " + account.world_id + "\nÚltima revisão confirmada: " + str(account.sync_state.get("revision", 0))
 	if world.progress_store != null:
 		var unchanged: bool = CloudCodec.hash_state(world.progress_store.capture()) == account.sync_state.get("hash", "")
 		detail += "\nProgresso local: " + ("igual à última versão sincronizada." if unchanged else "alterações ainda não sincronizadas.")
-	if not sync.enabled(account.uid): detail += "\nSincronização indisponível para esta conta nesta versão."
 	var notice := str(sync.states.get(sync.key(account), {}).get("detail", ""))
 	if notice != "": detail += "\n" + notice
 	var failure: Dictionary = sync.last_errors.get(sync.key(account), {})
@@ -93,7 +94,12 @@ func save_details() -> String:
 
 func refresh_save_details() -> void:
 	if area != "data": return
-	text.text = "O progresso é salvo periodicamente neste aparelho. Aguarde Sincronizado antes de trocar de aparelho. Tentativas automáticas têm intervalo de pelo menos 2 minutos; o botão permite tentar antes, respeitando 10 segundos entre pedidos.\n\n" + (hud.save_button.text if hud.save_button != null else "Save indisponível.") + "\n\n" + save_details()
+	var account: AccountProgress = hud.get_parent().get("account_store")
+	var cloud := account != null and WorldSync.enabled(account.uid)
+	var instructions := "O progresso é salvo automaticamente neste aparelho. Para esta conta, não há cópia automática entre aparelhos."
+	if cloud: instructions = "O progresso é salvo neste aparelho. Aguarde Sincronizado antes de trocar de aparelho. Tentativas automáticas: pelo menos 2 minutos; tentativa manual: pelo menos 10 segundos."
+	retry_button.text = "Salvar e tentar sincronizar" if cloud else "Salvar neste aparelho"
+	text.text = instructions + "\n\n" + (hud.save_button.text if hud.save_button != null else "Abra um mundo para salvar.") + "\n\n" + save_details()
 
 func invoke(caption: String) -> void:
 	match caption:
@@ -119,16 +125,16 @@ func layout() -> void:
 			button.clip_text = true
 
 func diagnostic() -> String:
-	var stamp := {"version":"0.8.1-atalhos-mobile", "commit":"desenvolvimento"}
+	var stamp := {"version":"0.9.1-beta-rc.1", "commit":"desenvolvimento"}
 	if FileAccess.file_exists("res://config/build-public.json"):
 		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://config/build-public.json"))
 		if data is Dictionary: stamp = data
 	var screen := DisplayServer.window_get_size()
 	if OS.has_feature("web"):
 		screen = Vector2i(int(JavaScriptBridge.eval("innerWidth")), int(JavaScriptBridge.eval("innerHeight")))
-	var info := "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.8.1-atalhos-mobile")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
+	var info := "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.9.1-beta-rc.1")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
 	if OS.has_feature("web"): info += "\nOrigem: " + str(JavaScriptBridge.eval("location.origin"))
 	var world := hud.get_parent()
-	if world.account_store != null and world.progress_store != null:
+	if world.get("account_store") != null and world.get("progress_store") != null:
 		info += "\nHash local: " + CloudCodec.hash_state(world.progress_store.capture()) + "\nHash confirmado: " + str(world.account_store.sync_state.get("hash", ""))
 	return info + "\n" + (hud.save_button.text if hud.save_button != null else "") + "\n" + save_details()
