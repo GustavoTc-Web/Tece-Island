@@ -1,0 +1,118 @@
+{
+  "url": "http://localhost:8080/Tece-Island/",
+  "results": [
+    {
+      "name": "PC: primeiro toque foca o campo",
+      "ok": true
+    },
+    {
+      "name": "PC: trocar campo preserva e-mail",
+      "ok": true
+    },
+    {
+      "name": "PC: senha mantém caixa, espaços e símbolos",
+      "ok": true
+    },
+    {
+      "name": "PC: seleção e exclusão",
+      "ok": true
+    },
+    {
+      "name": "PC: colagem real do clipboard",
+      "ok": true
+    },
+    {
+      "name": "PC: mostrar senha preserva cursor",
+      "ok": true
+    },
+    {
+      "name": "PC: ocultar senha preserva cursor",
+      "ok": true
+    },
+    {
+      "name": "PC: alternar visibilidade não altera texto",
+      "ok": true
+    },
+    {
+      "name": "PC: rotação e toque repetido mantêm foco",
+      "ok": true
+    },
+    {
+      "name": "PC: envio acessível com viewport reduzido (simulação, sem teclado físico)",
+      "ok": true
+    },
+    {
+      "name": "PC: cadastro acessível",
+      "ok": true
+    },
+    {
+      "name": "PC: recuperação acessível",
+      "ok": true
+    },
+    {
+      "name": "PC: Firebase real rejeita credenciais inválidas",
+      "ok": true
+    },
+    {
+      "name": "PC: falha mostra mensagem e libera nova tentativa",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: primeiro toque foca o campo",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: trocar campo preserva e-mail",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: senha mantém caixa, espaços e símbolos",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: seleção e exclusão",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: colagem real do clipboard",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: mostrar senha preserva cursor",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: ocultar senha preserva cursor",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: alternar visibilidade não altera texto",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: rotação e toque repetido mantêm foco",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: envio acessível com viewport reduzido (simulação, sem teclado físico)",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: cadastro acessível",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: recuperação acessível",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: Firebase real rejeita credenciais inválidas",
+      "ok": true
+    },
+    {
+      "name": "Toque emulado: falha mostra mensagem e libera nova tentativa",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

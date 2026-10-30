@@ -1,0 +1,528 @@
+{
+  "mobile": "Toque emulado; fixture offline isolada",
+  "results": [
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Três atalhos têm desenhos gráficos e legendas visíveis",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Alvos de toque respeitam aproximadamente 44px CSS",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Grupo cabe entre os joysticks e acima dos cinco espaços",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Movimento e ataque seguem independentes com dois dedos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Fabricação abre diretamente e mostra somente seu painel",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Abrir fabricação libera movimento e ataque mantidos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Toque no painel não move, coleta ou ataca o mundo",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Categoria exibe receita e ingredientes existentes",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Fabricar produz ferramenta e consome três madeiras",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Fechar retorna à partida sem comandos presos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Inventário abre sozinho",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Alternar do inventário oculta o painel anterior",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Inventário fecha e libera a partida",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Mão usa legenda Coletar diante de itens",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Coleta pelo comando existente conserva quantidade",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Interagir abre o baú contextual existente",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Recarregar ocupa linha separada sem sobrepor atalhos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Combate continua disparando pelo joystick",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Soltar joystick não mantém disparos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Seleção por toque e Comer cabem com os três atalhos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Comer segue consumindo uma unidade por toque",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "name": "Sem erros de execução ou recursos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Três atalhos têm desenhos gráficos e legendas visíveis",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Alvos de toque respeitam aproximadamente 44px CSS",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Grupo cabe entre os joysticks e acima dos cinco espaços",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Movimento e ataque seguem independentes com dois dedos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Fabricação abre diretamente e mostra somente seu painel",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Abrir fabricação libera movimento e ataque mantidos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Toque no painel não move, coleta ou ataca o mundo",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Categoria exibe receita e ingredientes existentes",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Fabricar produz ferramenta e consome três madeiras",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Fechar retorna à partida sem comandos presos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Inventário abre sozinho",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Alternar do inventário oculta o painel anterior",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Inventário fecha e libera a partida",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Mão usa legenda Coletar diante de itens",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Coleta pelo comando existente conserva quantidade",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Interagir abre o baú contextual existente",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Recarregar ocupa linha separada sem sobrepor atalhos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Combate continua disparando pelo joystick",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Soltar joystick não mantém disparos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Seleção por toque e Comer cabem com os três atalhos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Comer segue consumindo uma unidade por toque",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "name": "Sem erros de execução ou recursos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Fabricação abre diretamente e mostra somente seu painel",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Abrir fabricação libera movimento e ataque mantidos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Toque no painel não move, coleta ou ataca o mundo",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Categoria exibe receita e ingredientes existentes",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Fabricar produz ferramenta e consome três madeiras",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Fechar retorna à partida sem comandos presos",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Inventário abre sozinho",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Alternar do inventário oculta o painel anterior",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Inventário fecha e libera a partida",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Coleta pelo comando existente conserva quantidade",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Interagir abre o baú contextual existente",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Atalho C do computador continua abrindo fabricação",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Atalho I alterna painel sem sobreposição",
+      "ok": true
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "name": "Sem erros de execução ou recursos",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

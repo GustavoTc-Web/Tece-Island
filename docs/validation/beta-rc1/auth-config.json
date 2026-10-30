@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-29T23:44:48.200Z",
+  "status": 200,
+  "keys": [
+    "projectId",
+    "authorizedDomains"
+  ],
+  "officialDomainAuthorized": true,
+  "candidateDomainAuthorized": false,
+  "source": "Read-only public Firebase project configuration; no account created"
+}

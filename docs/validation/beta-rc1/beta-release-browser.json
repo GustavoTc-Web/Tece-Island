@@ -1,0 +1,78 @@
+{
+  "physical": false,
+  "productionLogin": false,
+  "auth": "mocked only in browser transport; full unmodified release client and IndexedDB",
+  "checks": [
+    {
+      "pass": true,
+      "label": "Release login explains closed chat/cloud access"
+    },
+    {
+      "pass": true,
+      "label": "New identity has no chat launcher or permission-error loop"
+    },
+    {
+      "pass": true,
+      "label": "Full release creates and saves a new non-allowlisted world as v8"
+    },
+    {
+      "pass": true,
+      "label": "Play-world opens actual solo; movement and explicit save-on-hide callback persist position"
+    },
+    {
+      "pass": true,
+      "label": "New solo identity makes no Firestore chat or sync requests"
+    },
+    {
+      "pass": true,
+      "label": "Reload keeps release world under its original identity"
+    },
+    {
+      "pass": true,
+      "label": "Release login explains closed chat/cloud access"
+    },
+    {
+      "pass": true,
+      "label": "New identity has no chat launcher or permission-error loop"
+    },
+    {
+      "pass": true,
+      "label": "Full release creates and saves a new non-allowlisted world as v8"
+    },
+    {
+      "pass": true,
+      "label": "Play-world opens actual solo; movement and explicit save-on-hide callback persist position"
+    },
+    {
+      "pass": true,
+      "label": "New solo identity makes no Firestore chat or sync requests"
+    },
+    {
+      "pass": true,
+      "label": "Reload keeps release world under its original identity"
+    },
+    {
+      "pass": true,
+      "label": "No GDScript or JavaScript errors in the release flow"
+    }
+  ],
+  "measurements": [
+    {
+      "format": "PC-emulated",
+      "load_to_login_ms": 5147.8883000000005,
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "format": "mobile-emulated",
+      "load_to_login_ms": 2269.858,
+      "viewport": {
+        "width": 852,
+        "height": 393
+      }
+    }
+  ],
+  "errors": []
+}

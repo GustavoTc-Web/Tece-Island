@@ -19,8 +19,9 @@ try{
   for(const name of ['spawn-movement','expanded-biome','temple-encounter']){
    if(name==='expanded-biome')await fixture('position',{x:-2200,y:1700});
    if(name==='temple-encounter'){
-    await fixture('campaign_clock',{day:3,night:true});await fixture('campaign_visit',{id:'map'});await page.waitForTimeout(250);await page.keyboard.press('e');
-    await fixture('campaign_clock',{day:4,night:true});await fixture('campaign_visit',{id:'lens'});await page.waitForTimeout(250);await page.keyboard.press('e');
+    await fixture('campaign_clock',{day:3,night:true});await fixture('campaign_visit',{id:'map'});await page.waitForTimeout(250);await page.keyboard.press('e',{delay:120});
+    await page.waitForFunction(()=>tcState.campaign.map_found);
+    await fixture('campaign_clock',{day:4,night:true});await fixture('campaign_visit',{id:'lens'});await page.waitForTimeout(250);await page.keyboard.press('e',{delay:120});
     await page.waitForFunction(()=>tcState.campaign.temples.lens.started);
    }
    await page.waitForTimeout(2200);
