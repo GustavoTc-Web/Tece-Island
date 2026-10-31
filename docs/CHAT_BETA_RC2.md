@@ -80,8 +80,14 @@ o chat, mantendo o solo local. Sem plano pago e sem promessa de acesso ilimitado
    fora do jogo/repositório, o documento REST `chatSettings/global`, incluindo
    `updateTime`. A CLI acessível nesta revisão não tem uma conta administrativa
    ativa; portanto a leitura autenticada remota atual não foi confirmada.
-   No terminal pessoal do projeto, executar
-   `node node_modules/firebase-tools/lib/bin/firebase.js login --reauth`,
+   Neste workspace, usar o terminal da worktree isolada, preservando a branch
+   e os arquivos abertos no IDE:
+
+   ```powershell
+   Set-Location 'C:\Users\gusta\Desktop\Tece-Island\.tools\solo-beta-rc2'
+   node ../../node_modules/firebase-tools/lib/bin/firebase.js login --reauth
+   ```
+
    concluir a autenticação diretamente no navegador e depois executar
    `node tools/export-chat-beta-baseline.mjs`. Esse último comando só faz GET e
    grava regras/settings em `.tools/firebase-current`, ignorado pelo Git. Não
@@ -96,7 +102,7 @@ o chat, mantendo o solo local. Sem plano pago e sem promessa de acesso ilimitado
 3. Revisar e publicar somente as regras geradas via Firebase Console/CLI para o
    projeto `tece-island-285cd`. Nenhum passo exige habilitar faturamento.
    **Somente após decidir a abertura**, o comando é
-   `node node_modules/firebase-tools/lib/bin/firebase.js deploy --project tece-island-285cd --only firestore:rules --config .tools/chat-beta-prepared/firebase.json`.
+   `node ../../node_modules/firebase-tools/lib/bin/firebase.js deploy --project tece-island-285cd --only firestore:rules --config .tools/chat-beta-prepared/firebase.json`.
 4. Para abertura a todas as verificadas, fazer PATCH em
    `https://firestore.googleapis.com/v1/projects/tece-island-285cd/databases/(default)/documents/chatSettings/global?updateMask.fieldPaths=access_mode`
    com corpo `{"fields":{"access_mode":{"stringValue":"verified"}}}` e
