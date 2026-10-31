@@ -5,9 +5,11 @@ O navegador oferece o mapa e a campanha solo completos. Multiplayer indisponíve
 nesta beta, sem data anunciada. O piloto foi preservado e seus serviços temporários
 encerrados; veja [registro](docs/MULTIPLAYER_ADIADO_BETA.md).
 
-Candidata de revisão: **0.9.1-beta-rc.1**, save **8**, campanha **2**, tarefas **1**.
+Candidata de revisão: **0.9.1-beta-rc.2**, save **9**, campanha **2**, tarefas **2**.
 A oficial **0.9.0** continua disponível até o reteste final. Veja a
-[revisão, limites e roteiro](docs/BETA_SOLO_RC1.md).
+[revisão, limites e roteiro](docs/BETA_SOLO_RC2.md).
+O chat para novas contas está preparado, com [abertura e orçamento pendentes](docs/CHAT_BETA_RC2.md).
+A [recuperação da candidata exige cliente compatível com v9](docs/RECUPERACAO_BETA_V9.md).
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
 campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).
@@ -41,7 +43,7 @@ importantes, ao perder foco e antes de retornar ao menu ou sair da conta.
 O indicador distingue gravação local, sincronizando, sincronizado e pendência/falha
 com nova tentativa. Sincronizado exige confirmação do serviço.
 Godot usa `user://accounts/<SHA-256 do UID>/worlds/<ID>/progress.json`, temporário,
-cópia anterior `.backup.json` e backups versionados antes das migrações até v8.
+cópia anterior `.backup.json` e backups versionados antes das migrações até v9.
 O catálogo fica em `worlds.json` na pasta da conta. O save anterior dessa conta
 migra uma vez para **Meu primeiro mundo**, com verificação e backup, mantendo o
 arquivo original. Inventário, equipamento, baús, objetivos e mundo são independentes.

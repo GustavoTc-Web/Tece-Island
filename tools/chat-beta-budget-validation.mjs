@@ -37,7 +37,7 @@ try{
   await Promise.all(clients.map(async(p,index)=>{await p.waitForFunction(n=>document.querySelector('#chat-list').textContent.includes('Live '+n),n,{timeout:20000});latencies.push({index,ms:Date.now()-t});}));await clients[0].waitForTimeout(5200);
  }
  phase='closing';for(const p of clients)await p.getByRole('button',{name:'Recolher',exact:true}).click();for(const p of clients)await p.waitForFunction(()=>!tcChatSnapshot.reading&&tcChatSnapshot.requests===0);phase='closed';await clients[0].waitForTimeout(7000);check(!rows.some(x=>x.phase==='closed'),'Closed panels issue zero requests');
- for(const p of clients){await p.locator('#chat-launch').click();await p.waitForFunction(()=>!tcChatSnapshot.reading);}
+ phase='reopen';for(const p of clients){await p.locator('#chat-launch').click();await p.waitForFunction(()=>!tcChatSnapshot.reading);}
  phase='backgrounding';for(const p of clients)await p.evaluate(()=>{window.testHidden=true;Object.defineProperty(document,'hidden',{configurable:true,get:()=>window.testHidden});document.dispatchEvent(new Event('visibilitychange'));});await clients[0].waitForTimeout(1000);phase='hidden';await clients[0].waitForTimeout(7000);check(!rows.some(x=>x.phase==='hidden'),'Background tabs issue zero requests after hide');
  phase='resume';for(const p of clients)await p.evaluate(()=>{window.testHidden=false;document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('focus'));});await clients[0].waitForTimeout(1800);check(rows.some(x=>x.phase==='resume'),'Resume reconciles the current window');
  check(errors.length===0&&rows.every(x=>x.status===200),'No browser or REST errors');

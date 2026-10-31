@@ -51,8 +51,8 @@ try{
   const first=await scan();
   await page.screenshot({path:'.tools/screenshots/beta-release-'+(mobile?'mobile':'pc')+'-world.png'});
   await writeFile('.tools/beta-release-debug.json',JSON.stringify(first.value.filter(e=>e.key.includes('/world/')).map(e=>{const s=JSON.parse(e.value);return {key:e.key,elapsed:s.elapsed,player:s.player};}),null,2));
-  check(first.ok&&first.value.some(e=>e.key.includes('/world/')&&JSON.parse(e.value).version===8),'Full release creates and saves a new non-allowlisted world as v8');
-  check(first.value.some(e=>{if(!e.key.includes('/world/'))return false;const s=JSON.parse(e.value);return s.elapsed>1&&s.player?.position?.[0]>1157;}),'Play-world opens actual solo; movement and explicit save-on-hide callback persist position');
+  check(first.ok&&first.value.some(e=>e.key.includes('/world/')&&JSON.parse(e.value).version===9),'Full release creates and saves a new non-allowlisted world as v9');
+  check(first.value.some(e=>{if(!e.key.includes('/world/'))return false;const s=JSON.parse(e.value);return s.elapsed>0&&s.player?.position?.[0]>1172;}),'Play-world opens actual solo; movement and explicit save-on-hide callback persist position');
   check(firestore===0,'New solo identity makes no Firestore chat or sync requests');
   await page.screenshot({path:'.tools/screenshots/beta-release-'+(mobile?'mobile':'pc')+'-world.png'});
   await page.reload();await page.locator('#auth-email').waitFor({timeout:90000});

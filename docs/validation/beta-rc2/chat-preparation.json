@@ -1,0 +1,10 @@
+{
+  "checks": 5,
+  "passed": 5,
+  "remoteWrites": 0,
+  "syntheticAdminFixture": true,
+  "preservedWorldRules": true,
+  "accessModeOnlyPatch": true,
+  "updateTimeRequired": true,
+  "refusesUnexpectedWorldRules": true
+}

@@ -1,0 +1,275 @@
+{
+  "version": "0.9.1-beta-rc.2",
+  "game_commit": "7c254c1f8454d768228c171cf6fa040b5eb322dc",
+  "physical": false,
+  "exploratory_campaign": "not_started: computer-use stopped before manual login because URL could not be verified",
+  "native": [
+    {
+      "test": "validate_world_library",
+      "checks": 19,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_world_library.log",
+      "checked_at": "2026-10-31T04:00:08.013Z"
+    },
+    {
+      "test": "validate_account_progress",
+      "checks": 21,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_account_progress.log",
+      "checked_at": "2026-10-31T04:00:10.851Z"
+    },
+    {
+      "test": "validate_session_progress",
+      "checks": 10,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_session_progress.log",
+      "checked_at": "2026-10-31T04:00:14.036Z"
+    },
+    {
+      "test": "validate_save_reliability",
+      "checks": 20,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_save_reliability.log",
+      "checked_at": "2026-10-31T04:00:15.724Z"
+    },
+    {
+      "test": "validate_world_sync",
+      "checks": 30,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_world_sync.log",
+      "checked_at": "2026-10-31T04:00:19.964Z"
+    },
+    {
+      "test": "validate_chest_bow_save",
+      "checks": 26,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_chest_bow_save.log",
+      "checked_at": "2026-10-31T04:00:24.175Z"
+    },
+    {
+      "test": "validate_auth_release",
+      "checks": 10,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_auth_release.log",
+      "checked_at": "2026-10-31T04:00:25.831Z"
+    },
+    {
+      "test": "validate_sync_pilot",
+      "checks": 13,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_sync_pilot.log",
+      "checked_at": "2026-10-31T04:00:26.839Z"
+    },
+    {
+      "test": "validate_sync_handoff",
+      "checks": 14,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_sync_handoff.log",
+      "checked_at": "2026-10-31T04:00:31.427Z"
+    },
+    {
+      "test": "validate_solo_campaign",
+      "checks": 60,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_solo_campaign.log",
+      "checked_at": "2026-10-31T04:00:57.366Z"
+    },
+    {
+      "test": "validate_solo_combat",
+      "checks": 33,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_solo_combat.log",
+      "checked_at": "2026-10-31T04:01:00.419Z"
+    },
+    {
+      "test": "validate_solo_migration",
+      "checks": 26,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_solo_migration.log",
+      "checked_at": "2026-10-31T04:01:03.054Z"
+    },
+    {
+      "test": "validate_campaign_tasks",
+      "checks": 46,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_campaign_tasks-final.log",
+      "checked_at": "2026-10-31T04:27:03.395Z"
+    },
+    {
+      "test": "validate_tower_navigation",
+      "checks": 125,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_tower_navigation.log",
+      "checked_at": "2026-10-31T04:01:47.016Z"
+    },
+    {
+      "test": "validate_pilot_reopen",
+      "checks": 57,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_pilot_reopen.log",
+      "checked_at": "2026-10-31T04:01:51.065Z"
+    },
+    {
+      "test": "validate_controls",
+      "checks": 7,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_controls-final.log",
+      "checked_at": "2026-10-31T04:27:06.377Z"
+    },
+    {
+      "test": "validate_monsters",
+      "checks": 18,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_monsters.log",
+      "checked_at": "2026-10-31T04:01:56.217Z"
+    },
+    {
+      "test": "validate_expansion",
+      "checks": 15,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_expansion.log",
+      "checked_at": "2026-10-31T04:01:58.207Z"
+    },
+    {
+      "test": "validate_wells",
+      "checks": 12,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_wells.log",
+      "checked_at": "2026-10-31T04:02:01.020Z"
+    },
+    {
+      "test": "validate_ruins",
+      "checks": 27,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_ruins.log",
+      "checked_at": "2026-10-31T04:02:03.080Z"
+    },
+    {
+      "test": "validate_crafting",
+      "checks": 12,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_crafting.log",
+      "checked_at": "2026-10-31T04:02:05.198Z"
+    },
+    {
+      "test": "validate_journal",
+      "checks": 18,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_journal.log",
+      "checked_at": "2026-10-31T04:02:07.757Z"
+    },
+    {
+      "test": "validate_mobile",
+      "checks": 30,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_mobile-final.log",
+      "checked_at": "2026-10-31T04:27:15.434Z"
+    },
+    {
+      "test": "validate_menu",
+      "checks": 14,
+      "failures": 0,
+      "expected_error_scenario": "intentional invalid scene refused; retry succeeds",
+      "log": ".tools/validation/validate_menu.log",
+      "checked_at": "2026-10-31T04:02:19.616Z"
+    },
+    {
+      "test": "validate_presentation",
+      "checks": 51,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_presentation.log",
+      "checked_at": "2026-10-31T04:02:21.405Z"
+    },
+    {
+      "test": "validate_beta_access",
+      "checks": 14,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_beta_access-final.log",
+      "checked_at": "2026-10-31T04:26:59.144Z"
+    },
+    {
+      "test": "validate_beta_rc2",
+      "checks": 36,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_beta_rc2-final.log",
+      "checked_at": "2026-10-31T04:30:57.705Z"
+    },
+    {
+      "test": "validate_integration",
+      "checks": 31,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_integration-final.log",
+      "checked_at": "2026-10-31T04:27:20.153Z"
+    },
+    {
+      "test": "validate_stage2",
+      "checks": 28,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_stage2-final.log",
+      "checked_at": "2026-10-31T04:27:24.126Z"
+    },
+    {
+      "test": "validate_bags",
+      "checks": 25,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_bags.log",
+      "checked_at": "2026-10-31T04:02:35.255Z"
+    },
+    {
+      "test": "validate_beta_rc2_persistence",
+      "checks": 16,
+      "failures": 0,
+      "expected_error_scenario": null,
+      "log": ".tools/validation/validate_beta_rc2_persistence-final.log",
+      "checked_at": "2026-10-31T04:26:53.754Z"
+    }
+  ],
+  "suites": 31,
+  "native_checks": 864,
+  "native_failures": 0,
+  "rules": {
+    "tests": 23,
+    "passed": 23,
+    "skipped": 0,
+    "production_applied": false
+  },
+  "native_rest_chat_checks": 11,
+  "browser": {
+    "interiors_inventory": 38,
+    "crafting": 20,
+    "saves": 12,
+    "chat": 45,
+    "release_flow": 13,
+    "budget": 8
+  },
+  "metadata_note": "Broad regression run and scoped repeats; prepared technical scenarios are not exploratory gameplay."
+}

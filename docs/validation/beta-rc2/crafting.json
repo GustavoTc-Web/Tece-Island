@@ -1,0 +1,102 @@
+[
+  {
+    "touch": false,
+    "label": "Recursos sem receitas cozidas",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Fabricação por botão entrega cantil",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Categoria Ferramentas",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Busca digitada funciona",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Alimentos removidos da fabricação geral",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Fogueira com interface exclusiva",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Cozinha consome uma unidade",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Fechar restaura jogo",
+    "pass": true
+  },
+  {
+    "touch": false,
+    "label": "Sem erros do engine/navegador",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Recursos sem receitas cozidas",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Fabricação por botão entrega cantil",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Categoria Ferramentas",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Busca digitada funciona",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Alimentos removidos da fabricação geral",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Fogueira com interface exclusiva",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Cozinha consome uma unidade",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Fechar restaura jogo",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Multitouch com canvas em densidade 2",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Perda de foco libera controles",
+    "pass": true
+  },
+  {
+    "touch": true,
+    "label": "Sem erros do engine/navegador",
+    "pass": true
+  }
+]

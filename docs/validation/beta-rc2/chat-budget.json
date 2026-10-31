@@ -1,0 +1,573 @@
+{
+  "measured_at": "2026-10-31T13:50:33.842Z",
+  "environment": "Edge headless and local Firebase demo emulator",
+  "billing_measurement": false,
+  "physical": false,
+  "idle_ms": 125011,
+  "checks": [
+    {
+      "ok": true,
+      "name": "chat-a: bounded full history received"
+    },
+    {
+      "ok": true,
+      "name": "chat-new: bounded full history received"
+    },
+    {
+      "ok": true,
+      "name": "Natural idle reconciliation uses bounded count"
+    },
+    {
+      "ok": true,
+      "name": "Stable idle does not reload the full history"
+    },
+    {
+      "ok": true,
+      "name": "Closed panels issue zero requests"
+    },
+    {
+      "ok": true,
+      "name": "Background tabs issue zero requests after hide"
+    },
+    {
+      "ok": true,
+      "name": "Resume reconciles the current window"
+    },
+    {
+      "ok": true,
+      "name": "No browser or REST errors"
+    }
+  ],
+  "latencies": [
+    {
+      "index": 0,
+      "ms": 10405
+    },
+    {
+      "index": 1,
+      "ms": 18006
+    },
+    {
+      "index": 1,
+      "ms": 969
+    },
+    {
+      "index": 0,
+      "ms": 5593
+    },
+    {
+      "index": 1,
+      "ms": 2579
+    },
+    {
+      "index": 0,
+      "ms": 7478
+    }
+  ],
+  "rows": [
+    {
+      "uid": "chat-a",
+      "phase": "startup",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454409489
+    },
+    {
+      "uid": "chat-a",
+      "phase": "startup",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454409707
+    },
+    {
+      "uid": "chat-a",
+      "phase": "startup",
+      "kind": "full",
+      "status": 200,
+      "documents": 50,
+      "estimated_direct_reads": 50,
+      "time": 1793454409860
+    },
+    {
+      "uid": "chat-a",
+      "phase": "startup",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454427013
+    },
+    {
+      "uid": "chat-a",
+      "phase": "startup",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454433261
+    },
+    {
+      "uid": "chat-new",
+      "phase": "startup",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454434246
+    },
+    {
+      "uid": "chat-new",
+      "phase": "startup",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454434624
+    },
+    {
+      "uid": "chat-new",
+      "phase": "startup",
+      "kind": "full",
+      "status": 200,
+      "documents": 50,
+      "estimated_direct_reads": 50,
+      "time": 1793454435044
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454439236
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454440922
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454445376
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454446955
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454451792
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454453028
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454457873
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454458587
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454465202
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454465337
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454471252
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454471319
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454477127
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454482871
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454487435
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454489115
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454495162
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454503317
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454511202
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454519426
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454527166
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "count",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454535485
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454536484
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454537404
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454538368
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454543286
+    },
+    {
+      "uid": "chat-a",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454554759
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "count",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454559318
+    },
+    {
+      "uid": "chat-new",
+      "phase": "idle",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454560191
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454561156
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "metadata",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454562077
+    },
+    {
+      "uid": "chat-a",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454570705
+    },
+    {
+      "uid": "chat-a",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454576925
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454578233
+    },
+    {
+      "uid": "chat-a",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454583005
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454584459
+    },
+    {
+      "uid": "chat-a",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454589036
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454590568
+    },
+    {
+      "uid": "chat-a",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454595274
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454596817
+    },
+    {
+      "uid": "chat-a",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 1,
+      "estimated_direct_reads": 1,
+      "time": 1793454601772
+    },
+    {
+      "uid": "chat-new",
+      "phase": "active",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454602854
+    },
+    {
+      "uid": "chat-a",
+      "phase": "closing",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454607868
+    },
+    {
+      "uid": "chat-new",
+      "phase": "closing",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454609387
+    },
+    {
+      "uid": "chat-a",
+      "phase": "reopen",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454620640
+    },
+    {
+      "uid": "chat-new",
+      "phase": "reopen",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454623259
+    },
+    {
+      "uid": "chat-new",
+      "phase": "resume",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454633110
+    },
+    {
+      "uid": "chat-a",
+      "phase": "resume",
+      "kind": "incremental",
+      "status": 200,
+      "documents": 0,
+      "estimated_direct_reads": 1,
+      "time": 1793454633240
+    }
+  ]
+}

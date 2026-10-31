@@ -62,9 +62,70 @@ jogada. A rodada exploratória da candidata congelada usa somente UI/controles
 normais e terá registro próprio; bugs adicionais serão relatados sem correção
 automática. Não há aprovação física de PC/celular nesta revisão.
 
-Os registros finais de pacote, commit, deploy, testes e rodada exploratória serão
-acrescentados após congelar o código. O endereço de reteste permanece
-https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/ .
+## Pacote publicado e resultados
+
+[Candidata privada](https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/):
+**0.9.1-beta-rc.2**, commit do jogo congelado
+`7c254c1f8454d768228c171cf6fa040b5eb322dc`.
+Fonte Sites `60648858bd92fc1b4167195e2022652af82d570a`, versão interna **2**,
+deploy `appgdep_6ae5f16c3c588191a57d1e99716b5ae8` **succeeded** em
+31/10/2026 às 10:47 BRT. PCK SHA-256:
+`e0f00a948d7406efef529a0899dad7ee8c2ba58e7dced408e0d47af0ba83d300`.
+O Site mantém um proprietário autorizado e zero visitantes externos; não foi
+aberto ao público. O solo aceita contas Firebase verificadas, mas a hospedagem
+da candidata continua privada até a decisão de lançamento.
+
+Conferidos por HTTP autorizado o manifesto e os 19 arquivos servidos, incluindo
+PCK, JS, cinco partes do WASM, fontes, licenças e worklets. O HTML conserva todo
+o shell com uma inserção do provedor. O PCK foi aberto em projeto vazio: contém
+o script do piso corrigido, save 9/tarefas 2 e as mesmas duas contas; não contém
+a fixture de teste nem regras/credenciais administrativas. Nenhum deploy Firebase
+foi feito. [Deploy](validation/beta-rc2/deployment.json),
+[arquivos servidos](validation/beta-rc2/published.json).
+
+[Resultados técnicos](validation/beta-rc2.json): 31 suítes nativas, **864 checks**,
+zero falhas finais; houve regressão ampla e repetições dos checks afetados após
+os ajustes. A suíte de menu recusa intencionalmente uma cena inválida e confirma
+a nova tentativa; o log esperado dessa recusa não é falha do jogo. Regras: **23
+testes, zero skips**, incluindo protocolo REST de saves. Transporte de chat
+nativo: 11 checks. Na Web: **38** de interiores/inventário, **20** de fabricação/
+multitouch, **12** de persistência, **45** de chat e **13** do cliente completo.
+O orçamento do chat tem oito checks de tráfego local, além das projeções.
+
+As capturas finais mostram o personagem inteiro junto à parede traseira e o
+loot visível no quarto inferior do templo:
+[casa PC](validation/beta-rc2/after-house-upper-left-pc.png),
+[casa mobile emulada](validation/beta-rc2/after-house-upper-left-mobile.png),
+[templo e loot](validation/beta-rc2/after-temple-lower-left-drops-mobile.png),
+[arrasto](validation/beta-rc2/inventory-drag-preview-pc.png).
+Os testes caminham com teclado/joystick por cenários preparados, abrem/recolhem
+baús e reabrem pelo AccountProgress/IndexedDB. IA/relógio podem estar congelados
+nesse teste de desenho. Isso é diferente de jogar a campanha normal.
+
+O cliente completo foi exercitado em perfis separados nos formatos PC e mobile,
+com respostas Auth simuladas só no transporte do navegador; identidades falsas
+não foram enviadas ao Firebase. Criou mundo, moveu, salvou v9 e conservou dados
+no reload, sem pedidos Firestore de uma conta nova não habilitada para sync/chat.
+Isso não aprova login positivo real nem desempenho físico. O tempo de carga
+coletado nessas execuções teve caches/atividades de QA diferentes e não representa
+uma comparação de velocidade entre aparelhos.
+
+Migração real de uma cópia v8 preservou exatamente `.before-v9.json`; guardião
+ferido/derrotado, loot e permissões usadas de sono sobreviveram à reabertura sem
+duplicação. O pacote oficial v8 recusou uma cópia v9 sem alterar seus bytes.
+[Persistência](validation/beta-rc2/old-client-v9.json) e
+[recuperação v9](RECUPERACAO_BETA_V9.md).
+
+**Rodada exploratória: não iniciada.** O controle do Edge foi encerrado antes do
+login por não conseguir verificar a URL com segurança. Não houve criação de mundo
+exploratório nem vitória nesta rodada. [Ponto exato, evidência e próximos passos](RELATORIO_EXPLORATORIO_RC2.md).
+Nenhum bug adicional da campanha foi confirmado sem esse percurso; não é uma
+aprovação da ausência de bugs. A campanha e os testes físicos continuam pendentes.
+
+A oficial continua **0.9.0**, jogo `15ba9685`, `main` `c790758`, com manifesto/hash
+originais conferidos novamente em 31/10. Seu checkout do IDE conserva a alteração
+local em `project.godot`. Multiplayer permanece em `a8ab12f`, adiado; seus serviços
+temporários já estavam ausentes, sem reinício de sala em RAM nesta revisão.
 
 ## Reteste físico enxuto
 

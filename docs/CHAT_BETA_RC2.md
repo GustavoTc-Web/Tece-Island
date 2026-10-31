@@ -17,7 +17,7 @@ no backend, histórico circular de 100 documentos e janela de 50. Somente os
 administradores já indicados em `admin_uids` podem remover mensagens. Clientes,
 inclusive administradores, não podem alterar `chatSettings/global`.
 
-As regras de mundos permanecem byte a byte iguais antes do bloco de chat:
+No arquivo preparado, as regras de mundos permanecem byte a byte iguais à base RC1 antes do bloco de chat:
 isolam dados pelo UID e validam versões/batches. A habilitação de sincronização
 para duas contas é uma configuração do cliente já existente; não se deve
 apresentá-la como uma nova allowlist de segurança no backend. Não foi ampliada.
@@ -80,18 +80,28 @@ o chat, mantendo o solo local. Sem plano pago e sem promessa de acesso ilimitado
    fora do jogo/repositório, o documento REST `chatSettings/global`, incluindo
    `updateTime`. A CLI acessível nesta revisão não tem uma conta administrativa
    ativa; portanto a leitura autenticada remota atual não foi confirmada.
+   No terminal pessoal do projeto, executar
+   `node node_modules/firebase-tools/lib/bin/firebase.js login --reauth`,
+   concluir a autenticação diretamente no navegador e depois executar
+   `node tools/export-chat-beta-baseline.mjs`. Esse último comando só faz GET e
+   grava regras/settings em `.tools/firebase-current`, ignorado pelo Git. Não
+   colocar senha, token, chave de serviço ou credencial administrativa no jogo,
+   no repositório ou na conversa.
 2. Preparar sem escrever remotamente:
 
-   `node tools/prepare-chat-beta.mjs --base REGRAS_EXPORTADAS --settings SETTINGS_EXPORTADO --mode verified`
+   `node tools/prepare-chat-beta.mjs --base .tools/firebase-current/firestore.rules --settings .tools/firebase-current/settings.json --mode verified`
 
    O comando exige que tudo fora de `chatAccess()` coincida com as regras desta
    revisão. Se houver divergência, interrompe sem sobrescrever proteções.
 3. Revisar e publicar somente as regras geradas via Firebase Console/CLI para o
    projeto `tece-island-285cd`. Nenhum passo exige habilitar faturamento.
+   **Somente após decidir a abertura**, o comando é
+   `node node_modules/firebase-tools/lib/bin/firebase.js deploy --project tece-island-285cd --only firestore:rules --config .tools/chat-beta-prepared/firebase.json`.
 4. Para abertura a todas as verificadas, fazer PATCH em
    `https://firestore.googleapis.com/v1/projects/tece-island-285cd/databases/(default)/documents/chatSettings/global?updateMask.fieldPaths=access_mode`
    com corpo `{"fields":{"access_mode":{"stringValue":"verified"}}}` e
-   `currentDocument.updateTime` igual ao documento recém-lido. Isso preserva
+   acrescentar à URL `&currentDocument.updateTime=` seguido do `updateTime`
+   recém-lido, codificado para URL. Isso preserva
    `enabled`, `allowed_uids`, `admin_uids` e todo o histórico. **Não substituir o
    documento inteiro nem usar o template antigo com `admin_uids: []`.**
 5. No cliente, exportar com `TECE_CHAT_AUDIENCE=verified`; o servidor continua
@@ -111,3 +121,27 @@ Não aplicado nesta revisão: deploy de regras Firebase, mudança em settings,
 adição de convidados, alterações de administradores, faturamento ou sync público.
 O site de revisão também continua privado. Testes positivos com contas reais
 novas, cadastro/confirmar e-mail e operação pública dependem da etapa de acesso.
+
+## Medições desta revisão, separadas das projeções
+
+Em 31/10/2026, dois clientes Edge headless usaram o Firebase demo local, sendo
+um UID novo fora da lista original. Durante 125 segundos sem mensagens novas,
+foram observadas 14 e 15 requisições por cliente, sem reconsulta do histórico
+completo. A contagem natural de reconciliação ocorreu nos dois. Os JSONs indicam
+14/15 leituras diretas mínimas estimadas nesse intervalo; as leituras dependentes
+das regras são a reserva do modelo, não telemetria de cobrança do emulador.
+
+Fechar os painéis e aguardar sete segundos produziu zero novas requisições;
+abas ocultas por sete segundos também produziram zero. Reabrir/retornar iniciou
+a reconciliação. Três inserções observadas em ambos os clientes chegaram em
+aproximadamente 1,0–18,0 s na repetição final; o caso mais lento veio depois do
+período ocioso. O intervalo de polling ocioso é de 15 s, mas não é garantia de
+tempo máximo de entrega; esta medição inclui agendamento/processamento do ambiente.
+Isso mede entrega por polling local,
+não RTT de produção ou desempenho físico. Os valores exatos da repetição final
+estão em [chat-budget.json](validation/beta-rc2/chat-budget.json).
+
+Os testes de falha/reconexão, backoff, remoção natural e controles com chat
+somam 45 checks Web. Não houve uso de contas, mensagens, cobrança ou medição de
+consumo real do projeto de produção. Aberturas, consultas vazias e metadados
+foram contados no tráfego; o planejamento adiciona a reserva das regras.
