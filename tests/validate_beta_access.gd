@@ -20,6 +20,12 @@ func run() -> void:
 	chat.uid = auth.account_uid()
 	check(auth.can_play(), "New verified identity can access solo without the closed-test allowlist")
 	check(not sync.enabled(auth.account_uid()) and not chat.available(), "New identity cannot access closed chat or cloud saves")
+	chat.config.audience = "verified"
+	check(chat.available() and not sync.enabled(auth.account_uid()), "Prepared verified chat audience never enables world sync for a new UID")
+	auth._verified = false
+	check(not chat.available(), "Unverified account cannot use prepared public chat")
+	auth._verified = true
+	chat.config.audience = "allowlist"
 	var menu: Control = load("res://scenes/menu.tscn").instantiate()
 	root.add_child(menu)
 	await process_frame
@@ -55,7 +61,7 @@ func run() -> void:
 	check(help.retry_button.text == "Salvar neste aparelho", "Local save action does not promise unavailable synchronization")
 	check(await world.save_progress(true), "New account acquires a durable local save")
 	var saved: Dictionary = await account.read(self)
-	check(saved.get("version") == 8 and saved.get("owner_uid") == library.uid and saved.get("world_id") == id, "Save v8 is correctly owned and isolated")
+	check(saved.get("version") == SaveStore.VERSION and saved.get("owner_uid") == library.uid and saved.get("world_id") == id, "Current save is correctly owned and isolated")
 	world.queue_free()
 	await process_frame
 	check((await account.read(self)).get("world_id") == id, "Closing the world preserves its local bytes")

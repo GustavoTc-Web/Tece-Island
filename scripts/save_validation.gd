@@ -18,6 +18,7 @@ static func valid(data: Variant, uid: String = "", world_id: String = "") -> boo
 	if sync.has("intent") and (not sync.intent is Dictionary or int(sync.intent.get("revision", 0)) <= 0 or not sync.intent.get("hash") is String or RegEx.create_from_string("^[a-f0-9]{64}$").search(sync.intent.hash) == null): return false
 	if data.has("region_wells") and not NaturalWells.valid_metadata(data.region_wells): return false
 	if data.has("region_buildings") and not RegionalBuildings.valid(data.region_buildings): return false
+	if not AbandonedBuilding.valid_interiors(data.get("building_interiors", {})): return false
 	var inventory := ResourceInventory.new()
 	var ok := inventory.restore_state(data.inventory)
 	inventory.free()

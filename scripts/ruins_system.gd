@@ -25,4 +25,5 @@ func initialize(world: Node2D, seed_value: int) -> void:
 			guard.territory_radius = 430
 			guard.position = temple.position + Vector2(170, -70)
 			world.get_node("WorldObjects").add_child(guard)
+			temple.register_guard(guard)
 			guardians.append(guard)

@@ -145,7 +145,13 @@ func has_line_of_sight(point: Vector2) -> bool:
 	return get_world_2d().direct_space_state.intersect_ray(ray).is_empty()
 
 
+func interior_awake() -> bool:
+	if not has_meta("interior_owner"): return true
+	var owner: Node2D = get_meta("interior_owner")
+	return is_instance_valid(owner) and owner.interior_revealed
+
 func try_attack() -> bool:
+	if not interior_awake(): return false
 	if not simulation_authority or dead or fading or get_tree().paused or not is_instance_valid(player) or player.dead:
 		return false
 	if attack_cooldown > 0.0 or global_position.distance_to(player.global_position) > attack_range:
@@ -283,6 +289,7 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not interior_awake(): return
 	if not simulation_authority or dead or fading or not is_instance_valid(player):
 		return
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)

@@ -44,7 +44,7 @@ try{
  start=Date.now();await b.locator('#chat-text').fill('Sim! Recebi aqui no celular.');await b.locator('#chat-text').press('Enter');await settled(b);await a.waitForFunction(()=>document.querySelector('#chat-list').textContent.includes('Recebi aqui'),null,{timeout:20000});latencies.push({phase:'lobby-mobile-pc',ms:Date.now()-start});
  check(await textCount(a,'Recebi aqui')===1,'resposta da sessão mobile chega ao PC');
  // Force past the client cooldown. The actual service rules still reject it.
- await command(b,{action:'force_send',text:'SPAM RECUSADO'});await b.waitForFunction(()=>tcChatSnapshot.status.includes('negado'));
+ await command(b,{action:'force_send',text:'SPAM RECUSADO'});await b.waitForFunction(()=>tcChatSnapshot.status.includes('HTTP 403'));
  check(await textCount(b,'SPAM RECUSADO')===0,'backend recusa excesso mesmo removendo o timer do cliente');
  await a.waitForTimeout(17000);check(await a.locator('#chat-panel').isVisible()&&await b.locator('#chat-panel').isVisible()&&await textCount(a,'Recebi aqui')===1,'dois painéis permanecem abertos por mais de 15 s, sem consulta forçada ou duplicação');
  check(await a.locator('#chat-retry').isHidden()&&await b.locator('#chat-retry').isHidden(),'Tentar conexão só aparece quando existe falha');

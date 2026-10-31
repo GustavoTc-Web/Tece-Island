@@ -125,14 +125,14 @@ func layout() -> void:
 			button.clip_text = true
 
 func diagnostic() -> String:
-	var stamp := {"version":"0.9.1-beta-rc.1", "commit":"desenvolvimento"}
+	var stamp := {"version":"0.9.1-beta-rc.2", "commit":"desenvolvimento"}
 	if FileAccess.file_exists("res://config/build-public.json"):
 		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://config/build-public.json"))
 		if data is Dictionary: stamp = data
 	var screen := DisplayServer.window_get_size()
 	if OS.has_feature("web"):
 		screen = Vector2i(int(JavaScriptBridge.eval("innerWidth")), int(JavaScriptBridge.eval("innerHeight")))
-	var info := "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.9.1-beta-rc.1")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
+	var info := "TC Island %s\nCommit: %s\nPlataforma: %s\nResolução: %d×%d\nOrientação: %s" % [str(stamp.get("version", "0.9.1-beta-rc.2")), str(stamp.get("commit", "desenvolvimento")), "Web" if OS.has_feature("web") else OS.get_name(), screen.x, screen.y, "retrato" if screen.y > screen.x else "paisagem"]
 	if OS.has_feature("web"): info += "\nOrigem: " + str(JavaScriptBridge.eval("location.origin"))
 	var world := hud.get_parent()
 	if world.get("account_store") != null and world.get("progress_store") != null:

@@ -26,7 +26,7 @@ func run() -> void:
 	world.get_node("EnemySpawner").set_physics_process(false)
 	world.get_node("WorldObjects/Player").set_physics_process(false)
 	await step()
-	check(FileAccess.get_file_as_string(path + ".before-v8.json") == original, "Backup v8 preserva bytes do save produzido pela 0.8.3")
+	check(FileAccess.get_file_as_string(path + ".before-v9.json") == original, "Backup v8 preserva bytes do save produzido pela 0.8.3")
 	var current: Dictionary = world.progress_store.capture()
 	check(current.version == SaveStore.VERSION and world.world_seed == old.world_seed, "Migração conserva semente e versiona formato")
 	check(same(current.inventory, old.inventory), "Inventário antigo conserva itens e atributos")
@@ -56,7 +56,7 @@ func run() -> void:
 		if button is Button and button.text == "Acessar sinalizador pela base": recovery_found = true
 	check(recovery_found, "Ação de recuperação aparece para construção antiga preservada")
 	await world.save_progress(true)
-	check(FileAccess.get_file_as_string(path + ".before-v8.json") == original and FileAccess.get_file_as_string(path + ".before-campaign-v1.json") == original, "Primeira gravação conserva ambos os backups originais")
+	check(FileAccess.get_file_as_string(path + ".before-v9.json") == original and FileAccess.get_file_as_string(path + ".before-campaign-v1.json") == original, "Primeira gravação conserva ambos os backups originais")
 	var saved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
 	check(saved.version == SaveStore.VERSION and saved.campaign.components.is_empty(), "Mundo v5 chega ao v8 sem etapas inventadas")
 	# Produce a future-format fixture for the unchanged 0.8.3 rejection probe.
@@ -90,7 +90,7 @@ func run() -> void:
 	check(not world.campaign.start_encounter() and world.campaign.activation_requirement().contains("mapa"), "Reparo antigo não salta requisito do mapa")
 	await world.save_progress(true)
 	await world.save_progress(true)
-	check(FileAccess.get_file_as_string(store.path + ".before-v8.json") == original and FileAccess.get_file_as_string(store.path + ".before-campaign-v2.json") == original, "Backups v6 e campanha 1 são exatos e idempotentes")
+	check(FileAccess.get_file_as_string(store.path + ".before-v9.json") == original and FileAccess.get_file_as_string(store.path + ".before-campaign-v2.json") == original, "Backups v6 e campanha 1 são exatos e idempotentes")
 	world.queue_free()
 	await step()
 	for count in range(4):

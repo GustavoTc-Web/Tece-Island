@@ -11,6 +11,7 @@ var network_mode: bool = false
 var inventory: ResourceInventory
 var recipe_buttons: Dictionary = {}
 var slot_buttons: Array[Button] = []
+var inventory_drag_active := false
 var selected_slot: int = -1
 var current_panel: String = ""
 var showing_death: bool = false
@@ -278,6 +279,9 @@ func _sync_slots() -> void:
 		button.add_theme_font_size_override("font_size", 12)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(select_slot.bind(index))
+		button.drag_hud = self
+		button.drag_inventory = inventory
+		button.drag_index = index
 		$InventoryPanel/Panel/Scroll/Rows/Slots.add_child(button)
 		slot_buttons.append(button)
 
@@ -292,6 +296,10 @@ func _remove_backpack() -> void:
 
 func _input(event: InputEvent) -> void:
 	if GlobalChat.opened: return
+	if inventory_drag_active and event is InputEventKey and event.pressed:
+		if event.is_action_pressed("close_panel"): set_panel("")
+		get_viewport().set_input_as_handled()
+		return
 	if showing_death or event.is_echo():
 		return
 	if current_panel == "saving":

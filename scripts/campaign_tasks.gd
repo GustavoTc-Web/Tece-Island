@@ -1,7 +1,7 @@
 class_name CampaignTasks
 extends RefCounted
 signal changed
-const VERSION := 1
+const VERSION := 2
 const CRAFT_IDS := ["machado_madeira", "picareta_madeira", "espada_pedra", "machado_pedra", "picareta_pedra", "fogueira", "mochila", "armadura_pedra", "arco", "cantil"]
 const STAGES := [
 	{"title": "Dia 1 · Kit inicial", "day": 1, "tasks": ["axe", "pick", "sword", "fire"]},
@@ -18,14 +18,18 @@ var crafted: Array[String] = []
 var inferred: Array[String] = []
 var collapsed := false
 var last_signature := ""
+var completed_stages: Array[int] = []
+var sleep_credits: Array[int] = []
+var sleep_used: Array[int] = []
+var sleep_baseline := false
 
 func capture() -> Dictionary:
-	return {"version": VERSION, "crafted": crafted.duplicate(), "inferred": inferred.duplicate(), "collapsed": collapsed}
+	return {"version": VERSION, "crafted": crafted.duplicate(), "inferred": inferred.duplicate(), "collapsed": collapsed, "completed_stages":completed_stages.duplicate(), "sleep_credits":sleep_credits.duplicate(), "sleep_used":sleep_used.duplicate()}
 
 static func valid(data: Variant) -> bool:
 	if not data is Dictionary: return false
 	if data.is_empty(): return true
-	if data.get("version") != VERSION or not data.get("collapsed") is bool: return false
+	if (data.get("version") != 1 and data.get("version") != VERSION) or not data.get("collapsed") is bool: return false
 	if not data.get("crafted") is Array or not data.get("inferred") is Array: return false
 	var seen := {}
 	for id in data.crafted:
@@ -35,6 +39,21 @@ static func valid(data: Variant) -> bool:
 	for id in data.inferred:
 		if id not in seen or evidence.has(id): return false
 		evidence[id] = true
+	if data.version == VERSION:
+		var stages := {}
+		for field in ["completed_stages", "sleep_credits", "sleep_used"]:
+			if not data.get(field) is Array: return false
+			var unique := {}
+			for value in data[field]:
+				if not (value is int or value is float) or value != int(value) or value < 0 or value > 5: return false
+				var key := str(int(value))
+				if unique.has(key): return false
+				unique[key] = true
+			stages[field] = unique
+		for key in stages.sleep_credits:
+			if not stages.completed_stages.has(key) or stages.sleep_used.has(key): return false
+		for key in stages.sleep_used:
+			if not stages.completed_stages.has(key): return false
 	return true
 
 func restore(data: Dictionary) -> bool:
@@ -42,6 +61,11 @@ func restore(data: Dictionary) -> bool:
 	crafted.assign(data.get("crafted", []))
 	inferred.assign(data.get("inferred", []))
 	collapsed = data.get("collapsed", false)
+	completed_stages.assign(data.get("completed_stages", []))
+	sleep_credits.assign(data.get("sleep_credits", []))
+	sleep_used.assign(data.get("sleep_used", []))
+	# Legacy snapshots establish a baseline, never retroactively grant sleep.
+	sleep_baseline = data.get("version", 1) == 1
 	return true
 
 func record_crafted(id: String, from_save: bool = false) -> void:
@@ -55,23 +79,41 @@ func record_crafted(id: String, from_save: bool = false) -> void:
 	elif not from_save and id in inferred:
 		inferred.erase(id)
 		modified = true
-	if modified: changed.emit()
+	if modified:
+		refresh_live()
+		changed.emit()
 
 func initialize(source: Node2D) -> void:
 	world = source
 	world.get_node("Inventory").changed.connect(refresh_live)
 	world.campaign.changed.connect(refresh_live)
 	world.get_node("DayNight").clock_changed.connect(func(_day, _phase, _remaining): refresh_live())
+	call_deferred("refresh_live")
 
 func refresh_live(_a: Variant = null, _b: Variant = null) -> void:
-	if not is_instance_valid(world): return
+	if not is_instance_valid(world) or world.loading_progress: return
 	# Current conditions are derived, never added to a cumulative counter.
 	var snapshot := [automatic_stage()]
 	for stage in range(STAGES.size()): snapshot.append(rows(stage))
+	var day: int = world.get_node("DayNight").day_number
+	for stage in range(6):
+		if stage in completed_stages: continue
+		if not snapshot[stage + 1].all(func(row): return row.done): continue
+		completed_stages.append(stage)
+		if not sleep_baseline and day > int(STAGES[stage].day): sleep_credits.append(stage)
+	sleep_baseline = false
+	snapshot.append([completed_stages, sleep_credits, sleep_used])
 	var signature := JSON.stringify(snapshot)
 	if signature != last_signature:
 		last_signature = signature
 		changed.emit()
+
+func consume_sleep_credit() -> bool:
+	if sleep_credits.is_empty(): return false
+	var stage: int = sleep_credits.pop_front()
+	sleep_used.append(stage)
+	changed.emit()
+	return true
 
 func ever(id: String) -> bool:
 	if id == "machado_madeira": return id in crafted or "machado_pedra" in crafted

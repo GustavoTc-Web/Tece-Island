@@ -50,7 +50,7 @@ func _ready() -> void:
 	brand.add_theme_constant_override("outline_size", 6)
 	main.add_child(brand)
 	release_note = Label.new()
-	release_note.text = "Beta solo · 0.9.1-beta-rc.1"
+	release_note.text = "Beta solo · 0.9.1-beta-rc.2"
 	release_note.add_theme_color_override("font_color", IslandTheme.AMBER)
 	main.add_child(release_note)
 	main_rows = VBoxContainer.new()

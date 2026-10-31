@@ -60,7 +60,7 @@ func _ready() -> void:
 	timer.start()
 
 func available() -> bool:
-	return config.get("enabled", false) == true and uid != "" and uid in config.get("allowed_uids", [])
+	return config.get("enabled", false) == true and uid != "" and FirebaseAuth.has_session() and (config.get("audience", "allowlist") == "verified" or uid in config.get("allowed_uids", []))
 
 func reset_session() -> void:
 	uid = ""
@@ -329,7 +329,7 @@ func failure(result: Dictionary, operation: String = "Chat") -> String:
 	var detail := " (HTTP %d%s)" % [http, " · " + code if code != "" else ""] if http > 0 else ""
 	match int(result.get("status", 0)):
 		401: return operation + ": sessão expirada. Entre novamente." + detail
-		403: return operation + ": acesso negado. Confira e-mail verificado, acesso e regras; no envio, aguarde 5 s." + detail
+		403: return "Chat indisponível nesta etapa ou envio antes do intervalo de 5 s. O solo continua disponível." + detail
 		404: return operation + ": chat não configurado no Firebase." + detail
 		429: return operation + ": cota do serviço atingida. Tente mais tarde." + detail
 		400, 412: return operation + ": consulta recusada. Confira as regras e o índice de sequence." + detail

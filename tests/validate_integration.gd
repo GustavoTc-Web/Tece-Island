@@ -123,7 +123,8 @@ func run() -> void:
 	tap(KEY_R)
 	check(weapons.reloading == "pistola", "Atalho R inicia recarga")
 	weapons._physics_process(2)
-	check(hud.get_node("Controls/Rows/Equipment").text.contains("8/8 carregada"), "HUD mostra carregada e reserva")
+	await step()
+	check(inv.loaded_ammo("pistola") == 8 and hud.get_node("Controls/Rows/Equipment").text.contains("8/8") and hud.get_node("Controls/Rows/Equipment").text.contains("reserva"), "HUD mostra carregada e reserva")
 	var before: int = inv.loaded_ammo("pistola")
 	var point: Vector2 = player.get_canvas_transform() * (player.position + Vector2(150, 0))
 	mouse(point)
@@ -170,8 +171,11 @@ func run() -> void:
 	await step()
 	var inside := true
 	for button in hud.recipe_buttons.values():
-		inside = inside and root.get_visible_rect().encloses(button.get_global_rect())
-	check(inside, "Botões de todas as receitas cabem na resolução padrão")
+		# Categories and the scroll intentionally keep offscreen rows. Check the
+		# interactive rows currently inside the scroll viewport, not hidden groups.
+		if button.is_visible_in_tree() and button.get_global_rect().intersects(hud.get_node("Crafting/Panel/Rows/Scroll").get_global_rect()):
+			inside = inside and root.get_visible_rect().encloses(button.get_global_rect())
+	check(inside, "Botões das receitas visíveis cabem na resolução padrão")
 	hud.set_panel("")
 	print("INTEGRAÇÃO: %d verificações, %d falhas" % [checks, failures])
 	world.queue_free()

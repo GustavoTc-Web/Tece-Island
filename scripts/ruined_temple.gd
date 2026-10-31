@@ -13,6 +13,7 @@ func _ready() -> void:
 	for side in [-1, 1]:
 		wall(Vector2(0, side * 150), Vector2(14, 180))
 		wall(Vector2(side * 205, 0), Vector2(290, 14))
+	create_floor()
 
 func populate_temple(random: RandomNumberGenerator, budget: int) -> void:
 	if initialized: return
@@ -31,15 +32,17 @@ func populate_temple(random: RandomNumberGenerator, budget: int) -> void:
 		var item: String = choices[random.randi_range(0, choices.size() - 1)]
 		chest.contents[item] = int(chest.contents.get(item, 0)) + 1
 
-func _draw() -> void:
-	draw_rect(Rect2(-350, -240, 700, 480), Color("626069"))
+func draw_floor(canvas: Node2D) -> void:
+	canvas.draw_rect(Rect2(-350, -240, 700, 480), Color("626069"))
 	for x in range(-330, 331, 42):
 		for y in range(-220, 221, 42):
-			draw_rect(Rect2(x, y, 38, 38), Color("6b6972") if posmod(x + y, 3) == 0 else Color("56555e"), false, 2)
+			canvas.draw_rect(Rect2(x, y, 38, 38), Color("6b6972") if posmod(x + y, 3) == 0 else Color("56555e"), false, 2)
+	canvas.draw_rect(Rect2(-350, -240, 700, 18), Color("8c8190"))
+	for x in [-350, 350]: canvas.draw_rect(Rect2(x - 25, -260, 50, 42), Color("9b8a9c"))
+
+func _draw() -> void:
 	for x in [-350, 350]:
 		draw_rect(Rect2(x - 9, -240, 18, 480), Color("8c8190"))
-		draw_rect(Rect2(x - 25, -260, 50, 42), Color("9b8a9c"))
-	draw_rect(Rect2(-350, -240, 700, 18), Color("8c8190"))
 	for side in [-1, 1]:
 		draw_rect(Rect2(side * 205 - 145, 231, 290, 18), Color("8c8190"))
 		draw_rect(Rect2(-7, side * 150 - 90, 14, 180), Color("827688"))

@@ -51,7 +51,9 @@ func command(args: Array) -> void:
 			world.get_node("EnemySpawner").set_physics_process(false)
 			world.get_node("Animals").set_physics_process(false)
 			world.get_node("DayNight").set_physics_process(false)
-			for enemy in get_tree().get_nodes_in_group("enemies"): enemy.set_physics_process(false)
+			for enemy in get_tree().get_nodes_in_group("enemies"):
+				enemy.set_physics_process(false)
+				enemy.simulation_authority = false
 		"tasks_craft": inv.craft(str(request.id))
 		"tasks_equip_armor": inv.equip_armor(int(request.index))
 		"tasks_use": player.get_node("Needs").use_slot(inv, int(request.index))
@@ -305,6 +307,13 @@ func _process(_delta: float) -> void:
 		data.temples = []
 		for temple in world.ruins.temples: data.temples.append([temple.position.x, temple.position.y])
 		data.player_screen = [player.get_global_transform_with_canvas().origin.x, player.get_global_transform_with_canvas().origin.y]
+		data.interaction_text = hud.get_node("Controls/Rows/Pickup").text if hud.has_node("Controls/Rows/Pickup") else ""
+		data.nearby_drops = []
+		for drop in get_tree().get_nodes_in_group("resource_drops"):
+			if drop.global_position.distance_to(player.position) < 500:
+				var point: Vector2 = drop.get_global_transform_with_canvas().origin
+				data.nearby_drops.append({"item":drop.resource,"quantity":drop.quantity,"position":[drop.position.x,drop.position.y],"screen":[point.x,point.y]})
+		data.dragging_inventory = hud.inventory_drag_active
 		data.backpack = inv.backpack
 		data.journal = world.journal.capture()
 		data.objectives = world.objectives.capture()

@@ -286,6 +286,9 @@ func swap_slots(a: int, b: int) -> bool:
 	var temp := _slots[a]
 	_slots[a] = _slots[b]
 	_slots[b] = temp
+	# Selection follows the equipped stack, including its UID, water and magazine.
+	if selected_index == a: selected_index = b
+	elif selected_index == b: selected_index = a
 	_notify()
 	return true
 
