@@ -36,6 +36,8 @@ Firestore gratuito: 50.000 leituras, 20.000 gravações e 20.000 exclusões/dia;
 1 GiB armazenado e 10 GiB de saída/mês. A cota diária reinicia à meia-noite do
 Pacífico. Consultas vazias e contagens pequenas também têm leitura mínima;
 documentos consultados pelas regras podem consumir leituras adicionais.
+Limites e semântica do PATCH reconferidos nas fontes oficiais em 01/11/2026;
+as projeções abaixo não foram transformadas em medições de produção.
 
 Modelo de planejamento, **não medição de faturamento**:
 
@@ -76,57 +78,154 @@ o chat, mantendo o solo local. Sem plano pago e sem promessa de acesso ilimitado
 
 ## Aplicação exata, ainda pendente
 
-1. Exportar as regras atualmente publicadas e obter, com acesso administrativo
-   fora do jogo/repositório, o documento REST `chatSettings/global`, incluindo
-   `updateTime`. A CLI acessível nesta revisão não tem uma conta administrativa
-   ativa; portanto a leitura autenticada remota atual não foi confirmada.
-   Neste workspace, usar o terminal da worktree isolada, preservando a branch
-   e os arquivos abertos no IDE:
+Em 01/11, a CLI acessível continua sem sessão; não houve leitura autenticada
+atual de regras/settings nem aplicação em produção. A configuração do PCK
+publicado continua em allowlist com duas contas. Os passos abaixo são preparação
+para depois da decisão de acesso; nenhum deles foi executado remotamente aqui.
 
-   ```powershell
-   Set-Location 'C:\Users\gusta\Desktop\Tece-Island\.tools\solo-beta-rc2'
-   node ../../node_modules/firebase-tools/lib/bin/firebase.js login --reauth
-   ```
+### Autenticar e preservar a base
 
-   concluir a autenticação diretamente no navegador e depois executar
-   `node tools/export-chat-beta-baseline.mjs`. Esse último comando só faz GET e
-   grava regras/settings em `.tools/firebase-current`, ignorado pelo Git. Não
-   colocar senha, token, chave de serviço ou credencial administrativa no jogo,
-   no repositório ou na conversa.
-2. Preparar sem escrever remotamente:
+No terminal pessoal, na worktree isolada, sem alterar a branch do IDE:
 
-   `node tools/prepare-chat-beta.mjs --base .tools/firebase-current/firestore.rules --settings .tools/firebase-current/settings.json --mode verified`
+```powershell
+Set-Location 'C:\Users\gusta\Desktop\Tece-Island\.tools\solo-beta-rc2'
+node ../../node_modules/firebase-tools/lib/bin/firebase.js login --reauth
+node tools/export-chat-beta-baseline.mjs
+```
 
-   O comando exige que tudo fora de `chatAccess()` coincida com as regras desta
-   revisão. Se houver divergência, interrompe sem sobrescrever proteções.
-3. Revisar e publicar somente as regras geradas via Firebase Console/CLI para o
-   projeto `tece-island-285cd`. Nenhum passo exige habilitar faturamento.
-   **Somente após decidir a abertura**, o comando é
-   `node ../../node_modules/firebase-tools/lib/bin/firebase.js deploy --project tece-island-285cd --only firestore:rules --config .tools/chat-beta-prepared/firebase.json`.
-4. Para abertura a todas as verificadas, fazer PATCH em
-   `https://firestore.googleapis.com/v1/projects/tece-island-285cd/databases/(default)/documents/chatSettings/global?updateMask.fieldPaths=access_mode`
-   com corpo `{"fields":{"access_mode":{"stringValue":"verified"}}}` e
-   acrescentar à URL `&currentDocument.updateTime=` seguido do `updateTime`
-   recém-lido, codificado para URL. Isso preserva
-   `enabled`, `allowed_uids`, `admin_uids` e todo o histórico. **Não substituir o
-   documento inteiro nem usar o template antigo com `admin_uids: []`.**
-5. No cliente, exportar com `TECE_CHAT_AUDIENCE=verified`; o servidor continua
-   sendo a autoridade. `TECE_PILOT_ALLOWED_UIDS` conserva exatamente os dois UIDs
-   originais da sincronização. `world-sync.json` não deve receber novos UIDs.
-6. Para a alternativa inicial de convites: manter `access_mode=allowlist` (ou
-   ausente), adicionar somente os convidados a `chatSettings/global.allowed_uids`
-   e ao arquivo **global-chat.json** do cliente. Preservar a lista de sync com
-   duas contas e a lista administrativa atual. A ferramenta de exportação padrão
-   desta RC2 continua restrita às duas; preparar outra candidata de acesso após
-   a decisão sobre o grupo, sem alterar mecânicas.
-7. Reversão de acesso: PATCH somente `access_mode` para `allowlist` e retornar o
-   cliente a `audience=allowlist`; emergência: PATCH somente `enabled=false`.
-   Não apagar perfis, mensagens ou saves. Conferir a cota antes de reabrir.
+Concluir a autenticação diretamente no navegador com uma conta administrativa
+do projeto `tece-island-285cd`. Não enviar senha/token pela conversa nem colocar
+chave de serviço no jogo ou Git. A exportação só faz GET e grava regras/settings
+com `updateTime` em `.tools/firebase-current`, ignorado pelo Git.
+
+### Opção recomendada: convidados verificados
+
+Escolher até cinco contas **no total**, incluindo as originais. Usar o UID real
+exibido no Firebase Auth, não apelido/e-mail. Exemplo de preparação local (trocar
+o identificador de exemplo pelo UID real):
+
+```powershell
+node tools/prepare-chat-beta.mjs --base .tools/firebase-current/firestore.rules --settings .tools/firebase-current/settings.json --mode allowlist --invite-uids 'UID_CONVIDADO_REAL'
+```
+
+Saídas em `.tools/chat-beta-prepared`:
+
+- `firestore.rules` e `firebase.json`: regra completa revisável. Tudo fora de
+  `chatAccess()` precisa coincidir com a base conhecida; divergência interrompe.
+- `settings-patch.rest.json`: somente `access_mode=allowlist` e `allowed_uids`
+  atual **mesclado** com convidados; não remove convidados anteriores.
+- `preconditions.json`: máscara de atualização e `currentDocument.updateTime`.
+  Não sobrescrever alterações administrativas concorrentes; reexportar se falhar.
+- `client-chat-config.json`: lista correspondente para o cliente, sem configurar
+  sincronização de mundos.
+
+Backend esperado: `enabled=true`, `access_mode=allowlist` e UID convidado na lista.
+Cliente esperado: `enabled=true`, `audience=allowlist` e esse mesmo UID na lista.
+O e-mail deve estar confirmado e a conta deve entrar novamente para obter sessão
+atualizada. Só alterar a lista no backend não faz aparecer o botão no PCK atual.
+
+As regras fechadas existentes já usam a allowlist. Se a base exportada confirmar
+essa política completa, os convites dependem da lista, sem exigir abertura para
+todas as verificadas. A regra preparada também pode ser aplicada após revisão,
+mantendo `access_mode=allowlist` durante o grupo inicial.
+
+### Alternativa: todas as contas verificadas
+
+```powershell
+node tools/prepare-chat-beta.mjs --base .tools/firebase-current/firestore.rules --settings .tools/firebase-current/settings.json --mode verified
+```
+
+Aplicar a regra `chatAccess()` preparada, que permite sessão com e-mail confirmado
+quando `access_mode=verified`. O PATCH dessa opção contém só
+`{"fields":{"access_mode":{"stringValue":"verified"}}}`: listas existentes e
+administradores ficam intactos. Cliente usa `audience=verified`, sem uma lista
+de convites como condição de entrada. Isso admite qualquer nova conta verificada;
+o custo passa a depender do uso total e não há teto global de horas/mensagens.
+
+### Aplicar backend e compilar o cliente correspondente
+
+**Após decidir a abertura e revisar a base**, a publicação das regras é:
+
+```powershell
+node ../../node_modules/firebase-tools/lib/bin/firebase.js deploy --project tece-island-285cd --only firestore:rules --config .tools/chat-beta-prepared/firebase.json
+```
+
+Atualizar somente os campos indicados em `preconditions.json` do documento
+`chatSettings/global`, pelo console ou REST. No REST, usar:
+
+```text
+PATCH https://firestore.googleapis.com/v1/projects/tece-island-285cd/databases/(default)/documents/chatSettings/global
+```
+
+Acrescentar um parâmetro `updateMask.fieldPaths` por campo indicado e
+`currentDocument.updateTime=<updateTime exportado, codificado para URL>`, com o
+corpo de `settings-patch.rest.json` e autenticação administrativa mantida fora
+do jogo. A [máscara preserva campos não citados](https://firebase.google.com/docs/firestore/reference/rest/v1/projects.databases.documents/patch).
+**Não substituir o documento inteiro nem gravar `admin_uids: []`.**
+
+Conferir `enabled` na base. O preparador preserva esse campo, inclusive se estiver
+desligado por cota. Se for necessário habilitar, isso requer a decisão de reabrir
+e uma atualização revisada de `enabled=true`, incluída na mesma máscara/corpo ou
+feita com nova precondição após reexportar. Nunca modificar admin_uids, chatRates,
+chatProfiles, histórico ou saves para efetuar essa abertura.
+
+O exportador foi preparado para separar as listas. No mesmo terminal, depois de
+ler a lista original autorizada deste workspace:
+
+```powershell
+$taskSync = Get-Content .tools/approved-access.json -Raw | ConvertFrom-Json
+$env:TECE_PILOT_ALLOWED_UIDS = $taskSync.allowed_uids -join ','
+```
+
+Para convidados:
+
+```powershell
+$taskChat = Get-Content .tools/chat-beta-prepared/client-chat-config.json -Raw | ConvertFrom-Json
+$env:TECE_CHAT_AUDIENCE = 'allowlist'
+$env:TECE_CHAT_ALLOWED_UIDS = $taskChat.allowed_uids -join ','
+```
+
+Para todas as verificadas:
+
+```powershell
+$env:TECE_CHAT_AUDIENCE = 'verified'
+$env:TECE_CHAT_ALLOWED_UIDS = ''
+```
+
+Em ambos, `world-sync.json` continua com **exatamente os dois UIDs originais** e
+intervalo 120 s. O exportador recusa convites que removam as originais, UIDs
+inválidos/duplicados e ampliação da lista de sync. O manifesto distingue as
+contagens; na política verified, não declara duas contas como limite do chat.
+No GitHub Actions, as variáveis correspondentes foram preparadas, mas não foram
+alteradas remotamente nesta revisão.
+
+Somente depois do reteste/decisão, gerar o pacote com `tools/export-web.ps1` usando
+Godot 4.7.2 e APPDATA isolado (restaurar a variável depois). Antes de publicar,
+alinhar a identificação e os campos de rollout do carimbo ao estado realmente
+confirmado; os da RC2 atual descrevem o chat ainda fechado. Testar privadamente
+envio/recepção entre uma conta nova verificada e uma original, recusa da não
+verificada, autoria/cooldown/administração e sync ainda restrita. Não promover
+para a main por executar essa preparação local.
+
+### Situação atual, acesso ao site e reversão
+
+A RC2 no Sites continua **owner-only**. Convidar uma conta Firebase não concede
+acesso ao Site privado; uma validação externa exige acesso à hospedagem também,
+com decisão separada. O endereço oficial continua público e na 0.9.0.
+
+Reversão: PATCH de `access_mode=allowlist` e cliente com `audience=allowlist` e a
+lista aprovada. Emergência: PATCH só `enabled=false`. Não apagar perfis/mensagens/
+saves. Conferir cota antes de reabrir. O Spark compartilha cota entre usos: falta
+de cota pode afetar chat e sync, mantendo o solo local.
 
 Não aplicado nesta revisão: deploy de regras Firebase, mudança em settings,
 adição de convidados, alterações de administradores, faturamento ou sync público.
 O site de revisão também continua privado. Testes positivos com contas reais
 novas, cadastro/confirmar e-mail e operação pública dependem da etapa de acesso.
+
+Em 01/11 foram aprovados oito testes locais de preparação/configuração,
+separados dos 23 testes de regras no emulador e dos 45 checks Web anteriores.
+Nenhum desses testes é aplicação de backend ou validação positiva de produção.
 
 ## Medições desta revisão, separadas das projeções
 

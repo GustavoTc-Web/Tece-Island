@@ -20,6 +20,8 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: npm ci --no-audit --no-fund
+      - name: Validar separação de acesso entre chat e sync
+        run: node --test tests/release-access.test.mjs tests/chat-beta-preparation.test.mjs
       - name: Instalar Godot
         run: |
           curl --fail --location --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip

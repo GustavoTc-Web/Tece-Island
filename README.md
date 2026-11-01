@@ -10,6 +10,8 @@ A oficial **0.9.0** continua disponível até o reteste final. Veja a
 [revisão, limites e roteiro](docs/BETA_SOLO_RC2.md).
 O chat para novas contas está preparado, com [abertura e orçamento pendentes](docs/CHAT_BETA_RC2.md).
 A [recuperação da candidata exige cliente compatível com v9](docs/RECUPERACAO_BETA_V9.md).
+[Fechamento para lançamento](docs/FECHAMENTO_BETA_SOLO_RC2.md) e
+[reteste manual curto](docs/RETESTE_MANUAL_RC2.md), aguardando resultado e autorização.
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
 campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).

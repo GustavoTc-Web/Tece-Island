@@ -1,6 +1,8 @@
 # Candidata 0.9.1-beta-rc.2
 
 Branch `release/solo-beta-rc2`, derivada de `release/solo-beta-rc1` em `bd0ccf7`.
+Consolidação de 01/11: [estado final e promoção pendente](FECHAMENTO_BETA_SOLO_RC2.md),
+[reteste manual com resultados esperados](RETESTE_MANUAL_RC2.md).
 Revisão solicitada em 31/10/2026. Oficial 0.9.0/main, checkout do IDE, saves
 pessoais e branch/documentação do multiplayer preservados. Não há novas mecânicas
 de combate, campanha ou multiplayer fora dos ajustes explicitamente solicitados.
@@ -116,9 +118,10 @@ duplicação. O pacote oficial v8 recusou uma cópia v9 sem alterar seus bytes.
 [Persistência](validation/beta-rc2/old-client-v9.json) e
 [recuperação v9](RECUPERACAO_BETA_V9.md).
 
-**Rodada exploratória: não iniciada.** O controle do Edge foi encerrado antes do
-login por não conseguir verificar a URL com segurança. Não houve criação de mundo
-exploratório nem vitória nesta rodada. [Ponto exato, evidência e próximos passos](RELATORIO_EXPLORATORIO_RC2.md).
+**Campanha exploratória não executada por limitação da ferramenta.** Após o
+relato de login do usuário, o controlador continuou sem verificar a URL; em 01/11,
+a revisão automática rejeitou nova identificação da janela. O ciclo foi encerrado.
+Não houve criação de mundo exploratório nem vitória. [Registro](RELATORIO_EXPLORATORIO_RC2.md).
 Nenhum bug adicional da campanha foi confirmado sem esse percurso; não é uma
 aprovação da ausência de bugs. A campanha e os testes físicos continuam pendentes.
 

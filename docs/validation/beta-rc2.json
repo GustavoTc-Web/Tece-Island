@@ -2,7 +2,7 @@
   "version": "0.9.1-beta-rc.2",
   "game_commit": "7c254c1f8454d768228c171cf6fa040b5eb322dc",
   "physical": false,
-  "exploratory_campaign": "not_started: computer-use stopped before manual login because URL could not be verified",
+  "exploratory_campaign": "campanha exploratória não executada por limitação da ferramenta; ciclo do controlador encerrado em 01/11/2026",
   "native": [
     {
       "test": "validate_world_library",

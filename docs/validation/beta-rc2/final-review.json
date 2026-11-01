@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-11-01T11:54:46.330Z",
+  "version": "0.9.1-beta-rc.2",
+  "game_commit": "7c254c1f8454d768228c171cf6fa040b5eb322dc",
+  "site_version": 2,
+  "served_checks": 20,
+  "served_checks_passed": true,
+  "frozen_source_hashes": 33,
+  "pck_sha256": "e0f00a948d7406efef529a0899dad7ee8c2ba58e7dced408e0d47af0ba83d300",
+  "runtime_diff_empty": true,
+  "archive_sha256": "d1beae540e1393266023052a9ca704bb87f1de5919f2c3314e0f3562282d2f87",
+  "archive_path": ".tools/beta-rc2-site.tar.gz",
+  "new_gameplay_tests": false,
+  "configuration_tests": {
+    "tests": 8,
+    "passed": 8,
+    "backend_requests": 0,
+    "synthetic_copies": true
+  },
+  "controller": {
+    "state": "closed",
+    "campaign": "campanha exploratória não executada por limitação da ferramenta",
+    "reason": "automatic review rejected window inventory as repetition of closed controller cycle"
+  },
+  "firebase": {
+    "production_writes": 0,
+    "production_backend_permissions_not_verified": true,
+    "billing_enabled_by_this_review": false
+  }
+}
