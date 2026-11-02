@@ -1,5 +1,7 @@
 # Tece Island — solo Web e controles de toque
 
+Nesta branch: candidata privada **0.9.1-beta.2-rc.1**, com [backup por conta e arrasto por toque](docs/BETA_2_RC1_BACKUP_TOQUE.md). A oficial abaixo permanece preservada.
+
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
 O navegador oferece o mapa e a campanha solo completos. Multiplayer indisponível
 nesta beta, sem data anunciada. O piloto foi preservado e seus serviços temporários
