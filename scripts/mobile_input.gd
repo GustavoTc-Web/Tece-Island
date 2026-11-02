@@ -14,7 +14,9 @@ func _ready() -> void:
 		enabled = bool(JavaScriptBridge.eval("navigator.maxTouchPoints > 0"))
 		focus_callback = JavaScriptBridge.create_callback(func(_args): reset())
 		JavaScriptBridge.get_interface("window").tcIslandResetInputs = focus_callback
-		JavaScriptBridge.eval("window.addEventListener('blur', () => window.tcIslandResetInputs()); document.addEventListener('visibilitychange', () => { if (document.hidden) window.tcIslandResetInputs(); });")
+		# Web engines can expose touchcancel as an ordinary release. Cancel in
+		# capture phase before Godot receives it, so interruption cannot commit.
+		JavaScriptBridge.eval("window.addEventListener('blur', () => window.tcIslandResetInputs()); document.addEventListener('visibilitychange', () => { if (document.hidden) window.tcIslandResetInputs(); }); for (const name of ['touchcancel','pointercancel']) window.addEventListener(name, () => window.tcIslandResetInputs(), {capture:true});")
 	mode_changed.connect(reset)
 
 func set_enabled(value: bool) -> void:
