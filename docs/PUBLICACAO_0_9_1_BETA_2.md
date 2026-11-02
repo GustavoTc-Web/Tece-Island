@@ -1,8 +1,8 @@
 # Publicação 0.9.1-beta.2 — backup por conta e arrasto por toque
 
 [Jogar no endereço oficial](https://gustavotc-web.github.io/Tece-Island/).
-Tag preparada: **v0.9.1-beta.2**. Autorização e preparação em **02/11/2026 BRT**.
-O resultado do deploy será registrado após a conferência do pacote servido.
+Tag: **v0.9.1-beta.2**. Autorização e publicação em **02/11/2026 BRT**.
+Workflow concluído com sucesso às **12:34:42 BRT**; arquivos públicos conferidos.
 
 ## Aprovação e escopo
 
@@ -65,9 +65,49 @@ a campanha humana. A limitação de autorização dos AudioWorklets no Site priv
 não foi tratada como aprovação de áudio; a conferência do endereço oficial será
 registrada separadamente.
 
-Nesta promoção serão conferidos os testes afetados e o CI obrigatório, o pacote
-Web com as mesmas restrições, manifesto, hashes e carregamento inicial público.
 Integração em checkout isolado, sem checkout/stash/reset no diretório do IDE.
-O pacote de recuperação do aplicativo v9 será preservado como asset da release,
-sem dados de jogadores. Commit, tag, workflow, hashes e limites serão registrados
-abaixo após concluir; não será presumida autenticação real ou teste físico.
+Commit publicado: **`ed840cbd11e23b98d9fce66944e08a2022bb820a`**, merge da
+preparação `30226c5` com a main. A tag **v0.9.1-beta.2** aponta para esse merge.
+Registros posteriores alteram apenas documentação e não reexportam o jogo.
+[Workflow 41472352111](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/41472352111):
+validação, exportação e deploy **success**.
+
+O CI passou **704 checks Godot em 25 suítes**, **23 testes de regras** sem skips,
+**11 checks de chat REST nativo** e **oito testes de configuração**. O backend de
+teste foi o emulador local Auth/Firestore; nenhuma regra foi aplicada em produção.
+Os testes locais afetados tiveram 89 checks aprovados em cinco suítes, além dos
+oito testes de configuração. Eles se sobrepõem ao CI e não são somados como novos
+casos independentes.
+
+No endereço oficial foram conferidos manifesto, **16 arquivos** por SHA-256 contra
+o artefato exato do Pages e os **38 hashes de fontes** contra o commit publicado.
+PCK servido: `3a8621ed0de7c60535079273e3ad895b564c76b4a1de8d61d9ff33a4a2f5d51e`.
+O PCK baixado abriu isoladamente com versão/commit/schema corretos, os mesmos dois
+UIDs, as duas correções e ausência de fixtures/regras administrativas. As variáveis
+GitHub conservaram o mesmo digest antes/depois.
+
+O cliente servido passou novamente em **27 checks Web de backup**, com duas
+identidades sintéticas no mesmo perfil e Auth interceptado somente no navegador.
+Cada conta exportou seus registros, incluindo backups reconhecidos, sem dados
+estrangeiros ou credenciais; a cópia baixada foi restaurada em outro perfil e
+aberta pelo cliente v9, preservando inventário, atributos, seleção e campanha.
+Não houve criação/login real ou tráfego Firebase de produção nesses testes.
+
+O carregamento inicial público foi conferido em Edge headless PC/mobile emulados,
+com recusa de exportação sem login e sem erros JavaScript, GDScript ou HTTP
+observados. Ambos os arquivos AudioWorklet tiveram bytes/HTTP conferidos no pacote
+público; o 401 observado na checagem autorizada por cabeçalho do Site privado não
+foi reproduzido nesta conferência pública. Isso não é aprovação física de áudio,
+desempenho ou suspensão. [Evidências e capturas](validation/beta.2-public/publication.json).
+
+[Release e recuperação](https://github.com/GustavoTc-Web/Tece-Island/releases/tag/v0.9.1-beta.2):
+`tece-island-0.9.1-beta.2-web-recovery.tar.gz`, com os 16 arquivos do aplicativo e
+sem saves de jogadores. Upload e download público conferidos. SHA-256:
+`2c489501f94774938e1c27ee8df51fcbd0a2dd6c7266ba0cb3d0968e68f50097`.
+Nenhum rollback foi acionado.
+
+**Sem bloqueio técnico de publicação conhecido.** O relato manual confirma os
+ajustes aprovados; campanha completa, exploração pelo controlador e casos físicos
+não especificados permanecem sem nova aprovação. Chat/sync continuam nas duas
+contas atuais; multiplayer permanece adiado. Saves reais, alteração local do IDE,
+Firebase e faturamento foram preservados.

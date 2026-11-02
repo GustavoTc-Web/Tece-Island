@@ -1,0 +1,334 @@
+{
+  "version": "0.9.1-beta.2",
+  "published_commit": "ed840cbd11e23b98d9fce66944e08a2022bb820a",
+  "tag": "v0.9.1-beta.2",
+  "deployment": {
+    "run": 41472352111,
+    "sha": "ed840cbd11e23b98d9fce66944e08a2022bb820a",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/41472352111",
+    "artifact": {
+      "id": 13156490529,
+      "name": "github-pages",
+      "size": 10911854,
+      "digest": "sha256:aa548b4c5d78f3e3cbfcede70fbfab1e3614b6862333cc7497dd656a8fa042d0"
+    },
+    "started_at": "2026-11-02T15:31:04Z",
+    "updated_at": "2026-11-02T15:34:42Z"
+  },
+  "ci": {
+    "native_checks": 704,
+    "native_errors": [],
+    "rule_tests": 23,
+    "rule_pass": 23,
+    "rule_fail": 0,
+    "rule_skipped": 0,
+    "native_chat_checks": 11,
+    "native_suites": 25,
+    "configuration_tests": 8
+  },
+  "published": {
+    "at": "2026-11-02T15:36:50.333Z",
+    "verified": true,
+    "url": "https://gustavotc-web.github.io/Tece-Island/",
+    "version": "0.9.1-beta.2",
+    "commit": "ed840cbd11e23b98d9fce66944e08a2022bb820a",
+    "allowed_account_count": 2,
+    "source_hashes": 38,
+    "source_hashes_match": true,
+    "files": [
+      {
+        "file": ".nojekyll",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": "index.apple-touch-icon.png",
+        "bytes": 11939,
+        "sha256": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221"
+      },
+      {
+        "file": "index.audio.position.worklet.js",
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      {
+        "file": "index.audio.worklet.js",
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      {
+        "file": "index.html",
+        "bytes": 32634,
+        "sha256": "aa2175b4da697308298dc4e033eab20aaf9722c86ca76bc615ce0467636d9e81"
+      },
+      {
+        "file": "index.icon.png",
+        "bytes": 5765,
+        "sha256": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7"
+      },
+      {
+        "file": "index.js",
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      {
+        "file": "index.pck",
+        "bytes": 598600,
+        "sha256": "3a8621ed0de7c60535079273e3ad895b564c76b4a1de8d61d9ff33a4a2f5d51e"
+      },
+      {
+        "file": "index.png",
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      {
+        "file": "index.wasm",
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      {
+        "file": "version.json",
+        "bytes": 5141,
+        "sha256": "df6d855bf9a705065b75ec41b8c0a102a29c576d4fa9af67f32326c03bf8e7c1"
+      },
+      {
+        "file": "assets/fonts/AtkinsonHyperlegible-OFL.txt",
+        "bytes": 4351,
+        "sha256": "64b9cae8727cb41ea9e8843103e69647c82383f3a902e2bb39b2c5d92083b6e1"
+      },
+      {
+        "file": "assets/fonts/AtkinsonHyperlegible-Regular.ttf",
+        "bytes": 54348,
+        "sha256": "7fb917c89019896d0b52ee84b7cbb3304c18cb90b19a62f5e32712bd23e97669"
+      },
+      {
+        "file": "assets/fonts/BreeSerif-OFL.txt",
+        "bytes": 4409,
+        "sha256": "e69c15e0276bc82a5d7b1d5b6d88776a20920414b498c376ff43ec88e72afaa9"
+      },
+      {
+        "file": "assets/fonts/BreeSerif-Regular.ttf",
+        "bytes": 46572,
+        "sha256": "fd080582d70112ef479ba4ddd72407f9a4fcbcec4caa7d29de259b13eeb5f431"
+      },
+      {
+        "file": "assets/fonts/README.md",
+        "bytes": 588,
+        "sha256": "51fb6584b646fe24044db5c1ec5fc535b93ceb364f0b145aa1b7a09b629d9eb1"
+      }
+    ],
+    "sha256": {
+      "index.pck": "3a8621ed0de7c60535079273e3ad895b564c76b4a1de8d61d9ff33a4a2f5d51e",
+      "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "firebase_admin_writes": false,
+    "authenticated_game_test": false,
+    "physical": false
+  },
+  "served_pack": {
+    "checks": {
+      "approved_corrections": true,
+      "chat_closed": true,
+      "firebase_unchanged": true,
+      "floor_script": true,
+      "no_admin_rules": true,
+      "no_fixtures": true,
+      "public_solo_only": true,
+      "same_two_accounts": true,
+      "schema": true,
+      "version_commit": true
+    },
+    "commit": "ed840cbd11e23b98d9fce66944e08a2022bb820a",
+    "version": "0.9.1-beta.2"
+  },
+  "initial_load": {
+    "url": "https://gustavotc-web.github.io/Tece-Island/",
+    "results": [
+      {
+        "format": "pc-emulated",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "load_to_login_ms": 10328.142300000001,
+        "runtime_title": "TC Island",
+        "passed": true,
+        "engine_started": true,
+        "version_visible": true,
+        "errors": [],
+        "httpErrors": [],
+        "audio_modules": [],
+        "no_login_export_refused": true,
+        "production_authentication": false,
+        "gameplay": false,
+        "firebase_requests": 0,
+        "physical": false,
+        "rendering": "headless Edge with software WebGL; not physical performance"
+      },
+      {
+        "format": "mobile-emulated",
+        "viewport": {
+          "width": 852,
+          "height": 393
+        },
+        "load_to_login_ms": 3652.3973000000005,
+        "runtime_title": "TC Island",
+        "passed": true,
+        "engine_started": true,
+        "version_visible": true,
+        "errors": [],
+        "httpErrors": [],
+        "audio_modules": [],
+        "no_login_export_refused": true,
+        "production_authentication": false,
+        "gameplay": false,
+        "firebase_requests": 0,
+        "physical": false,
+        "rendering": "headless Edge with software WebGL; not physical performance"
+      }
+    ],
+    "physical": false
+  },
+  "public_backup_validation": {
+    "physical": false,
+    "auth": "mocked only in browser transport",
+    "production_firebase_requests": 0,
+    "checks": [
+      {
+        "pass": true,
+        "label": "Unauthenticated export is refused by the real client"
+      },
+      {
+        "pass": true,
+        "label": "Release client created a real owned v9 save"
+      },
+      {
+        "pass": true,
+        "label": "Unauthenticated export is refused by the real client"
+      },
+      {
+        "pass": true,
+        "label": "New backup filename is used"
+      },
+      {
+        "pass": true,
+        "label": "Backup identifies current-account scope and private content"
+      },
+      {
+        "pass": true,
+        "label": "Every exported catalog/save/backup belongs to the connected account; caller-supplied UID is ignored"
+      },
+      {
+        "pass": true,
+        "label": "No foreign UID or account hash is present"
+      },
+      {
+        "pass": true,
+        "label": "No auth password, tokens, login email or session marker in nested content"
+      },
+      {
+        "pass": true,
+        "label": "Export is read-only, including excluded records"
+      },
+      {
+        "pass": true,
+        "label": "Owned migration backup and conflict copies are included"
+      },
+      {
+        "pass": true,
+        "label": "Legacy, unreadable, opaque and misowned entries stay outside the standard backup"
+      },
+      {
+        "pass": true,
+        "label": "Unauthenticated export is refused by the real client"
+      },
+      {
+        "pass": true,
+        "label": "Release client created a real owned v9 save"
+      },
+      {
+        "pass": true,
+        "label": "Unauthenticated export is refused by the real client"
+      },
+      {
+        "pass": true,
+        "label": "New backup filename is used"
+      },
+      {
+        "pass": true,
+        "label": "Backup identifies current-account scope and private content"
+      },
+      {
+        "pass": true,
+        "label": "Every exported catalog/save/backup belongs to the connected account; caller-supplied UID is ignored"
+      },
+      {
+        "pass": true,
+        "label": "No foreign UID or account hash is present"
+      },
+      {
+        "pass": true,
+        "label": "No auth password, tokens, login email or session marker in nested content"
+      },
+      {
+        "pass": true,
+        "label": "Export is read-only, including excluded records"
+      },
+      {
+        "pass": true,
+        "label": "Owned migration backup and conflict copies are included"
+      },
+      {
+        "pass": true,
+        "label": "Legacy, unreadable, opaque and misowned entries stay outside the standard backup"
+      },
+      {
+        "pass": true,
+        "label": "B catalog cannot leak A world identifier/name through a dangling reference"
+      },
+      {
+        "pass": true,
+        "label": "Unauthenticated export is refused by the real client"
+      },
+      {
+        "pass": true,
+        "label": "Actual v9 client reopens the downloaded copy preserving inventory attributes, selection and campaign map"
+      },
+      {
+        "pass": true,
+        "label": "Restored B backup creates no A records"
+      },
+      {
+        "pass": true,
+        "label": "No production Firebase traffic or script errors"
+      }
+    ],
+    "errors": [],
+    "actual_client": true,
+    "synthetic_data": true
+  },
+  "recovery": {
+    "url": "https://github.com/GustavoTc-Web/Tece-Island/releases/download/v0.9.1-beta.2/tece-island-0.9.1-beta.2-web-recovery.tar.gz",
+    "name": "tece-island-0.9.1-beta.2-web-recovery.tar.gz",
+    "size": 10825084,
+    "sha256": "2c489501f94774938e1c27ee8df51fcbd0a2dd6c7266ba0cb3d0968e68f50097",
+    "public_download_sha256_verified": true,
+    "contains_player_saves": false
+  },
+  "github_config": {
+    "before": "424e58c76182609fa1c22fa7d5542d0935fa314dc16b94fcd766d96692afa6b1",
+    "after": "424e58c76182609fa1c22fa7d5542d0935fa314dc16b94fcd766d96692afa6b1",
+    "unchanged": true
+  },
+  "manual_report": {
+    "source": "user",
+    "scope": "approved candidate adjustments worked; no complete campaign or unspecified physical cases inferred"
+  },
+  "exploratory_campaign": "not executed due to tool limitation",
+  "firebase_admin_calls": 0,
+  "billing_actions": 0,
+  "primary_saves_touched": false
+}
