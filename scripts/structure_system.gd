@@ -114,16 +114,35 @@ func _physics_process(_delta: float) -> void:
 	if active and not MobileInput.enabled:
 		update_preview(get_global_mouse_position())
 
+func sleep_block(bed: PlacedStructure) -> String:
+	if player.terrain_enabled and WorldTerrain.is_dark(bed.global_position):
+		return "Não é possível dormir nas Ruínas Escuras."
+	if not cycle.is_night():
+		return "Durma à noite após concluir uma etapa atrasada."
+	if get_tree().paused: return "Sono bloqueado: feche o painel e retome a partida."
+	var world := get_parent()
+	if world.campaign.encounter == "active": return "Sono bloqueado: ataque final em andamento."
+	for id in world.campaign.temples:
+		var state: Dictionary = world.campaign.temples[id]
+		if state.started and not CampaignEncounters.complete(id, state): return "Sono bloqueado: conclua o encontro de templo iniciado."
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if world.is_ancestor_of(enemy) and not enemy.dead and enemy.global_position.distance_to(bed.global_position) < sleep_enemy_distance:
+			return "Sono bloqueado: inimigo próximo."
+	if world.campaign.encounter != "won" and world.objectives.campaign_tasks.sleep_credits.is_empty():
+		return "Sono bloqueado: enfrente a noite; conclua uma etapa atrasada para liberar um salto."
+	return ""
+
+func bed_status(bed: PlacedStructure) -> String:
+	var reason := sleep_block(bed)
+	return reason if not reason.is_empty() else ("Exploração livre: dormir até amanhecer." if get_parent().campaign.encounter == "won" else "Etapa atrasada concluída: dormir uma vez até amanhecer.")
+
 func use_bed(bed: PlacedStructure) -> String:
 	respawn_bed = bed
 	if get_parent().has_method("queue_save"): get_parent().queue_save()
-	if player.terrain_enabled and WorldTerrain.is_dark(bed.global_position):
-		return "Não é possível dormir nas Ruínas Escuras. Reaparecimento definido."
-	if not cycle.is_night():
-		return "Ponto de reaparecimento definido. Durma aqui à noite."
-	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if enemy.global_position.distance_to(bed.global_position) < sleep_enemy_distance:
-			return "Dormir bloqueado: inimigo próximo. Ponto de reaparecimento definido."
+	get_parent().objectives.campaign_tasks.refresh_live()
+	var reason := sleep_block(bed)
+	if not reason.is_empty(): return reason + " Reaparecimento definido."
+	if get_parent().campaign.encounter != "won" and not get_parent().objectives.campaign_tasks.consume_sleep_credit(): return "Etapa atrasada ainda pendente."
 	cycle.sleep_until_dawn()
 	# Aplica a regra já no salto de tempo, sem esperar outro frame.
 	for enemy in get_tree().get_nodes_in_group("enemies"):

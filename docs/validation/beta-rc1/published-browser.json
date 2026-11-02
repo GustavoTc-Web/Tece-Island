@@ -1,0 +1,47 @@
+{
+  "checks": [
+    {
+      "pass": true,
+      "label": "Published candidate shows exact beta version"
+    },
+    {
+      "pass": true,
+      "label": "Published-origin Firebase rejects invalid credentials without origin/configuration error"
+    },
+    {
+      "pass": true,
+      "label": "Published login reports a readable retryable failure"
+    },
+    {
+      "pass": true,
+      "label": "Published candidate shows exact beta version"
+    },
+    {
+      "pass": true,
+      "label": "Published-origin Firebase rejects invalid credentials without origin/configuration error"
+    },
+    {
+      "pass": true,
+      "label": "Published login reports a readable retryable failure"
+    },
+    {
+      "pass": true,
+      "label": "Published Godot Web boot has no script errors"
+    }
+  ],
+  "measures": [
+    {
+      "mobile_emulated": false,
+      "load_to_login_ms": 8237.219700000001
+    },
+    {
+      "mobile_emulated": true,
+      "load_to_login_ms": 6988.422500000001
+    }
+  ],
+  "physical": false,
+  "positiveLoginTested": false,
+  "realFirebaseInvalidLogin": true,
+  "audioWorkletQA": "Exact authenticated served worklet bytes loaded as test-only Blob modules because page-scoped bearer routing did not authorize worklet fetches; no product change or physical audio approval",
+  "errors": []
+}

@@ -1,0 +1,99 @@
+{
+  "physical": false,
+  "renderer": "Headless Edge with SwiftShader permitted; no physical mobile GPU",
+  "scope": "Godot Engine FPS and TIME_PROCESS sampled every 100ms for 70 samples per scenario; this is not a per-frame p95 or a network RTT benchmark",
+  "scenarios": [
+    {
+      "format": "PC-emulated",
+      "scenario": "spawn-movement",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "load_ready_ms": 4809.6605,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 57,
+      "sampled_process_p95_ms": 33.8,
+      "draw_calls_median": 219
+    },
+    {
+      "format": "PC-emulated",
+      "scenario": "expanded-biome",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "load_ready_ms": 4809.6605,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 60,
+      "sampled_process_p95_ms": 17,
+      "draw_calls_median": 113
+    },
+    {
+      "format": "PC-emulated",
+      "scenario": "temple-encounter",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "load_ready_ms": 4809.6605,
+      "samples": 70,
+      "fps_median": 59,
+      "fps_min": 55,
+      "sampled_process_p95_ms": 27.1,
+      "draw_calls_median": 204
+    },
+    {
+      "format": "mobile-emulated",
+      "scenario": "spawn-movement",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "deviceScaleFactor": 2,
+      "load_ready_ms": 1644.9065000000046,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 59,
+      "sampled_process_p95_ms": 31.9,
+      "draw_calls_median": 251
+    },
+    {
+      "format": "mobile-emulated",
+      "scenario": "expanded-biome",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "deviceScaleFactor": 2,
+      "load_ready_ms": 1644.9065000000046,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 60,
+      "sampled_process_p95_ms": 19.6,
+      "draw_calls_median": 130
+    },
+    {
+      "format": "mobile-emulated",
+      "scenario": "temple-encounter",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "deviceScaleFactor": 2,
+      "load_ready_ms": 1644.9065000000046,
+      "samples": 70,
+      "fps_median": 57,
+      "fps_min": 34,
+      "sampled_process_p95_ms": 63.9,
+      "draw_calls_median": 223
+    }
+  ],
+  "errors": [],
+  "run_context": "Final repeat after other browser suites and Firebase emulators stopped; no client code optimization between runs"
+}

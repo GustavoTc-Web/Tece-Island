@@ -1,0 +1,174 @@
+{
+  "version": "0.9.1-beta-rc.2",
+  "commit": "7c254c1f8454d768228c171cf6fa040b5eb322dc",
+  "checks": [
+    {
+      "pass": true,
+      "label": "Published manifest matches the exact beta candidate committed artifact"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/AtkinsonHyperlegible-OFL.txt"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/AtkinsonHyperlegible-Regular.ttf"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/BreeSerif-OFL.txt"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/BreeSerif-Regular.ttf"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match assets/fonts/README.md"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-0.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-1.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-2.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-3.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match engine-fc74679e3b97f768-4.bin"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.apple-touch-icon.png"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.audio.position.worklet.js"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.audio.worklet.js"
+    },
+    {
+      "pass": true,
+      "label": "Served HTML preserves complete source with one provider insertion"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.icon.png"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.js"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.pck"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match index.png"
+    },
+    {
+      "pass": true,
+      "label": "Served bytes match pilot-engine.json"
+    }
+  ],
+  "manifest": {
+    "version": "0.9.1-beta-rc.2",
+    "commit": "7c254c1f8454d768228c171cf6fa040b5eb322dc",
+    "save_schema": 9,
+    "campaign_schema": 2,
+    "tasks_schema": 2,
+    "base_release": "0.9.0",
+    "multiplayer_available": false,
+    "public_solo": true,
+    "public_chat": false,
+    "chat_verified_prepared": true,
+    "chat_rollout": "original_two_pending_budget_decision",
+    "firestore_rules_deployed": false,
+    "public_world_sync": false,
+    "chat_enabled": true,
+    "world_sync_enabled": true,
+    "allowed_account_count": 2,
+    "chat_transport": "rest_incremental_with_window_count",
+    "chat_poll_seconds": 5,
+    "chat_idle_poll_seconds": 15,
+    "chat_idle_after_seconds": 60,
+    "chat_reconcile_seconds": 120,
+    "world_sync_interval_seconds": 120,
+    "sha256": {
+      "index.pck": "e0f00a948d7406efef529a0899dad7ee8c2ba58e7dced408e0d47af0ba83d300",
+      "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "source_sha256": {
+      "firestore.rules": "0644fc2b9c606bc12a26c9a3968553549d530d8fdf6a1cdbc7d2dda71fc0cb1e",
+      "scripts/world_sync.gd": "23057c2cc1d1da1b095e60c12ad30c57b3279d58dd51f4411f04a42dd54ef47e",
+      "scripts/firestore_client.gd": "44b7d4da955b0e90218bca34027071b210ba4322b800c4ec2022ce3f499d36a0",
+      "scripts/account_progress.gd": "0f6de4b64c55e73eccb6a621cd9cf4ebe4501b99b4adf18b464a82b0c6736810",
+      "scripts/world_library.gd": "549869700377ac39a0fbd7fa19b853c8b6a16bd1c373ba21bc846a22758244aa",
+      "scripts/save_store.gd": "92482950c6e5b4cf75824f949eb42cb5aa7f6d0ed9165da9d458cbceb815d02b",
+      "scripts/save_validation.gd": "0ef41f36e3603abd5e9d22a19de642d06672a50fffa491145c6f15a157c7a339",
+      "scripts/progress_controller.gd": "229ab297e0bc10a898c23e9f3abf5d843b958808558dc0ae3ae168eec58e302a",
+      "scripts/chat/global_chat.gd": "1738b5a7368e718af3882f6be52af04d1d430122939f88bb25f6b5387a2e05d9",
+      "scripts/chat/chat_client.gd": "82923f1895fa8ab285474249b8c23e4ef25c880bd71a9fada5fadd465578ee1f",
+      "scripts/solo_campaign.gd": "64608a3e151cb429e2d6bfcf6ef45087f3f3035d613cb91a9e24b44e6c742166",
+      "scripts/campaign_tasks.gd": "cc087bf85ee0d7e587f059f3977c8c83e10ea064f9a35b7dcb5abc9b5c5e7114",
+      "scripts/campaign_landmark.gd": "63ea07422713ced5d690f8efc4650e3e02fdba43fcb7faf8cccf2a906a8cde8b",
+      "scripts/campaign_terrain.gd": "5135665ebe91092db8fa78c5ffd4414d000f4f8b43dd1b9fe050d833aaa1e941",
+      "scripts/campaign_temple.gd": "4403d66bf4a4d6f3eb7d5924f79a4cec3a5c20c13521bd641f2a7ff1eabee741",
+      "scripts/campaign_encounters.gd": "adf3437816668b8b97793f79749105f233c76f1ecf25b2736fcd10a8aac0a3f6",
+      "scripts/campaign_task_panel.gd": "8e3fb8ba53cdd43843d48606aeb5b6ff697af17cb32baba15843dd438df40587",
+      "scripts/minimap.gd": "a3fcac2a00419bfd313a2bb661034758c6ae5b41d0e59e5ae8860261c76befe0",
+      "scripts/day_night.gd": "f381f80889f7b3a21129ad719dcbae54212b44d1b3527129fc5c1f47f26568dd",
+      "scripts/enemy_spawner.gd": "5bb510dfc5cc6adb37217b0abf77255938486511e21b197fad9adea118746ae3",
+      "scripts/forest_creature.gd": "319885de7359f3cfd6ae91b59503f5fd1b6edb936c615c74520b86a8426ab900",
+      "scripts/world.gd": "a0989203a1de749baca7c156a3783d83020635634f9fb9ed3ac342df77be3157",
+      "scripts/world_progress.gd": "1c08d5c3927104ea85e641b0ad3541af4174a0d0a959f1d45dfacb980fe2482f",
+      "web/shell.html": "2980c8550d88e17110ae6aa2d73988c8bcda59b038f48dce1e5f5c752996893f",
+      "scripts/abandoned_building.gd": "fb52024504d9b0ffc0370c5ed752ba07f5faba19383a4cde2cad230bb45cf05d",
+      "scripts/building_floor.gd": "9c138e5633050953e102bc89f1b3b82e1a66a02a1141a4312a3c5cdab6779977",
+      "scripts/ruined_temple.gd": "a24ccedd6c312c0a4ddb5e6dc04169705714d9e0e62ff62320abbe3e8af130bf",
+      "scripts/inventory.gd": "fe28c542950508e4eefc035b9bf51d4add1fec5ff5554a2519b0b25c9a7d86b7",
+      "scripts/item_slot.gd": "3eae14d3e39a660c68806484a2d4bf4fb3c308116b26e0e57dbd3af49d20c3a3",
+      "scripts/hud.gd": "15996dd27b01131d253dd94351aac399c3a68c27c06a3e74c1f0e85d8886fe16",
+      "scripts/structure_system.gd": "d939685d723b39b36c1a8d6cc25b523c383b4cc04624ae1f37490bc23618c207",
+      "scripts/placed_structure.gd": "b3c9d8087ca1bed4de9c522244e830c9cbb34232d828b4f8a90b0f6635734d69",
+      "scripts/crafting_view.gd": "f555a0dfa7c2744d9460c20621b88bbb924df9c37495a92250c6cafa116fbc03"
+    },
+    "served_sha256": {
+      "assets/fonts/AtkinsonHyperlegible-OFL.txt": "64b9cae8727cb41ea9e8843103e69647c82383f3a902e2bb39b2c5d92083b6e1",
+      "assets/fonts/AtkinsonHyperlegible-Regular.ttf": "7fb917c89019896d0b52ee84b7cbb3304c18cb90b19a62f5e32712bd23e97669",
+      "assets/fonts/BreeSerif-OFL.txt": "e69c15e0276bc82a5d7b1d5b6d88776a20920414b498c376ff43ec88e72afaa9",
+      "assets/fonts/BreeSerif-Regular.ttf": "fd080582d70112ef479ba4ddd72407f9a4fcbcec4caa7d29de259b13eeb5f431",
+      "assets/fonts/README.md": "51fb6584b646fe24044db5c1ec5fc535b93ceb364f0b145aa1b7a09b629d9eb1",
+      "engine-fc74679e3b97f768-0.bin": "8a56546b5f9b9137e80adde4400b797a5189062dee30d2505871ebd8e83987d3",
+      "engine-fc74679e3b97f768-1.bin": "62901720225c5663e708a233614396a6943357de7c98cead67f11669773dccae",
+      "engine-fc74679e3b97f768-2.bin": "c14dee0b88ada7bc7b4b48f3b8ae20e16922818417292b06082484fe183ae397",
+      "engine-fc74679e3b97f768-3.bin": "ca498a54fdb112b659cf23bc79a932e58d350a0f4cc8fabb639f230233ad6c72",
+      "engine-fc74679e3b97f768-4.bin": "219249da87c3cfda9a89fba24e253e60d6efd5191d0b108120ad93e51e54d707",
+      "index.apple-touch-icon.png": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221",
+      "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "index.html": "d79b2944ef654c9e882e32ba8600d3577be2750001c37018e39a11747820f73b",
+      "index.icon.png": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7",
+      "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "index.pck": "e0f00a948d7406efef529a0899dad7ee8c2ba58e7dced408e0d47af0ba83d300",
+      "index.png": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+      "pilot-engine.json": "9d78b4bc981bdc114d44843bbe9780b98fba37537c5d330ec55ce1ea2f5db83a"
+    },
+    "chat_audience": "allowlist",
+    "firebase_backend_changed": false
+  },
+  "physical": false
+}

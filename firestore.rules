@@ -81,7 +81,8 @@ service cloud.firestore {
     function chatAccess() {
       let settings = get(/databases/$(database)/documents/chatSettings/global).data;
       return chatVerified() && settings.enabled == true
-        && request.auth.uid in settings.allowed_uids;
+        && (('access_mode' in settings && settings.access_mode == 'verified')
+          || request.auth.uid in settings.allowed_uids);
     }
     function chatAdmin() {
       return chatAccess() && request.auth.uid in

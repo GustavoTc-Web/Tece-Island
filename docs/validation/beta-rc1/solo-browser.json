@@ -1,0 +1,640 @@
+{
+  "results": [
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "HUD mostra etapa e contador da campanha"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Objetivo cabe no HUD"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Movimento por teclado preservado"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Interação real descobre sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Registro original revela pistas sem competir na coleta"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Mapa bloqueado antes da terceira noite"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Terceira noite recupera mapa pela interação"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Interação inicia templo lens"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Conquista garante componente lens"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Interação inicia templo coil"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Conquista garante componente coil"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Interação inicia templo core"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Conquista garante componente core"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Diário reúne conquistas e requisitos"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Interação repara o sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Sexta noite ativa confronto"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Duas formações precedem Guardião"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Guardiāo vencido aguarda amanhecer"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Vitória abre resumo e pausa combate"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Continuar por mouse/toque preserva o mundo"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "HUD mostra etapa e contador da campanha"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Objetivo cabe no HUD"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Dois dedos continuam movendo e mirando"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação real descobre sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Registro original revela pistas sem competir na coleta"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Mapa bloqueado antes da terceira noite"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Terceira noite recupera mapa pela interação"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação inicia templo lens"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Conquista garante componente lens"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação inicia templo coil"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Conquista garante componente coil"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação inicia templo core"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Conquista garante componente core"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Diário reúne conquistas e requisitos"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação repara o sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Sexta noite ativa confronto"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Duas formações precedem Guardião"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Guardiāo vencido aguarda amanhecer"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Vitória abre resumo e pausa combate"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Continuar por mouse/toque preserva o mundo"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "HUD mostra etapa e contador da campanha"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Objetivo cabe no HUD"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Dois dedos continuam movendo e mirando"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação real descobre sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Registro original revela pistas sem competir na coleta"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Mapa bloqueado antes da terceira noite"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Terceira noite recupera mapa pela interação"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação inicia templo lens"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Conquista garante componente lens"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação inicia templo coil"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Conquista garante componente coil"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação inicia templo core"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Conquista garante componente core"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Diário reúne conquistas e requisitos"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Interação repara o sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Sexta noite ativa confronto"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Duas formações precedem Guardião"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Guardiāo vencido aguarda amanhecer"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Vitória abre resumo e pausa combate"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Continuar por mouse/toque preserva o mundo"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Migração IndexedDB tem backup exato, repetível e conflito protegido"
+    }
+  ],
+  "errors": [],
+  "frameSamples": [
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "region": "lens",
+      "median_ms": 16.700000000000728,
+      "p95_ms": 16.799999999999272,
+      "frames": 45
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "region": "coil",
+      "median_ms": 16.700000000000728,
+      "p95_ms": 17.299999999999272,
+      "frames": 45
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "region": "lens",
+      "median_ms": 16.69999999999891,
+      "p95_ms": 16.799999999999272,
+      "frames": 45
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "region": "coil",
+      "median_ms": 16.69999999999891,
+      "p95_ms": 16.799999999999272,
+      "frames": 45
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "region": "lens",
+      "median_ms": 16.69999999999891,
+      "p95_ms": 16.799999999999272,
+      "frames": 45
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "region": "coil",
+      "median_ms": 16.69999999999891,
+      "p95_ms": 16.799999999999272,
+      "frames": 45
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "date": "2026-10-29",
+  "version": "0.9.1-beta-rc.1",
+  "branch": "release/solo-beta-rc1",
+  "game_commit": "3450cabfef156e46d2df3b946913455fd5c95e0a",
+  "physical": false,
+  "native": [
+    {
+      "test": "validate_world_library",
+      "exit": 0,
+      "failure": false,
+      "checks": 19
+    },
+    {
+      "test": "validate_account_progress",
+      "exit": 0,
+      "failure": false,
+      "checks": 21
+    },
+    {
+      "test": "validate_session_progress",
+      "exit": 0,
+      "failure": false,
+      "checks": 10
+    },
+    {
+      "test": "validate_save_reliability",
+      "exit": 0,
+      "failure": false,
+      "checks": 20
+    },
+    {
+      "test": "validate_world_sync",
+      "exit": 0,
+      "failure": false,
+      "checks": 30
+    },
+    {
+      "test": "validate_chest_bow_save",
+      "exit": 0,
+      "failure": false,
+      "checks": 26
+    },
+    {
+      "test": "validate_auth_release",
+      "exit": 0,
+      "failure": false,
+      "checks": 10
+    },
+    {
+      "test": "validate_sync_pilot",
+      "exit": 0,
+      "failure": false,
+      "checks": 13
+    },
+    {
+      "test": "validate_sync_handoff",
+      "exit": 0,
+      "failure": false,
+      "checks": 14
+    },
+    {
+      "test": "validate_solo_campaign",
+      "exit": 0,
+      "failure": false,
+      "checks": 60
+    },
+    {
+      "test": "validate_solo_combat",
+      "exit": 0,
+      "failure": false,
+      "checks": 33
+    },
+    {
+      "test": "validate_solo_migration",
+      "exit": 0,
+      "failure": false,
+      "checks": 26
+    },
+    {
+      "test": "validate_campaign_tasks",
+      "exit": 0,
+      "failure": false,
+      "checks": 46
+    },
+    {
+      "test": "validate_tower_navigation",
+      "exit": 0,
+      "failure": false,
+      "checks": 125
+    },
+    {
+      "test": "validate_pilot_reopen",
+      "exit": 0,
+      "failure": false,
+      "checks": 57
+    },
+    {
+      "test": "validate_controls",
+      "exit": 0,
+      "failure": false,
+      "checks": 7
+    },
+    {
+      "test": "validate_monsters",
+      "exit": 0,
+      "failure": false,
+      "checks": 18
+    },
+    {
+      "test": "validate_expansion",
+      "exit": 0,
+      "failure": false,
+      "checks": 15
+    },
+    {
+      "test": "validate_wells",
+      "exit": 0,
+      "failure": false,
+      "checks": 12
+    },
+    {
+      "test": "validate_ruins",
+      "exit": 0,
+      "failure": false,
+      "checks": 27
+    },
+    {
+      "test": "validate_crafting",
+      "exit": 0,
+      "failure": false,
+      "checks": 12
+    },
+    {
+      "test": "validate_journal",
+      "exit": 0,
+      "failure": false,
+      "checks": 18
+    },
+    {
+      "test": "validate_mobile",
+      "exit": 0,
+      "failure": false,
+      "checks": 30
+    },
+    {
+      "test": "validate_menu",
+      "exit": 0,
+      "failure": false,
+      "checks": 14
+    },
+    {
+      "test": "validate_presentation",
+      "exit": 0,
+      "failure": false,
+      "checks": 51
+    }
+  ],
+  "final": [
+    {
+      "test": "validate_beta_access",
+      "exit": 0,
+      "failure": false,
+      "checks": 12
+    },
+    {
+      "test": "validate_controls",
+      "exit": 0,
+      "failure": false,
+      "checks": 7
+    },
+    {
+      "test": "validate_mobile",
+      "exit": 0,
+      "failure": false,
+      "checks": 30
+    },
+    {
+      "test": "validate_presentation",
+      "exit": 0,
+      "failure": false,
+      "checks": 51
+    }
+  ],
+  "rules": {
+    "tests": 22,
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "project": "demo-tece-island"
+  },
+  "notes": [
+    "Native game tests use copied or synthetic saves in isolated APPDATA.",
+    "Full release new-player auth is mocked in browser transport; no synthetic tokens go to Firebase.",
+    "Real Firebase invalid-login requests checked from PC and mobile-emulated formats; no production account created.",
+    "Save-on-hide callback was invoked explicitly in release UI test; physical OS suspend remains pending.",
+    "Performance samples use headless Edge on this PC with mobile viewport emulation, not a physical mobile device.",
+    "Existing user report: one complete solo pilot .4 campaign, day-seven victory, device unspecified."
+  ],
+  "native_unique_suites": 26,
+  "native_unique_checks": 726,
+  "affected_suites_rerun": true,
+  "web_checks_before_chat": 246,
+  "compiled_pack_checks": 5,
+  "publication": {
+    "site_id": "appgprj_6ae3d5c2c024819192cf6aa8c70c7b47",
+    "version": 1,
+    "url": "https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/",
+    "source_commit": "e9ea43e3eda9ffc7a3f6c9e540232a0f0d37d790",
+    "deployment": "appgdep_6ae3da884bf08191b6aea3bb09767a50",
+    "result": "succeeded",
+    "pck_sha256": "0985ad616f5b9c5e1f1fb12c23c9a81221fdf4d64f4f0c1e431c54719dea464d",
+    "served_checks": 20
+  },
+  "chat_browser_checks": 44,
+  "web_checks_total": 290,
+  "chat_browser_errors": [],
+  "chat_emulator": {
+    "project": "demo-tece-island",
+    "physical": false,
+    "completed": true
+  },
+  "published_browser_checks": 7,
+  "published_asset_checks": 20,
+  "positive_production_login": false,
+  "real_signup_and_email_confirmation": false,
+  "public_auth_config": {
+    "officialDomainAuthorized": true,
+    "candidateDomainAdded": false,
+    "continueUrlPreserved": true
+  },
+  "multiplayer": {
+    "branch": "feat/multiplayer-pilot",
+    "head": "a8ab12f",
+    "servicesStopped": true,
+    "ram": "already lost before inspection; logs terminated 2026-10-25"
+  },
+  "scope": {
+    "gameMechanics": "No changes to campaign, clock, recipes, enemies, terrain or combat balance",
+    "saves": "Only copies of v5/v6/v7/v8 fixtures and victory checkpoints used; personal browser saves not accessed",
+    "firebase": "No rule, index, account, billing or production data mutation",
+    "audience": "Candidate private owner access; official public 0.9.0 preserved",
+    "IDE": "Root feat/solo-seventh-night and project.godot whitespace change preserved"
+  }
+}

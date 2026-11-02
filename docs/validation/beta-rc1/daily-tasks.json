@@ -1,0 +1,356 @@
+{
+  "results": [
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Kit inicial tem quatro tarefas e contador"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Painel cabe acima dos controles no PC/mobile"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Fabricação real marca todas com check"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Recolher mantém contador e libera espaço"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Reload IndexedDB mantém conquistas e recolhimento"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Perder itens não apaga fabricação"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Etapa do mapa mostra requisito noturno"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Bolsa e armadura equipada são condições distintas"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Equipar conclui condição atual"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Comer e beber reduzem contadores atuais"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Diário reúne etapas, checks e pendências antigas"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Fechar diário devolve os controles"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false
+      },
+      "pass": true,
+      "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Kit inicial tem quatro tarefas e contador"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Painel cabe acima dos controles no PC/mobile"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Fabricação real marca todas com check"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Recolher mantém contador e libera espaço"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Reload IndexedDB mantém conquistas e recolhimento"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Perder itens não apaga fabricação"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Etapa do mapa mostra requisito noturno"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Bolsa e armadura equipada são condições distintas"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Equipar conclui condição atual"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Comer e beber reduzem contadores atuais"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Diário reúne etapas, checks e pendências antigas"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Fechar diário devolve os controles"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Kit inicial tem quatro tarefas e contador"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Painel cabe acima dos controles no PC/mobile"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Fabricação real marca todas com check"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Recolher mantém contador e libera espaço"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Reload IndexedDB mantém conquistas e recolhimento"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Perder itens não apaga fabricação"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Etapa do mapa mostra requisito noturno"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Bolsa e armadura equipada são condições distintas"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Equipar conclui condição atual"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Comer e beber reduzem contadores atuais"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Diário reúne etapas, checks e pendências antigas"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Fechar diário devolve os controles"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true
+      },
+      "pass": true,
+      "label": "Migração v7 para v8 preserva backup exato e rejeita gravação obsoleta"
+    }
+  ],
+  "errors": []
+}

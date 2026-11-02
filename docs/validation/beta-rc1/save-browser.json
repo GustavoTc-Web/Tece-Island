@@ -1,0 +1,50 @@
+[
+  {
+    "pass": true,
+    "label": "Gravação só confirma após concluir transação IndexedDB"
+  },
+  {
+    "pass": true,
+    "label": "Recarregar página mantém os bytes do mundo"
+  },
+  {
+    "pass": true,
+    "label": "Fechar navegador e reabrir perfil próprio mantém save"
+  },
+  {
+    "pass": true,
+    "label": "Primeira sessão grava a alteração"
+  },
+  {
+    "pass": true,
+    "label": "Duas abas: sessão antiga não sobrescreve save recente"
+  },
+  {
+    "pass": true,
+    "label": "Conflito e backup são preservados em armazenamento durável"
+  },
+  {
+    "pass": true,
+    "label": "Varredura encontra mundo mesmo sem registro no catálogo"
+  },
+  {
+    "pass": true,
+    "label": "Dois mundos e contas não compartilham chaves"
+  },
+  {
+    "pass": true,
+    "label": "Backup antes da nuvem é único e conserva a primeira versão"
+  },
+  {
+    "pass": true,
+    "label": "Operação inválida nunca retorna sucesso"
+  },
+  {
+    "pass": true,
+    "label": "Godot Web salva contas separadas e migra legado uma vez com original preservado"
+  },
+  {
+    "pass": true,
+    "label": "Godot Web recarrega progresso das mesmas contas após reload"
+  }
+]

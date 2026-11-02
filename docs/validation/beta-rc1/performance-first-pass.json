@@ -1,0 +1,99 @@
+{
+  "physical": false,
+  "renderer": "Headless Edge with SwiftShader permitted; no physical mobile GPU",
+  "scope": "Godot Engine FPS and TIME_PROCESS sampled every 100ms for 70 samples per scenario; this is not a per-frame p95 or a network RTT benchmark",
+  "scenarios": [
+    {
+      "format": "PC-emulated",
+      "scenario": "spawn-movement",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "load_ready_ms": 5044.4169999999995,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 59,
+      "sampled_process_p95_ms": 26.9,
+      "draw_calls_median": 216
+    },
+    {
+      "format": "PC-emulated",
+      "scenario": "expanded-biome",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "load_ready_ms": 5044.4169999999995,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 46,
+      "sampled_process_p95_ms": 26.5,
+      "draw_calls_median": 113
+    },
+    {
+      "format": "PC-emulated",
+      "scenario": "temple-encounter",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "load_ready_ms": 5044.4169999999995,
+      "samples": 70,
+      "fps_median": 54,
+      "fps_min": 41,
+      "sampled_process_p95_ms": 35.8,
+      "draw_calls_median": 203
+    },
+    {
+      "format": "mobile-emulated",
+      "scenario": "spawn-movement",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "deviceScaleFactor": 2,
+      "load_ready_ms": 2393.6947999999975,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 58,
+      "sampled_process_p95_ms": 36.7,
+      "draw_calls_median": 251
+    },
+    {
+      "format": "mobile-emulated",
+      "scenario": "expanded-biome",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "deviceScaleFactor": 2,
+      "load_ready_ms": 2393.6947999999975,
+      "samples": 70,
+      "fps_median": 60,
+      "fps_min": 60,
+      "sampled_process_p95_ms": 26.1,
+      "draw_calls_median": 130
+    },
+    {
+      "format": "mobile-emulated",
+      "scenario": "temple-encounter",
+      "viewport": {
+        "width": 852,
+        "height": 393
+      },
+      "deviceScaleFactor": 2,
+      "load_ready_ms": 2393.6947999999975,
+      "samples": 70,
+      "fps_median": 45,
+      "fps_min": 33,
+      "sampled_process_p95_ms": 73.7,
+      "draw_calls_median": 223
+    }
+  ],
+  "errors": [],
+  "run_context": "First completed pass while other QA activity could contend for this PC"
+}

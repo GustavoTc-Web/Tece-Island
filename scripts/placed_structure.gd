@@ -47,7 +47,8 @@ func _ready() -> void:
 func prompt() -> String:
 	if kind == "porta_madeira": return "E — Fechar porta" if door_open else "E — Abrir porta"
 	if kind == "bau": return "E — Abrir " + chest_name
-	return "E — Definir reaparecimento / dormir" if kind == "cama" else "E — Preparar carne na fogueira"
+	if kind == "cama": return "E — Cama · " + (system.bed_status(self) if system != null else "Definir reaparecimento")
+	return "E — Preparar carne na fogueira"
 
 func set_highlighted(value: bool) -> void:
 	highlighted = value

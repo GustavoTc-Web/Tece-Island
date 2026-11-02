@@ -124,3 +124,25 @@ test('contagem limitada detecta remoção sem expor dados ou ampliar acesso',asy
  await assertFails(getCountFromServer(collection(db(),'globalMessages')));
  await assertFails(getCountFromServer(query(collection(db(),'globalMessages'),limit(51))));
 });
+
+test('prepared verified-chat mode admits new verified UID without granting administration or foreign saves',async()=>{
+ await env.withSecurityRulesDisabled(c=>setDoc(doc(c.firestore(),'chatSettings/global'),{enabled:true,access_mode:'verified',allowed_uids:users,admin_uids:['chat-admin']}));
+ try{
+  await reset();const client=db('new-verified');
+  await assertSucceeds(setDoc(doc(client,'chatProfiles/new-verified'),{nickname:'Nova conta'}));
+  await assertSucceeds(send(client,'new-verified',{nickname:'Nova conta'}));
+  await assertSucceeds(getDocs(query(collection(client,'globalMessages'),limit(50))));
+  await assertFails(deleteDoc(doc(client,'globalMessages/1')));
+  await assertFails(setDoc(doc(client,'chatSettings/global'),{enabled:true,access_mode:'verified',allowed_uids:users,admin_uids:['new-verified']}));
+  await assertFails(setDoc(doc(client,'chatProfiles/new-verified'),{nickname:'Nova conta',admin:true}));
+  await assertFails(getDoc(doc(client,'users/chat-a/worlds/private-world')));
+  for(const denied of [db('new-unverified',false),env.unauthenticatedContext().firestore()]){
+   await assertFails(getDocs(query(collection(denied,'globalMessages'),limit(50))));
+   await assertFails(setDoc(doc(denied,'chatProfiles/new-unverified'),{nickname:'Nao verificada'}));
+  }
+  await assertSucceeds(deleteDoc(doc(db('chat-admin'),'globalMessages/1')));
+ }finally{
+  await env.withSecurityRulesDisabled(c=>setDoc(doc(c.firestore(),'chatSettings/global'),{enabled:true,allowed_uids:users,admin_uids:['chat-admin']}));
+ }
+ await assertFails(getDoc(doc(db('new-verified'),'chatSettings/global')));
+});

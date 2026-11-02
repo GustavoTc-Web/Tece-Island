@@ -1,7 +1,22 @@
 # Tece Island — solo Web e controles de toque
 
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
-O navegador oferece o mapa solo completo. O teste multiplayer ENet permanece no desktop.
+O navegador oferece o mapa e a campanha solo completos. Multiplayer indisponível
+nesta beta, sem data anunciada. O piloto foi preservado e seus serviços temporários
+encerrados; veja [registro](docs/MULTIPLAYER_ADIADO_BETA.md).
+
+Beta solo pública: **0.9.1-beta.1**, save **9**, campanha **2**, tarefas **2**.
+**[Jogar no navegador](https://gustavotc-web.github.io/Tece-Island/)** — PC ou celular em paisagem.
+Promoção da candidata **0.9.1-beta-rc.2** aprovada pelo usuário, sem novas funcionalidades.
+[Escopo, publicação e limitações](docs/PUBLICACAO_0_9_1_BETA_1.md).
+O solo aceita contas com e-mail confirmado; **chat e sincronização continuam no
+teste fechado de duas contas**. Abrir o chat para novas contas será uma etapa
+separada: [configurações e orçamento](docs/CHAT_BETA_RC2.md).
+A [recuperação exige cliente compatível com v9](docs/RECUPERACAO_BETA_V9.md):
+**voltar apenas à 0.9.0 não abre saves já migrados**.
+[Reteste manual curto](docs/RETESTE_MANUAL_RC2.md). O usuário confirmou os últimos
+ajustes; isso não confirma uma campanha completa na RC2. A campanha exploratória
+pelo controlador não foi executada por limitação da ferramenta.
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
 campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).
@@ -10,7 +25,10 @@ Saves v8 exigem [recuperação com cliente compatível](docs/RECUPERACAO_0_9_0.m
 Confiabilidade dos saves e piloto de sincronização Firestore:
 [investigação, configuração e testes](docs/SAVES_E_SINCRONIZACAO.md).
 Na build pública, chat e sincronização ficam restritos às mesmas duas contas
-autorizadas; os defaults de desenvolvimento continuam desligados. Para mundos desaparecidos, siga a
+autorizadas; os defaults de desenvolvimento continuam desligados. O solo aceita
+qualquer conta de e-mail confirmado, com progresso local por conta, endereço,
+navegador e aparelho. Para as demais contas, não há sincronização automática.
+Para mundos desaparecidos, siga a
 [exportação e recuperação sem apagar armazenamento](docs/RECUPERAR_MUNDO.md).
 
 ## Começar
@@ -32,7 +50,7 @@ importantes, ao perder foco e antes de retornar ao menu ou sair da conta.
 O indicador distingue gravação local, sincronizando, sincronizado e pendência/falha
 com nova tentativa. Sincronizado exige confirmação do serviço.
 Godot usa `user://accounts/<SHA-256 do UID>/worlds/<ID>/progress.json`, temporário,
-cópia anterior `.backup.json` e backup versionado antes da migração para v5.
+cópia anterior `.backup.json` e backups versionados antes das migrações até v9.
 O catálogo fica em `worlds.json` na pasta da conta. O save anterior dessa conta
 migra uma vez para **Meu primeiro mundo**, com verificação e backup, mantendo o
 arquivo original. Inventário, equipamento, baús, objetivos e mundo são independentes.
@@ -51,8 +69,9 @@ um item e use Guardar/Retirar pilha ou T; transferências parciais conservam o r
 Renomeie o baú em até 24 caracteres. O painel Base seleciona e confirma desmontagem:
 50% dos materiais, arredondados para baixo, com excedentes no chão; baú cheio bloqueado.
 Diário por J ou Menu → Diário e objetivos reúne O Último Sinal e a sequência inicial.
-Objetivos mostra uma etapa por vez: madeira, pedra, três equipamentos de pedra,
-fogueira e bolsa nível 3. Fabricações antecipadas ficam registradas.
+O HUD acompanha tarefas por dia, contador, requisitos e conclusões automáticas;
+o Diário mantém todas as etapas, inclusive atrasadas. Bolsa nível 1 é a meta do
+dia 2; níveis superiores são opcionais. Fabricações antecipadas ficam registradas.
 Menu → Configurações permite volume/silenciar e mostrar objetivos.
 Detalhes: [ATUALIZACAO_SINAL.md](docs/ATUALIZACAO_SINAL.md) e
 [usabilidade mobile, testes e capturas](docs/USABILIDADE_MOBILE.md).
@@ -186,7 +205,11 @@ do chão. Intervalos: mãos 1,20 s, madeira 0,54 s, pedra 0,36 s.
 Combate valida alcance, direção e linha de visão. Pistola: oito tiros, intervalo
 0,45 s, recarga 1,2 s. Espingarda: dois cartuchos, seis projéteis por disparo,
 intervalo 1,2 s, recarga 1,8 s. A cadência é compartilhada por todas as entradas.
-Cama define reaparecimento e permite dormir à noite sem inimigo próximo.
+Cama define reaparecimento. Antes da vitória, dormir consome um uso obtido pela
+primeira conclusão de uma etapa atrasada; objetivos em dia não permitem pular
+a noite. O uso e seu consumo persistem após reabrir. Combate próximo, Ruínas
+Escuras, encontro de templo ativo e ataque final bloqueiam o sono. Após a vitória,
+é possível dormir em noite segura para continuar explorando.
 Fogueira fornece luz local e permite cozinhar a até 100 pixels com linha de visão.
 Colocação valida distância, bordas e colisões; somente confirmar consome o item.
 

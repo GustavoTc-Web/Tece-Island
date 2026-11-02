@@ -1,0 +1,215 @@
+{
+  "kind": "automated-browser-and-local-emulator",
+  "physical": false,
+  "results": [
+    {
+      "name": "botão Chat disponível nas duas sessões autenticadas",
+      "ok": true
+    },
+    {
+      "name": "apelido exigido e persistido antes do primeiro envio",
+      "ok": true
+    },
+    {
+      "name": "segunda sessão reutiliza apelido da conta",
+      "ok": true
+    },
+    {
+      "name": "Godot Web → regras do emulador → segunda sessão recebe mensagem uma vez",
+      "ok": true
+    },
+    {
+      "name": "recebimento automático preserva texto digitado",
+      "ok": true
+    },
+    {
+      "name": "resposta da sessão mobile chega ao PC",
+      "ok": true
+    },
+    {
+      "name": "backend recusa excesso mesmo removendo o timer do cliente",
+      "ok": true
+    },
+    {
+      "name": "dois painéis permanecem abertos por mais de 15 s, sem consulta forçada ou duplicação",
+      "ok": true
+    },
+    {
+      "name": "Tentar conexão só aparece quando existe falha",
+      "ok": true
+    },
+    {
+      "name": "Alterar apelido mostra nome atual",
+      "ok": true
+    },
+    {
+      "name": "cancelar preserva apelido e rascunho",
+      "ok": true
+    },
+    {
+      "name": "validação mantém edição aberta para corrigir caracteres",
+      "ok": true
+    },
+    {
+      "name": "salvar atualiza apelido sem apagar mensagem em edição",
+      "ok": true
+    },
+    {
+      "name": "apelido persistido aparece em outra sessão/aparelho da conta",
+      "ok": true
+    },
+    {
+      "name": "próximo envio consulta perfil atual mesmo com apelido antigo no outro aparelho",
+      "ok": true
+    },
+    {
+      "name": "mensagens antigas conservam apelido do envio",
+      "ok": true
+    },
+    {
+      "name": "apelido persiste após recarregar e autenticar novamente",
+      "ok": true
+    },
+    {
+      "name": "silenciar remove mensagens localmente",
+      "ok": true
+    },
+    {
+      "name": "silenciamento continua vinculado ao UID após mudar apelido",
+      "ok": true
+    },
+    {
+      "name": "reativar restaura a visualização",
+      "ok": true
+    },
+    {
+      "name": "reativar também mostra mensagens com o novo apelido",
+      "ok": true
+    },
+    {
+      "name": "painéis fechados encerram consultas, sem assinaturas persistentes",
+      "ok": true
+    },
+    {
+      "name": "abrir e recolher repetidamente reutiliza o serviço sem duplicar consultas",
+      "ok": true
+    },
+    {
+      "name": "troca de cena conserva rascunho e reutiliza serviço",
+      "ok": true
+    },
+    {
+      "name": "digitação bloqueia movimento, ataque, inventário e atalhos durante a partida",
+      "ok": true
+    },
+    {
+      "name": "recebimento nas duas direções com partida pausada e painéis continuamente abertos por mais de 15 s",
+      "ok": true
+    },
+    {
+      "name": "novas mensagens acompanham automaticamente quem está no fim",
+      "ok": true
+    },
+    {
+      "name": "quem lê mensagens antigas mantém posição e rascunho e recebe aviso",
+      "ok": true
+    },
+    {
+      "name": "Ver novas mensagens leva ao fim e limpa aviso",
+      "ok": true
+    },
+    {
+      "name": "falha incremental mostra código e recupera mensagem por consulta limitada",
+      "ok": true
+    },
+    {
+      "name": "aba oculta simulada suspende consultas de chat",
+      "ok": true
+    },
+    {
+      "name": "retorno à aba recupera mensagens automaticamente sem apagar rascunho",
+      "ok": true
+    },
+    {
+      "name": "enviar permanece acessível com viewport de teclado reduzido (emulação)",
+      "ok": true
+    },
+    {
+      "name": "recolher permanece acessível com viewport reduzido",
+      "ok": true
+    },
+    {
+      "name": "chat pode continuar em retrato sobre a orientação do jogo",
+      "ok": true
+    },
+    {
+      "name": "queda de rede mostra falha compreensível",
+      "ok": true
+    },
+    {
+      "name": "falha no envio preserva rascunho",
+      "ok": true
+    },
+    {
+      "name": "reconexão recupera o histórico sem duplicar mensagens",
+      "ok": true
+    },
+    {
+      "name": "campo limita digitação a 200 caracteres",
+      "ok": true
+    },
+    {
+      "name": "HTML e marcação aparecem como texto, sem elementos executáveis",
+      "ok": true
+    },
+    {
+      "name": "administrador remove e reconciliação automática reflete exclusão sem fechar painel",
+      "ok": true
+    },
+    {
+      "name": "logout limpa rascunho, histórico, requisições e interface",
+      "ok": true
+    },
+    {
+      "name": "troca de conta usa apelido próprio e não restaura rascunho anterior",
+      "ok": true
+    },
+    {
+      "name": "um único pedido de chat por sessão, inclusive ao enviar durante atualização",
+      "ok": true
+    },
+    {
+      "name": "sem erros GDScript ou JavaScript na execução Web",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "latencies": [
+    {
+      "phase": "lobby-pc-mobile",
+      "ms": 5254
+    },
+    {
+      "phase": "lobby-mobile-pc",
+      "ms": 1049
+    },
+    {
+      "phase": "paused-pc-mobile",
+      "ms": 5256
+    },
+    {
+      "phase": "paused-mobile-pc",
+      "ms": 1083
+    },
+    {
+      "phase": "simulated-tab-resume",
+      "ms": 3370
+    },
+    {
+      "phase": "admin-removal",
+      "ms": 120882
+    }
+  ],
+  "max_requests_per_session": 1,
+  "chat_requests": 150
+}

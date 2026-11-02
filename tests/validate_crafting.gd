@@ -22,13 +22,14 @@ func run() -> void:
 	hud.crafting_view.refresh()
 	check(hud.crafting_view.rows.picareta_pedra.visible and not hud.crafting_view.rows.machado_pedra.visible, "Busca filtra pelo nome")
 	hud.crafting_view.search.text = ""
-	hud.crafting_view.group = "Alimentos"
+	hud.crafting_view.search.text = "receita inexistente"
 	hud.crafting_view.refresh()
-	check(hud.crafting_view.empty.visible, "Categoria vazia explica fogueira sem inventar receita")
+	check(hud.crafting_view.empty.visible and hud.crafting_view.tabs.get_child_count() == 3, "Busca vazia tem explicação e não existe aba Alimentos")
 	hud.set_panel("crafting")
 	hud._craft("carne_cozida")
 	check(inv.count_item("carne_cozida") == 0, "Comando de cozinha rejeitado fora da interface da fogueira")
 	inv.add_resource("madeira", 4)
+	hud.crafting_view.search.text = ""
 	inv.add_resource("fibra", 4)
 	hud.crafting_view.group = "Recursos"
 	hud.crafting_view.refresh()

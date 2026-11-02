@@ -28,7 +28,7 @@ func initialize(owner_hud: CanvasLayer, source: ResourceInventory) -> void:
 	tabs = HBoxContainer.new()
 	parent.add_child(tabs)
 	parent.move_child(tabs, 3)
-	for name in ["Ferramentas", "Recursos", "Alimentos", "Armaduras"]:
+	for name in ["Ferramentas", "Recursos", "Armaduras"]:
 		var button := Button.new()
 		button.text = name
 		button.custom_minimum_size.y = 48
@@ -103,4 +103,4 @@ func refresh() -> void:
 		reasons[id].text = error
 		reasons[id].visible = error != ""
 	empty.visible = count == 0
-	empty.text = "Não há receitas sem cozimento. Prepare alimentos na fogueira." if group == "Alimentos" and not cooking and search.text.is_empty() else "Nenhuma receita encontrada."
+	empty.text = "Nenhuma receita encontrada."

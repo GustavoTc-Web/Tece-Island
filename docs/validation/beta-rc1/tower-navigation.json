@@ -1,0 +1,338 @@
+{
+  "results": [
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Torre e rumo aparecem sem examinar sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Reproduz etapa 3 em 4/5, inclusive no dia 4"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Objetivos e minimapa não se sobrepõem"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Nome e rumo cabem no HUD"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Percurso completo até o mapa usa movimento e colisões reais"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Na base, pergaminho selecionado e restrição diurna explícita"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Interagir de dia mantém missão pendente"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "À noite informa tecla e botão de interação"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Coleta real na noite 3 conclui objetivo e remove marcador"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "AccountProgress confirma coleta gravada no IndexedDB"
+    },
+    {
+      "dimensions": {
+        "width": 1280,
+        "height": 720,
+        "touch": false,
+        "night": 3
+      },
+      "pass": true,
+      "label": "Reabrir IndexedDB pelo carregador real mantém coleta e não recria pendência"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Torre e rumo aparecem sem examinar sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Reproduz etapa 3 em 4/5, inclusive no dia 4"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Objetivos e minimapa não se sobrepõem"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Nome e rumo cabem no HUD"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Percurso completo até o mapa usa movimento e colisões reais"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Na base, pergaminho selecionado e restrição diurna explícita"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Interagir de dia mantém missão pendente"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "À noite informa tecla e botão de interação"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Coleta real na noite 4 conclui objetivo e remove marcador"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "AccountProgress confirma coleta gravada no IndexedDB"
+    },
+    {
+      "dimensions": {
+        "width": 852,
+        "height": 393,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Reabrir IndexedDB pelo carregador real mantém coleta e não recria pendência"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Torre e rumo aparecem sem examinar sinalizador"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Reproduz etapa 3 em 4/5, inclusive no dia 4"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Objetivos e minimapa não se sobrepõem"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Nome e rumo cabem no HUD"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Percurso completo até o mapa usa movimento e colisões reais"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Na base, pergaminho selecionado e restrição diurna explícita"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Interagir de dia mantém missão pendente"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "À noite informa tecla e botão de interação"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Coleta real na noite 4 conclui objetivo e remove marcador"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "AccountProgress confirma coleta gravada no IndexedDB"
+    },
+    {
+      "dimensions": {
+        "width": 640,
+        "height": 360,
+        "touch": true,
+        "night": 4
+      },
+      "pass": true,
+      "label": "Reabrir IndexedDB pelo carregador real mantém coleta e não recria pendência"
+    }
+  ],
+  "errors": [],
+  "automated": true,
+  "human_played": false,
+  "enemies_disabled": true
+}

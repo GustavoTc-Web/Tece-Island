@@ -256,7 +256,9 @@ func _physics_process(_delta: float) -> void:
 
 func update_activity() -> void:
 	for node in $WorldObjects.get_children():
-		if node is AbandonedBuilding: node.show_name(node.global_position.distance_to($WorldObjects/Player.global_position) <= maxf(180, node.footprint.length() * 0.55))
+		if node is AbandonedBuilding:
+			node.show_name(node.global_position.distance_to($WorldObjects/Player.global_position) <= maxf(180, node.footprint.length() * 0.55))
+			node.reveal_near($WorldObjects/Player.global_position)
 		if node.is_queued_for_deletion() or not (node is ForestCreature or node is NeutralAnimal or node is HarvestResource or node is PlacedStructure): continue
 		var distance: float = node.global_position.distance_to($WorldObjects/Player.global_position)
 		if node is ForestCreature and node.fading:
@@ -271,6 +273,9 @@ func update_activity() -> void:
 			node.queue_free()
 			continue
 		var active := distance <= 1600
+		if node is ForestCreature and node.has_meta("interior_owner"):
+			var building: Node2D = node.get_meta("interior_owner")
+			active = active and is_instance_valid(building) and building.interior_revealed
 		if bool(node.get_meta("activity_active", true)) == active: continue
 		node.set_meta("activity_active", active)
 		node.visible = active

@@ -1,0 +1,27 @@
+{
+  "checks": [
+    {
+      "label": "exact committed pilot build",
+      "pass": true
+    },
+    {
+      "label": "same two authorized accounts and preserved chat/sync",
+      "pass": true
+    },
+    {
+      "label": "actual pilot pack loads legacy-v5 without altering original",
+      "pass": true
+    },
+    {
+      "label": "actual pilot pack loads pilot-v8-won without altering original",
+      "pass": true
+    },
+    {
+      "label": "mandatory auth and no development fixture",
+      "pass": true
+    }
+  ],
+  "commit": "3450cabfef156e46d2df3b946913455fd5c95e0a",
+  "pass": true,
+  "version": "0.9.1-beta-rc.1"
+}

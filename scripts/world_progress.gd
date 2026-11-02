@@ -17,6 +17,7 @@ func capture() -> Dictionary:
 	result.region_wells = world.region_wells.duplicate(true)
 	result.region_buildings = world.region_buildings.duplicate(true)
 	result.building_loot = {}
+	result.building_interiors = {}
 	result.wells_policy = "fixed"
 	result.journal = world.journal.capture()
 	result.objectives = world.objectives.capture()
@@ -30,6 +31,7 @@ func capture() -> Dictionary:
 	for region in WorldTerrain.regions(): result.generated_regions.append(region.id)
 	for node in world.get_node("WorldObjects").get_children():
 		if node.is_queued_for_deletion(): continue
+		if node is AbandonedBuilding: result.building_interiors[SaveStore.key(node.position)] = node.capture_interior()
 		if node is PlacedStructure:
 			var state := {"kind": node.kind, "position": SaveStore.point(node.position)}
 			state.id = node.structure_id
@@ -74,6 +76,7 @@ func _load_progress() -> void:
 			writable = false
 	if data.has("region_wells") and data.region_wells is Dictionary and not NaturalWells.valid_metadata(data.region_wells): writable = false
 	if data.has("region_buildings") and data.region_buildings is Dictionary and not RegionalBuildings.valid(data.region_buildings): writable = false
+	if not AbandonedBuilding.valid_interiors(data.get("building_interiors", {})): writable = false
 	if not writable:
 		world.get_node("HUD").show_message("Progresso incompatível: o save original foi preservado.")
 		return
@@ -143,6 +146,9 @@ func _load_progress() -> void:
 	world.get_node("DayNight").elapsed = maxf(0, float(data.get("elapsed", 0)))
 	world.get_node("DayNight").refresh()
 	var objects: Node2D = world.get_node("WorldObjects")
+	for building in objects.get_children():
+		if building is AbandonedBuilding and data.get("building_interiors", {}).has(SaveStore.key(building.position)):
+			building.restore_interior(data.building_interiors[SaveStore.key(building.position)])
 	for node in objects.get_children():
 		if node is ResourceDrop: node.queue_free()
 		elif node is HarvestResource and data.has("resources"):

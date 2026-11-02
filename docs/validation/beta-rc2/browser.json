@@ -1,0 +1,756 @@
+{
+  "technical": true,
+  "notExploratoryCampaign": true,
+  "results": [
+    {
+      "mobile": false,
+      "name": "Mouse drag is active with visible preview",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Slot 7 to 1 swaps whole stacks and equipped reference",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Invalid drop and discard key cancel without loss or attack",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Quickbar immediately reflects swapped order",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Browser reopen retains sorted slots and equipment",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "house-upper-left camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "house-upper-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "house-lower-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "House entrance and exit keep physical geometry",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Opening upper temple chest releases visible nearby ground items",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-upper-left-drops camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Normal E or mobile Interagir collects the released item",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-upper-left camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-upper-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-lower-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-lower-left-drops camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-lower-left camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "Reopen inside lower temple retains position and campaign",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "temple-reopened camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": false,
+      "name": "No engine/browser script errors",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "Slot 7 to 1 swaps whole stacks and equipped reference",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "Quickbar immediately reflects swapped order",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "Browser reopen retains sorted slots and equipment",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "house-upper-left camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "house-upper-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "house-lower-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "House entrance and exit keep physical geometry",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "Opening upper temple chest releases visible nearby ground items",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-upper-left-drops camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "Normal E or mobile Interagir collects the released item",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-upper-left camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-upper-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-lower-right camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-lower-left-drops camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-lower-left camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "Reopen inside lower temple retains position and campaign",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "temple-reopened camera contains actor",
+      "ok": true
+    },
+    {
+      "mobile": true,
+      "name": "No engine/browser script errors",
+      "ok": true
+    }
+  ],
+  "evidence": [
+    {
+      "mobile": false,
+      "name": "house-upper-left",
+      "path": ".tools/screenshots/after-house-upper-left-pc.png",
+      "position": [
+        464.424011230469,
+        1190.5
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "house-upper-right",
+      "path": ".tools/screenshots/after-house-upper-right-pc.png",
+      "position": [
+        625.424011230469,
+        1190.5
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "house-lower-right",
+      "path": ".tools/screenshots/after-house-lower-right-pc.png",
+      "position": [
+        625.424011230469,
+        1320
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "temple-upper-left-drops",
+      "path": ".tools/screenshots/after-temple-upper-left-drops-pc.png",
+      "position": [
+        -2517.5,
+        340.909118652344
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            459.5,
+            255.999969482422
+          ]
+        },
+        {
+          "item": "pedra",
+          "position": [
+            -2514,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            483.5,
+            255.999969482422
+          ]
+        }
+      ],
+      "prompt": "E — Recolher 1 Pedra"
+    },
+    {
+      "mobile": false,
+      "name": "temple-upper-left",
+      "path": ".tools/screenshots/after-temple-upper-left-pc.png",
+      "position": [
+        -2594.5,
+        232.409118652344
+      ],
+      "screen": [
+        477.5,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            364.499969482422
+          ]
+        }
+      ],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "temple-upper-right",
+      "path": ".tools/screenshots/after-temple-upper-right-pc.png",
+      "position": [
+        -2019.13012695312,
+        234.557434082031
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "temple-lower-right",
+      "path": ".tools/screenshots/after-temple-lower-right-pc.png",
+      "position": [
+        -2022.63012695312,
+        605.557434082031
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "temple-lower-left-drops",
+      "path": ".tools/screenshots/after-temple-lower-left-drops-pc.png",
+      "position": [
+        -2516.13012695312,
+        577.557434082031
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            458.130126953125,
+            19.3516540527344
+          ]
+        },
+        {
+          "item": "madeira",
+          "position": [
+            -2538,
+            566.909057617188
+          ],
+          "quantity": 1,
+          "screen": [
+            458.130126953125,
+            259.351623535156
+          ]
+        }
+      ],
+      "prompt": "E — Recolher 1 Madeira"
+    },
+    {
+      "mobile": false,
+      "name": "temple-lower-left",
+      "path": ".tools/screenshots/after-temple-lower-left-pc.png",
+      "position": [
+        -2589.63012695312,
+        605.557434082031
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            531.630126953125,
+            -8.64834594726562
+          ]
+        }
+      ],
+      "prompt": ""
+    },
+    {
+      "mobile": false,
+      "name": "temple-reopened",
+      "path": ".tools/screenshots/after-temple-reopened-pc.png",
+      "position": [
+        -2589.63012695312,
+        605.557434082031
+      ],
+      "screen": [
+        480,
+        270
+      ],
+      "viewport": [
+        960,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            531.630126953125,
+            -8.64834594726562
+          ]
+        }
+      ],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "house-upper-left",
+      "path": ".tools/screenshots/after-house-upper-left-mobile.png",
+      "position": [
+        464.629333496094,
+        1200.5869140625
+      ],
+      "screen": [
+        585,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "house-upper-right",
+      "path": ".tools/screenshots/after-house-upper-right-mobile.png",
+      "position": [
+        633.454040527344,
+        1200.5869140625
+      ],
+      "screen": [
+        585,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "house-lower-right",
+      "path": ".tools/screenshots/after-house-lower-right-mobile.png",
+      "position": [
+        633.454040527344,
+        1315.8818359375
+      ],
+      "screen": [
+        585,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "temple-upper-left-drops",
+      "path": ".tools/screenshots/after-temple-upper-left-drops-mobile.png",
+      "position": [
+        -2516.060546875,
+        329.788757324219
+      ],
+      "screen": [
+        555.939453125,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            267.120330810547
+          ]
+        },
+        {
+          "item": "pedra",
+          "position": [
+            -2514,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            558,
+            267.120330810547
+          ]
+        }
+      ],
+      "prompt": "Recolher 1 Pedra"
+    },
+    {
+      "mobile": true,
+      "name": "temple-upper-left",
+      "path": ".tools/screenshots/after-temple-upper-left-mobile.png",
+      "position": [
+        -2586.06103515625,
+        247.435317993164
+      ],
+      "screen": [
+        485.93896484375,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            349.473754882812
+          ]
+        }
+      ],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "temple-upper-right",
+      "path": ".tools/screenshots/after-temple-upper-right-mobile.png",
+      "position": [
+        -2027.513671875,
+        240.330780029297
+      ],
+      "screen": [
+        585,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "temple-lower-right",
+      "path": ".tools/screenshots/after-temple-lower-right-mobile.png",
+      "position": [
+        -2035.7490234375,
+        598.568420410156
+      ],
+      "screen": [
+        585,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "temple-lower-left-drops",
+      "path": ".tools/screenshots/after-temple-lower-left-drops-mobile.png",
+      "position": [
+        -2515.45825195312,
+        565.627014160156
+      ],
+      "screen": [
+        556.541748046875,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            31.2820739746094
+          ]
+        },
+        {
+          "item": "madeira",
+          "position": [
+            -2538,
+            566.909057617188
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            271.282043457031
+          ]
+        }
+      ],
+      "prompt": "Recolher 1 Madeira"
+    },
+    {
+      "mobile": true,
+      "name": "temple-lower-left",
+      "path": ".tools/screenshots/after-temple-lower-left-mobile.png",
+      "position": [
+        -2571.046875,
+        598.568420410156
+      ],
+      "screen": [
+        500.953125,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            -1.65933227539062
+          ]
+        }
+      ],
+      "prompt": ""
+    },
+    {
+      "mobile": true,
+      "name": "temple-reopened",
+      "path": ".tools/screenshots/after-temple-reopened-mobile.png",
+      "position": [
+        -2571.046875,
+        598.568420410156
+      ],
+      "screen": [
+        500.953125,
+        270
+      ],
+      "viewport": [
+        1170,
+        540
+      ],
+      "drops": [
+        {
+          "item": "flecha",
+          "position": [
+            -2538,
+            326.909088134766
+          ],
+          "quantity": 1,
+          "screen": [
+            534,
+            -1.65933227539062
+          ]
+        }
+      ],
+      "prompt": ""
+    }
+  ]
+}

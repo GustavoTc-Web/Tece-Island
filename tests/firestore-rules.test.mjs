@@ -10,6 +10,7 @@ let env;
 before(async()=>{
   if(!process.env.FIRESTORE_EMULATOR_HOST)throw Error('Execute npm run test:rules; estes testes nunca usam produção.');
   env=await initializeTestEnvironment({projectId,firestore:{rules:await readFile('firestore.rules','utf8')}});
+  await env.clearFirestore();
 });
 after(async()=>{if(env)await env.cleanup();});
 const db=uid=>env.authenticatedContext(uid,{email_verified:true}).firestore();

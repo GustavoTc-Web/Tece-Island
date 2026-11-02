@@ -68,6 +68,9 @@ func run() -> void:
 	enemy.set_physics_process(false)
 	check(system.use_bed(bed).contains("bloqueado") and cycle.is_night(), "Inimigo próximo bloqueia sono")
 	enemy.position += Vector2(500, 0)
+	# Prepared late-completion permission; normal on-time sleep is tested in RC2.
+	world.objectives.campaign_tasks.completed_stages.assign([0])
+	world.objectives.campaign_tasks.sleep_credits.assign([0])
 	check(system.use_bed(bed).contains("dormiu") and not cycle.is_night() and enemy.fading, "Dormir atualiza dia e monstros")
 	check(system.respawn_point(Vector2.ZERO) != Vector2.ZERO, "Reaparecimento ao lado da cama livre")
 	bed.queue_free()

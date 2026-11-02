@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: invite patch merges chat UIDs while preserving administrators, enable flag and prior guests
+ok 1 - invite patch merges chat UIDs while preserving administrators, enable flag and prior guests
+  ---
+  duration_ms: 156.6131
+  type: 'test'
+  ...
+# Subtest: verified mode changes only access mode and never supplies an admin or sync override
+ok 2 - verified mode changes only access mode and never supplies an admin or sync override
+  ---
+  duration_ms: 195.895
+  type: 'test'
+  ...
+# Subtest: unexpected world rules or malformed invitation stop before producing deployment files
+ok 3 - unexpected world rules or malformed invitation stop before producing deployment files
+  ---
+  duration_ms: 196.617
+  type: 'test'
+  ...
+# Subtest: default rollout preserves the original two accounts for both services
+ok 4 - default rollout preserves the original two accounts for both services
+  ---
+  duration_ms: 655.5782
+  type: 'test'
+  ...
+# Subtest: inviting a verified chat account cannot expand the world-sync list
+ok 5 - inviting a verified chat account cannot expand the world-sync list
+  ---
+  duration_ms: 514.6864
+  type: 'test'
+  ...
+# Subtest: verified audience opens only the client chat policy, retaining two sync accounts
+ok 6 - verified audience opens only the client chat policy, retaining two sync accounts
+  ---
+  duration_ms: 503.356
+  type: 'test'
+  ...
+# Subtest: invalid, duplicate, missing original and mixed invitation policies are refused
+ok 7 - invalid, duplicate, missing original and mixed invitation policies are refused
+  ---
+  duration_ms: 381.0558
+  type: 'test'
+  ...
+# Subtest: manifest rejects an accidentally expanded sync list even when chat includes it
+ok 8 - manifest rejects an accidentally expanded sync list even when chat includes it
+  ---
+  duration_ms: 456.5955
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2622.1621
