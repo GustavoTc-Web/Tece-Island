@@ -1,5 +1,9 @@
 # Fechamento da candidata solo — 01/11/2026
 
+Registro histórico da consolidação. O usuário posteriormente aprovou os últimos
+ajustes e autorizou a promoção pública, mantendo chat fechado e sem declarar
+campanha completa. Veja o [registro da publicação](PUBLICACAO_0_9_1_BETA_1.md).
+
 Estado: **pronta para reteste manual; promoção ainda não autorizada**.
 Nenhuma nova funcionalidade ou mudança no runtime do jogo nesta consolidação.
 

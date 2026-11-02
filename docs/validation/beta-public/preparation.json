@@ -1,0 +1,139 @@
+{
+  "candidate": "0.9.1-beta-rc.2",
+  "release": "0.9.1-beta.1",
+  "date_brt": "2026-11-01",
+  "approval": {
+    "source": "user report",
+    "text": "Os ultimos ajustes funcionaram nos testes que fiz.",
+    "scope": "last RC2 adjustments only; no complete campaign or unspecified device tests inferred"
+  },
+  "exploratory_campaign": "campanha exploratoria nao executada por limitacao da ferramenta",
+  "provenance": {
+    "approved_game_commit": "7c254c1f8454d768228c171cf6fa040b5eb322dc",
+    "consolidation_commit": "17895fc65fa6d4a2a5291eeb8fd1862962d30c66",
+    "consolidation_runtime_changes": 0,
+    "release_runtime_changes": [
+      "scripts/game_menu.gd",
+      "scripts/network/menu.gd",
+      "web/shell.html"
+    ],
+    "only_version_replacements": true,
+    "firestore_rules_unchanged_from_rc2": true,
+    "gameplay_changes": 0
+  },
+  "native": [
+    {
+      "exit": 0,
+      "errors": [
+        null
+      ],
+      "checks": 14,
+      "test": "validate_beta_access"
+    },
+    {
+      "exit": 0,
+      "errors": [
+        null
+      ],
+      "checks": 36,
+      "test": "validate_beta_rc2"
+    },
+    {
+      "exit": 0,
+      "errors": [
+        null
+      ],
+      "checks": 16,
+      "test": "validate_beta_rc2_persistence"
+    },
+    {
+      "exit": 0,
+      "errors": [
+        null
+      ],
+      "checks": 10,
+      "test": "validate_auth_release"
+    },
+    {
+      "exit": 0,
+      "errors": [
+        null
+      ],
+      "checks": 46,
+      "test": "validate_campaign_tasks"
+    },
+    {
+      "exit": 0,
+      "errors": [
+        null
+      ],
+      "checks": 26,
+      "test": "validate_solo_migration"
+    }
+  ],
+  "configuration_tests": {
+    "passed": 8,
+    "failed": 0,
+    "production_firebase_calls": 0
+  },
+  "github_before": {
+    "at": "2026-11-02T02:27:33.705Z",
+    "main": "c7907580c0410f7bb8a40e03d2fdc126f4e6e1d4",
+    "pages": {
+      "url": "https://gustavotc-web.github.io/Tece-Island/",
+      "build_type": "workflow",
+      "status": null
+    },
+    "variables": {
+      "names": [
+        "FIREBASE_API_KEY",
+        "FIREBASE_AUTH_DOMAIN",
+        "FIREBASE_AUTH_ENABLED",
+        "FIREBASE_PROJECT_ID",
+        "TECE_PILOT_ALLOWED_UIDS"
+      ],
+      "sha256": "424e58c76182609fa1c22fa7d5542d0935fa314dc16b94fcd766d96692afa6b1",
+      "original_two_preserved": true,
+      "chat_expansion": false,
+      "firebase_public_unchanged": true
+    },
+    "runs": [
+      {
+        "id": 39299335063,
+        "sha": "15ba9685c120ce867588668a35f3c3f53077981d",
+        "branch": "main",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39299335063"
+      },
+      {
+        "id": 39037784828,
+        "sha": "7c17e63f634d4abbaca87c6f5ad1b5198601e99d",
+        "branch": "main",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/39037784828"
+      },
+      {
+        "id": 38999412608,
+        "sha": "81aa0f96afe8aa0ded0a3d520183a332f05ea745",
+        "branch": "main",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/38999412608"
+      },
+      {
+        "id": 38483914888,
+        "sha": "e89b0ed9dfc1effc30e2712118a319b5da685b04",
+        "branch": "main",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/GustavoTc-Web/Tece-Island/actions/runs/38483914888"
+      }
+    ]
+  },
+  "reused_evidence": "docs/validation/beta-rc2.json",
+  "primary_saves_touched": false,
+  "firebase_admin_changes": false,
+  "billing_actions": false
+}

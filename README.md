@@ -5,13 +5,18 @@ O navegador oferece o mapa e a campanha solo completos. Multiplayer indisponíve
 nesta beta, sem data anunciada. O piloto foi preservado e seus serviços temporários
 encerrados; veja [registro](docs/MULTIPLAYER_ADIADO_BETA.md).
 
-Candidata de revisão: **0.9.1-beta-rc.2**, save **9**, campanha **2**, tarefas **2**.
-A oficial **0.9.0** continua disponível até o reteste final. Veja a
-[revisão, limites e roteiro](docs/BETA_SOLO_RC2.md).
-O chat para novas contas está preparado, com [abertura e orçamento pendentes](docs/CHAT_BETA_RC2.md).
-A [recuperação da candidata exige cliente compatível com v9](docs/RECUPERACAO_BETA_V9.md).
-[Fechamento para lançamento](docs/FECHAMENTO_BETA_SOLO_RC2.md) e
-[reteste manual curto](docs/RETESTE_MANUAL_RC2.md), aguardando resultado e autorização.
+Beta solo pública: **0.9.1-beta.1**, save **9**, campanha **2**, tarefas **2**.
+**[Jogar no navegador](https://gustavotc-web.github.io/Tece-Island/)** — PC ou celular em paisagem.
+Promoção da candidata **0.9.1-beta-rc.2** aprovada pelo usuário, sem novas funcionalidades.
+[Escopo, publicação e limitações](docs/PUBLICACAO_0_9_1_BETA_1.md).
+O solo aceita contas com e-mail confirmado; **chat e sincronização continuam no
+teste fechado de duas contas**. Abrir o chat para novas contas será uma etapa
+separada: [configurações e orçamento](docs/CHAT_BETA_RC2.md).
+A [recuperação exige cliente compatível com v9](docs/RECUPERACAO_BETA_V9.md):
+**voltar apenas à 0.9.0 não abre saves já migrados**.
+[Reteste manual curto](docs/RETESTE_MANUAL_RC2.md). O usuário confirmou os últimos
+ajustes; isso não confirma uma campanha completa na RC2. A campanha exploratória
+pelo controlador não foi executada por limitação da ferramenta.
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
 campanha completa com vitória no dia 7. [Publicação e validação](docs/PUBLICACAO_0_9_0.md).
@@ -200,7 +205,11 @@ do chão. Intervalos: mãos 1,20 s, madeira 0,54 s, pedra 0,36 s.
 Combate valida alcance, direção e linha de visão. Pistola: oito tiros, intervalo
 0,45 s, recarga 1,2 s. Espingarda: dois cartuchos, seis projéteis por disparo,
 intervalo 1,2 s, recarga 1,8 s. A cadência é compartilhada por todas as entradas.
-Cama define reaparecimento e permite dormir à noite sem inimigo próximo.
+Cama define reaparecimento. Antes da vitória, dormir consome um uso obtido pela
+primeira conclusão de uma etapa atrasada; objetivos em dia não permitem pular
+a noite. O uso e seu consumo persistem após reabrir. Combate próximo, Ruínas
+Escuras, encontro de templo ativo e ataque final bloqueiam o sono. Após a vitória,
+é possível dormir em noite segura para continuar explorando.
 Fogueira fornece luz local e permite cozinhar a até 100 pixels com linha de visão.
 Colocação valida distância, bordas e colisões; somente confirmar consome o item.
 

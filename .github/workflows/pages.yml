@@ -38,8 +38,10 @@ jobs:
       - name: Exportar
         env:
           TECE_PILOT_ALLOWED_UIDS: ${{ vars.TECE_PILOT_ALLOWED_UIDS }}
-          TECE_CHAT_AUDIENCE: ${{ vars.TECE_CHAT_AUDIENCE }}
-          TECE_CHAT_ALLOWED_UIDS: ${{ vars.TECE_CHAT_ALLOWED_UIDS }}
+          # Public solo beta preserves the existing two-account chat rollout.
+          # Opening chat requires a separately reviewed client/backend change.
+          TECE_CHAT_AUDIENCE: allowlist
+          TECE_CHAT_ALLOWED_UIDS: ''
         run: |
           node tools/configure-release-access.mjs
           node tools/stamp-build.mjs
