@@ -179,13 +179,19 @@ window.tcLocalProgress={request:async(operation,key,payload,claim,done)=>{
 // A background/focus save supplements periodic saves; unload is never the only save.
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&window.tcSaveOnHide)window.tcSaveOnHide();});
 window.tcRequestPersistence=async()=>navigator.storage?.persist?await navigator.storage.persist():false;
-// Read-only diagnostics. Contains game progress, never authentication tokens.
+// Read-only account backup. The Godot bridge verifies the current Firebase
+// session and selects known owned records; no caller-supplied UID is accepted.
 window.tcExportLocalSaves=async()=>{
- const result=await new Promise(resolve=>window.tcLocalProgress.request('scan','', '', '',r=>resolve(JSON.parse(r))));
+ const result=await new Promise((resolve,reject)=>{
+  if(typeof window.tcAccountBackup!=='function'){reject(new Error('Entre novamente para exportar seus mundos.'));return;}
+  const timer=setTimeout(()=>reject(new Error('Tempo esgotado. Dados preservados.')),20000);
+  window.tcAccountBackup(raw=>{clearTimeout(timer);try{resolve(JSON.parse(raw));}catch{reject(new Error('Resposta de backup inválida.'));}});
+ });
  if(!result.ok)throw new Error(result.error);
- const blob=new Blob([JSON.stringify({format:1,origin:location.origin,exportedAt:new Date().toISOString(),entries:result.value},null,2)],{type:'application/json'});
- const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='tece-island-saves.json';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
- return {entries:result.value.length,bytes:blob.size};
+ const blob=new Blob([JSON.stringify({format:2,scope:'current-account-worlds',privacy:'Backup privado: contém progresso e nomes definidos pelo jogador.',origin:location.origin,exportedAt:new Date().toISOString(),entries:result.entries},null,2)],{type:'application/json'});
+ const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='tece-island-meus-mundos.json';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+ if(result.excluded)alert('Backup criado. Alguns registros antigos, inválidos ou não reconhecidos ficaram fora do arquivo e continuam preservados neste navegador.');
+ return {entries:result.entries.length,excluded:result.excluded,bytes:blob.size};
 };
 // Render at display density, capped at 2 to bound fill-rate on mobile GPUs.
 function resize(){const r=document.querySelector('#stage').getBoundingClientRect(),density=Math.min(window.devicePixelRatio||1,2);const width=Math.max(1,Math.round(r.width*density)),height=Math.max(1,Math.round(r.height*density));if(canvas.width!==width)canvas.width=width;if(canvas.height!==height)canvas.height=height;}
