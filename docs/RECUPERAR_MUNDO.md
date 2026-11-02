@@ -1,5 +1,12 @@
 # Obter os saves sem apagar armazenamento
 
+Na oficial **0.9.1-beta.2**, o botão normal é **Exportar backup dos meus
+mundos** e inclui apenas registros reconhecidos da conta conectada. O arquivo
+é privado: preserva progresso e nomes definidos pelo jogador. A publicação
+substitui o exportador geral anterior da 0.9.1-beta.1.
+Veja [escopo, exclusões e recuperação](BETA_2_RC1_BACKUP_TOQUE.md).
+
+Para saves v9 da beta/RC2, siga [recuperação compatível com v9](RECUPERACAO_BETA_V9.md).
 Para saves v8 da 0.9.0 ou dos pilotos .3/.4, use também
 [a recuperação compatível](RECUPERACAO_0_9_0.md). Voltar só ao aplicativo 0.8.3
 não permite abrir esses mundos.
@@ -9,17 +16,22 @@ Para a jogadora:
 1. Abra o **mesmo endereço, navegador e perfil** usados na última partida, no
    aparelho original. Não limpe dados/cache, não reinstale e não crie outro mundo
    no lugar do desaparecido. Entre na mesma conta.
-2. Na versão corrigida: Menu → **Exportar cópia dos saves deste navegador**.
-   Guarde o JSON antes de escolher qualquer recuperação. Para versões antigas,
-   peça ajuda para executar o arquivo abaixo nas ferramentas do navegador.
+2. Na versão atual: Menu → **Exportar backup dos meus mundos**. Guarde o JSON privado
+   antes de escolher qualquer recuperação. As entradas excluídas não são apagadas;
+   não presuma ausência de save só porque ele não consta nesse arquivo.
 3. Informe aparelho/navegador, endereço exato do jogo, conta usada, nome do
    mundo, última ação antes de sumir e mensagem de erro, se houver. Senhas,
    tokens e links de login/recuperação não são necessários.
 
-Para suporte no navegador original (computador ou depuração remota do celular):
+Para **recuperação técnica excepcional**, com os titulares dos dados presentes
+nesse perfil: primeiro preserve uma cópia privada do perfil/armazenamento. O
+procedimento abaixo é mais amplo que o backup normal e não deve ser oferecido
+como exportação geral sem login ou anexado a suporte/issue pública.
+
+No navegador original (computador ou depuração remota do celular):
 abra DevTools → Console na página do jogo, leia e execute
 [`tools/export-browser-saves.js`](../tools/export-browser-saves.js). O script usa
-somente transações de leitura, exporta o banco por conta e bancos Godot `userfs`
+somente transações de leitura, exporta **todas as contas** do banco e bancos Godot `userfs`
 legados e baixa `tece-island-diagnostico.json`. Não apaga nem migra dados. Se não
 houver banco correspondente, o arquivo também registra isso.
 

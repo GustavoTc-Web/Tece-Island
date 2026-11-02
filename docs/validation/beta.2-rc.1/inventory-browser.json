@@ -1,0 +1,123 @@
+{
+  "physical": false,
+  "fixture": true,
+  "notExploratoryCampaign": true,
+  "results": [
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Mouse preview still starts normally"
+    },
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Sword 7 to occupied 1 swaps whole stacks and equipped selection"
+    },
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Water, magazine and weapon identity are conserved"
+    },
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Mouse invalid drop plus Q still cancels without discard"
+    },
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Gestures do not generate player movement or attack"
+    },
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Quickbar reflects inventory order"
+    },
+    {
+      "mobile": false,
+      "pass": true,
+      "label": "Durable reopen preserves reordered slots and equipped identity"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Hold produces a visible preview"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Preview follows finger and target 1 is highlighted"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Sword 7 to occupied 1 swaps whole stacks and equipped selection"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Water, magazine and weapon identity are conserved"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Outside drop cancels with no discard"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Interrupted touch cancels"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Window focus loss cancels before release"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Viewport/orientation change cancels the gesture"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Closing inventory cancels"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Swipe before hold scrolls without starting a drag"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Scroll preserves slot order"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Empty slot receives the complete stack"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Mover / trocar remains available"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Gestures do not generate player movement or attack"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Quickbar reflects inventory order"
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "label": "Durable reopen preserves reordered slots and equipped identity"
+    }
+  ],
+  "errors": []
+}

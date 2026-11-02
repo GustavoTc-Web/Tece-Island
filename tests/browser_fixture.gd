@@ -314,6 +314,11 @@ func _process(_delta: float) -> void:
 				var point: Vector2 = drop.get_global_transform_with_canvas().origin
 				data.nearby_drops.append({"item":drop.resource,"quantity":drop.quantity,"position":[drop.position.x,drop.position.y],"screen":[point.x,point.y]})
 		data.dragging_inventory = hud.inventory_drag_active
+		data.inventory_scroll = rect(hud.get_node("InventoryPanel/Panel/Scroll"))
+		data.inventory_scroll_value = hud.get_node("InventoryPanel/Panel/Scroll").scroll_vertical
+		if is_instance_valid(MobileInput.inventory_touch_drag):
+			var gesture: Node = MobileInput.inventory_touch_drag
+			data.touch_inventory = {"phase":gesture.phase, "finger":gesture.finger, "target":gesture.target.drag_index if is_instance_valid(gesture.target) else -1, "preview":rect(gesture.preview) if is_instance_valid(gesture.preview) else [], "preview_visible":is_instance_valid(gesture.preview)}
 		data.backpack = inv.backpack
 		data.journal = world.journal.capture()
 		data.objectives = world.objectives.capture()

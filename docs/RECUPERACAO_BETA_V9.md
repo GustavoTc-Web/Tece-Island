@@ -1,6 +1,7 @@
 # Recuperação da beta solo: save v9
 
-A **0.9.1-beta.1**, promovida da RC2, usa save **9**, campanha **2**, tarefas **2**. A migração aceita saves
+As oficiais **0.9.1-beta.1/2**, promovidas de suas candidatas, usam save **9**,
+campanha **2**, tarefas **2**. A migração aceita saves
 anteriores, preserva itens, mundo, conquistas e condições de vitória. Acrescenta
 o registro de etapas concluídas/créditos de sono e o estado dos guardiões de
 interiores (revelação, vida restante e derrotados). Migração não fabrica derrotas
@@ -38,9 +39,9 @@ save já convertido não é recuperação. O cliente antigo deve recusá-lo e ma
 o original; não se deve contornar essa proteção editando a versão do save.
 
 O pacote Web desta beta será preservado como arquivo de recuperação na
-[release v0.9.1-beta.1](https://github.com/GustavoTc-Web/Tece-Island/releases/tag/v0.9.1-beta.1).
+[release v0.9.1-beta.2](https://github.com/GustavoTc-Web/Tece-Island/releases/tag/v0.9.1-beta.2).
 Ele contém o aplicativo, não os saves. Conferir o SHA-256 no registro da
-[publicação](PUBLICACAO_0_9_1_BETA_1.md). Uma restauração operacional deve servir
+[publicação](PUBLICACAO_0_9_1_BETA_2.md). Uma restauração operacional deve servir
 esse cliente **no mesmo endereço/origem**, mediante autorização; abrir o arquivo
 em outra origem não recupera o IndexedDB original. A opção preferida continua
 sendo corrigir e republicar um cliente v9, preservando os dados existentes.

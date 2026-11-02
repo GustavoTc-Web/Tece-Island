@@ -17,6 +17,7 @@ var selected_world := ""
 var connected_address := ""
 var connected_port := 7000
 var local_conflict_dialog := false
+var backup_callback: JavaScriptObject
 @export var connection_timeout: float = 8.0
 
 func _ready() -> void:
@@ -32,12 +33,23 @@ func _ready() -> void:
 	FirebaseAuth.signed_out.connect(_signed_out)
 	FirebaseAuth.before_logout = _save_before_logout
 	FirebaseAuth.message_changed.connect(_auth_message)
+	if OS.has_feature("web"):
+		backup_callback = JavaScriptBridge.create_callback(func(args):
+			if args.size() == 1: export_account_backup(args[0]))
+		JavaScriptBridge.get_interface("window").tcAccountBackup = backup_callback
 	if FirebaseAuth.can_play(): show_menu("")
 	else: show_auth()
 
 func _auth_message(text: String) -> void:
 	if is_instance_valid(game) and game.has_node("HUD"): game.get_node("HUD").show_message(text)
 	elif is_instance_valid(menu): menu.show_status(text)
+
+func export_account_backup(done: JavaScriptObject) -> void:
+	var owner := FirebaseAuth.account_uid()
+	var generation := FirebaseAuth.session_generation()
+	var result: Dictionary = await AccountSaveExport.collect(owner, get_tree()) if not owner.is_empty() else {"ok":false, "error":"Entre novamente para exportar seus mundos."}
+	if owner != FirebaseAuth.account_uid() or generation != FirebaseAuth.session_generation(): result = {"ok":false, "error":"A conta mudou. Exportação cancelada; tente novamente."}
+	done.call("call", null, JSON.stringify(result))
 
 func show_auth(message: String = "", save_current: bool = true) -> void:
 	OrientationGuard.set_authenticated(false)
@@ -91,7 +103,11 @@ func show_menu(message: String) -> void:
 			var retry: Button = menu.button(menu.pages.worlds, "Atualizar mundos / Tentar sincronização", refresh_worlds)
 			retry.visible = WorldSync.enabled(library.uid)
 			if OS.has_feature("web"):
-				menu.button(menu.pages.options, "Exportar cópia dos saves deste navegador", func(): JavaScriptBridge.eval("window.tcExportLocalSaves().catch(()=>alert('Não foi possível exportar. Nenhum dado foi apagado.'))"))
+				menu.button(menu.pages.options, "Exportar backup dos meus mundos", func(): JavaScriptBridge.eval("window.tcExportLocalSaves().catch(()=>alert('Não foi possível exportar seus mundos. Entre novamente e tente. Nenhum dado foi apagado.'))"))
+				var privacy := Label.new()
+				privacy.text = "Backup privado: contém progresso e nomes definidos por você. Apenas os dados reconhecidos desta conta são incluídos. Entradas antigas ou inválidas permanecem neste navegador para recuperação."
+				privacy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				menu.pages.options.add_child(privacy)
 				JavaScriptBridge.eval("window.tcRequestPersistence().catch(()=>false)")
 		var account := AccountProgress.new()
 		var owner := FirebaseAuth.account_uid()

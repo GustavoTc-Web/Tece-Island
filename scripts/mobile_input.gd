@@ -5,6 +5,7 @@ var enabled := false
 var overlay: Control
 var gui_touches: Dictionary = {}
 var focus_callback: JavaScriptObject
+var inventory_touch_drag: Node
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -13,7 +14,9 @@ func _ready() -> void:
 		enabled = bool(JavaScriptBridge.eval("navigator.maxTouchPoints > 0"))
 		focus_callback = JavaScriptBridge.create_callback(func(_args): reset())
 		JavaScriptBridge.get_interface("window").tcIslandResetInputs = focus_callback
-		JavaScriptBridge.eval("window.addEventListener('blur', () => window.tcIslandResetInputs()); document.addEventListener('visibilitychange', () => { if (document.hidden) window.tcIslandResetInputs(); });")
+		# Web engines can expose touchcancel as an ordinary release. Cancel in
+		# capture phase before Godot receives it, so interruption cannot commit.
+		JavaScriptBridge.eval("window.addEventListener('blur', () => window.tcIslandResetInputs()); document.addEventListener('visibilitychange', () => { if (document.hidden) window.tcIslandResetInputs(); }); for (const name of ['touchcancel','pointercancel']) window.addEventListener(name, () => window.tcIslandResetInputs(), {capture:true});")
 	mode_changed.connect(reset)
 
 func set_enabled(value: bool) -> void:
@@ -33,6 +36,7 @@ func touch_minimum() -> float:
 
 func reset() -> void:
 	gui_touches.clear()
+	if is_instance_valid(inventory_touch_drag): inventory_touch_drag.cancel()
 	if is_instance_valid(overlay): overlay.reset()
 	for action in ["move_left", "move_right", "move_up", "move_down", "hit", "use_tool"]:
 		Input.action_release(action)
@@ -62,6 +66,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if not event is InputEventScreenTouch and not event is InputEventScreenDrag: return
+	if is_instance_valid(inventory_touch_drag) and inventory_touch_drag.handle_input(event):
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			var control := button_at(get_tree().root, event.position)
