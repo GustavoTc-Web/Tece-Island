@@ -2,8 +2,8 @@
 
 [Jogar no endereço oficial](https://gustavotc-web.github.io/Tece-Island/).
 Tag: **v0.9.1-beta.1**. Preparação e autorização em **01/11/2026**, horário de São Paulo.
+Publicação oficial concluída em **01/11/2026 às 23:36:55 BRT**.
 Este documento separa a autorização de lançamento das verificações do deploy.
-O resultado final será acrescentado após a publicação.
 
 ## Versão aprovada e escopo
 
@@ -79,6 +79,44 @@ restauração explícita de backup v8 e perde o progresso posterior àquela cóp
 
 Integração preparada em worktree isolada; checkout do IDE e seus arquivos locais
 preservados. O workflow Pages valida, exporta e publica somente o cliente Web.
-Após concluir, serão registrados commit do pacote, execução do workflow, hashes,
-carregamento inicial automatizado e arquivo de recuperação. Não haverá teste
-autenticado de produção ou teste físico sem evidência específica.
+Commit publicado: **`fbc56f75c60ae690f5a101516145a384c9fa1304`**, merge da
+preparação `dad6b2b` e da RC2 na main. A tag **v0.9.1-beta.1** aponta para esse
+merge. Registros posteriores alteram apenas documentação, sem reexportar o jogo.
+[Workflow 41378423061](https://github.com/GustavoTc-Web/Tece-Island/actions/runs/41378423061):
+validação, exportação e deploy **success**.
+
+O CI executou **655 checks Godot em 23 suítes**, **23 testes de regras** sem skips,
+**11 checks de chat nativo REST** e **oito testes de configuração de acesso**.
+Todos passaram. O backend de teste foi o emulador local Auth/Firestore.
+Antes do push, seis suítes afetadas tiveram 148 checks locais aprovados;
+esses resultados se sobrepõem ao CI e não são somados como casos independentes.
+As evidências anteriores da RC2 foram conservadas, sem repetir a campanha.
+
+No endereço público, manifesto e **16 arquivos** foram comparados por SHA-256
+com o artefato exato do Pages; os **33 hashes de fontes** conferem com o commit.
+PCK servido: `db7c52b3a9a185ecda220817c6134a01473e2c46ce812f938c119b418e03c358`.
+O PCK baixado abriu em projeto vazio: versão/commit, v9/tarefas v2, dois UIDs,
+intervalo de sync, chat fechado, Firebase público e ausência de fixtures/regras
+administrativas conferidos. As variáveis GitHub conservaram o mesmo digest
+antes/depois; nenhum backend Firebase foi modificado.
+
+Carregamento inicial até a tela de login confirmado em **Edge headless PC e
+mobile emulado**, com WebGL de software e perfis descartáveis. Sem erros de
+script, HTTP ou JavaScript; sem login, requisições Firebase, criação de conta
+ou partida autenticada. Medidas observadas: cerca de 8,2 s no primeiro PC e
+2,4 s no mobile emulado subsequente, sob cache/ambiente distintos — não são
+benchmark comparável nem medida de aparelho físico. Capturas e resultados:
+[registro técnico](validation/beta-public/publication.json),
+[PC](validation/beta-public/login-pc-emulated.png) e
+[mobile](validation/beta-public/login-mobile-emulated.png).
+
+[Pré-release e recuperação](https://github.com/GustavoTc-Web/Tece-Island/releases/tag/v0.9.1-beta.1).
+Arquivo `tece-island-0.9.1-beta.1-web-recovery.tar.gz`, 16 arquivos do aplicativo,
+sem dados de jogadores. SHA-256:
+`6abfcd3b54d89ec1841170d9c4c5964a75b77928bd64a00809b8883663709715`.
+Upload e download público foram conferidos. Não foi acionado rollback.
+
+**Sem bloqueio técnico de publicação conhecido.** Permanecem sem nova aprovação:
+campanha completa na RC2, exploração pelo controlador, login de produção e casos
+físicos não especificados pelo usuário (incluindo áudio, rotação e suspensão).
+A abertura do chat para novas contas é uma etapa separada, sem impedir o solo.
