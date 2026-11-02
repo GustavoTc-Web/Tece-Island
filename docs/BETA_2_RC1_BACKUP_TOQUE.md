@@ -1,5 +1,9 @@
 # Candidata 0.9.1-beta.2-rc.1 — backup próprio e inventário por toque
 
+Registro histórico da candidata. O usuário posteriormente relatou que os ajustes
+funcionaram e autorizou a [publicação oficial 0.9.1-beta.2](PUBLICACAO_0_9_1_BETA_2.md).
+O relato não especifica campanha completa, aparelho ou todos os casos físicos.
+
 Branch `release/solo-beta.2-rc.1`, preparada em 02/11/2026. Dois ajustes pontuais;
 save **v9**, campanha **v2**, tarefas **v2** e demais mecânicas preservados.
 O endereço oficial mantém **0.9.1-beta.1** até autorização posterior. Não há

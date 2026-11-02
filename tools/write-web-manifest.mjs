@@ -2,7 +2,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 const read=async p=>JSON.parse(await readFile(p,'utf8'));
 const stamp=await read('config/build-public.json'),chat=await read('config/global-chat.json'),sync=await read('config/world-sync.json');
-if(stamp.version!=='0.9.1-beta.2-rc.1'||!/^[a-f0-9]{40}$/.test(stamp.commit)||stamp.save_schema!==9||stamp.campaign_schema!==2||stamp.tasks_schema!==2)throw Error('Identificação da versão ausente.');
+if(stamp.version!=='0.9.1-beta.2'||!/^[a-f0-9]{40}$/.test(stamp.commit)||stamp.save_schema!==9||stamp.campaign_schema!==2||stamp.tasks_schema!==2)throw Error('Identificação da versão ausente.');
 const validList=list=>Array.isArray(list)&&list.length>0&&new Set(list).size===list.length&&list.every(uid=>typeof uid==='string'&&/^[A-Za-z0-9_-]{1,128}$/.test(uid));
 const audience=chat.audience||'allowlist';
 if(!chat.enabled||!sync.enabled||!validList(sync.allowed_uids)||sync.allowed_uids.length!==2||!validList(chat.allowed_uids)||sync.allowed_uids.some(uid=>!chat.allowed_uids.includes(uid))||!['allowlist','verified'].includes(audience)||sync.interval_seconds!==120)throw Error('Configuração de rollout divergente.');

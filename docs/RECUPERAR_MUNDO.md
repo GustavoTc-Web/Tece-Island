@@ -1,9 +1,9 @@
 # Obter os saves sem apagar armazenamento
 
-Na candidata **0.9.1-beta.2-rc.1**, o botão normal é **Exportar backup dos meus
+Na oficial **0.9.1-beta.2**, o botão normal é **Exportar backup dos meus
 mundos** e inclui apenas registros reconhecidos da conta conectada. O arquivo
-é privado: preserva progresso e nomes definidos pelo jogador. A oficial
-0.9.1-beta.1 ainda contém o exportador geral anterior até promoção autorizada.
+é privado: preserva progresso e nomes definidos pelo jogador. A publicação
+substitui o exportador geral anterior da 0.9.1-beta.1.
 Veja [escopo, exclusões e recuperação](BETA_2_RC1_BACKUP_TOQUE.md).
 
 Para saves v9 da beta/RC2, siga [recuperação compatível com v9](RECUPERACAO_BETA_V9.md).
@@ -16,7 +16,7 @@ Para a jogadora:
 1. Abra o **mesmo endereço, navegador e perfil** usados na última partida, no
    aparelho original. Não limpe dados/cache, não reinstale e não crie outro mundo
    no lugar do desaparecido. Entre na mesma conta.
-2. Na candidata: Menu → **Exportar backup dos meus mundos**. Guarde o JSON privado
+2. Na versão atual: Menu → **Exportar backup dos meus mundos**. Guarde o JSON privado
    antes de escolher qualquer recuperação. As entradas excluídas não são apagadas;
    não presuma ausência de save só porque ele não consta nesse arquivo.
 3. Informe aparelho/navegador, endereço exato do jogo, conta usada, nome do

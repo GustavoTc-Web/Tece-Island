@@ -12,7 +12,7 @@ async function prepareManifest(dir){
  for(const file of ['scripts','web','firestore.rules'])await cp(path.join(root,file),path.join(dir,file),{recursive:true});
  await mkdir(path.join(dir,'build/web'),{recursive:true});
  for(const file of ['index.pck','index.js','index.wasm'])await writeFile(path.join(dir,'build/web',file),'metadata fixture, not a game build');
- await writeFile(path.join(dir,'config/build-public.json'),JSON.stringify({version:'0.9.1-beta.2-rc.1',commit:'7c254c1f8454d768228c171cf6fa040b5eb322dc',save_schema:9,campaign_schema:2,tasks_schema:2}));
+ await writeFile(path.join(dir,'config/build-public.json'),JSON.stringify({version:'0.9.1-beta.2',commit:'7c254c1f8454d768228c171cf6fa040b5eb322dc',save_schema:9,campaign_schema:2,tasks_schema:2}));
 }
 test('default rollout preserves the original two accounts for both services',async()=>{
  const dir=await fixture();assert.equal(run(dir,'configure-release-access.mjs').status,0);

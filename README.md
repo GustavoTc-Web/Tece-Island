@@ -1,23 +1,25 @@
 # Tece Island — solo Web e controles de toque
 
-Nesta branch: candidata privada **0.9.1-beta.2-rc.1**, com [backup por conta e arrasto por toque](docs/BETA_2_RC1_BACKUP_TOQUE.md). A oficial abaixo permanece preservada.
+Atualização aprovada: [backup por conta e arrasto por toque](docs/PUBLICACAO_0_9_1_BETA_2.md).
 
 Jogo 2D de sobrevivência em **Godot 4.7.2 Standard**, GDScript e **Compatibility**.
 O navegador oferece o mapa e a campanha solo completos. Multiplayer indisponível
 nesta beta, sem data anunciada. O piloto foi preservado e seus serviços temporários
 encerrados; veja [registro](docs/MULTIPLAYER_ADIADO_BETA.md).
 
-Beta solo pública: **0.9.1-beta.1**, save **9**, campanha **2**, tarefas **2**.
+Beta solo pública: **0.9.1-beta.2**, save **9**, campanha **2**, tarefas **2**.
 **[Jogar no navegador](https://gustavotc-web.github.io/Tece-Island/)** — PC ou celular em paisagem.
-Promoção da candidata **0.9.1-beta-rc.2** aprovada pelo usuário, sem novas funcionalidades.
-[Escopo, publicação e limitações](docs/PUBLICACAO_0_9_1_BETA_1.md).
+Promoção da candidata **0.9.1-beta.2-rc.1** aprovada pelo usuário, com exportação
+restrita à conta conectada e arrasto por toque. Sem funcionalidades adicionais.
+[Escopo, publicação e limitações](docs/PUBLICACAO_0_9_1_BETA_2.md).
 O solo aceita contas com e-mail confirmado; **chat e sincronização continuam no
 teste fechado de duas contas**. Abrir o chat para novas contas será uma etapa
 separada: [configurações e orçamento](docs/CHAT_BETA_RC2.md).
 A [recuperação exige cliente compatível com v9](docs/RECUPERACAO_BETA_V9.md):
 **voltar apenas à 0.9.0 não abre saves já migrados**.
-[Reteste manual curto](docs/RETESTE_MANUAL_RC2.md). O usuário confirmou os últimos
-ajustes; isso não confirma uma campanha completa na RC2. A campanha exploratória
+[Roteiro e evidências da candidata](docs/BETA_2_RC1_BACKUP_TOQUE.md). O usuário
+relatou que os ajustes funcionaram; não foi presumida campanha completa ou teste
+físico não especificado. A campanha exploratória
 pelo controlador não foi executada por limitação da ferramenta.
 
 **0.9.0 — campanha solo:** promoção do piloto .4 aprovado pelo usuário após uma
