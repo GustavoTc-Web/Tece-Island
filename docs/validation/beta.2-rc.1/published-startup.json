@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "mobile_emulated": false,
+      "initial_load": true,
+      "version": "0.9.1-beta.2-rc.1",
+      "no_login_export": true,
+      "production_firebase_requests": 0,
+      "startup_errors": [
+        {
+          "phase": "startup",
+          "name": "AbortError",
+          "message": "Failed to load worklet module script: https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/index.audio.worklet.js (HTTP status: 401)"
+        },
+        {
+          "phase": "startup",
+          "name": "AbortError",
+          "message": "Failed to load worklet module script: https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/index.audio.position.worklet.js (HTTP status: 401)"
+        }
+      ],
+      "teardown_errors": [],
+      "physical": false,
+      "production_login": false
+    },
+    {
+      "mobile_emulated": true,
+      "initial_load": true,
+      "version": "0.9.1-beta.2-rc.1",
+      "no_login_export": true,
+      "production_firebase_requests": 0,
+      "startup_errors": [
+        {
+          "phase": "startup",
+          "name": "AbortError",
+          "message": "Failed to load worklet module script: https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/index.audio.worklet.js (HTTP status: 401)"
+        },
+        {
+          "phase": "startup",
+          "name": "AbortError",
+          "message": "Failed to load worklet module script: https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/index.audio.position.worklet.js (HTTP status: 401)"
+        }
+      ],
+      "teardown_errors": [],
+      "physical": false,
+      "production_login": false
+    }
+  ],
+  "audio_qa_limit": "HTTP 401 for AudioWorklet requests under header-authorized headless access; normal user login/physical audio unverified"
+}

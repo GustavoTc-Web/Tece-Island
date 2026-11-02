@@ -1,0 +1,62 @@
+[
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 36,
+    "test": "validate_account_save_export"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 13,
+    "test": "validate_inventory_touch_drag"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 16,
+    "test": "validate_beta_rc2_persistence"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 20,
+    "test": "validate_save_reliability"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 19,
+    "test": "validate_world_library"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 30,
+    "test": "validate_world_sync"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 10,
+    "test": "validate_auth_release"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 7,
+    "test": "validate_controls"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 14,
+    "test": "validate_beta_access"
+  },
+  {
+    "exit": 0,
+    "failures": 0,
+    "checks": 46,
+    "test": "validate_campaign_tasks"
+  }
+]

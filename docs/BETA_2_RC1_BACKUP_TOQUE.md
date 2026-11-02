@@ -99,5 +99,58 @@ Roteiro físico com **mundo novo de teste**:
    cada arquivo deve conter somente seus mundos e cópias reconhecidas. Sem login,
    não deve haver opção de exportação. Guarde os arquivos como backups privados.
 
-Os resultados automatizados/emulados e a publicação serão acrescentados abaixo.
-Não há aprovação física presumida nem nova campanha completa nesta rodada.
+## Resultado técnico e publicação
+
+**Publicada privadamente em 02/11/2026 às 11:17 BRT**:
+[abrir candidata](https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/).
+Versão **0.9.1-beta.2-rc.1**, jogo congelado em
+`2738a9f49fb5d390fdb6bbcfec06e2af54aeb358`. Site versão interna **3**, fonte
+`bedcd988986accb7ef95e874d7bdf2f279f4fad6`; deploy
+`appgdep_6ae89b6d17d481919329edf4a7343222` **succeeded**.
+PCK servido SHA-256:
+`09ffe124a0d85d0fd8deed91630f600378d8a7adf92368647190e98d5d33e948`.
+
+- **211 checks Godot em dez suítes**, sem falhas. Inclui 36 checks do exportador,
+  13 do toque, recuperação real v9, backups, catálogos, sync, Auth e controles.
+- **Oito testes de configuração** passaram; regras e permissões Firebase não
+  foram aplicadas ou ampliadas.
+- **23 checks Web de inventário**: mouse e toque CDP emulado, prévia/destino,
+  espada 7→1, vazio/ocupado, atributos, cancelamento fora/OS/foco/fechamento/
+  resize, rolagem, alternativa Mover/trocar, controles e IndexedDB/reabertura.
+- **27 checks Web de backup**, no cliente completo com Auth simulado somente
+  no transporte do navegador: A e B no mesmo perfil, cópias de migração/conflito,
+  registros opacos/ilegíveis/sem dono preservados fora da cópia, referências
+  estrangeiras no catálogo rejeitadas, ausência de credenciais, recusa sem login
+  e restauração do arquivo baixado em outro perfil descartável com cliente v9.
+- PCK abriu em projeto vazio com versão/commit/schema corretos, mesmas duas
+  contas e ausência de fixtures/regras administrativas. O manifesto e os 19
+  arquivos declarados foram conferidos no Site servido; HTML preserva a fonte
+  integral com a inserção do provedor. Os 38 hashes de fontes correspondem ao
+  commit congelado. O carregamento inicial privado foi conferido nos formatos
+  PC/mobile emulados, sem login de produção e com exportação sem login recusada.
+
+**Limitação da conferência privada:** a sessão headless autorizada por cabeçalho
+de QA recebeu HTTP **401** ao carregar `index.audio.worklet.js` e
+`index.audio.position.worklet.js`. Os mesmos arquivos foram obtidos e conferidos
+por hash na consulta HTTP autorizada; o cliente chegou à tela de login. Isso
+registra um limite desse acesso automatizado, não uma aprovação de áudio nem
+uma conclusão sobre o comportamento da sessão normal do usuário. Áudio no Site
+privado requer reteste autenticado no aparelho. Não foi feita alteração nos
+módulos ou nas permissões para contornar isso. Os erros constam integralmente,
+sem credenciais, em `published-startup.json`.
+
+[Resultados e capturas](validation/beta.2-rc.1/),
+[publicação](validation/beta.2-rc.1/deployment.json),
+[oficial preservada](validation/beta.2-rc.1/official-preserved.json).
+
+**Estado real:** os dois ajustes estão implementados e publicados **somente
+nesta candidata privada**. A oficial continua 0.9.1-beta.1, commit `fbc56f7`, main
+`2d7cd6c`; portanto ainda contém o exportador geral antigo até promoção
+autorizada. Não compartilhe o arquivo antigo como se fosse restrito à conta.
+Firebase, administradores, listas de chat/sync, faturamento, saves reais e
+alteração local do IDE foram preservados. Multiplayer segue adiado.
+
+**Pendências:** confirmação física do usuário no PC/celular, incluindo o gesto
+real e suspensão/retomada. Os testes acima são automações/cenários preparados,
+não uma partida humana. Não há aprovação física presumida nem nova campanha
+completa nesta rodada; a exploração pelo controlador continua não executada.

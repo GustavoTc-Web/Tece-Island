@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-11-02T14:20:36.774Z",
+  "official_version": "0.9.1-beta.1",
+  "official_commit": "fbc56f75c60ae690f5a101516145a384c9fa1304",
+  "official_pck": "db7c52b3a9a185ecda220817c6134a01473e2c46ce812f938c119b418e03c358",
+  "main": "2d7cd6c320aa1d1ac696ecfe21cccf05f7cf11ca",
+  "multiplayer": "a8ab12f0c101b995e41d94066adeb94b8efd8f52",
+  "ide_project_unchanged": true,
+  "firebase_admin_calls": 0,
+  "billing_actions": 0
+}

@@ -1,0 +1,22 @@
+{
+  "id": "appgdep_6ae89b6d17d481919329edf4a7343222",
+  "project_id": "appgprj_6ae3d5c2c024819192cf6aa8c70c7b47",
+  "title": "Tece-Island — Candidata da beta solo",
+  "version_id": "appgprj_6ae3d5c2c024819192cf6aa8c70c7b47~appgver_fa70bb22ab008191965739855674fb6f",
+  "type": "publish",
+  "status": "succeeded",
+  "url": "https://tece-island-solo-beta.gustavotccandido.chatgpt.site",
+  "has_mcp": false,
+  "screenshot_asset_pointer": null,
+  "provider_deployment_id": "site---6ae3d5c2c024819192cf6aa8c70c7b47",
+  "failure_message": null,
+  "env_set_revision": 0,
+  "updated_at": "2026-11-02T14:17:36.133804+00:00",
+  "site_version_number": 3,
+  "source_commit": "bedcd988986accb7ef95e874d7bdf2f279f4fad6",
+  "game_commit": "2738a9f49fb5d390fdb6bbcfec06e2af54aeb358",
+  "game_version": "0.9.1-beta.2-rc.1",
+  "pck_sha256": "09ffe124a0d85d0fd8deed91630f600378d8a7adf92368647190e98d5d33e948",
+  "owner_only": true,
+  "official_updated": false
+}

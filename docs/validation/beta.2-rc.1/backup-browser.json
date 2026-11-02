@@ -1,0 +1,118 @@
+{
+  "physical": false,
+  "auth": "mocked only in browser transport",
+  "production_firebase_requests": 0,
+  "checks": [
+    {
+      "pass": true,
+      "label": "Unauthenticated export is refused by the real client"
+    },
+    {
+      "pass": true,
+      "label": "Release client created a real owned v9 save"
+    },
+    {
+      "pass": true,
+      "label": "Unauthenticated export is refused by the real client"
+    },
+    {
+      "pass": true,
+      "label": "New backup filename is used"
+    },
+    {
+      "pass": true,
+      "label": "Backup identifies current-account scope and private content"
+    },
+    {
+      "pass": true,
+      "label": "Every exported catalog/save/backup belongs to the connected account; caller-supplied UID is ignored"
+    },
+    {
+      "pass": true,
+      "label": "No foreign UID or account hash is present"
+    },
+    {
+      "pass": true,
+      "label": "No auth password, tokens, login email or session marker in nested content"
+    },
+    {
+      "pass": true,
+      "label": "Export is read-only, including excluded records"
+    },
+    {
+      "pass": true,
+      "label": "Owned migration backup and conflict copies are included"
+    },
+    {
+      "pass": true,
+      "label": "Legacy, unreadable, opaque and misowned entries stay outside the standard backup"
+    },
+    {
+      "pass": true,
+      "label": "Unauthenticated export is refused by the real client"
+    },
+    {
+      "pass": true,
+      "label": "Release client created a real owned v9 save"
+    },
+    {
+      "pass": true,
+      "label": "Unauthenticated export is refused by the real client"
+    },
+    {
+      "pass": true,
+      "label": "New backup filename is used"
+    },
+    {
+      "pass": true,
+      "label": "Backup identifies current-account scope and private content"
+    },
+    {
+      "pass": true,
+      "label": "Every exported catalog/save/backup belongs to the connected account; caller-supplied UID is ignored"
+    },
+    {
+      "pass": true,
+      "label": "No foreign UID or account hash is present"
+    },
+    {
+      "pass": true,
+      "label": "No auth password, tokens, login email or session marker in nested content"
+    },
+    {
+      "pass": true,
+      "label": "Export is read-only, including excluded records"
+    },
+    {
+      "pass": true,
+      "label": "Owned migration backup and conflict copies are included"
+    },
+    {
+      "pass": true,
+      "label": "Legacy, unreadable, opaque and misowned entries stay outside the standard backup"
+    },
+    {
+      "pass": true,
+      "label": "B catalog cannot leak A world identifier/name through a dangling reference"
+    },
+    {
+      "pass": true,
+      "label": "Unauthenticated export is refused by the real client"
+    },
+    {
+      "pass": true,
+      "label": "Actual v9 client reopens the downloaded copy preserving inventory attributes, selection and campaign map"
+    },
+    {
+      "pass": true,
+      "label": "Restored B backup creates no A records"
+    },
+    {
+      "pass": true,
+      "label": "No production Firebase traffic or script errors"
+    }
+  ],
+  "errors": [],
+  "actual_client": true,
+  "synthetic_data": true
+}

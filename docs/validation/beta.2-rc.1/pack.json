@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "chat_closed": true,
+    "firebase_unchanged": true,
+    "floor_script": true,
+    "no_admin_rules": true,
+    "no_fixtures": true,
+    "public_solo_only": true,
+    "same_two_accounts": true,
+    "schema": true,
+    "version_commit": true
+  },
+  "commit": "2738a9f49fb5d390fdb6bbcfec06e2af54aeb358",
+  "version": "0.9.1-beta.2-rc.1"
+}

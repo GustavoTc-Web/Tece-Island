@@ -1,0 +1,10 @@
+{
+  "mobile": true,
+  "errors": [
+    {
+      "phase": "startup",
+      "name": "AbortError",
+      "message": "Failed to load worklet module script: https://tece-island-solo-beta.gustavotccandido.chatgpt.site/Tece-Island/index.audio.worklet.js (HTTP status: 401)"
+    }
+  ]
+}
