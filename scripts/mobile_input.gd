@@ -5,6 +5,7 @@ var enabled := false
 var overlay: Control
 var gui_touches: Dictionary = {}
 var focus_callback: JavaScriptObject
+var inventory_touch_drag: Node
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -33,6 +34,7 @@ func touch_minimum() -> float:
 
 func reset() -> void:
 	gui_touches.clear()
+	if is_instance_valid(inventory_touch_drag): inventory_touch_drag.cancel()
 	if is_instance_valid(overlay): overlay.reset()
 	for action in ["move_left", "move_right", "move_up", "move_down", "hit", "use_tool"]:
 		Input.action_release(action)
@@ -62,6 +64,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if not event is InputEventScreenTouch and not event is InputEventScreenDrag: return
+	if is_instance_valid(inventory_touch_drag) and inventory_touch_drag.handle_input(event):
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			var control := button_at(get_tree().root, event.position)

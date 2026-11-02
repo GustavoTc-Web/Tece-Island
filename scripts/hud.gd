@@ -191,6 +191,9 @@ func initialize(source: ResourceInventory) -> void:
 		close.pressed.connect(func(): set_panel(""))
 		get_node(panel).add_child(close)
 	_create_compact_ui()
+	var touch_drag := preload("res://scripts/inventory_touch_drag.gd").new()
+	touch_drag.hud = self
+	add_child(touch_drag)
 	get_viewport().size_changed.connect(func(): mobile_layout(MobileInput.enabled))
 
 func mobile_layout(value: bool) -> void:
