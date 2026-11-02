@@ -37,7 +37,7 @@ func run() -> void:
 	var library := WorldLibrary.new()
 	library.configure(uid)
 	var catalog := library.data.duplicate(true)
-	catalog.worlds = [{"id":id,"name":"Meu mundo","last_access":123,"uninitialized":false}]
+	catalog.worlds = [{"id":id,"name":"Meu mundo","last_access":123,"uninitialized":false},{"id":"foreign-only","name":"Foreign reference","last_access":1}]
 	catalog.servers = [{"name":"Teste","address":"test.invalid","port":7000,"last_access":12}]
 	var rows := [{"key":prefix+"world/"+id,"value":content}, {"key":prefix+"worlds","value":JSON.stringify(catalog)}, {"key":other_prefix+"world/"+id,"value":JSON.stringify(foreign)}, {"key":other_prefix+"worlds:backup","value":JSON.stringify({"owner_uid":other})}]
 	var selected := AccountSaveExport.select_entries(rows,uid)
@@ -47,6 +47,7 @@ func run() -> void:
 	check(JSON.stringify(JSON.parse_string(selected.entries[0].value))==JSON.stringify(JSON.parse_string(content)), "World state and sync hashes survive normalized serialization")
 	check(JSON.parse_string(selected.entries[1].value).servers.is_empty(), "Non-world server history is absent from the backup, retained in source")
 	check(not catalog.servers.is_empty(), "Selection never modifies the source catalog")
+	check(JSON.parse_string(selected.entries[1].value).worlds.size()==1 and not str(selected.entries[1].value).contains("foreign-only"), "Catalog cannot export a reference without an eligible owned world copy")
 	for suffix in [":backup",":backup-2",":before-v9",":before-v8",":before-cloud",":conflict-"+"a".repeat(32),":conflict-original-"+"a".repeat(32),":recovery-original-"+"a".repeat(32),":resolved-original-"+"a".repeat(32)]:
 		check(AccountSaveExport.select_entries([{"key":prefix+"world/"+id+suffix,"value":content}],uid).entries.size()==1, "Recognized owned recovery copy is exportable: "+suffix.split("-")[0])
 	for suffix in [":unreadable-"+"a".repeat(32),":unknown",":conflict-foreign",":before-v99"]:

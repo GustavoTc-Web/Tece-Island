@@ -20,6 +20,8 @@ static func select_entries(rows: Array, uid: String) -> Dictionary:
 	if uid.is_empty(): return {"ok":false, "error":"Entre novamente para exportar seus mundos."}
 	var prefix := "account/" + uid.sha256_text() + "/"
 	var entries := []
+	var catalogs := []
+	var owned_worlds := {}
 	var excluded := 0
 	for row in rows:
 		if not row is Dictionary or not row.get("key") is String or not row.get("value") is String: continue
@@ -44,12 +46,21 @@ static func select_entries(rows: Array, uid: String) -> Dictionary:
 			var copy: Dictionary = value.duplicate(true)
 			copy.servers = []
 			if not library.valid(value) or not shape(copy, catalog_schema()): excluded += 1; continue
-			entries.append({"key":key, "value":JSON.stringify(copy)})
+			catalogs.append({"key":key, "data":copy})
 		elif value.get("world_id") == world_id and shape(value, world_schema()) and SaveValidation.valid(value, uid, world_id):
 			# Serialize the validated object, not raw text with ignored duplicate
 			# JSON members. Cloud hashes already use canonical parsed JSON.
 			entries.append({"key":key, "value":JSON.stringify(value)})
+			owned_worlds[world_id] = true
 		else: excluded += 1
+	# A catalog's owner alone does not prove ownership of every reference in it.
+	# Keep only references backed by an eligible owned primary/recovery copy.
+	for catalog in catalogs:
+		var copy: Dictionary = catalog.data
+		var worlds: Array = copy.worlds.filter(func(entry): return owned_worlds.has(str(entry.id)))
+		excluded += copy.worlds.size() - worlds.size()
+		copy.worlds = worlds
+		entries.append({"key":catalog.key, "value":JSON.stringify(copy)})
 	return {"ok":true, "entries":entries, "excluded":excluded}
 
 # Descriptors reject unrecognized keys at every depth, including encoded data
