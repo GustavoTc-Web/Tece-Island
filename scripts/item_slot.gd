@@ -24,12 +24,11 @@ func _ready() -> void:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(label)
 	resized.connect(layout)
-	mouse_exited.connect(func(): IslandTheme.decorate(self, rendered_active))
+	mouse_exited.connect(func(): decorate_slot(rendered_active))
 	layout()
 func render(data: Dictionary, index: int, active: bool) -> void:
 	rendered_active = active
-	IslandTheme.decorate(self, active)
-	for type in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color", "font_hover_pressed_color"]: add_theme_color_override(type, Color.TRANSPARENT)
+	decorate_slot(active)
 	var item: String = data.get("item", "")
 	text = "" if compact else "%d\n%s" % [index + 1, ItemCatalog.quick_title(item) if not item.is_empty() else "Vazio"]
 	item_icon.item = item
@@ -43,6 +42,12 @@ func render(data: Dictionary, index: int, active: bool) -> void:
 	slot_number.text = str(index + 1)
 	tooltip_text = caption.text + (" · " + quantity.text if not quantity.text.is_empty() else "")
 	layout()
+
+func decorate_slot(active: bool) -> void:
+	IslandTheme.decorate(self, active)
+	# ItemIcon/caption/quantity draw the content; highlighting must not reveal
+	# the underlying Button text and duplicate it over the labels.
+	for type in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color", "font_hover_pressed_color"]: add_theme_color_override(type, Color.TRANSPARENT)
 func layout() -> void:
 	if item_icon == null: return
 	var font := int(maxf(14, ceilf(12 / MobileInput.css_scale()))) if MobileInput.enabled else 14
@@ -103,7 +108,7 @@ func accepts_inventory_drag(data: Variant) -> bool:
 
 func _can_drop_data(_point: Vector2, data: Variant) -> bool:
 	var valid := drag_available() and accepts_inventory_drag(data)
-	if valid: IslandTheme.decorate(self, true)
+	if valid: decorate_slot(true)
 	return valid
 
 func _drop_data(point: Vector2, data: Variant) -> void:
@@ -119,4 +124,4 @@ func apply_inventory_drag(data: Dictionary) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END and drag_hud != null:
 		drag_hud.inventory_drag_active = false
-		IslandTheme.decorate(self, rendered_active)
+		decorate_slot(rendered_active)

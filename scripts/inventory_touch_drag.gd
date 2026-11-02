@@ -97,10 +97,10 @@ func update_preview() -> void:
 	var control := MobileInput.button_at(hud.get_node("InventoryPanel"), point)
 	if control != null and control.has_method("accepts_inventory_drag") and control.accepts_inventory_drag(payload):
 		target = control
-		IslandTheme.decorate(target, true)
+		target.decorate_slot(true)
 
 func restore_target() -> void:
-	if is_instance_valid(target): IslandTheme.decorate(target, target.rendered_active)
+	if is_instance_valid(target): target.decorate_slot(target.rendered_active)
 	target = null
 
 func cancel() -> void:
