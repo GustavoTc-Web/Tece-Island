@@ -59,8 +59,17 @@ func layout() -> void:
 	caption.position = Vector2(square + 20, 3)
 	caption.size = Vector2(maxf(40, size.x - square - 26), maxf(30, size.y - font - 8))
 
+func inventory_drag_available() -> bool:
+	return is_instance_valid(drag_hud) and drag_inventory != null and not GlobalChat.opened and drag_hud.current_panel == "inventory" and drag_index >= 0 and drag_index < drag_inventory.capacity
+
 func drag_available() -> bool:
-	return drag_hud != null and drag_inventory != null and not MobileInput.enabled and not GlobalChat.opened and drag_hud.current_panel == "inventory" and drag_index >= 0 and drag_index < drag_inventory.capacity
+	return not MobileInput.enabled and inventory_drag_available()
+
+func inventory_drag_data() -> Dictionary:
+	if not inventory_drag_available(): return {}
+	var stack := drag_inventory.slot_data(drag_index)
+	if stack.is_empty(): return {}
+	return {"kind":"solo-inventory-slot", "owner":drag_inventory.get_instance_id(), "source":drag_index, "stack":JSON.stringify(stack)}
 
 func _get_drag_data(_point: Vector2) -> Variant:
 	if not drag_available(): return null
@@ -68,6 +77,11 @@ func _get_drag_data(_point: Vector2) -> Variant:
 	if stack.is_empty(): return null
 	drag_hud.inventory_drag_active = true
 	drag_hud.moving_slot = -1
+	set_drag_preview(inventory_drag_preview())
+	return inventory_drag_data()
+
+func inventory_drag_preview() -> Control:
+	var stack := drag_inventory.slot_data(drag_index)
 	var preview := PanelContainer.new()
 	preview.add_theme_stylebox_override("panel", IslandTheme.panel())
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -80,18 +94,24 @@ func _get_drag_data(_point: Vector2) -> Variant:
 	var title := Label.new()
 	title.text = "%s ×%d" % [ItemCatalog.title(stack.item), int(stack.get("quantity", 1))]
 	row.add_child(title)
-	set_drag_preview(preview)
-	return {"kind":"solo-inventory-slot", "owner":drag_inventory.get_instance_id(), "source":drag_index, "stack":JSON.stringify(stack)}
+	return preview
+
+func accepts_inventory_drag(data: Variant) -> bool:
+	if not inventory_drag_available() or not data is Dictionary or data.get("kind") != "solo-inventory-slot" or data.get("owner") != drag_inventory.get_instance_id(): return false
+	var source := int(data.get("source", -1))
+	return source >= 0 and source < drag_inventory.capacity and not drag_inventory.slot_data(source).is_empty() and JSON.stringify(drag_inventory.slot_data(source)) == data.get("stack", "")
 
 func _can_drop_data(_point: Vector2, data: Variant) -> bool:
-	if not drag_available() or not data is Dictionary or data.get("kind") != "solo-inventory-slot" or data.get("owner") != drag_inventory.get_instance_id(): return false
-	var source := int(data.get("source", -1))
-	var valid: bool = source >= 0 and source < drag_inventory.capacity and not drag_inventory.slot_data(source).is_empty() and JSON.stringify(drag_inventory.slot_data(source)) == data.get("stack", "")
+	var valid := drag_available() and accepts_inventory_drag(data)
 	if valid: IslandTheme.decorate(self, true)
 	return valid
 
 func _drop_data(point: Vector2, data: Variant) -> void:
 	if not _can_drop_data(point, data): return
+	apply_inventory_drag(data)
+
+func apply_inventory_drag(data: Dictionary) -> void:
+	if not accepts_inventory_drag(data): return
 	if drag_inventory.swap_slots(int(data.source), drag_index):
 		drag_hud.moving_slot = -1
 		drag_hud.select_slot(drag_index)
